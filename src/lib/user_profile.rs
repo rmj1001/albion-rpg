@@ -18,60 +18,112 @@ pub struct Wallet {
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct Job {
-    pub xp: u32,
-    pub level: u32,
+pub struct XP {
+    pub combat: u32,
+    pub fishing: u32,
+    pub cooking: u32,
+    pub woodcutting: u32,
+    pub mining: u32,
+    pub smithing: u32,
+    pub thieving: u32,
+}
+
+pub enum XPType {
+    Combat,
+    Fishing,
+    Cooking,
+    Woodcutting,
+    Mining,
+    Smithing,
+    Thieving,
+}
+
+impl XP {
+    pub fn level(xp: u32) -> u32 {
+        (xp / 100) + 1
+    }
+
+    pub fn total_xp(&self) -> u32 {
+        self.combat
+            + self.fishing
+            + self.cooking
+            + self.woodcutting
+            + self.mining
+            + self.smithing
+            + self.thieving
+    }
+
+    pub fn profile_level(&self) -> u32 {
+        XP::level(self.total_xp())
+    }
+
+    pub fn increment(&mut self, flag: XPType) {
+        let more_xp = rand::thread_rng().gen_range(1..5);
+
+        match flag {
+            XPType::Combat => self.combat += more_xp,
+            XPType::Fishing => self.fishing += more_xp,
+            XPType::Cooking => self.cooking += more_xp,
+            XPType::Woodcutting => self.woodcutting += more_xp,
+            XPType::Mining => self.mining += more_xp,
+            XPType::Smithing => self.smithing += more_xp,
+            XPType::Thieving => self.thieving += more_xp,
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct Guilds {
-    pub fishing: Job,
-    pub cooking: Job,
-    pub woodcutting: Job,
-    pub mining: Job,
-    pub smithing: Job,
-    pub thieving: Job,
+pub struct Item {
+    name: String,
+    price: u32,
+    quantity: u32,
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct Inventory {
-    pub fish: u16,
-    pub cooked_fish: u16,
-    pub wood: u16,
-    pub ore: u16,
-    pub ingots: u16,
+pub struct MundaneInventory {
+    pub fish: Item,
+    pub cooked_fish: Item,
+    pub wood: Item,
+    pub ore: Item,
+    pub ingots: Item,
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct Armor {
+    pub name: String,
+    pub price: u32,
+    pub owns: bool,
     pub defense: u16,
     pub durability: u16,
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct ArmorInventory {
-    pub leather: Option<Armor>,
-    pub bronze: Option<Armor>,
-    pub iron: Option<Armor>,
-    pub steel: Option<Armor>,
-    pub dragonhide: Option<Armor>,
-    pub mystic: Option<Armor>,
+    pub leather: Armor,
+    pub bronze: Armor,
+    pub iron: Armor,
+    pub steel: Armor,
+    pub dragonhide: Armor,
+    pub mystic: Armor,
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct Weapon {
+    pub name: String,
+    pub price: u32,
+    pub owns: bool,
     pub damage: u16,
     pub durability: u16,
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct WeaponsInventory {
-    pub wooden_sword: Option<Weapon>,
-    pub bronze_sword: Option<Weapon>,
-    pub iron_sword: Option<Weapon>,
-    pub steel_sword: Option<Weapon>,
-    pub mystic_sword: Option<Weapon>,
-    pub wizard_staff: Option<Weapon>,
+    pub wooden_sword: Weapon,
+    pub bronze_sword: Weapon,
+    pub iron_sword: Weapon,
+    pub steel_sword: Weapon,
+    pub mystic_sword: Weapon,
+    pub wizard_staff: Weapon,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -80,9 +132,10 @@ pub struct UserProfile {
     pub password: String,
     pub locked: bool,
     pub is_developer: bool,
-    pub wallet: Wallet,
+    pub gold: u32,
     pub health: Health,
-    pub guilds: Guilds,
+    pub xp: XP,
+    pub inventory: MundaneInventory,
     pub armor: ArmorInventory,
     pub weapons: WeaponsInventory,
 }
@@ -95,39 +148,134 @@ impl UserProfile {
             password: String::new(),
             locked: false,
             is_developer: false,
-            wallet: Wallet {
-                copper: 0,
-                silver: 0,
-                gold: rand::prelude::thread_rng().gen_range(75..200),
-                electrum: 0,
-            },
+            gold: 0,
             health: Health {
                 hitpoints: 100,
                 hunger: 0,
             },
-            guilds: Guilds {
-                fishing: Job { xp: 0, level: 1 },
-                cooking: Job { xp: 0, level: 1 },
-                woodcutting: Job { xp: 0, level: 1 },
-                mining: Job { xp: 0, level: 1 },
-                smithing: Job { xp: 0, level: 1 },
-                thieving: Job { xp: 0, level: 1 },
+            xp: XP {
+                combat: 0,
+                fishing: 0,
+                cooking: 0,
+                woodcutting: 0,
+                mining: 0,
+                smithing: 0,
+                thieving: 0,
+            },
+            inventory: MundaneInventory {
+                fish: Item {
+                    name: "Fish".to_string(),
+                    price: 10,
+                    quantity: 0,
+                },
+                cooked_fish: Item {
+                    name: "Cooked Fish".to_string(),
+                    price: 25,
+                    quantity: 0,
+                },
+                wood: Item {
+                    name: "Logs".to_string(),
+                    price: 20,
+                    quantity: 0,
+                },
+                ore: Item {
+                    name: "Ore".to_string(),
+                    price: 30,
+                    quantity: 0,
+                },
+                ingots: Item {
+                    name: "Ingots".to_string(),
+                    price: 50,
+                    quantity: 0,
+                },
             },
             armor: ArmorInventory {
-                leather: None,
-                bronze: None,
-                iron: None,
-                steel: None,
-                dragonhide: None,
-                mystic: None,
+                leather: Armor {
+                    name: "Leather".to_string(),
+                    price: 50,
+                    owns: false,
+                    defense: 10,
+                    durability: 100,
+                },
+                bronze: Armor {
+                    name: "Bronze".to_string(),
+                    price: 200,
+                    owns: false,
+                    defense: 30,
+                    durability: 200,
+                },
+                iron: Armor {
+                    name: "Iron".to_string(),
+                    price: 500,
+                    owns: false,
+                    defense: 50,
+                    durability: 300,
+                },
+                steel: Armor {
+                    name: "Steel".to_string(),
+                    price: 750,
+                    owns: false,
+                    defense: 100,
+                    durability: 500,
+                },
+                dragonhide: Armor {
+                    name: "Dragonhide".to_string(),
+                    price: 1000,
+                    owns: false,
+                    defense: 200,
+                    durability: 500,
+                },
+                mystic: Armor {
+                    name: "Magic".to_string(),
+                    price: 10000,
+                    owns: false,
+                    defense: 1000,
+                    durability: 10000,
+                },
             },
             weapons: WeaponsInventory {
-                wooden_sword: None,
-                bronze_sword: None,
-                iron_sword: None,
-                steel_sword: None,
-                mystic_sword: None,
-                wizard_staff: None,
+                wooden_sword: Weapon {
+                    name: "Wooden Sword".to_string(),
+                    price: 10,
+                    owns: false,
+                    damage: 10,
+                    durability: 100,
+                },
+                bronze_sword: Weapon {
+                    name: "Bronze Sword".to_string(),
+                    price: 30,
+                    owns: false,
+                    damage: 20,
+                    durability: 150,
+                },
+                iron_sword: Weapon {
+                    name: "Iron Sword".to_string(),
+                    price: 100,
+                    owns: false,
+                    damage: 50,
+                    durability: 200,
+                },
+                steel_sword: Weapon {
+                    name: "Steel Rapier".to_string(),
+                    price: 500,
+                    owns: false,
+                    damage: 200,
+                    durability: 500,
+                },
+                mystic_sword: Weapon {
+                    name: "Magic Sword".to_string(),
+                    price: 5000,
+                    owns: false,
+                    damage: 500,
+                    durability: 1000,
+                },
+                wizard_staff: Weapon {
+                    name: "Wizard Staff".to_string(),
+                    price: 10000,
+                    owns: false,
+                    damage: 1000,
+                    durability: 2000,
+                },
             },
         };
 
