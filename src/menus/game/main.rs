@@ -6,9 +6,11 @@ use anglandia_text_rpg::lib::{
 
 pub fn menu(user: &mut UserProfile) {
     loop {
-        page_header(&format!("Game Menu (user: {})", user.username));
-        println!(
-            "Type the menu item code (ex. c3) and press ENTER/RETURN to perform that action.\n"
+        page_header(
+            &format!("Game Menu (user: {})", user.username),
+            Some(
+                "Type the menu item code (ex. c3) and press ENTER/RETURN to perform that action.\n",
+            ),
         );
 
         tui::sub_header("Combat");
@@ -71,15 +73,13 @@ pub fn menu(user: &mut UserProfile) {
                 if user.developer {
                     crate::menus::game::profile::d1_developer_menu::main(user);
                 } else {
-                    println!("Invalid input d1.");
-                    tui::press_enter_to_continue();
+                    tui::invalid_input(None);
                     continue;
                 }
             }
 
             wrong_input => {
-                println!("Invalid input {}.", wrong_input);
-                tui::press_enter_to_continue();
+                tui::invalid_input(Some(wrong_input));
                 continue;
             }
         }

@@ -107,7 +107,7 @@ impl UserProfile {
         }
     }
 
-    pub fn directory_path() -> String {
+    fn directory_path() -> String {
         let os = std::env::consts::OS;
         let mut directory_path: String = String::new();
 
@@ -141,7 +141,7 @@ impl UserProfile {
     }
 
     /// Generates the directory path string for profiles depending on platform.
-    pub fn profile_path(username: &str) -> String {
+    fn profile_path(username: &str) -> String {
         format!("{}/{}.json", UserProfile::directory_path(), username)
     }
 
@@ -188,14 +188,40 @@ impl UserProfile {
         }
     }
 
-    pub fn delete_profile(username: &str) {
-        let profile_path: String = UserProfile::profile_path(username);
+    pub fn delete_profile(&self, optional_username: Option<&str>) {
+        let mut profile_path: String = String::new();
+
+        match optional_username {
+            Some(name) => {
+                profile_path = UserProfile::profile_path(name);
+            }
+
+            None => {
+                profile_path = UserProfile::profile_path(&self.username);
+            }
+        }
+
         let file_path = Path::new(&profile_path);
 
         match fs::remove_file(file_path) {
             Ok(_) => {}
             Err(error) => panic!("Could not delete profile file: {}", error),
         }
+    }
+
+    pub fn lock_profile(&mut self) {
+        self.locked = true;
+        self.save_profile();
+    }
+
+    pub fn unlock_profile(&mut self) {
+        self.locked = false;
+        self.save_profile();
+    }
+
+    pub fn developer_mode(&mut self, flag: bool) {
+        self.developer = flag;
+        self.save_profile();
     }
 }
 

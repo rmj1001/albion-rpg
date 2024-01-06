@@ -4,7 +4,7 @@ use anglandia_text_rpg::lib::{
 };
 
 pub fn menu() {
-    page_header("Registration");
+    page_header("Registration", None);
 
     let username: String = dialogue::prompt_input("Username");
 
@@ -20,7 +20,7 @@ pub fn menu() {
     let confirm_pass: String = dialogue::prompt_input("Confirm Password");
 
     if password != confirm_pass {
-        println!("Passwords do not match.");
+        println!("\nPasswords do not match.");
         tui::press_enter_to_continue();
         crate::menus::accounts::main::menu();
     }
@@ -32,7 +32,7 @@ pub fn menu() {
     };
 
     profile.save_profile();
-    println!("Account saved successfully.");
+    println!("\nRegistration successful.");
     tui::press_enter_to_continue();
     crate::menus::accounts::main::menu();
 }

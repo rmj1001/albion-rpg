@@ -57,9 +57,16 @@ pub fn header(title: &str, line_length: usize) {
 
 /// Prints a header with a title, using a line of dashes on the top
 /// and bottom. The title is centered.
-pub fn page_header(title: &str) {
+pub fn page_header(title: &str, instructions: Option<&str>) {
     crate::lib::terminal::clear_screen();
-    header(&format!("Anglandia - {}", title), 80);
+
+    if let Some(instruction_text) = instructions {
+        header(&format!("Anglandia - {}", title), 80);
+        println!("{}\n", instruction_text);
+    } else {
+        header(&format!("Anglandia - {}", title), 80);
+        println!("\n");
+    }
 }
 
 pub fn sub_header(title: &str) {
@@ -68,9 +75,23 @@ pub fn sub_header(title: &str) {
 
 /// Equivalent to DOS "pause" command
 pub fn press_enter_to_continue() {
-    println!("\n[PRESS RETURN/ENTER TO CONTINUE.]");
+    println!("[PRESS RETURN/ENTER TO CONTINUE.]");
     let mut garbage = String::new();
     let _ = std::io::stdin().read_line(&mut garbage);
+}
+
+pub fn invalid_input(input: Option<&str>) {
+    match input {
+        Some(data) => {
+            println!("\nInvalid input '{}'.", data);
+            press_enter_to_continue();
+        }
+
+        None => {
+            println!("\nInvalid input.");
+            press_enter_to_continue();
+        }
+    }
 }
 
 pub mod dialogue {

@@ -4,7 +4,7 @@ use anglandia_text_rpg::lib::tui::*;
 pub fn menu() {
     loop {
         clear_screen();
-        page_header("Accounts Menu");
+        page_header("Accounts Menu", None);
 
         let main_menu_options = vec!["Login", "Register", "NAV: Exit"];
 
