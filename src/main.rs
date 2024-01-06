@@ -1,11 +1,16 @@
 pub mod menus {
-    pub mod start {
+    pub mod accounts {
         pub mod login;
-        pub mod main_menu;
+        pub mod main;
         pub mod register;
+    }
+
+    pub mod game {
+        pub mod main;
     }
 }
 
 fn main() {
-    menus::start::main_menu::menu()
+    anglandia_text_rpg::lib::os::detect_os();
+    menus::accounts::main::menu();
 }
