@@ -3,7 +3,7 @@
 version = 3
 
 [[package]]
-name = "anglandia-text-rpg"
+name = "albion-termrpg"
 version = "0.1.0"
 dependencies = [
  "console",

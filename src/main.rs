@@ -33,6 +33,6 @@ pub mod menus {
 }
 
 fn main() {
-    anglandia_text_rpg::lib::os::detect_os();
+    albion_termrpg::lib::os::detect_os();
     menus::accounts::main::menu();
 }

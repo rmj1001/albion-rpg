@@ -1,4 +1,4 @@
-use anglandia_text_rpg::lib::{
+use albion_termrpg::lib::{
     terminal,
     tui::{self, page_header},
     user_profile::UserProfile,

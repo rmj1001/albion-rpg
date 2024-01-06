@@ -1,5 +1,5 @@
-use anglandia_text_rpg::lib::terminal::*;
-use anglandia_text_rpg::lib::tui::*;
+use albion_termrpg::lib::terminal::*;
+use albion_termrpg::lib::tui::*;
 
 pub fn menu() {
     loop {
