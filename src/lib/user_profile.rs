@@ -10,14 +10,6 @@ pub struct Health {
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct Wallet {
-    pub copper: u32,
-    pub silver: u32,
-    pub gold: u32,
-    pub electrum: u32,
-}
-
-#[derive(Serialize, Deserialize)]
 pub struct XP {
     pub combat: u32,
     pub fishing: u32,
@@ -158,9 +150,9 @@ pub struct UserProfile {
     pub password: String,
     pub locked: bool,
     pub is_developer: bool,
-    pub gold: u32,
     pub health: Health,
     pub xp: XP,
+    pub gold: u32,
     pub inventory: MundaneInventory,
     pub armor: ArmorInventory,
     pub weapons: WeaponsInventory,
@@ -174,7 +166,6 @@ impl UserProfile {
             password: String::new(),
             locked: false,
             is_developer: false,
-            gold: 0,
             health: Health {
                 hitpoints: 100,
                 hunger: 0,
@@ -188,6 +179,7 @@ impl UserProfile {
                 smithing: 0,
                 thieving: 0,
             },
+            gold: 0,
             inventory: MundaneInventory {
                 fish: Item {
                     name: "Fish".to_string(),
