@@ -1,4 +1,4 @@
-use rand::Rng;
+use rand::{thread_rng, Rng};
 use serde::{Deserialize, Serialize};
 use serde_json as json;
 use std::{fs, path::Path};
@@ -94,7 +94,42 @@ pub struct Armor {
     pub price: u32,
     pub owns: bool,
     pub defense: u16,
-    pub durability: u16,
+    pub durability: i16,
+    pub default_durability: i16,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct Weapon {
+    pub name: String,
+    pub price: u32,
+    pub owns: bool,
+    pub damage: u16,
+    pub durability: i16,
+    default_durability: i16,
+}
+
+impl Weapon {
+    pub fn decrease_durability(&mut self) {
+        let random_damage = thread_rng().gen_range(1..5);
+        self.durability -= random_damage;
+
+        if self.durability <= 0 {
+            self.owns = false;
+            self.durability = self.default_durability
+        }
+    }
+}
+
+impl Armor {
+    pub fn decrease_durability(&mut self) {
+        let random_damage = thread_rng().gen_range(1..5);
+        self.durability -= random_damage;
+
+        if self.durability <= 0 {
+            self.owns = false;
+            self.durability = self.default_durability
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize)]
@@ -105,15 +140,6 @@ pub struct ArmorInventory {
     pub steel: Armor,
     pub dragonhide: Armor,
     pub mystic: Armor,
-}
-
-#[derive(Serialize, Deserialize)]
-pub struct Weapon {
-    pub name: String,
-    pub price: u32,
-    pub owns: bool,
-    pub damage: u16,
-    pub durability: u16,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -196,6 +222,7 @@ impl UserProfile {
                     owns: false,
                     defense: 10,
                     durability: 100,
+                    default_durability: 100,
                 },
                 bronze: Armor {
                     name: "Bronze".to_string(),
@@ -203,6 +230,7 @@ impl UserProfile {
                     owns: false,
                     defense: 30,
                     durability: 200,
+                    default_durability: 200,
                 },
                 iron: Armor {
                     name: "Iron".to_string(),
@@ -210,6 +238,7 @@ impl UserProfile {
                     owns: false,
                     defense: 50,
                     durability: 300,
+                    default_durability: 300,
                 },
                 steel: Armor {
                     name: "Steel".to_string(),
@@ -217,6 +246,7 @@ impl UserProfile {
                     owns: false,
                     defense: 100,
                     durability: 500,
+                    default_durability: 500,
                 },
                 dragonhide: Armor {
                     name: "Dragonhide".to_string(),
@@ -224,6 +254,7 @@ impl UserProfile {
                     owns: false,
                     defense: 200,
                     durability: 500,
+                    default_durability: 500,
                 },
                 mystic: Armor {
                     name: "Magic".to_string(),
@@ -231,6 +262,7 @@ impl UserProfile {
                     owns: false,
                     defense: 1000,
                     durability: 10000,
+                    default_durability: 10000,
                 },
             },
             weapons: WeaponsInventory {
@@ -240,6 +272,7 @@ impl UserProfile {
                     owns: false,
                     damage: 10,
                     durability: 100,
+                    default_durability: 100,
                 },
                 bronze_sword: Weapon {
                     name: "Bronze Sword".to_string(),
@@ -247,6 +280,7 @@ impl UserProfile {
                     owns: false,
                     damage: 20,
                     durability: 150,
+                    default_durability: 150,
                 },
                 iron_sword: Weapon {
                     name: "Iron Sword".to_string(),
@@ -254,6 +288,7 @@ impl UserProfile {
                     owns: false,
                     damage: 50,
                     durability: 200,
+                    default_durability: 200,
                 },
                 steel_sword: Weapon {
                     name: "Steel Rapier".to_string(),
@@ -261,6 +296,7 @@ impl UserProfile {
                     owns: false,
                     damage: 200,
                     durability: 500,
+                    default_durability: 500,
                 },
                 mystic_sword: Weapon {
                     name: "Magic Sword".to_string(),
@@ -268,6 +304,7 @@ impl UserProfile {
                     owns: false,
                     damage: 500,
                     durability: 1000,
+                    default_durability: 1000,
                 },
                 wizard_staff: Weapon {
                     name: "Wizard Staff".to_string(),
@@ -275,6 +312,7 @@ impl UserProfile {
                     owns: false,
                     damage: 1000,
                     durability: 2000,
+                    default_durability: 2000,
                 },
             },
         };
