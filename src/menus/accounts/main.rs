@@ -6,7 +6,7 @@ pub fn menu() {
         clear_screen();
         page_header("Accounts Menu", None);
 
-        let main_menu_options = vec!["Login", "Register", "NAV: Exit"];
+        let main_menu_options = vec!["Login", "Register", "Exit"];
 
         let chosen_option = dialogue::selector(&main_menu_options, 0, None);
 

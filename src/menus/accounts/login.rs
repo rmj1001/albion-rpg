@@ -38,7 +38,7 @@ pub fn menu() {
                 match &unlock[..] {
                     "y" => {
                         if get_password(&profile) {
-                            profile.unlock_profile();
+                            profile.unlock();
                             println!("\nProfile unlocked. Proceed with login.\n");
                         } else {
                             profile_remains_locked()
@@ -46,7 +46,7 @@ pub fn menu() {
                     }
                     "yes" => {
                         if get_password(&profile) {
-                            profile.unlock_profile();
+                            profile.unlock();
                         } else {
                             profile_remains_locked()
                         }

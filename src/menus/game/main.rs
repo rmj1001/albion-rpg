@@ -32,7 +32,7 @@ pub fn menu(user: &mut UserProfile) {
         println!("p2. Hall of Records");
 
         println!("\n");
-        if user.developer {
+        if user.is_developer {
             println!("d1. Developer Menu");
         }
         println!("n1. Settings");
@@ -58,7 +58,7 @@ pub fn menu(user: &mut UserProfile) {
             // Profile
             "p1" => crate::menus::game::profile::p1_inventory::main(user),
             "p2" => crate::menus::game::profile::p2_hall_of_records::main(user),
-            "n1" => crate::menus::game::profile::n1_settings::main(user),
+            "n1" => crate::menus::game::profile::n1_settings::menu(user),
             "n2" => {
                 user.save_profile();
                 crate::menus::accounts::main::menu();
@@ -70,7 +70,7 @@ pub fn menu(user: &mut UserProfile) {
 
             // Developer Mode
             "d1" => {
-                if user.developer {
+                if user.is_developer {
                     crate::menus::game::profile::d1_developer_menu::main(user);
                 } else {
                     tui::invalid_input(None);

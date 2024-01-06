@@ -11,7 +11,7 @@ pub fn menu() {
     let found_profile = UserProfile::retrieve_profile(&username);
 
     if found_profile.is_some() {
-        println!("That profile already exists.");
+        println!("\nThat profile already exists.");
         tui::press_enter_to_continue();
         crate::menus::accounts::main::menu();
     }
@@ -25,11 +25,7 @@ pub fn menu() {
         crate::menus::accounts::main::menu();
     }
 
-    let profile = UserProfile {
-        username,
-        password,
-        ..Default::default()
-    };
+    let profile = UserProfile::from(&username, &password);
 
     profile.save_profile();
     println!("\nRegistration successful.");
