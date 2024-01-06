@@ -27,11 +27,7 @@ pub fn print_line_string(total_length: Option<usize>) {
     println!("{}", &line_string[..]);
 }
 
-/// Prints a header with a title, using a line of dashes on the top
-/// and bottom. The title is centered.
-pub fn page_header(title: &str) {
-    crate::lib::terminal::clear_screen();
-
+pub fn header(title: &str, line_length: usize) {
     fn add_spaces_to_string(s: &mut String, spaces: usize) {
         let mut index = 0;
 
@@ -42,22 +38,32 @@ pub fn page_header(title: &str) {
         }
     }
 
-    let title_string = format!("Anglandia - {}", title);
     let mut header = String::new();
 
-    header.push_str(&create_line_string(80));
+    header.push_str(&create_line_string(line_length));
     header.push('\n');
 
-    let spaces_on_one_side = (80 - (title_string.len() + 2)) / 2 + 1;
+    let spaces_on_one_side = (line_length - (title.len() + 2)) / 2 + 1;
 
     add_spaces_to_string(&mut header, spaces_on_one_side);
 
-    header.push_str(&title_string);
+    header.push_str(title);
 
     header.push('\n');
-    header.push_str(&create_line_string(80));
+    header.push_str(&create_line_string(line_length));
 
     println!("{}", header);
+}
+
+/// Prints a header with a title, using a line of dashes on the top
+/// and bottom. The title is centered.
+pub fn page_header(title: &str) {
+    crate::lib::terminal::clear_screen();
+    header(&format!("Anglandia - {}", title), 80);
+}
+
+pub fn sub_header(title: &str) {
+    header(title, 40);
 }
 
 /// Equivalent to DOS "pause" command
