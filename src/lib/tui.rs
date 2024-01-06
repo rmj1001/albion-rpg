@@ -60,11 +60,11 @@ pub fn header(title: &str, line_length: usize) {
 pub fn page_header(title: &str, instructions: Option<&str>) {
     crate::lib::terminal::clear_screen();
 
+    header(&format!("Albion - {}", title), 80);
+
     if let Some(instruction_text) = instructions {
-        header(&format!("Anglandia - {}", title), 80);
         println!("{}\n", instruction_text);
     } else {
-        header(&format!("Anglandia - {}", title), 80);
         println!("\n");
     }
 }
