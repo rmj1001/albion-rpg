@@ -81,6 +81,7 @@ pub struct WeaponsInventory {
 pub struct UserProfile {
     pub username: String,
     pub password: String,
+    pub locked: bool,
     pub developer: bool,
     pub wallet: Wallet,
     pub health: Health,
@@ -186,6 +187,16 @@ impl UserProfile {
             Err(_) => None,
         }
     }
+
+    pub fn delete_profile(username: &str) {
+        let profile_path: String = UserProfile::profile_path(username);
+        let file_path = Path::new(&profile_path);
+
+        match fs::remove_file(file_path) {
+            Ok(_) => {}
+            Err(error) => panic!("Could not delete profile file: {}", error),
+        }
+    }
 }
 
 impl Default for UserProfile {
@@ -194,6 +205,7 @@ impl Default for UserProfile {
         let mut profile = UserProfile {
             username: String::new(),
             password: String::new(),
+            locked: false,
             developer: false,
             wallet: Wallet {
                 copper: 0,

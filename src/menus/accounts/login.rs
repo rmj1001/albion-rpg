@@ -12,6 +12,7 @@ pub fn menu() {
 
     match profile_result {
         Some(profile) => {
+            let mut profile = profile;
             let password: String = dialogue::password();
 
             if password != profile.password {
@@ -23,7 +24,7 @@ pub fn menu() {
             println!("Login successful.");
             tui::press_enter_to_continue();
 
-            crate::menus::game::main::menu(profile);
+            crate::menus::game::main::menu(&mut profile);
         }
 
         None => {
