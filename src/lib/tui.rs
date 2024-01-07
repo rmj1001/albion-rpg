@@ -58,7 +58,7 @@ pub fn header(title: &str, line_length: usize) {
 /// Prints a header with a title, using a line of dashes on the top
 /// and bottom. The title is centered.
 pub fn page_header(title: &str, instructions: Option<&str>) {
-    crate::lib::terminal::clear_screen();
+    crate::lib::terminal::clear();
 
     header(&format!("Albion - {}", title), 80);
 

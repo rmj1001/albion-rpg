@@ -1,6 +1,6 @@
 use std::process::Command;
 
-pub fn clear_screen() {
+pub fn clear() {
     if cfg!(target_os = "windows") {
         Command::new("cmd")
             .args(["/c", "cls"])
@@ -18,6 +18,6 @@ pub fn clear_screen() {
 }
 
 pub fn exit() {
-    clear_screen();
+    clear();
     std::process::exit(0);
 }

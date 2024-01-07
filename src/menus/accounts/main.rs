@@ -2,7 +2,7 @@ use albion_termrpg::lib::terminal::*;
 use albion_termrpg::lib::tui::*;
 
 pub fn menu() {
-    clear_screen();
+    clear();
     page_header(
         "Accounts Menu",
         Some("Use ↑ ↓ keys to select an option below, then press ENTER/RETURN to run it"),
