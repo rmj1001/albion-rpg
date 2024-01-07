@@ -1,12 +1,13 @@
 use albion_termrpg::lib::{
-    tui::{self, dialogue, page_header},
+    input::prompt_input,
+    tui::{self, page_header},
     user::profile::{ProfileRetrievalResult, UserProfile},
 };
 
 pub fn menu() {
     page_header("Registration", None);
 
-    let username: String = dialogue::prompt_input("Username");
+    let username: String = prompt_input("Username");
 
     let found_profile = UserProfile::retrieve(&username);
 
@@ -16,8 +17,8 @@ pub fn menu() {
         crate::menus::accounts::main::menu();
     }
 
-    let password: String = dialogue::prompt_input("Password");
-    let confirm_pass: String = dialogue::prompt_input("Confirm Password");
+    let password: String = prompt_input("Password");
+    let confirm_pass: String = prompt_input("Confirm Password");
 
     if password != confirm_pass {
         println!("\nPasswords do not match.");
