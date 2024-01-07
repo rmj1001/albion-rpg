@@ -110,10 +110,13 @@ fn manage_user_profiles(user: &mut UserProfile) {
     }
 }
 
+// TODO: Bank Manipulations
 fn manipulate_banks(user: &mut UserProfile) {}
 
+// TODO: XP Manipulation
 fn manipulate_xp(user: &mut UserProfile) {}
 
+// TODO: Inventory Manipulation
 fn manipulate_inventory(user: &mut UserProfile) {}
 
 pub fn main(user: &mut UserProfile) {
