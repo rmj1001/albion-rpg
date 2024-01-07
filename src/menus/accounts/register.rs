@@ -1,6 +1,6 @@
 use albion_termrpg::lib::{
     tui::{self, dialogue, page_header},
-    user_profile::UserProfile,
+    user_profile::{ProfileRetrievalResult, UserProfile},
 };
 
 pub fn menu() {
@@ -10,7 +10,7 @@ pub fn menu() {
 
     let found_profile = UserProfile::retrieve_profile(&username);
 
-    if found_profile.is_some() {
+    if let ProfileRetrievalResult::Some(_) = found_profile {
         println!("\nThat profile already exists.");
         tui::press_enter_to_continue();
         crate::menus::accounts::main::menu();

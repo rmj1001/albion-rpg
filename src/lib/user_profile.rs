@@ -84,11 +84,13 @@ pub enum BankAccount {
     Account4,
 }
 
+#[derive(Serialize, Deserialize)]
 pub enum BankResult {
     Ok,
     Error(&'static str),
 }
 
+#[derive(Serialize, Deserialize)]
 pub struct Bank {
     pub account1: u32,
     pub account2: u32,
@@ -267,6 +269,7 @@ pub struct UserProfile {
     pub health: Health,
     pub xp: XP,
     pub gold: u32,
+    pub bank: Bank,
     pub inventory: MundaneInventory,
     pub armor: ArmorInventory,
     pub weapons: WeaponsInventory,
@@ -294,6 +297,12 @@ impl UserProfile {
                 thieving: 0,
             },
             gold: 0,
+            bank: Bank {
+                account1: 0,
+                account2: 0,
+                account3: 0,
+                account4: 0,
+            },
             inventory: MundaneInventory {
                 fish: Item {
                     name: "Fish".to_string(),
@@ -558,21 +567,22 @@ impl UserProfile {
 
     /// Retrieves a profile from a config file. If no profile is retrieved then the login handler
     /// will handle the result
-    pub fn retrieve_profile(username: &str) -> Option<UserProfile> {
+    pub fn retrieve_profile(username: &str) -> ProfileRetrievalResult {
         let profile_contents = UserProfile::retrieve_profile_to_string(username);
 
         if profile_contents.is_some() {
             match json::from_str(&profile_contents.unwrap()) {
-                Ok(profile) => Some(profile),
+                Ok(profile) => ProfileRetrievalResult::Some(profile),
                 Err(_) => {
-                    println!("\nThis user profile is corrupted and will be deleted.");
                     UserProfile::delete_profile(username);
 
-                    None
+                    ProfileRetrievalResult::None(
+                        "This user profile is corrupted and will be deleted.".to_string(),
+                    )
                 }
             }
         } else {
-            None
+            ProfileRetrievalResult::None(format!("User profile '{}' does not exist.", username))
         }
     }
 
@@ -635,4 +645,10 @@ impl UserProfile {
             }
         }
     }
+}
+
+#[allow(clippy::large_enum_variant)]
+pub enum ProfileRetrievalResult {
+    Some(UserProfile),
+    None(String),
 }

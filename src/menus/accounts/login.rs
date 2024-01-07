@@ -1,6 +1,7 @@
 use albion_termrpg::lib::{
     tui::dialogue,
     tui::{self, page_header},
+    user_profile::ProfileRetrievalResult,
     user_profile::UserProfile,
 };
 
@@ -28,7 +29,7 @@ pub fn menu() {
     let profile_result = UserProfile::retrieve_profile(&username);
 
     match profile_result {
-        Some(profile) => {
+        ProfileRetrievalResult::Some(profile) => {
             let mut profile = profile;
 
             if profile.locked {
@@ -72,8 +73,8 @@ pub fn menu() {
             crate::menus::game::main::menu(&mut profile);
         }
 
-        None => {
-            println!("\nThat profile does not exist.");
+        ProfileRetrievalResult::None(message) => {
+            println!("\n{}", message);
             tui::press_enter_to_continue();
             crate::menus::accounts::main::menu();
         }
