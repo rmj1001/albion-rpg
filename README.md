@@ -19,4 +19,6 @@ are not comprehensive or up-to-date.
 
 ## Demo Video
 
+Click on the image below to watch the video.
+
 [<img src="https://i.ytimg.com/vi/S93cg6G9JHw/maxresdefault.jpg" width="50%">](https://www.youtube.com/watch?v=S93cg6G9JHw "AlbionRPG Demo Video")
