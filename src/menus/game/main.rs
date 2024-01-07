@@ -57,11 +57,11 @@ pub fn menu(user: &mut UserProfile) {
         "p2" => crate::menus::game::profile::p2_hall_of_records::main(user),
         "n1" => crate::menus::game::profile::n1_settings::menu(user),
         "n2" => {
-            user.save_profile();
+            user.save();
             crate::menus::accounts::main::menu();
         }
         "n3" => {
-            user.save_profile();
+            user.save();
             terminal::exit();
         }
 

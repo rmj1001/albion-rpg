@@ -26,7 +26,7 @@ pub fn menu() {
     page_header("Login", None);
 
     let username: String = dialogue::prompt_input("Username");
-    let profile_result = UserProfile::retrieve_profile(&username);
+    let profile_result = UserProfile::retrieve(&username);
 
     match profile_result {
         ProfileRetrievalResult::Some(profile) => {

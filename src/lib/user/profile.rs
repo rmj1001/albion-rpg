@@ -203,7 +203,7 @@ impl UserProfile {
         profile.username = username.to_string();
         profile.password = password.to_string();
 
-        profile.save_profile();
+        profile.save();
 
         profile
     }
@@ -256,7 +256,7 @@ impl UserProfile {
     }
 
     /// Lists all profiles registered with the game and removes the .json from the filename.
-    pub fn list_profiles() -> Vec<String> {
+    pub fn list_all() -> Vec<String> {
         let directory = UserProfile::directory_path();
         let files_result = fs::read_dir(directory);
 
@@ -291,7 +291,7 @@ impl UserProfile {
     /// Writes the UserProfile data to a config file.
     /// If the file exists, it is overwritten with the current profile state.
     /// If the file does not exist, the default values are written to the file.
-    pub fn save_profile(&self) {
+    pub fn save(&self) {
         let path_string: String = UserProfile::profile_path(&self.username);
 
         match fs::create_dir_all(UserProfile::directory_path()) {
@@ -315,7 +315,7 @@ impl UserProfile {
         }
     }
 
-    fn retrieve_profile_to_string(username: &str) -> Option<String> {
+    fn retrieve_to_string(username: &str) -> Option<String> {
         let profile_path: String = UserProfile::profile_path(username);
         let file_path: &Path = Path::new(&profile_path);
 
@@ -327,14 +327,14 @@ impl UserProfile {
 
     /// Retrieves a profile from a config file. If no profile is retrieved then the login handler
     /// will handle the result
-    pub fn retrieve_profile(username: &str) -> ProfileRetrievalResult {
-        let profile_contents = UserProfile::retrieve_profile_to_string(username);
+    pub fn retrieve(username: &str) -> ProfileRetrievalResult {
+        let profile_contents = UserProfile::retrieve_to_string(username);
 
         if profile_contents.is_some() {
             match json::from_str(&profile_contents.unwrap()) {
                 Ok(profile) => ProfileRetrievalResult::Some(profile),
                 Err(_) => {
-                    UserProfile::delete_profile(username);
+                    UserProfile::delete(username);
 
                     ProfileRetrievalResult::None(
                         "This user profile is corrupted and will be deleted.".to_string(),
@@ -347,7 +347,7 @@ impl UserProfile {
     }
 
     /// API for deleting a profile based on a username string
-    pub fn delete_profile(username: &str) {
+    pub fn delete(username: &str) {
         let profile_path_string: String = UserProfile::profile_path(username);
         let profile_path = Path::new(&profile_path_string);
 
@@ -358,32 +358,32 @@ impl UserProfile {
     }
 
     /// Deletes the profile file and logs out
-    pub fn self_delete_profile(&self) {
-        UserProfile::delete_profile(&self.username);
+    pub fn delete_self(&self) {
+        UserProfile::delete(&self.username);
     }
 
     /// Hinders profile login without double password entry
     pub fn lock(&mut self) {
         self.locked = true;
-        self.save_profile();
+        self.save();
     }
 
     /// Allows profile to login un-hindered.
     pub fn unlock(&mut self) {
         self.locked = false;
-        self.save_profile();
+        self.save();
     }
 
     /// Updates developer status
-    pub fn developer_mode(&mut self, flag: bool) {
+    pub fn set_developer(&mut self, flag: bool) {
         self.is_developer = flag;
-        self.save_profile();
+        self.save();
     }
 
     /// Updates password field
     pub fn change_password(&mut self, new_password: String) {
         self.password = new_password;
-        self.save_profile();
+        self.save();
     }
 
     /// Updates the username field and profile file name.
@@ -397,7 +397,7 @@ impl UserProfile {
         match fs::rename(old_file_path, new_file_path) {
             Ok(_) => {
                 self.username = new_username;
-                self.save_profile();
+                self.save();
             }
 
             Err(error) => {

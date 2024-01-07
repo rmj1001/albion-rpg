@@ -68,7 +68,7 @@ fn lock_profile(user: &mut UserProfile) {
 }
 
 fn delete_profile(user: &mut UserProfile) {
-    user.self_delete_profile();
+    user.delete_self();
 
     page_header("Profile Settings", None);
     println!("Profile sucessfully deleted.");
@@ -102,7 +102,7 @@ fn disable_developer_mode(user: &mut UserProfile) {
         }
     }
 
-    user.developer_mode(false);
+    user.set_developer(false);
     println!("\nDeveloper mode disabled.");
     tui::press_enter_to_continue();
 

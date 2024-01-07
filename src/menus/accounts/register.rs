@@ -8,7 +8,7 @@ pub fn menu() {
 
     let username: String = dialogue::prompt_input("Username");
 
-    let found_profile = UserProfile::retrieve_profile(&username);
+    let found_profile = UserProfile::retrieve(&username);
 
     if let ProfileRetrievalResult::Some(_) = found_profile {
         println!("\nThat profile already exists.");
@@ -27,7 +27,7 @@ pub fn menu() {
 
     let profile = UserProfile::from(&username, &password);
 
-    profile.save_profile();
+    profile.save();
     println!("\nRegistration successful.");
     tui::press_enter_to_continue();
     crate::menus::accounts::main::menu();

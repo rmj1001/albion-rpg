@@ -13,7 +13,7 @@ fn manage_user_profiles(user: &mut UserProfile) {
     );
 
     // Listing profiles for printing or deletion
-    let profiles: Vec<String> = UserProfile::list_profiles();
+    let profiles: Vec<String> = UserProfile::list_all();
 
     let choice1 = tui::dialogue::selector(
         &["1. List Profiles", "2. Delete profiles", "NAV: Go Back"],
@@ -83,7 +83,7 @@ fn manage_user_profiles(user: &mut UserProfile) {
                     }
 
                     if *profile_string == user.username {
-                        UserProfile::delete_profile(&user.username);
+                        UserProfile::delete(&user.username);
 
                         page_header("Developer Mode - Profile Management", None);
                         println!("\nCurrent profile successfully deleted. Logging out.");
@@ -92,7 +92,7 @@ fn manage_user_profiles(user: &mut UserProfile) {
                         crate::menus::accounts::main::menu();
                     }
 
-                    UserProfile::delete_profile(profile_string);
+                    UserProfile::delete(profile_string);
 
                     page_header("Developer Mode - Profile Management", None);
                     println!("\nProfile '{}' successfully deleted.", profile_string);
