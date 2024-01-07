@@ -33,6 +33,6 @@ pub mod menus {
 }
 
 fn main() {
-    albion_termrpg::lib::os::detect_os();
+    albion_termrpg::lib::os::deter_unsupported_os();
     menus::accounts::main::menu();
 }

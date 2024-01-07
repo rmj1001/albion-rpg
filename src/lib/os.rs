@@ -1,5 +1,5 @@
 /// Panics if the operating system is not supported by the program.
-pub fn detect_os() {
+pub fn deter_unsupported_os() {
     let os = std::env::consts::OS;
 
     match os {
