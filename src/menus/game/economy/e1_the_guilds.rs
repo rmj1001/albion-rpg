@@ -26,7 +26,7 @@ pub fn main_menu(user: &mut UserProfile) {
             "4. Mining",
             "5. Smithing",
             "6. Thieving",
-            "NAV: Go Back to Main Menu",
+            "NAV: Go Back",
         ],
         0,
         Some(""),
@@ -137,7 +137,7 @@ fn job(
 
     println!();
 
-    let work_choice = tui::dialogue::selector(&["Work", "Go Back to Guilds"], 0, Some(""));
+    let work_choice = tui::dialogue::selector(&["Work", "Go Back"], 0, Some(""));
 
     match work_choice {
         0 => {

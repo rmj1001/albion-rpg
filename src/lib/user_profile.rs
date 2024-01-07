@@ -394,6 +394,39 @@ impl UserProfile {
         format!("{}/{}.json", UserProfile::directory_path(), username)
     }
 
+    /// Lists all profiles registered with the game and removes the .json from the filename.
+    pub fn list_profiles() -> Vec<String> {
+        let directory = UserProfile::directory_path();
+        let files_result = fs::read_dir(directory);
+
+        match files_result {
+            Ok(directory_read) => {
+                let files = directory_read.filter(|file_result| {
+                    file_result
+                        .as_ref()
+                        .expect("Could not list files")
+                        .file_name()
+                        .to_str()
+                        .unwrap()
+                        .to_string()
+                        .contains(".json")
+                });
+
+                files
+                    .map(|file| {
+                        file.unwrap()
+                            .file_name()
+                            .to_str()
+                            .unwrap()
+                            .to_string()
+                            .replace(".json", "")
+                    })
+                    .collect()
+            }
+            Err(error) => panic!("Could not read the directory: {}", error),
+        }
+    }
+
     /// Writes the UserProfile data to a config file.
     /// If the file exists, it is overwritten with the current profile state.
     /// If the file does not exist, the default values are written to the file.

@@ -3,134 +3,167 @@ use albion_termrpg::lib::{
     user_profile::UserProfile,
 };
 
+fn change_username(user: &mut UserProfile) {
+    page_header("Profile Settings", None);
+    let new_username = tui::dialogue::prompt_input("New Username");
+
+    if new_username == user.username {
+        println!("\nThis is your current username. Aborting.");
+        tui::press_enter_to_continue();
+        menu(user);
+    }
+
+    let confirm_username = tui::dialogue::prompt_input("Confirm Username");
+
+    if new_username != confirm_username {
+        println!("\nUsernames do not match.");
+        tui::press_enter_to_continue();
+        menu(user);
+    }
+
+    user.change_username(new_username);
+
+    page_header("Profile Settings", None);
+    println!("Successfully changed username.");
+    tui::press_enter_to_continue();
+
+    menu(user);
+}
+
+fn change_password(user: &mut UserProfile) {
+    page_header("Profile Settings", None);
+    let new_password = tui::dialogue::prompt_input("New Password");
+
+    if new_password == user.password {
+        println!("\nThis is your current password Aborting.");
+        tui::press_enter_to_continue();
+        menu(user);
+    }
+
+    let confirm_password = tui::dialogue::prompt_input("Confirm Password");
+
+    if new_password != confirm_password {
+        println!("\nPasswords do not match.");
+        tui::press_enter_to_continue();
+        menu(user);
+    }
+
+    user.change_password(new_password);
+
+    page_header("Profile Settings", None);
+    println!("Successfully changed password.");
+    tui::press_enter_to_continue();
+
+    menu(user);
+}
+
+fn lock_profile(user: &mut UserProfile) {
+    user.lock();
+
+    page_header("Profile Settings", None);
+    println!("Profile sucessfully locked.");
+    tui::press_enter_to_continue();
+
+    crate::menus::accounts::main::menu();
+}
+
+fn delete_profile(user: &mut UserProfile) {
+    user.self_delete_profile();
+
+    page_header("Profile Settings", None);
+    println!("Profile sucessfully deleted.");
+    tui::press_enter_to_continue();
+
+    crate::menus::accounts::main::menu();
+}
+
+fn disable_developer_mode(user: &mut UserProfile) {
+    let confirm =
+        tui::dialogue::prompt_input("Are you sure you want to disable developer mode? (y/n)")
+            .to_lowercase();
+
+    match &confirm[..] {
+        "n" => {
+            println!("\nAborting.");
+            tui::press_enter_to_continue();
+            menu(user);
+        }
+        "no" => {
+            println!("\nAborting.");
+            tui::press_enter_to_continue();
+            menu(user);
+        }
+        "y" => {}
+        "yes" => {}
+        _ => {
+            println!("\nInvalid input. Aborting.");
+            tui::press_enter_to_continue();
+            menu(user);
+        }
+    }
+
+    user.developer_mode(false);
+    println!("\nDeveloper mode disabled.");
+    tui::press_enter_to_continue();
+
+    menu(user);
+}
+
 pub fn menu(user: &mut UserProfile) {
     page_header(
         "Profile Settings",
-        Some("Type the menu code (ex. 1) and press ENTER/RETURN"),
+        Some("Type the menu item code (ex. c3) and press ENTER/RETURN to perform that action.\n"),
     );
 
-    println!("1. Change Username");
-    println!("2. Change Password");
-    println!("3. Lock Profile");
-    println!("4. Delete Profile\n");
+    #[allow(clippy::needless_late_init)]
+    let choice: usize;
 
     if user.is_developer {
-        println!("5. Disable Developer Mode");
+        choice = tui::dialogue::selector(
+            &[
+                "1. Change Username",
+                "2. Change Password",
+                "3. Lock Profile",
+                "4. Delete Profile",
+                "5. Disable Developer Mode",
+                "NAV: Go Back",
+            ],
+            0,
+            Some(""),
+        );
+    } else {
+        choice = tui::dialogue::selector(
+            &[
+                "1. Change Username",
+                "2. Change Password",
+                "3. Lock Profile",
+                "4. Delete Profile",
+                "NAV: Go Back",
+            ],
+            0,
+            Some(""),
+        );
     }
 
-    println!("0. Go Back to Main Menu\n");
-
-    let choice = tui::dialogue::prompt_input("Enter Menu Code").to_lowercase();
-
-    match &choice[..] {
-        "1" => {
-            page_header("Profile Settings", None);
-            let new_username = tui::dialogue::prompt_input("New Username");
-
-            if new_username == user.username {
-                println!("\nThis is your current username. Aborting.");
-                tui::press_enter_to_continue();
-                menu(user);
-            }
-
-            let confirm_username = tui::dialogue::prompt_input("Confirm Username");
-
-            if new_username != confirm_username {
-                println!("\nUsernames do not match.");
-                tui::press_enter_to_continue();
-                menu(user);
-            }
-
-            user.change_username(new_username);
-
-            page_header("Profile Settings", None);
-            println!("Successfully changed username.");
-            tui::press_enter_to_continue();
-
-            menu(user);
-        }
-        "2" => {
-            page_header("Profile Settings", None);
-            let new_password = tui::dialogue::prompt_input("New Password");
-
-            if new_password == user.password {
-                println!("\nThis is your current password Aborting.");
-                tui::press_enter_to_continue();
-                menu(user);
-            }
-
-            let confirm_password = tui::dialogue::prompt_input("Confirm Password");
-
-            if new_password != confirm_password {
-                println!("\nPasswords do not match.");
-                tui::press_enter_to_continue();
-                menu(user);
-            }
-
-            user.change_password(new_password);
-
-            page_header("Profile Settings", None);
-            println!("Successfully changed password.");
-            tui::press_enter_to_continue();
-
-            menu(user);
-        }
-        "3" => {
-            user.lock();
-
-            page_header("Profile Settings", None);
-            println!("Profile sucessfully locked.");
-            tui::press_enter_to_continue();
-
-            crate::menus::accounts::main::menu();
-        }
-
-        "4" => {
-            user.self_delete_profile();
-
-            page_header("Profile Settings", None);
-            println!("Profile sucessfully deleted.");
-            tui::press_enter_to_continue();
-
-            crate::menus::accounts::main::menu();
-        }
-
-        "5" => {
-            if !user.is_developer {
-                tui::invalid_input(Some("Invalid input."));
-                menu(user);
-            }
-
-            user.developer_mode(false);
-            println!("\nDeveloper mode disabled.");
-            tui::press_enter_to_continue();
-
-            menu(user);
-        }
-
-        "0" => crate::menus::game::main::menu(user),
-
-        // Enable/Disable developer mode
-        "3141592" => {
-            #[allow(clippy::needless_late_init)]
-            let message;
-
+    match choice {
+        0 => change_username(user),
+        1 => change_password(user),
+        2 => lock_profile(user),
+        3 => delete_profile(user),
+        4 => {
             if user.is_developer {
-                user.developer_mode(false);
-                message = "\nDeveloper mode disabled.";
+                disable_developer_mode(user);
             } else {
-                user.developer_mode(true);
-                message = "\nDeveloper mode enabled.";
+                crate::menus::game::main::menu(user)
             }
-
-            println!("{}", message);
-            tui::press_enter_to_continue();
-            menu(user);
         }
-
-        wrong_input => {
-            tui::invalid_input(Some(wrong_input));
-            menu(user);
+        5 => {
+            if user.is_developer {
+                crate::menus::game::main::menu(user)
+            } else {
+                panic!("Dialoguer chose index out of bounds");
+            }
         }
+        _ => panic!("Dialoguer chose index out of bounds"),
     }
 }
