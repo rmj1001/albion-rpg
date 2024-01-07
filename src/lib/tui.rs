@@ -1,12 +1,17 @@
 /// Create a string of dashes with desired length
 ///
 /// Example: create_line_string(3) // ---
-pub fn create_line_string(total_length: usize) -> String {
+pub fn create_line_string(total_length: usize, optional_character: Option<char>) -> String {
     let mut line_string: String = String::new();
     let mut current_length: usize = 1;
+    let mut line_character = '-';
+
+    if let Some(character) = optional_character {
+        line_character = character;
+    }
 
     while current_length <= total_length {
-        line_string.push('-');
+        line_string.push(line_character);
         current_length += 1;
     }
 
@@ -20,8 +25,8 @@ pub fn print_line_string(total_length: Option<usize>) {
     let mut line_string: String = String::new();
 
     match total_length {
-        None => line_string = create_line_string(80),
-        Some(length) => line_string = create_line_string(length),
+        None => line_string = create_line_string(80, None),
+        Some(length) => line_string = create_line_string(length, None),
     }
 
     println!("{}", &line_string[..]);
@@ -40,7 +45,7 @@ pub fn header(title: &str, line_length: usize) {
 
     let mut header = String::new();
 
-    header.push_str(&create_line_string(line_length));
+    header.push_str(&create_line_string(line_length, None));
     header.push('\n');
 
     let spaces_on_one_side = (line_length - (title.len() + 2)) / 2 + 1;
@@ -50,7 +55,7 @@ pub fn header(title: &str, line_length: usize) {
     header.push_str(title);
 
     header.push('\n');
-    header.push_str(&create_line_string(line_length));
+    header.push_str(&create_line_string(line_length, None));
 
     println!("{}", header);
 }
