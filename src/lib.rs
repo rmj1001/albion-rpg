@@ -9,6 +9,7 @@ pub mod lib {
         pub mod achievements;
         pub mod armor;
         pub mod bank;
+        pub mod combat;
         pub mod inventory;
         pub mod profile;
         pub mod weapons;
