@@ -1,4 +1,5 @@
 use albion_termrpg::lib::{
+    input::prompt_input,
     terminal,
     tui::{self, page_header},
     user::profile::UserProfile,
@@ -36,7 +37,7 @@ pub fn menu(user: &mut UserProfile) {
     println!("n2. Logout");
     println!("n3. Exit Game\n");
 
-    let choice = tui::dialogue::prompt_input("Enter Menu Code").to_lowercase();
+    let choice = prompt_input("Enter Menu Code").to_lowercase();
 
     match &choice[..] {
         // Combat

@@ -2,6 +2,7 @@
 #![allow(unused_variables)]
 
 use albion_termrpg::lib::{
+    input::{prompt_input, select_from_vector, selector},
     tui::{self, page_header},
     user::profile::UserProfile,
 };
@@ -15,7 +16,7 @@ fn manage_user_profiles(user: &mut UserProfile) {
     // Listing profiles for printing or deletion
     let profiles: Vec<String> = UserProfile::list_all();
 
-    let choice1 = tui::dialogue::selector(
+    let choice1 = selector(
         &["1. List Profiles", "2. Delete profiles", "NAV: Go Back"],
         0,
         Some(""),
@@ -43,17 +44,14 @@ fn manage_user_profiles(user: &mut UserProfile) {
                 Some("Use ↑ ↓ keys to select an option below, then press ENTER/RETURN to run it"),
             );
 
-            let choice = tui::dialogue::select_from_vector(
-                profiles.clone(),
-                0,
-                Some("Select a profile to delete"),
-            );
+            let choice =
+                select_from_vector(profiles.clone(), 0, Some("Select a profile to delete"));
 
             let profile_choice = profiles.get(choice);
 
             match profile_choice {
                 Some(profile_string) => {
-                    match &tui::dialogue::prompt_input(&format!(
+                    match &prompt_input(&format!(
                         "Are you sure you want to delete profile '{}'? (y/n)",
                         profile_string
                     ))
@@ -125,7 +123,7 @@ pub fn main(user: &mut UserProfile) {
         Some("Use ↑ ↓ keys to select an option below, then press ENTER/RETURN to run it"),
     );
 
-    let choice = tui::dialogue::selector(
+    let choice = selector(
         &[
             "1. Throw a panic",
             "2. Manipulate Inventory",

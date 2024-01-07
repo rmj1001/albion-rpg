@@ -1,11 +1,12 @@
 use albion_termrpg::lib::{
+    input::{prompt_input, selector},
     tui::{self, page_header},
     user::profile::UserProfile,
 };
 
 fn change_username(user: &mut UserProfile) {
     page_header("Profile Settings", None);
-    let new_username = tui::dialogue::prompt_input("New Username");
+    let new_username = prompt_input("New Username");
 
     if new_username == user.username {
         println!("\nThis is your current username. Aborting.");
@@ -13,7 +14,7 @@ fn change_username(user: &mut UserProfile) {
         menu(user);
     }
 
-    let confirm_username = tui::dialogue::prompt_input("Confirm Username");
+    let confirm_username = prompt_input("Confirm Username");
 
     if new_username != confirm_username {
         println!("\nUsernames do not match.");
@@ -32,7 +33,7 @@ fn change_username(user: &mut UserProfile) {
 
 fn change_password(user: &mut UserProfile) {
     page_header("Profile Settings", None);
-    let new_password = tui::dialogue::prompt_input("New Password");
+    let new_password = prompt_input("New Password");
 
     if new_password == user.password {
         println!("\nThis is your current password Aborting.");
@@ -40,7 +41,7 @@ fn change_password(user: &mut UserProfile) {
         menu(user);
     }
 
-    let confirm_password = tui::dialogue::prompt_input("Confirm Password");
+    let confirm_password = prompt_input("Confirm Password");
 
     if new_password != confirm_password {
         println!("\nPasswords do not match.");
@@ -79,8 +80,7 @@ fn delete_profile(user: &mut UserProfile) {
 
 fn disable_developer_mode(user: &mut UserProfile) {
     let confirm =
-        tui::dialogue::prompt_input("Are you sure you want to disable developer mode? (y/n)")
-            .to_lowercase();
+        prompt_input("Are you sure you want to disable developer mode? (y/n)").to_lowercase();
 
     match &confirm[..] {
         "n" => {
@@ -119,7 +119,7 @@ pub fn menu(user: &mut UserProfile) {
     let choice: usize;
 
     if user.is_developer {
-        choice = tui::dialogue::selector(
+        choice = selector(
             &[
                 "1. Change Username",
                 "2. Change Password",
@@ -132,7 +132,7 @@ pub fn menu(user: &mut UserProfile) {
             Some(""),
         );
     } else {
-        choice = tui::dialogue::selector(
+        choice = selector(
             &[
                 "1. Change Username",
                 "2. Change Password",

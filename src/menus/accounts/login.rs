@@ -1,12 +1,12 @@
 use albion_termrpg::lib::{
-    tui::dialogue,
+    input::*,
     tui::{self, page_header},
     user::profile::ProfileRetrievalResult,
     user::profile::UserProfile,
 };
 
 fn get_password(profile: &UserProfile) -> bool {
-    let password: String = dialogue::password();
+    let password: String = password();
 
     if password != profile.password {
         println!("\nIncorrect password.");
@@ -25,7 +25,7 @@ fn profile_remains_locked() {
 pub fn menu() {
     page_header("Login", None);
 
-    let username: String = dialogue::prompt_input("Username");
+    let username: String = prompt_input("Username");
     let profile_result = UserProfile::retrieve(&username);
 
     match profile_result {
@@ -33,8 +33,7 @@ pub fn menu() {
             let mut profile = profile;
 
             if profile.locked {
-                let unlock =
-                    dialogue::prompt_input("\nProfile is locked. Unlock? (y/n)").to_lowercase();
+                let unlock = prompt_input("\nProfile is locked. Unlock? (y/n)").to_lowercase();
 
                 match &unlock[..] {
                     "y" => {

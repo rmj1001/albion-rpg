@@ -1,6 +1,7 @@
 #![allow(unused_assignments, clippy::new_without_default)]
 
 pub mod lib {
+    pub mod input;
     pub mod os;
     pub mod terminal;
     pub mod tui;

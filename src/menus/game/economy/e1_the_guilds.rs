@@ -1,4 +1,5 @@
 #![allow(unused_assignments, unused_variables, unused_mut)]
+use albion_termrpg::lib::input::selector;
 
 use albion_termrpg::lib::{
     tui::{self, page_header},
@@ -20,7 +21,7 @@ pub fn main_menu(user: &mut UserProfile) {
     let mut increase_item: Option<&mut Item>;
     let mut decrease_item: Option<&mut Item>;
 
-    let guild_choice = tui::dialogue::selector(
+    let guild_choice = selector(
         &[
             "1. Fishing",
             "2. Cooking",
@@ -139,7 +140,7 @@ fn job(
 
     println!();
 
-    let work_choice = tui::dialogue::selector(&["Work", "Go Back"], 0, Some(""));
+    let work_choice = selector(&["Work", "Go Back"], 0, Some(""));
 
     match work_choice {
         0 => {
