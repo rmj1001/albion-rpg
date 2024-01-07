@@ -86,7 +86,7 @@ pub fn menu(user: &mut UserProfile) {
         }
 
         "4" => {
-            user.delete_profile(None);
+            user.self_delete_profile();
 
             page_header("Profile Settings", None);
             println!("Profile sucessfully deleted.");

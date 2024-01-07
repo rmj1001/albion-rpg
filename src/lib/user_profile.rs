@@ -355,14 +355,6 @@ impl UserProfile {
         }
     }
 
-    /// Creates a UserProfile struct from a serialized JSON string
-    fn read_from_json(data: String) -> UserProfile {
-        match json::from_str(&data) {
-            Ok(profile) => profile,
-            Err(error) => panic!("Could not deserialize player data from JSON: {}", error),
-        }
-    }
-
     /// Generates the profile directory path for multiple platforms
     fn directory_path() -> String {
         let os: &str = std::env::consts::OS;
@@ -429,42 +421,57 @@ impl UserProfile {
         }
     }
 
-    /// Retrieves a profile from a config file. If no profile is retrieved then the login handler
-    /// will handle the result
-    pub fn retrieve_profile(username: &str) -> Option<UserProfile> {
+    fn retrieve_profile_to_string(username: &str) -> Option<String> {
         let profile_path: String = UserProfile::profile_path(username);
         let file_path: &Path = Path::new(&profile_path);
 
         match fs::read_to_string(file_path) {
-            Ok(contents) => {
-                #[allow(unused_mut)]
-                let mut profile = UserProfile::read_from_json(contents);
-                Some(profile)
+            Ok(contents) => Some(contents),
+            Err(_) => {
+                println!(
+                    "\nProfile '{}' either could not be read or does not exist.",
+                    username
+                );
+
+                None
             }
-            Err(_) => None,
+        }
+    }
+
+    /// Retrieves a profile from a config file. If no profile is retrieved then the login handler
+    /// will handle the result
+    pub fn retrieve_profile(username: &str) -> Option<UserProfile> {
+        let profile_contents = UserProfile::retrieve_profile_to_string(username);
+
+        if profile_contents.is_some() {
+            match json::from_str(&profile_contents.unwrap()) {
+                Ok(profile) => Some(profile),
+                Err(_) => {
+                    println!("\nThis user profile is corrupted and will be deleted.");
+                    UserProfile::delete_profile(username);
+
+                    None
+                }
+            }
+        } else {
+            None
+        }
+    }
+
+    /// API for deleting a profile based on a username string
+    pub fn delete_profile(username: &str) {
+        let profile_path_string: String = UserProfile::profile_path(username);
+        let profile_path = Path::new(&profile_path_string);
+
+        match fs::remove_file(profile_path) {
+            Ok(_) => {}
+            Err(error) => panic!("Could not delete profile file: {}", error),
         }
     }
 
     /// Deletes the profile file and logs out
-    pub fn delete_profile(&self, optional_username: Option<&str>) {
-        let mut profile_path: String = String::new();
-
-        match optional_username {
-            Some(name) => {
-                profile_path = UserProfile::profile_path(name);
-            }
-
-            None => {
-                profile_path = UserProfile::profile_path(&self.username);
-            }
-        }
-
-        let file_path: &Path = Path::new(&profile_path);
-
-        match fs::remove_file(file_path) {
-            Ok(_) => {}
-            Err(error) => panic!("Could not delete profile file: {}", error),
-        }
+    pub fn self_delete_profile(&self) {
+        UserProfile::delete_profile(&self.username);
     }
 
     /// Hinders profile login without double password entry

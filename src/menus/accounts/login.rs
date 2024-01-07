@@ -73,7 +73,6 @@ pub fn menu() {
         }
 
         None => {
-            println!("\nThat profile does not exist.");
             tui::press_enter_to_continue();
             crate::menus::accounts::main::menu();
         }
