@@ -69,18 +69,33 @@ impl UserProfile {
                 account4: 0,
             },
             inventory: MundaneInventory {
+                bait: Item {
+                    name: "Bait".to_string(),
+                    price: 1,
+                    quantity: 0,
+                },
+                seeds: Item {
+                    name: "Seeds".to_string(),
+                    price: 1,
+                    quantity: 0,
+                },
+                furs: Item {
+                    name: "Fur".to_string(),
+                    price: 5,
+                    quantity: 0,
+                },
                 fish: Item {
                     name: "Fish".to_string(),
                     price: 10,
                     quantity: 0,
                 },
-                cooked_fish: Item {
-                    name: "Cooked Fish".to_string(),
+                food: Item {
+                    name: "Food".to_string(),
                     price: 25,
                     quantity: 0,
                 },
                 wood: Item {
-                    name: "Logs".to_string(),
+                    name: "Wood".to_string(),
                     price: 20,
                     quantity: 0,
                 },
@@ -90,8 +105,38 @@ impl UserProfile {
                     quantity: 0,
                 },
                 ingots: Item {
-                    name: "Ingots".to_string(),
+                    name: "Ingot".to_string(),
                     price: 50,
+                    quantity: 0,
+                },
+                potions: Item {
+                    name: "Potion".to_string(),
+                    price: 20,
+                    quantity: 0,
+                },
+                rubies: Item {
+                    name: "Ruby".to_string(),
+                    price: 200,
+                    quantity: 0,
+                },
+                magic_scrolls: Item {
+                    name: "Magic Scroll".to_string(),
+                    price: 50,
+                    quantity: 0,
+                },
+                bones: Item {
+                    name: "Bone".to_string(),
+                    price: 50,
+                    quantity: 0,
+                },
+                dragon_hides: Item {
+                    name: "Dragon Hide".to_string(),
+                    price: 200,
+                    quantity: 0,
+                },
+                runic_tablets: Item {
+                    name: "Runic Tablet".to_string(),
+                    price: 1000,
                     quantity: 0,
                 },
             },

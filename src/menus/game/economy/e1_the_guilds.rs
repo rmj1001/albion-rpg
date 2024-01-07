@@ -3,7 +3,7 @@ use albion_termrpg::lib::input::selector;
 
 use albion_termrpg::lib::{
     tui::{self, page_header},
-    user::inventory::{Item, ItemNames},
+    user::inventory::{GuildItemNames, Item},
     user::profile::UserProfile,
     user::xp::{XPType, XP},
 };
@@ -41,7 +41,7 @@ pub fn main_menu(user: &mut UserProfile) {
             "Fishing".to_string(),
             XPType::Fishing,
             false,
-            &Some(ItemNames::Fish),
+            &Some(GuildItemNames::Fish),
             &None,
         ),
         1 => job(
@@ -49,15 +49,15 @@ pub fn main_menu(user: &mut UserProfile) {
             "Cooking".to_string(),
             XPType::Cooking,
             false,
-            &Some(ItemNames::CookedFish),
-            &Some(ItemNames::Fish),
+            &Some(GuildItemNames::CookedFish),
+            &Some(GuildItemNames::Fish),
         ),
         2 => job(
             user,
             "Woodcutting".to_string(),
             XPType::Woodcutting,
             false,
-            &Some(ItemNames::Wood),
+            &Some(GuildItemNames::Wood),
             &None,
         ),
         3 => job(
@@ -65,7 +65,7 @@ pub fn main_menu(user: &mut UserProfile) {
             "Mining".to_string(),
             XPType::Mining,
             false,
-            &Some(ItemNames::Ore),
+            &Some(GuildItemNames::Ore),
             &None,
         ),
         4 => job(
@@ -73,8 +73,8 @@ pub fn main_menu(user: &mut UserProfile) {
             "Smithing".to_string(),
             XPType::Smithing,
             false,
-            &Some(ItemNames::Ingots),
-            &Some(ItemNames::Ore),
+            &Some(GuildItemNames::Ingots),
+            &Some(GuildItemNames::Ore),
         ),
         5 => job(
             user,
@@ -94,8 +94,8 @@ fn job(
     job_name: String,
     xp_type: XPType,
     use_gold: bool,
-    increase_item: &Option<ItemNames>,
-    decrease_item: &Option<ItemNames>,
+    increase_item: &Option<GuildItemNames>,
+    decrease_item: &Option<GuildItemNames>,
 ) {
     page_header(
         &format!("Job: {}", job_name),
@@ -114,26 +114,26 @@ fn job(
 
     match increase_item {
         Some(item) => match item {
-            ItemNames::CookedFish => {
-                println!("Cooked Fish: {}", user.inventory.cooked_fish.quantity)
+            GuildItemNames::CookedFish => {
+                println!("Cooked Fish: {}", user.inventory.food.quantity)
             }
-            ItemNames::Fish => println!("Fish: {}", user.inventory.fish.quantity),
-            ItemNames::Wood => println!("Wood: {}", user.inventory.wood.quantity),
-            ItemNames::Ingots => println!("Ingots: {}", user.inventory.ingots.quantity),
-            ItemNames::Ore => println!("Ores: {}", user.inventory.ore.quantity),
+            GuildItemNames::Fish => println!("Fish: {}", user.inventory.fish.quantity),
+            GuildItemNames::Wood => println!("Wood: {}", user.inventory.wood.quantity),
+            GuildItemNames::Ingots => println!("Ingots: {}", user.inventory.ingots.quantity),
+            GuildItemNames::Ore => println!("Ores: {}", user.inventory.ore.quantity),
         },
         None => {}
     }
 
     match decrease_item {
         Some(item) => match item {
-            ItemNames::CookedFish => {
-                println!("Cooked Fish: {}", user.inventory.cooked_fish.quantity)
+            GuildItemNames::CookedFish => {
+                println!("Cooked Fish: {}", user.inventory.food.quantity)
             }
-            ItemNames::Fish => println!("Fish: {}", user.inventory.fish.quantity),
-            ItemNames::Wood => println!("Wood: {}", user.inventory.wood.quantity),
-            ItemNames::Ingots => println!("Ingots: {}", user.inventory.ingots.quantity),
-            ItemNames::Ore => println!("Ores: {}", user.inventory.ore.quantity),
+            GuildItemNames::Fish => println!("Fish: {}", user.inventory.fish.quantity),
+            GuildItemNames::Wood => println!("Wood: {}", user.inventory.wood.quantity),
+            GuildItemNames::Ingots => println!("Ingots: {}", user.inventory.ingots.quantity),
+            GuildItemNames::Ore => println!("Ores: {}", user.inventory.ore.quantity),
         },
         None => {}
     }
@@ -147,7 +147,7 @@ fn job(
             user.xp.increment(xp_type);
 
             if use_gold {
-                user.gold += rand::thread_rng().gen_range(1..2);
+                user.gold += rand::thread_rng().gen_range(0..2);
 
                 job(
                     user,
@@ -161,46 +161,46 @@ fn job(
 
             match increase_item {
                 Some(item) => match item {
-                    ItemNames::CookedFish => user.inventory.cooked_fish.quantity += 1,
-                    ItemNames::Fish => user.inventory.fish.quantity += 1,
-                    ItemNames::Wood => user.inventory.wood.quantity += 1,
-                    ItemNames::Ingots => user.inventory.ingots.quantity += 1,
-                    ItemNames::Ore => user.inventory.ore.quantity += 1,
+                    GuildItemNames::CookedFish => user.inventory.food.quantity += 1,
+                    GuildItemNames::Fish => user.inventory.fish.quantity += 1,
+                    GuildItemNames::Wood => user.inventory.wood.quantity += 1,
+                    GuildItemNames::Ingots => user.inventory.ingots.quantity += 1,
+                    GuildItemNames::Ore => user.inventory.ore.quantity += 1,
                 },
                 None => {}
             }
 
             match decrease_item {
                 Some(item) => match item {
-                    ItemNames::CookedFish => {
-                        if user.inventory.cooked_fish.quantity == 0 {
+                    GuildItemNames::CookedFish => {
+                        if user.inventory.food.quantity == 0 {
                             too_low_items(user, "cooked fish");
                         }
 
-                        user.inventory.cooked_fish.quantity -= 1;
+                        user.inventory.food.quantity -= 1;
                     }
-                    ItemNames::Fish => {
+                    GuildItemNames::Fish => {
                         if user.inventory.fish.quantity == 0 {
                             too_low_items(user, "fish");
                         }
 
                         user.inventory.fish.quantity -= 1;
                     }
-                    ItemNames::Wood => {
+                    GuildItemNames::Wood => {
                         if user.inventory.wood.quantity == 0 {
                             too_low_items(user, "wood");
                         }
 
                         user.inventory.wood.quantity -= 1;
                     }
-                    ItemNames::Ingots => {
+                    GuildItemNames::Ingots => {
                         if user.inventory.ingots.quantity == 0 {
                             too_low_items(user, "ingots");
                         }
 
                         user.inventory.ingots.quantity -= 1;
                     }
-                    ItemNames::Ore => {
+                    GuildItemNames::Ore => {
                         if user.inventory.ore.quantity == 0 {
                             too_low_items(user, "ores");
                         }
