@@ -23,7 +23,7 @@ pub fn menu(user: &mut UserProfile) {
     println!("e4. Weapons Shop");
     println!("e5. Armor Shop");
     println!("e6. Mystic Shop");
-    println!("e7. Max's Shop");
+    println!("e7. Celestial Shop");
 
     tui::sub_header("Profile");
     println!("p1. Inventory");
@@ -51,7 +51,7 @@ pub fn menu(user: &mut UserProfile) {
         "e4" => crate::menus::game::economy::e4_weapons_shop::main(user),
         "e5" => crate::menus::game::economy::e5_armor_shop::main(user),
         "e6" => crate::menus::game::economy::e6_mystic_shop::main(user),
-        "e7" => crate::menus::game::economy::e7_max_shop::main(user),
+        "e7" => crate::menus::game::economy::e7_celestial_shop::main(user),
 
         // Profile
         "p1" => crate::menus::game::profile::p1_inventory::main(user),

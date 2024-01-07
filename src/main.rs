@@ -18,7 +18,7 @@ pub mod menus {
             pub mod e4_weapons_shop;
             pub mod e5_armor_shop;
             pub mod e6_mystic_shop;
-            pub mod e7_max_shop;
+            pub mod e7_celestial_shop;
         }
 
         pub mod profile {

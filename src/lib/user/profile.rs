@@ -1,8 +1,9 @@
-use crate::lib::user::armor::*;
-use crate::lib::user::bank::*;
-use crate::lib::user::inventory::*;
-use crate::lib::user::weapons::*;
-use crate::lib::user::xp::*;
+use super::achievements::*;
+use super::armor::*;
+use super::bank::*;
+use super::inventory::*;
+use super::weapons::*;
+use super::xp::*;
 
 use serde::{Deserialize, Serialize};
 use serde_json as json;
@@ -33,6 +34,7 @@ pub struct UserProfile {
     pub is_developer: bool,
     pub health: Health,
     pub xp: XP,
+    pub achievements: Achievements,
     pub gold: u32,
     pub bank: Bank,
     pub inventory: MundaneInventory,
@@ -61,6 +63,7 @@ impl UserProfile {
                 smithing: 0,
                 thieving: 0,
             },
+            achievements: Achievements {},
             gold: 0,
             bank: Bank {
                 account1: 0,

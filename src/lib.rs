@@ -6,6 +6,7 @@ pub mod lib {
     pub mod terminal;
     pub mod tui;
     pub mod user {
+        pub mod achievements;
         pub mod armor;
         pub mod bank;
         pub mod inventory;

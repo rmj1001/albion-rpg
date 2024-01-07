@@ -10,6 +10,7 @@ fn print_xp(xp: u32) {
     println!();
 }
 
+// TODO: Achievements System
 pub fn main(user: &mut UserProfile) {
     let xp: &XP = &user.xp;
 
