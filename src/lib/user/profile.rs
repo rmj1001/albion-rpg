@@ -14,6 +14,12 @@ pub struct Health {
     pub hunger: u32,
 }
 
+#[allow(clippy::large_enum_variant)]
+pub enum ProfileRetrievalResult {
+    Some(UserProfile),
+    None(String),
+}
+
 #[derive(Serialize, Deserialize)]
 pub struct UserProfile {
     pub username: String,
@@ -399,10 +405,4 @@ impl UserProfile {
             }
         }
     }
-}
-
-#[allow(clippy::large_enum_variant)]
-pub enum ProfileRetrievalResult {
-    Some(UserProfile),
-    None(String),
 }
