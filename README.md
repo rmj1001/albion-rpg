@@ -19,4 +19,4 @@ are not comprehensive or up-to-date.
 
 ## Demo Video
 
-![Demo Video](https://youtu.be/S93cg6G9JHw)
+[![Demo Video](./demo/demo_image.jpg)](./demo/AlbionRPG.mp4)
