@@ -69,7 +69,7 @@ fn lock_profile(user: &mut UserProfile) {
 }
 
 fn delete_profile(user: &mut UserProfile) {
-    user.delete_self();
+    user.delete();
 
     page_header("Profile Settings", None);
     println!("Profile sucessfully deleted.");

@@ -20,6 +20,11 @@ pub enum ProfileRetrievalResult {
     None(String),
 }
 
+pub enum JSONResult {
+    Some(String),
+    None,
+}
+
 #[derive(Serialize, Deserialize)]
 pub struct UserProfile {
     pub username: String,
@@ -209,15 +214,15 @@ impl UserProfile {
     }
 
     /// Writes the current state of the UserProfile to a JSON string
-    fn write_to_json(&self) -> String {
-        match json::to_string(self) {
+    pub fn to_pretty_json(&self) -> String {
+        match json::to_string_pretty(self) {
             Ok(json_string) => json_string,
             Err(error) => panic!("Could not serialize player data to JSON: {}", error),
         }
     }
 
     /// Generates the profile directory path for multiple platforms
-    fn directory_path() -> String {
+    pub fn directory_path() -> String {
         let os: &str = std::env::consts::OS;
         let mut directory_path: String = String::new();
 
@@ -251,7 +256,7 @@ impl UserProfile {
     }
 
     /// Generates the full path string for profiles depending on platform.
-    fn profile_path(username: &str) -> String {
+    pub fn file_path(username: &str) -> String {
         format!("{}/{}.json", UserProfile::directory_path(), username)
     }
 
@@ -292,7 +297,7 @@ impl UserProfile {
     /// If the file exists, it is overwritten with the current profile state.
     /// If the file does not exist, the default values are written to the file.
     pub fn save(&self) {
-        let path_string: String = UserProfile::profile_path(&self.username);
+        let path_string: String = UserProfile::file_path(&self.username);
 
         match fs::create_dir_all(UserProfile::directory_path()) {
             Ok(_) => {}
@@ -303,52 +308,50 @@ impl UserProfile {
         }
 
         if !Path::new(&path_string).exists() {
-            match fs::write(&path_string, UserProfile::new().write_to_json()) {
+            match fs::write(&path_string, UserProfile::new().to_pretty_json()) {
                 Ok(_) => {}
                 Err(write_error) => panic!("Could not write profile to disk: {}", write_error),
             }
         }
 
-        match fs::write(path_string, self.write_to_json()) {
+        match fs::write(path_string, self.to_pretty_json()) {
             Ok(_) => {}
             Err(error) => panic!("Could not write profile to disk: {}", error),
-        }
-    }
-
-    fn retrieve_to_string(username: &str) -> Option<String> {
-        let profile_path: String = UserProfile::profile_path(username);
-        let file_path: &Path = Path::new(&profile_path);
-
-        match fs::read_to_string(file_path) {
-            Ok(contents) => Some(contents),
-            Err(_) => None,
         }
     }
 
     /// Retrieves a profile from a config file. If no profile is retrieved then the login handler
     /// will handle the result
     pub fn retrieve(username: &str) -> ProfileRetrievalResult {
-        let profile_contents = UserProfile::retrieve_to_string(username);
+        let profile_path: String = UserProfile::file_path(username);
+        let file_path: &Path = Path::new(&profile_path);
+        let mut profile_contents: String = String::new();
 
-        if profile_contents.is_some() {
-            match json::from_str(&profile_contents.unwrap()) {
-                Ok(profile) => ProfileRetrievalResult::Some(profile),
-                Err(_) => {
-                    UserProfile::delete(username);
-
-                    ProfileRetrievalResult::None(
-                        "This user profile is corrupted and will be deleted.".to_string(),
-                    )
-                }
+        match fs::read_to_string(file_path) {
+            Ok(contents) => profile_contents = contents,
+            Err(_) => {
+                return ProfileRetrievalResult::None(format!(
+                    "User profile '{}' does not exist.",
+                    username
+                ));
             }
-        } else {
-            ProfileRetrievalResult::None(format!("User profile '{}' does not exist.", username))
+        }
+
+        match json::from_str(&profile_contents) {
+            Ok(profile) => ProfileRetrievalResult::Some(profile),
+            Err(_) => {
+                UserProfile::delete_from_username(username);
+
+                ProfileRetrievalResult::None(
+                    "This user profile is corrupted and will be deleted.".to_string(),
+                )
+            }
         }
     }
 
     /// API for deleting a profile based on a username string
-    pub fn delete(username: &str) {
-        let profile_path_string: String = UserProfile::profile_path(username);
+    pub fn delete_from_username(username: &str) {
+        let profile_path_string: String = UserProfile::file_path(username);
         let profile_path = Path::new(&profile_path_string);
 
         match fs::remove_file(profile_path) {
@@ -358,8 +361,8 @@ impl UserProfile {
     }
 
     /// Deletes the profile file and logs out
-    pub fn delete_self(&self) {
-        UserProfile::delete(&self.username);
+    pub fn delete(&self) {
+        UserProfile::delete_from_username(&self.username);
     }
 
     /// Hinders profile login without double password entry
@@ -388,10 +391,10 @@ impl UserProfile {
 
     /// Updates the username field and profile file name.
     pub fn change_username(&mut self, new_username: String) {
-        let old_profile_path: String = UserProfile::profile_path(&self.username);
+        let old_profile_path: String = UserProfile::file_path(&self.username);
         let old_file_path: &Path = Path::new(&old_profile_path);
 
-        let new_profile_path: String = UserProfile::profile_path(&new_username);
+        let new_profile_path: String = UserProfile::file_path(&new_username);
         let new_file_path: &Path = Path::new(&new_profile_path);
 
         match fs::rename(old_file_path, new_file_path) {

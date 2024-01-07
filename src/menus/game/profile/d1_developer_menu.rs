@@ -3,8 +3,8 @@
 
 use albion_termrpg::lib::{
     input::{prompt_input, select_from_vector, selector},
-    tui::{self, page_header},
-    user::profile::UserProfile,
+    tui::{self, page_header, press_enter_to_continue},
+    user::profile::{ProfileRetrievalResult, UserProfile},
 };
 
 fn manage_user_profiles(user: &mut UserProfile) {
@@ -17,7 +17,12 @@ fn manage_user_profiles(user: &mut UserProfile) {
     let profiles: Vec<String> = UserProfile::list_all();
 
     let choice1 = selector(
-        &["1. List Profiles", "2. Delete profiles", "NAV: Go Back"],
+        &[
+            "1. List Users",
+            "2. Delete User",
+            "3. View User File",
+            "NAV: Go Back",
+        ],
         0,
         Some(""),
     );
@@ -81,7 +86,7 @@ fn manage_user_profiles(user: &mut UserProfile) {
                     }
 
                     if *profile_string == user.username {
-                        UserProfile::delete(&user.username);
+                        UserProfile::delete_from_username(&user.username);
 
                         page_header("Developer Mode - Profile Management", None);
                         println!("\nCurrent profile successfully deleted. Logging out.");
@@ -90,7 +95,7 @@ fn manage_user_profiles(user: &mut UserProfile) {
                         crate::menus::accounts::main::menu();
                     }
 
-                    UserProfile::delete(profile_string);
+                    UserProfile::delete_from_username(profile_string);
 
                     page_header("Developer Mode - Profile Management", None);
                     println!("\nProfile '{}' successfully deleted.", profile_string);
@@ -102,10 +107,49 @@ fn manage_user_profiles(user: &mut UserProfile) {
             }
         }
 
-        2 => main(user),
+        2 => view_user(user),
+
+        3 => main(user),
 
         _ => panic!("Dialoguer picked option out of bounds"),
     }
+}
+
+// TODO: Viewing user JSON file in a pager
+fn view_user(user: &mut UserProfile) {
+    page_header("Profile Management", None);
+    let choice = select_from_vector(UserProfile::list_all(), 0, Some("Select a user to view"));
+
+    let profiles = UserProfile::list_all();
+    let profile_choice = profiles.get(choice);
+
+    match profile_choice {
+        Some(profile_string) => {
+            let profile_result = UserProfile::retrieve(profile_string);
+
+            match profile_result {
+                ProfileRetrievalResult::Some(profile) => {
+                    let json_string = profile.to_pretty_json();
+
+                    page_header(&format!("User Profile: {}", profile.username), None);
+
+                    println!("{}\n", json_string);
+
+                    press_enter_to_continue();
+                    manage_user_profiles(user);
+                }
+                ProfileRetrievalResult::None(message) => {
+                    println!("\n{}", message);
+                    press_enter_to_continue();
+
+                    manage_user_profiles(user);
+                }
+            }
+        }
+        None => panic!("Dialoguer picked option out of bounds."),
+    }
+
+    manage_user_profiles(user);
 }
 
 // TODO: Bank Manipulations
