@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
 pub enum BankAccount {
+    CoinPurse,
     Account1,
     Account2,
     Account3,
@@ -39,6 +40,11 @@ impl Bank {
         }
 
         match account_flag {
+            BankAccount::CoinPurse => {
+                if add_only {
+                    user.gold += amount;
+                }
+            }
             BankAccount::Account1 => {
                 user.bank.account1 += amount;
             }
@@ -60,9 +66,14 @@ impl Bank {
         user: &mut UserProfile,
         account_flag: BankAccount,
         amount: u32,
-        withdraw_only: bool,
+        subtract_only: bool,
     ) -> BankResult {
         match account_flag {
+            BankAccount::CoinPurse => {
+                if subtract_only {
+                    user.gold -= amount;
+                }
+            }
             BankAccount::Account1 => {
                 if user.bank.account1 < amount {
                     return BankResult::Error("There is not enough gold in the account");
@@ -93,7 +104,7 @@ impl Bank {
             }
         }
 
-        if !withdraw_only {
+        if !subtract_only {
             user.gold += amount;
         }
 

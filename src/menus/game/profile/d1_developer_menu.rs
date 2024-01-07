@@ -119,7 +119,7 @@ fn manage_user_profiles(user: &mut UserProfile) {
 }
 
 fn view_user(user: &mut UserProfile) {
-    page_header("Profile Management", None);
+    page_header("Developer Mode - User Data Viewer", None);
     let choice = select_from_vector(UserProfile::list_all(), 0, Some("Select a user to view"));
 
     let profiles = UserProfile::list_all();
@@ -133,7 +133,7 @@ fn view_user(user: &mut UserProfile) {
                 ProfileRetrievalResult::Some(profile) => {
                     let json_string = profile.to_pretty_json();
 
-                    page_header(&format!("User Profile: {}", profile.username), None);
+                    page_header(&format!("User Profile - {}", profile.username), None);
 
                     println!("{}\n", json_string);
 
@@ -157,10 +157,17 @@ fn view_user(user: &mut UserProfile) {
 fn manipulate_banks(user: &mut UserProfile) {
     let mut account: BankAccount = BankAccount::Account1;
 
-    page_header("Bank Management", None);
+    page_header("Developer Mode - Bank Management", None);
+    println!("Coin Purse: {} Gold", user.gold);
+    println!();
+    println!("Account 1: {} Gold", user.bank.account1);
+    println!("Account 2: {} Gold", user.bank.account2);
+    println!("Account 3: {} Gold", user.bank.account3);
+    println!("Account 4: {} Gold\n", user.bank.account4);
 
     let account_choice = selector(
         &[
+            "Coin Purse",
             "Account 1",
             "Account 2",
             "Account 3",
@@ -172,11 +179,12 @@ fn manipulate_banks(user: &mut UserProfile) {
     );
 
     match account_choice {
-        0 => account = BankAccount::Account1,
-        1 => account = BankAccount::Account2,
-        2 => account = BankAccount::Account3,
-        3 => account = BankAccount::Account4,
-        4 => main(user),
+        0 => account = BankAccount::CoinPurse,
+        1 => account = BankAccount::Account1,
+        2 => account = BankAccount::Account2,
+        3 => account = BankAccount::Account3,
+        4 => account = BankAccount::Account4,
+        5 => main(user),
         _ => panic!("Dialoguer selected vector index out of bounds."),
     }
 
@@ -194,7 +202,7 @@ fn manipulate_banks(user: &mut UserProfile) {
         Err(_) => {
             println!("Invalid input. Cancelling.");
             press_enter_to_continue();
-            main(user);
+            manipulate_banks(user);
         }
     }
 
@@ -205,7 +213,7 @@ fn manipulate_banks(user: &mut UserProfile) {
         0 => bank_result = Bank::deposit(user, account, amount, true),
         // Withdrawal
         1 => bank_result = Bank::withdraw(user, account, amount, true),
-        2 => main(user),
+        2 => manipulate_banks(user),
         _ => panic!("Dialoguer selected vector index out of bounds."),
     }
 
@@ -213,13 +221,13 @@ fn manipulate_banks(user: &mut UserProfile) {
         BankResult::Ok => {
             println!("\nOperation successful.");
             press_enter_to_continue();
-            main(user);
+            manipulate_banks(user);
         }
 
         BankResult::Error(message) => {
             println!("\n{}", message);
             press_enter_to_continue();
-            main(user);
+            manipulate_banks(user);
         }
     }
 }
