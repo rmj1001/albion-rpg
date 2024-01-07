@@ -427,14 +427,7 @@ impl UserProfile {
 
         match fs::read_to_string(file_path) {
             Ok(contents) => Some(contents),
-            Err(_) => {
-                println!(
-                    "\nProfile '{}' either could not be read or does not exist.",
-                    username
-                );
-
-                None
-            }
+            Err(_) => None,
         }
     }
 
