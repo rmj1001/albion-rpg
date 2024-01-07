@@ -25,29 +25,31 @@ pub struct Bank {
 
 impl Bank {
     pub fn deposit(
-        &mut self,
         user: &mut UserProfile,
         account_flag: BankAccount,
         amount: u32,
+        add_only: bool,
     ) -> BankResult {
-        if user.gold < amount {
+        if !add_only && user.gold < amount {
             return BankResult::Error("There is not enough gold in the account");
         }
 
-        user.gold -= amount;
+        if !add_only {
+            user.gold -= amount;
+        }
 
         match account_flag {
             BankAccount::Account1 => {
-                self.account1 += amount;
+                user.bank.account1 += amount;
             }
             BankAccount::Account2 => {
-                self.account2 += amount;
+                user.bank.account2 += amount;
             }
             BankAccount::Account3 => {
-                self.account3 += amount;
+                user.bank.account3 += amount;
             }
             BankAccount::Account4 => {
-                self.account4 += amount;
+                user.bank.account4 += amount;
             }
         }
 
@@ -55,43 +57,46 @@ impl Bank {
     }
 
     pub fn withdraw(
-        &mut self,
         user: &mut UserProfile,
         account_flag: BankAccount,
         amount: u32,
+        withdraw_only: bool,
     ) -> BankResult {
         match account_flag {
             BankAccount::Account1 => {
-                if self.account1 < amount {
+                if user.bank.account1 < amount {
                     return BankResult::Error("There is not enough gold in the account");
                 } else {
-                    self.account1 -= amount;
+                    user.bank.account1 -= amount;
                 }
             }
             BankAccount::Account2 => {
-                if self.account2 < amount {
+                if user.bank.account2 < amount {
                     return BankResult::Error("There is not enough gold in the account");
                 } else {
-                    self.account2 -= amount;
+                    user.bank.account2 -= amount;
                 }
             }
             BankAccount::Account3 => {
-                if self.account3 < amount {
+                if user.bank.account3 < amount {
                     return BankResult::Error("There is not enough gold in the account");
                 } else {
-                    self.account3 -= amount;
+                    user.bank.account3 -= amount;
                 }
             }
             BankAccount::Account4 => {
-                if self.account4 < amount {
+                if user.bank.account4 < amount {
                     return BankResult::Error("There is not enough gold in the account");
                 } else {
-                    self.account4 -= amount;
+                    user.bank.account4 -= amount;
                 }
             }
         }
 
-        user.gold += amount;
+        if !withdraw_only {
+            user.gold += amount;
+        }
+
         BankResult::Ok
     }
 }

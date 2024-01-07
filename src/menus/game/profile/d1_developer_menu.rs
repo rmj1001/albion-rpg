@@ -2,9 +2,12 @@
 #![allow(unused_variables)]
 
 use albion_termrpg::lib::{
-    input::{prompt_input, select_from_vector, selector},
+    input::{self, prompt_input, select_from_vector, selector},
     tui::{self, page_header, press_enter_to_continue},
-    user::profile::{ProfileRetrievalResult, UserProfile},
+    user::{
+        bank::{Bank, BankAccount, BankResult},
+        profile::{ProfileRetrievalResult, UserProfile},
+    },
 };
 
 fn manage_user_profiles(user: &mut UserProfile) {
@@ -115,7 +118,6 @@ fn manage_user_profiles(user: &mut UserProfile) {
     }
 }
 
-// TODO: Viewing user JSON file in a pager
 fn view_user(user: &mut UserProfile) {
     page_header("Profile Management", None);
     let choice = select_from_vector(UserProfile::list_all(), 0, Some("Select a user to view"));
@@ -152,8 +154,75 @@ fn view_user(user: &mut UserProfile) {
     manage_user_profiles(user);
 }
 
-// TODO: Bank Manipulations
-fn manipulate_banks(user: &mut UserProfile) {}
+fn manipulate_banks(user: &mut UserProfile) {
+    let mut account: BankAccount = BankAccount::Account1;
+
+    page_header("Bank Management", None);
+
+    let account_choice = selector(
+        &[
+            "Account 1",
+            "Account 2",
+            "Account 3",
+            "Account 4",
+            "NAV: Go Back",
+        ],
+        0,
+        None,
+    );
+
+    match account_choice {
+        0 => account = BankAccount::Account1,
+        1 => account = BankAccount::Account2,
+        2 => account = BankAccount::Account3,
+        3 => account = BankAccount::Account4,
+        4 => main(user),
+        _ => panic!("Dialoguer selected vector index out of bounds."),
+    }
+
+    let option = selector(&["Add Money", "Subtract Money", "NAV: Cancel"], 0, None);
+
+    if option == 2 {
+        main(user);
+    }
+
+    let amount_result = input::prompt_input("Amount").parse::<u32>();
+    let mut amount: u32 = 0;
+
+    match amount_result {
+        Ok(number) => amount = number,
+        Err(_) => {
+            println!("Invalid input. Cancelling.");
+            press_enter_to_continue();
+            main(user);
+        }
+    }
+
+    let mut bank_result: BankResult = BankResult::Error("Uninitialized");
+
+    match option {
+        // Deposit
+        0 => bank_result = Bank::deposit(user, account, amount, true),
+        // Withdrawal
+        1 => bank_result = Bank::withdraw(user, account, amount, true),
+        2 => main(user),
+        _ => panic!("Dialoguer selected vector index out of bounds."),
+    }
+
+    match bank_result {
+        BankResult::Ok => {
+            println!("\nOperation successful.");
+            press_enter_to_continue();
+            main(user);
+        }
+
+        BankResult::Error(message) => {
+            println!("\n{}", message);
+            press_enter_to_continue();
+            main(user);
+        }
+    }
+}
 
 // TODO: XP Manipulation
 fn manipulate_xp(user: &mut UserProfile) {}
