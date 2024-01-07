@@ -1,6 +1,3 @@
-// TODO: Remove this once the functions below are implemented.
-#![allow(unused_variables)]
-
 use albion_termrpg::lib::{
     input::{self, prompt_input, select_from_vector, selector},
     tui::{self, page_header, press_enter_to_continue},
@@ -80,7 +77,7 @@ fn manage_user_profiles(user: &mut UserProfile) {
                         "y" => {}
                         "yes" => {}
 
-                        invalid_input => {
+                        _ => {
                             println!("\nInvalid input. Aborting.");
                             tui::press_enter_to_continue();
 
@@ -233,9 +230,11 @@ fn manipulate_banks(user: &mut UserProfile) {
 }
 
 // TODO: XP Manipulation
+#[allow(unused_variables)]
 fn manipulate_xp(user: &mut UserProfile) {}
 
 // TODO: Inventory Manipulation
+#[allow(unused_variables)]
 fn manipulate_inventory(user: &mut UserProfile) {}
 
 pub fn main(user: &mut UserProfile) {
