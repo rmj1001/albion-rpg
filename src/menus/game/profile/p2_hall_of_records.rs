@@ -1,6 +1,7 @@
 use albion_termrpg::lib::{
     tui::{page_header, press_enter_to_continue},
-    user_profile::{UserProfile, XP},
+    user::profile::UserProfile,
+    user::xp::XP,
 };
 
 fn print_xp(xp: u32) {

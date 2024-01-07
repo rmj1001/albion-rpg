@@ -1,8 +1,8 @@
 use albion_termrpg::lib::{
     tui::dialogue,
     tui::{self, page_header},
-    user_profile::ProfileRetrievalResult,
-    user_profile::UserProfile,
+    user::profile::ProfileRetrievalResult,
+    user::profile::UserProfile,
 };
 
 fn get_password(profile: &UserProfile) -> bool {

@@ -2,7 +2,9 @@
 
 use albion_termrpg::lib::{
     tui::{self, page_header},
-    user_profile::{Item, ItemNames, UserProfile, XPType, XP},
+    user::inventory::{Item, ItemNames},
+    user::profile::UserProfile,
+    user::xp::{XPType, XP},
 };
 use rand::Rng;
 

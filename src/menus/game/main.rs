@@ -1,7 +1,7 @@
 use albion_termrpg::lib::{
     terminal,
     tui::{self, page_header},
-    user_profile::UserProfile,
+    user::profile::UserProfile,
 };
 
 pub fn menu(user: &mut UserProfile) {

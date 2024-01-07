@@ -1,6 +1,6 @@
 use albion_termrpg::lib::{
     tui::{self, dialogue, page_header},
-    user_profile::{ProfileRetrievalResult, UserProfile},
+    user::profile::{ProfileRetrievalResult, UserProfile},
 };
 
 pub fn menu() {

@@ -1,6 +1,6 @@
 use albion_termrpg::lib::{
     tui::{self, page_header},
-    user_profile::UserProfile,
+    user::profile::UserProfile,
 };
 
 fn change_username(user: &mut UserProfile) {

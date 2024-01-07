@@ -4,5 +4,12 @@ pub mod lib {
     pub mod os;
     pub mod terminal;
     pub mod tui;
-    pub mod user_profile;
+    pub mod user {
+        pub mod armor;
+        pub mod bank;
+        pub mod inventory;
+        pub mod profile;
+        pub mod weapons;
+        pub mod xp;
+    }
 }
