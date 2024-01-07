@@ -44,7 +44,7 @@ pub fn menu(user: &mut UserProfile) {
         "c2" => crate::menus::game::combat::c2_wander_realm::main(user),
 
         // Economy
-        "e1" => crate::menus::game::economy::e1_the_guilds::main(user),
+        "e1" => crate::menus::game::economy::e1_the_guilds::main_menu(user),
         "e2" => crate::menus::game::economy::e2_the_bank::main(user),
         "e3" => crate::menus::game::economy::e3_trading_post::main(user),
         "e4" => crate::menus::game::economy::e4_weapons_shop::main(user),

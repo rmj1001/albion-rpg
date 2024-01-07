@@ -20,6 +20,7 @@ pub struct XP {
     pub thieving: u32,
 }
 
+#[derive(Clone, Copy, Serialize, Deserialize)]
 pub enum XPType {
     Combat,
     Fishing,
@@ -62,13 +63,34 @@ impl XP {
             XPType::Thieving => self.thieving += more_xp,
         }
     }
+
+    pub fn get(&self, flag: XPType) -> u32 {
+        match flag {
+            XPType::Combat => self.combat,
+            XPType::Fishing => self.fishing,
+            XPType::Cooking => self.cooking,
+            XPType::Woodcutting => self.woodcutting,
+            XPType::Mining => self.mining,
+            XPType::Smithing => self.smithing,
+            XPType::Thieving => self.thieving,
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct Item {
-    name: String,
-    price: u32,
-    quantity: u32,
+    pub name: String,
+    pub price: u32,
+    pub quantity: u32,
+}
+
+#[derive(Serialize, Deserialize)]
+pub enum ItemNames {
+    Fish,
+    CookedFish,
+    Wood,
+    Ore,
+    Ingots,
 }
 
 #[derive(Serialize, Deserialize)]

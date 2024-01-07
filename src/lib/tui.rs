@@ -102,12 +102,22 @@ pub mod dialogue {
         optional_prompt: Option<&str>,
     ) -> usize {
         match optional_prompt {
-            Some(prompt) => dialoguer::Select::new()
-                .with_prompt(prompt)
-                .items(options)
-                .default(0)
-                .interact()
-                .unwrap_or(default_index),
+            Some(prompt) => {
+                if prompt.is_empty() {
+                    dialoguer::Select::new()
+                        .items(options)
+                        .default(0)
+                        .interact()
+                        .unwrap_or(default_index)
+                } else {
+                    dialoguer::Select::new()
+                        .with_prompt(prompt)
+                        .items(options)
+                        .default(0)
+                        .interact()
+                        .unwrap_or(default_index)
+                }
+            }
             None => dialoguer::Select::new()
                 .with_prompt(
                     "Use ↑ ↓ keys to select an option below, then press ENTER/RETURN to run it",
