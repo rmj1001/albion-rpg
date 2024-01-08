@@ -71,33 +71,37 @@ impl Bank {
         match account_flag {
             BankAccount::CoinPurse => {
                 if subtract_only {
-                    user.gold -= amount;
+                    if user.gold < amount {
+                        return BankResult::Error("There is not enough gold.");
+                    } else {
+                        user.gold -= amount;
+                    }
                 }
             }
             BankAccount::Account1 => {
                 if user.bank.account1 < amount {
-                    return BankResult::Error("There is not enough gold in the account");
+                    return BankResult::Error("There is not enough gold.");
                 } else {
                     user.bank.account1 -= amount;
                 }
             }
             BankAccount::Account2 => {
                 if user.bank.account2 < amount {
-                    return BankResult::Error("There is not enough gold in the account");
+                    return BankResult::Error("There is not enough gold.");
                 } else {
                     user.bank.account2 -= amount;
                 }
             }
             BankAccount::Account3 => {
                 if user.bank.account3 < amount {
-                    return BankResult::Error("There is not enough gold in the account");
+                    return BankResult::Error("There is not enough gold.");
                 } else {
                     user.bank.account3 -= amount;
                 }
             }
             BankAccount::Account4 => {
                 if user.bank.account4 < amount {
-                    return BankResult::Error("There is not enough gold in the account");
+                    return BankResult::Error("There is not enough gold.");
                 } else {
                     user.bank.account4 -= amount;
                 }

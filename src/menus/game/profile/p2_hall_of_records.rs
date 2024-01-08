@@ -1,7 +1,8 @@
 use albion_termrpg::lib::{
+    input::selector,
     tui::{page_header, press_enter_to_continue},
-    user::profile::UserProfile,
     user::xp::XP,
+    user::{achievements::Achievements, profile::UserProfile},
 };
 
 fn print_xp(xp: u32) {
@@ -10,11 +11,30 @@ fn print_xp(xp: u32) {
     println!();
 }
 
-// TODO: Achievements System
 pub fn main(user: &mut UserProfile) {
+    page_header(
+        "Hall of Records",
+        Some("Use ↑ ↓ keys to select an option below, then press ENTER/RETURN to run it"),
+    );
+
+    let menu_option = selector(
+        &["1. XP/Levels", "2. Achievements", "NAV: Go Back"],
+        0,
+        Some(""),
+    );
+
+    match menu_option {
+        0 => xp(user),
+        1 => achievements(user),
+        2 => crate::menus::game::main::menu(user),
+        _ => panic!("Dialoguer picked array index out of bounds"),
+    }
+}
+
+pub fn xp(user: &mut UserProfile) {
     let xp: &XP = &user.xp;
 
-    page_header("Hall of Records", None);
+    page_header("Hall of Records - XP/Levels", None);
 
     println!("# Profile");
     print_xp(xp.total_xp());
@@ -41,5 +61,17 @@ pub fn main(user: &mut UserProfile) {
     print_xp(xp.thieving);
 
     press_enter_to_continue();
-    crate::menus::game::main::menu(user);
+    main(user);
+}
+
+pub fn achievements(user: &mut UserProfile) {
+    #[allow(unused_variables)]
+    let achievements: &Achievements = &user.achievements;
+
+    page_header("Hall of Records - Achievements", None);
+
+    // TODO: List achievements here
+
+    press_enter_to_continue();
+    main(user);
 }

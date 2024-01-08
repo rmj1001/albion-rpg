@@ -8,7 +8,10 @@ use albion_termrpg::lib::{
 pub fn main(user: &mut UserProfile) {
     let mut account: BankAccount = BankAccount::Account1;
 
-    page_header("The Bank", None);
+    page_header(
+        "The Bank",
+        Some("Use ↑ ↓ keys to select an option below, then press ENTER/RETURN to run it"),
+    );
     println!("Coin Purse: {} Gold", user.gold);
     println!();
     println!("Account 1: {} Gold", user.bank.account1);
@@ -25,7 +28,7 @@ pub fn main(user: &mut UserProfile) {
             "NAV: Go Back",
         ],
         0,
-        None,
+        Some(""),
     );
 
     match account_choice {
@@ -37,7 +40,7 @@ pub fn main(user: &mut UserProfile) {
         _ => panic!("Dialoguer selected vector index out of bounds."),
     }
 
-    let option = selector(&["Deposit", "Withdraw", "NAV: Cancel"], 0, None);
+    let option = selector(&["Deposit", "Withdraw", "NAV: Cancel"], 0, Some(""));
 
     if option == 2 {
         main(user);

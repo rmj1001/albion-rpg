@@ -1,5 +1,53 @@
-use albion_termrpg::lib::user::profile::UserProfile;
+use albion_termrpg::lib::{
+    input::selector,
+    tui::{page_header, press_enter_to_continue},
+    user::profile::UserProfile,
+};
 
-// TODO: Player Inventory Printer (Pages for Mundane Items, Weapons, Armor)
-#[allow(unused_variables)]
-pub fn main(user: &mut UserProfile) {}
+pub fn main(user: &mut UserProfile) {
+    page_header(
+        "Inventory Viewer",
+        Some("Use ↑ ↓ keys to select an option below, then press ENTER/RETURN to run it"),
+    );
+
+    let menu_option = selector(
+        &["1. Items", "2. Weapons", "3. Armor", "NAV: Go Back"],
+        0,
+        Some(""),
+    );
+
+    match menu_option {
+        0 => mundane_inventory(user),
+        1 => weapons_inventory(user),
+        2 => armor_inventory(user),
+        3 => crate::menus::game::main::menu(user),
+        _ => panic!("Dialogue selected index out of option vec bounds"),
+    }
+}
+
+pub fn mundane_inventory(user: &mut UserProfile) {
+    page_header("Items Inventory", None);
+
+    // TODO: Mundane Items Inventory
+
+    press_enter_to_continue();
+    main(user);
+}
+
+pub fn weapons_inventory(user: &mut UserProfile) {
+    page_header("Weapons Inventory", None);
+
+    // TODO: Weapons Inventory
+
+    press_enter_to_continue();
+    main(user);
+}
+
+pub fn armor_inventory(user: &mut UserProfile) {
+    page_header("Armor Inventory", None);
+
+    // TODO: Armor Inventory
+
+    press_enter_to_continue();
+    main(user);
+}

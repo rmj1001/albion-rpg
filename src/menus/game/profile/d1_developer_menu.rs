@@ -7,6 +7,36 @@ use albion_termrpg::lib::{
     },
 };
 
+pub fn main(user: &mut UserProfile) {
+    page_header(
+        "Developer Settings",
+        Some("Use ↑ ↓ keys to select an option below, then press ENTER/RETURN to run it"),
+    );
+
+    let choice = selector(
+        &[
+            "1. Throw a panic",
+            "2. Manipulate Inventory",
+            "3. Manipulate XP",
+            "4. Manipulate Banks",
+            "5. Manage User Profiles",
+            "NAV: Go Back",
+        ],
+        0,
+        Some(""),
+    );
+
+    match choice {
+        0 => panic!("This is a panic!"),
+        1 => manipulate_inventory(user),
+        2 => manipulate_xp(user),
+        3 => manipulate_banks(user),
+        4 => manage_user_profiles(user),
+        5 => crate::menus::game::main::menu(user),
+        _ => panic!("Dialogue picked option out of bounds"),
+    }
+}
+
 fn manage_user_profiles(user: &mut UserProfile) {
     page_header(
         "Developer Mode - Profile Management",
@@ -154,7 +184,11 @@ fn view_user(user: &mut UserProfile) {
 fn manipulate_banks(user: &mut UserProfile) {
     let mut account: BankAccount = BankAccount::Account1;
 
-    page_header("Developer Mode - Bank Management", None);
+    page_header(
+        "Developer Mode - Bank Management",
+        Some("Use ↑ ↓ keys to select an option below, then press ENTER/RETURN to run it"),
+    );
+
     println!("Coin Purse: {} Gold", user.gold);
     println!();
     println!("Account 1: {} Gold", user.bank.account1);
@@ -172,7 +206,7 @@ fn manipulate_banks(user: &mut UserProfile) {
             "NAV: Go Back",
         ],
         0,
-        None,
+        Some(""),
     );
 
     match account_choice {
@@ -185,7 +219,7 @@ fn manipulate_banks(user: &mut UserProfile) {
         _ => panic!("Dialoguer selected vector index out of bounds."),
     }
 
-    let option = selector(&["Add Money", "Subtract Money", "NAV: Cancel"], 0, None);
+    let option = selector(&["Add Money", "Subtract Money", "NAV: Cancel"], 0, Some(""));
 
     if option == 2 {
         main(user);
@@ -236,33 +270,3 @@ fn manipulate_xp(user: &mut UserProfile) {}
 // TODO: Inventory Manipulation
 #[allow(unused_variables)]
 fn manipulate_inventory(user: &mut UserProfile) {}
-
-pub fn main(user: &mut UserProfile) {
-    page_header(
-        "Developer Settings",
-        Some("Use ↑ ↓ keys to select an option below, then press ENTER/RETURN to run it"),
-    );
-
-    let choice = selector(
-        &[
-            "1. Throw a panic",
-            "2. Manipulate Inventory",
-            "3. Manipulate XP",
-            "4. Manipulate Banks",
-            "5. Manage User Profiles",
-            "NAV: Go Back",
-        ],
-        0,
-        Some(""),
-    );
-
-    match choice {
-        0 => panic!("This is a panic!"),
-        1 => manipulate_inventory(user),
-        2 => manipulate_xp(user),
-        3 => manipulate_banks(user),
-        4 => manage_user_profiles(user),
-        5 => crate::menus::game::main::menu(user),
-        _ => panic!("Dialogue picked option out of bounds"),
-    }
-}
