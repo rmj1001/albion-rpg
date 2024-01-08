@@ -21,4 +21,4 @@ are not comprehensive or up-to-date.
 
 Click on the image below to watch the video.
 
-[<img src="https://i.ytimg.com/vi/S93cg6G9JHw/maxresdefault.jpg" width="50%">](https://www.youtube.com/watch?v=S93cg6G9JHw "AlbionRPG Demo Video")
+[![Demo thumbnail](demo/demo_image.jpg)](https://www.youtube.com/watch?v=S93cg6G9JHw "AlbionRPG Demo Video")
