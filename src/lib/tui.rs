@@ -60,18 +60,34 @@ pub fn header(title: &str, line_length: usize) {
     println!("{}", header);
 }
 
+pub enum HeaderInstructions {
+    EnterCode,
+    Keyboard,
+    Other(String),
+    None,
+}
+
 /// Prints a header with a title, using a line of dashes on the top
 /// and bottom. The title is centered.
-pub fn page_header(title: &str, instructions: Option<&str>) {
+pub fn page_header(title: &str, instructions_variant: HeaderInstructions) {
     crate::lib::terminal::clear();
 
     header(&format!("Albion - {}", title), 80);
 
-    if let Some(instruction_text) = instructions {
-        println!("{}\n", instruction_text);
-    } else {
-        println!("\n");
+    let mut instructions: String = String::new();
+
+    match instructions_variant {
+        HeaderInstructions::Keyboard => {
+            instructions.push_str("Press ↑ or ↓ to navigate, then press ENTER/RETURN.")
+        }
+        HeaderInstructions::EnterCode => {
+            instructions.push_str("Enter a code (ex. p1), then press ENTER/RETURN.")
+        }
+        HeaderInstructions::Other(text) => instructions.push_str(&text),
+        HeaderInstructions::None => {}
     }
+
+    println!("{}\n", instructions);
 }
 
 pub fn sub_header(title: &str) {

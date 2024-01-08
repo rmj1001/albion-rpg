@@ -1,14 +1,11 @@
 use albion_termrpg::lib::{
     input::selector,
-    tui::{page_header, press_enter_to_continue},
+    tui::{page_header, press_enter_to_continue, HeaderInstructions},
     user::profile::UserProfile,
 };
 
 pub fn main(user: &mut UserProfile) {
-    page_header(
-        "Inventory Viewer",
-        Some("Use ↑ ↓ keys to select an option below, then press ENTER/RETURN to run it"),
-    );
+    page_header("Inventory Viewer", HeaderInstructions::None);
 
     let menu_option = selector(
         &["1. Items", "2. Weapons", "3. Armor", "NAV: Go Back"],
@@ -26,7 +23,7 @@ pub fn main(user: &mut UserProfile) {
 }
 
 pub fn mundane_inventory(user: &mut UserProfile) {
-    page_header("Items Inventory", None);
+    page_header("Items Inventory", HeaderInstructions::None);
 
     // TODO: Mundane Items Inventory
 
@@ -35,7 +32,7 @@ pub fn mundane_inventory(user: &mut UserProfile) {
 }
 
 pub fn weapons_inventory(user: &mut UserProfile) {
-    page_header("Weapons Inventory", None);
+    page_header("Weapons Inventory", HeaderInstructions::None);
 
     // TODO: Weapons Inventory
 
@@ -44,7 +41,7 @@ pub fn weapons_inventory(user: &mut UserProfile) {
 }
 
 pub fn armor_inventory(user: &mut UserProfile) {
-    page_header("Armor Inventory", None);
+    page_header("Armor Inventory", HeaderInstructions::None);
 
     // TODO: Armor Inventory
 

@@ -1,11 +1,11 @@
 use albion_termrpg::lib::{
     input::{prompt_input, selector},
-    tui::{self, page_header},
+    tui::{self, page_header, HeaderInstructions},
     user::profile::UserProfile,
 };
 
 fn change_username(user: &mut UserProfile) {
-    page_header("Profile Settings", None);
+    page_header("Profile Settings", HeaderInstructions::None);
     let new_username = prompt_input("New Username");
 
     if new_username == user.username {
@@ -24,7 +24,7 @@ fn change_username(user: &mut UserProfile) {
 
     user.change_username(new_username);
 
-    page_header("Profile Settings", None);
+    page_header("Profile Settings", HeaderInstructions::None);
     println!("Successfully changed username.");
     tui::press_enter_to_continue();
 
@@ -32,7 +32,7 @@ fn change_username(user: &mut UserProfile) {
 }
 
 fn change_password(user: &mut UserProfile) {
-    page_header("Profile Settings", None);
+    page_header("Profile Settings", HeaderInstructions::None);
     let new_password = prompt_input("New Password");
 
     if new_password == user.password {
@@ -51,7 +51,7 @@ fn change_password(user: &mut UserProfile) {
 
     user.change_password(new_password);
 
-    page_header("Profile Settings", None);
+    page_header("Profile Settings", HeaderInstructions::None);
     println!("Successfully changed password.");
     tui::press_enter_to_continue();
 
@@ -61,7 +61,7 @@ fn change_password(user: &mut UserProfile) {
 fn lock_profile(user: &mut UserProfile) {
     user.lock();
 
-    page_header("Profile Settings", None);
+    page_header("Profile Settings", HeaderInstructions::None);
     println!("Profile sucessfully locked.");
     tui::press_enter_to_continue();
 
@@ -71,7 +71,7 @@ fn lock_profile(user: &mut UserProfile) {
 fn delete_profile(user: &mut UserProfile) {
     user.delete();
 
-    page_header("Profile Settings", None);
+    page_header("Profile Settings", HeaderInstructions::None);
     println!("Profile sucessfully deleted.");
     tui::press_enter_to_continue();
 
@@ -110,10 +110,7 @@ fn disable_developer_mode(user: &mut UserProfile) {
 }
 
 pub fn menu(user: &mut UserProfile) {
-    page_header(
-        "Profile Settings",
-        Some("Type the menu item code (ex. c3) and press ENTER/RETURN to perform that action.\n"),
-    );
+    page_header("Profile Settings", HeaderInstructions::Keyboard);
 
     #[allow(clippy::needless_late_init)]
     let choice: usize;

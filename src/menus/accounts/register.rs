@@ -1,11 +1,11 @@
 use albion_termrpg::lib::{
     input::prompt_input,
-    tui::{self, page_header},
+    tui::{self, page_header, HeaderInstructions},
     user::profile::{ProfileRetrievalResult, UserProfile},
 };
 
 pub fn menu() {
-    page_header("Registration", None);
+    page_header("Registration", HeaderInstructions::None);
 
     let username: String = prompt_input("Username");
 

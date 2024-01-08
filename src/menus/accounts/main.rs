@@ -2,10 +2,7 @@ use albion_termrpg::lib::{input::selector, terminal::*, tui::*};
 
 pub fn menu() {
     clear();
-    page_header(
-        "Accounts Menu",
-        Some("Use ↑ ↓ keys to select an option below, then press ENTER/RETURN to run it"),
-    );
+    page_header("Accounts Menu", HeaderInstructions::Keyboard);
 
     let main_menu_options = vec!["Login", "Register", "Exit"];
 

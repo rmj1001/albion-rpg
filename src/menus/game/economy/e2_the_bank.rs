@@ -1,6 +1,6 @@
 use albion_termrpg::lib::{
     input::{prompt_input, selector},
-    tui::{page_header, press_enter_to_continue},
+    tui::{page_header, press_enter_to_continue, HeaderInstructions},
     user::{bank::*, profile::UserProfile},
 };
 
@@ -8,10 +8,7 @@ use albion_termrpg::lib::{
 pub fn main(user: &mut UserProfile) {
     let mut account: BankAccount = BankAccount::Account1;
 
-    page_header(
-        "The Bank",
-        Some("Use ↑ ↓ keys to select an option below, then press ENTER/RETURN to run it"),
-    );
+    page_header("The Bank", HeaderInstructions::Keyboard);
     println!("Coin Purse: {} Gold", user.gold);
     println!();
     println!("Account 1: {} Gold", user.bank.account1);

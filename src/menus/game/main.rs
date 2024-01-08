@@ -8,7 +8,7 @@ use albion_termrpg::lib::{
 pub fn menu(user: &mut UserProfile) {
     page_header(
         &format!("Game Menu (user: {})", user.username),
-        Some("Type the menu item code (ex. c3) and press ENTER/RETURN to perform that action.\n"),
+        tui::HeaderInstructions::EnterCode,
     );
 
     tui::sub_header("Combat");

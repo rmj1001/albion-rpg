@@ -1,6 +1,6 @@
 use albion_termrpg::lib::{
     input::{self, prompt_input, select_from_vector, selector},
-    tui::{self, page_header, press_enter_to_continue},
+    tui::{self, page_header, press_enter_to_continue, HeaderInstructions},
     user::{
         bank::{Bank, BankAccount, BankResult},
         profile::{ProfileRetrievalResult, UserProfile},
@@ -8,10 +8,7 @@ use albion_termrpg::lib::{
 };
 
 pub fn main(user: &mut UserProfile) {
-    page_header(
-        "Developer Settings",
-        Some("Use ↑ ↓ keys to select an option below, then press ENTER/RETURN to run it"),
-    );
+    page_header("Developer Settings", HeaderInstructions::Keyboard);
 
     let choice = selector(
         &[
@@ -28,19 +25,19 @@ pub fn main(user: &mut UserProfile) {
 
     match choice {
         0 => panic!("This is a panic!"),
-        1 => manipulate_inventory(user),
-        2 => manipulate_xp(user),
-        3 => manipulate_banks(user),
-        4 => manage_user_profiles(user),
+        1 => inventory_manager(user),
+        2 => xp_manager(user),
+        3 => bank_manager(user),
+        4 => user_manager(user),
         5 => crate::menus::game::main::menu(user),
         _ => panic!("Dialogue picked option out of bounds"),
     }
 }
 
-fn manage_user_profiles(user: &mut UserProfile) {
+fn user_manager(user: &mut UserProfile) {
     page_header(
-        "Developer Mode - Profile Management",
-        Some("Use ↑ ↓ keys to select an option below, then press ENTER/RETURN to run it"),
+        "Developer Mode - User Manager",
+        HeaderInstructions::Keyboard,
     );
 
     // Listing profiles for printing or deletion
@@ -60,7 +57,7 @@ fn manage_user_profiles(user: &mut UserProfile) {
     match choice1 {
         // listing profiles
         0 => {
-            page_header("Developer Mode - Profile Management", None);
+            page_header("Developer Mode - User Manager", HeaderInstructions::None);
 
             for profile_string in &profiles {
                 println!("- {}", profile_string);
@@ -69,14 +66,14 @@ fn manage_user_profiles(user: &mut UserProfile) {
             println!();
             tui::press_enter_to_continue();
 
-            manage_user_profiles(user);
+            user_manager(user);
         }
 
         // deleting profiles
         1 => {
             page_header(
-                "Developer Mode - Profile Management",
-                Some("Use ↑ ↓ keys to select an option below, then press ENTER/RETURN to run it"),
+                "Developer Mode - User Manager",
+                HeaderInstructions::Keyboard,
             );
 
             let choice =
@@ -96,13 +93,13 @@ fn manage_user_profiles(user: &mut UserProfile) {
                             println!("\nAborting.");
                             tui::press_enter_to_continue();
 
-                            manage_user_profiles(user);
+                            user_manager(user);
                         }
                         "no" => {
                             println!("\nAborting.");
                             tui::press_enter_to_continue();
 
-                            manage_user_profiles(user);
+                            user_manager(user);
                         }
                         "y" => {}
                         "yes" => {}
@@ -111,14 +108,14 @@ fn manage_user_profiles(user: &mut UserProfile) {
                             println!("\nInvalid input. Aborting.");
                             tui::press_enter_to_continue();
 
-                            manage_user_profiles(user);
+                            user_manager(user);
                         }
                     }
 
                     if *profile_string == user.username {
                         UserProfile::delete_from_username(&user.username);
 
-                        page_header("Developer Mode - Profile Management", None);
+                        page_header("Developer Mode - User Manager", HeaderInstructions::None);
                         println!("\nCurrent profile successfully deleted. Logging out.");
                         tui::press_enter_to_continue();
 
@@ -127,12 +124,13 @@ fn manage_user_profiles(user: &mut UserProfile) {
 
                     UserProfile::delete_from_username(profile_string);
 
-                    page_header("Developer Mode - Profile Management", None);
+                    page_header("Developer Mode - User Manager", HeaderInstructions::None);
                     println!("\nProfile '{}' successfully deleted.", profile_string);
                     tui::press_enter_to_continue();
 
-                    manage_user_profiles(user);
+                    user_manager(user);
                 }
+
                 None => panic!("Dialoguer picked vec index out of bounds"),
             }
         }
@@ -146,7 +144,10 @@ fn manage_user_profiles(user: &mut UserProfile) {
 }
 
 fn view_user(user: &mut UserProfile) {
-    page_header("Developer Mode - User Data Viewer", None);
+    page_header(
+        "Developer Mode - User Manager - Data Viewer",
+        HeaderInstructions::None,
+    );
     let choice = select_from_vector(UserProfile::list_all(), 0, Some("Select a user to view"));
 
     let profiles = UserProfile::list_all();
@@ -160,33 +161,36 @@ fn view_user(user: &mut UserProfile) {
                 ProfileRetrievalResult::Some(profile) => {
                     let json_string = profile.to_pretty_json();
 
-                    page_header(&format!("User Profile - {}", profile.username), None);
+                    page_header(
+                        &format!("User Profile - {}", profile.username),
+                        HeaderInstructions::None,
+                    );
 
                     println!("{}\n", json_string);
 
                     press_enter_to_continue();
-                    manage_user_profiles(user);
+                    user_manager(user);
                 }
                 ProfileRetrievalResult::None(message) => {
                     println!("\n{}", message);
                     press_enter_to_continue();
 
-                    manage_user_profiles(user);
+                    user_manager(user);
                 }
             }
         }
         None => panic!("Dialoguer picked option out of bounds."),
     }
 
-    manage_user_profiles(user);
+    user_manager(user);
 }
 
-fn manipulate_banks(user: &mut UserProfile) {
+fn bank_manager(user: &mut UserProfile) {
     let mut account: BankAccount = BankAccount::Account1;
 
     page_header(
-        "Developer Mode - Bank Management",
-        Some("Use ↑ ↓ keys to select an option below, then press ENTER/RETURN to run it"),
+        "Developer Mode - Bank Managert",
+        HeaderInstructions::Keyboard,
     );
 
     println!("Coin Purse: {} Gold", user.gold);
@@ -233,7 +237,7 @@ fn manipulate_banks(user: &mut UserProfile) {
         Err(_) => {
             println!("Invalid input. Cancelling.");
             press_enter_to_continue();
-            manipulate_banks(user);
+            bank_manager(user);
         }
     }
 
@@ -244,7 +248,7 @@ fn manipulate_banks(user: &mut UserProfile) {
         0 => bank_result = Bank::deposit(user, account, amount, true),
         // Withdrawal
         1 => bank_result = Bank::withdraw(user, account, amount, true),
-        2 => manipulate_banks(user),
+        2 => bank_manager(user),
         _ => panic!("Dialoguer selected vector index out of bounds."),
     }
 
@@ -252,21 +256,68 @@ fn manipulate_banks(user: &mut UserProfile) {
         BankResult::Ok => {
             println!("\nOperation successful.");
             press_enter_to_continue();
-            manipulate_banks(user);
+            bank_manager(user);
         }
 
         BankResult::Error(message) => {
             println!("\n{}", message);
             press_enter_to_continue();
-            manipulate_banks(user);
+            bank_manager(user);
         }
     }
 }
 
-// TODO: XP Manipulation
-#[allow(unused_variables)]
-fn manipulate_xp(user: &mut UserProfile) {}
+fn xp_manager(user: &mut UserProfile) {
+    page_header("Developer Mode - XP Manager", HeaderInstructions::None);
 
-// TODO: Inventory Manipulation
-#[allow(unused_variables)]
-fn manipulate_inventory(user: &mut UserProfile) {}
+    // TODO: XP Manager
+
+    main(user);
+}
+
+fn inventory_manager(user: &mut UserProfile) {
+    page_header(
+        "Developer Mode - Inventory Manager",
+        HeaderInstructions::None,
+    );
+
+    // TODO: Inventory Manager
+
+    main(user);
+}
+
+#[allow(dead_code)]
+fn items_manager(user: &mut UserProfile) {
+    page_header(
+        "Developer Mode - Inventory Manager - Items",
+        HeaderInstructions::None,
+    );
+
+    // TODO: Items Manager
+
+    main(user);
+}
+
+#[allow(dead_code)]
+fn weapons_manager(user: &mut UserProfile) {
+    page_header(
+        "Developer Mode - Inventory Manager - Weapons",
+        HeaderInstructions::None,
+    );
+
+    // TODO: Weapons Manager
+
+    main(user);
+}
+
+#[allow(dead_code)]
+fn armor_manager(user: &mut UserProfile) {
+    page_header(
+        "Developer Mode - Inventory Manager - Armor",
+        HeaderInstructions::None,
+    );
+
+    // TODO: Armor Manager
+
+    main(user);
+}

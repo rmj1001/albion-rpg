@@ -1,6 +1,6 @@
 use albion_termrpg::lib::{
     input::selector,
-    tui::{page_header, press_enter_to_continue},
+    tui::{page_header, press_enter_to_continue, HeaderInstructions},
     user::xp::XP,
     user::{achievements::Achievements, profile::UserProfile},
 };
@@ -12,10 +12,7 @@ fn print_xp(xp: u32) {
 }
 
 pub fn main(user: &mut UserProfile) {
-    page_header(
-        "Hall of Records",
-        Some("Use ↑ ↓ keys to select an option below, then press ENTER/RETURN to run it"),
-    );
+    page_header("Hall of Records", HeaderInstructions::Keyboard);
 
     let menu_option = selector(
         &["1. XP/Levels", "2. Achievements", "NAV: Go Back"],
@@ -34,7 +31,7 @@ pub fn main(user: &mut UserProfile) {
 pub fn xp(user: &mut UserProfile) {
     let xp: &XP = &user.xp;
 
-    page_header("Hall of Records - XP/Levels", None);
+    page_header("Hall of Records - XP/Levels", HeaderInstructions::None);
 
     println!("# Profile");
     print_xp(xp.total_xp());
@@ -68,7 +65,7 @@ pub fn achievements(user: &mut UserProfile) {
     #[allow(unused_variables)]
     let achievements: &Achievements = &user.achievements;
 
-    page_header("Hall of Records - Achievements", None);
+    page_header("Hall of Records - Achievements", HeaderInstructions::None);
 
     // TODO: List achievements here
 

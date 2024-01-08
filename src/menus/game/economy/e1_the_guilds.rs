@@ -1,6 +1,7 @@
 #![allow(unused_assignments, unused_variables, unused_mut)]
 use albion_termrpg::lib::input::selector;
 
+use albion_termrpg::lib::tui::HeaderInstructions;
 use albion_termrpg::lib::{
     tui::{self, page_header},
     user::inventory::{GuildItemNames, Item},
@@ -10,10 +11,7 @@ use albion_termrpg::lib::{
 use rand::Rng;
 
 pub fn main_menu(user: &mut UserProfile) {
-    page_header(
-        "The Guilds",
-        Some("Use ↑ ↓ keys to select an option below, then press ENTER/RETURN to run it"),
-    );
+    page_header("The Guilds", HeaderInstructions::Keyboard);
 
     let job_name: String;
     let job_xp: XPType;
@@ -97,10 +95,7 @@ fn job(
     increase_item: &Option<GuildItemNames>,
     decrease_item: &Option<GuildItemNames>,
 ) {
-    page_header(
-        &format!("Job: {}", job_name),
-        Some("Use ↑ ↓ keys to select an option below, then press ENTER/RETURN to run it"),
-    );
+    page_header(&format!("Job: {}", job_name), HeaderInstructions::Keyboard);
 
     println!("XP: {}", user.xp.get(xp_type));
     println!("Level: {}", XP::level(user.xp.get(xp_type)));

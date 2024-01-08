@@ -23,7 +23,7 @@ fn profile_remains_locked() {
 }
 
 pub fn menu() {
-    page_header("Login", None);
+    page_header("Login", tui::HeaderInstructions::None);
 
     let username: String = prompt_input("Username");
     let profile_result = UserProfile::retrieve(&username);
