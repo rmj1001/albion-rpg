@@ -60,18 +60,19 @@ pub fn header(title: &str, line_length: usize) {
     println!("{}", header);
 }
 
-/// Prints a header with a title, using a line of dashes on the top
-/// and bottom. The title is centered.
+/// Clears terminal screen and prints big_header().
 pub fn page_header(title: &str, instructions: HeaderInstructions) {
     crate::lib::terminal::clear();
     big_header(title, instructions)
 }
 
+/// Prints a header with 80 character width
 pub fn big_header(title: &str, instructions: HeaderInstructions) {
     header(&format!("Albion - {}", title), 80);
     header_instructions(instructions);
 }
 
+/// Prints a header with 40 character width
 pub fn small_header(title: &str, instructions: HeaderInstructions) {
     header(title, 40);
     header_instructions(instructions);
@@ -84,6 +85,7 @@ pub enum HeaderInstructions {
     None,
 }
 
+/// Prints instructions under a header based on enum variant used
 pub fn header_instructions(instructions: HeaderInstructions) {
     let mut instructions_string = String::new();
 
@@ -110,6 +112,7 @@ pub fn press_enter_to_continue() {
     let _ = std::io::stdin().read_line(&mut garbage);
 }
 
+/// Use this to print "Invalid Input" and pause the terminal
 pub fn invalid_input(input: Option<&str>) {
     match input {
         Some(data) => {
