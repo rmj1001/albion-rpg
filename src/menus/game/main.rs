@@ -1,7 +1,7 @@
 use albion_termrpg::lib::{
     input::prompt_input,
     terminal,
-    tui::{self, page_header},
+    tui::{self, page_header, HeaderInstructions},
     user::profile::UserProfile,
 };
 
@@ -11,12 +11,12 @@ pub fn menu(user: &mut UserProfile) {
         tui::HeaderInstructions::EnterCode,
     );
 
-    tui::sub_header("Combat");
+    tui::small_header("Combat", HeaderInstructions::None);
     println!("c1. Wander the Realm");
     println!("c2. Enter the Stronghold");
     println!("\n");
 
-    tui::sub_header("Economy");
+    tui::small_header("Economy", HeaderInstructions::None);
     println!("e1. Work in the Guilds");
     println!("e2. The Bank");
     println!("e3. Trading Post");
@@ -25,7 +25,7 @@ pub fn menu(user: &mut UserProfile) {
     println!("e6. Mystic Shop");
     println!("e7. Celestial Shop");
 
-    tui::sub_header("Profile");
+    tui::small_header("Profile", HeaderInstructions::None);
     println!("p1. Inventory");
     println!("p2. Hall of Records");
 

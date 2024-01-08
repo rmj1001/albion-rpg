@@ -69,29 +69,46 @@ pub enum HeaderInstructions {
 
 /// Prints a header with a title, using a line of dashes on the top
 /// and bottom. The title is centered.
-pub fn page_header(title: &str, instructions_variant: HeaderInstructions) {
+pub fn page_header(title: &str, instructions: HeaderInstructions) {
     crate::lib::terminal::clear();
 
     header(&format!("Albion - {}", title), 80);
 
-    let mut instructions: String = String::new();
+    let mut instructions_string: String = String::new();
 
-    match instructions_variant {
+    match instructions {
         HeaderInstructions::Keyboard => {
-            instructions.push_str("Press ↑ or ↓ to navigate, then press ENTER/RETURN.")
+            instructions_string.push_str("Press ↑ or ↓ to navigate, then press ENTER/RETURN.")
         }
         HeaderInstructions::EnterCode => {
-            instructions.push_str("Enter a code (ex. p1), then press ENTER/RETURN.")
+            instructions_string.push_str("Enter a code (ex. p1), then press ENTER/RETURN.")
         }
-        HeaderInstructions::Other(text) => instructions.push_str(&text),
+        HeaderInstructions::Other(text) => instructions_string.push_str(&text),
         HeaderInstructions::None => {}
     }
 
-    println!("{}\n", instructions);
+    println!("{}\n", instructions_string);
 }
 
-pub fn sub_header(title: &str) {
+pub fn small_header(title: &str, instructions: HeaderInstructions) {
     header(title, 40);
+
+    let mut instructions_string = String::new();
+
+    match instructions {
+        HeaderInstructions::Keyboard => {
+            instructions_string.push_str("Press ↑ or ↓ to navigate, then press ENTER/RETURN.")
+        }
+        HeaderInstructions::EnterCode => {
+            instructions_string.push_str("Enter a code (ex. p1), then press ENTER/RETURN.")
+        }
+        HeaderInstructions::Other(text) => instructions_string.push_str(&text),
+        HeaderInstructions::None => {
+            return;
+        }
+    }
+
+    println!("{}\n", instructions_string);
 }
 
 /// Equivalent to DOS "pause" command
