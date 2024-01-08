@@ -63,7 +63,13 @@ impl UserProfile {
                 smithing: 0,
                 thieving: 0,
             },
-            achievements: Achievements {},
+            achievements: Achievements {
+                monsters_killed: 0,
+                earned_million_gold: false,
+                level_100_reached: false,
+                stronghold_defeated: false,
+                hacked_the_game: false,
+            },
             gold: 0,
             bank: Bank {
                 account1: 0,
