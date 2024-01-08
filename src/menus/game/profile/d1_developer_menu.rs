@@ -105,9 +105,7 @@ fn user_manager(user: &mut UserProfile) {
                         "yes" => {}
 
                         _ => {
-                            println!("\nInvalid input. Aborting.");
-                            tui::press_enter_to_continue();
-
+                            tui::invalid_input(None);
                             user_manager(user);
                         }
                     }
@@ -235,8 +233,7 @@ fn bank_manager(user: &mut UserProfile) {
     match amount_result {
         Ok(number) => amount = number,
         Err(_) => {
-            println!("Invalid input. Cancelling.");
-            press_enter_to_continue();
+            tui::invalid_input(None);
             bank_manager(user);
         }
     }

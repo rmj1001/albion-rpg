@@ -96,8 +96,7 @@ fn disable_developer_mode(user: &mut UserProfile) {
         "y" => {}
         "yes" => {}
         _ => {
-            println!("\nInvalid input. Aborting.");
-            tui::press_enter_to_continue();
+            tui::invalid_input(None);
             menu(user);
         }
     }

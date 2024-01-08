@@ -1,6 +1,6 @@
 use albion_termrpg::lib::{
     input::{prompt_input, selector},
-    tui::{page_header, press_enter_to_continue, HeaderInstructions},
+    tui::{self, page_header, press_enter_to_continue, HeaderInstructions},
     user::{bank::*, profile::UserProfile},
 };
 
@@ -49,8 +49,7 @@ pub fn main(user: &mut UserProfile) {
     match amount_result {
         Ok(number) => amount = number,
         Err(_) => {
-            println!("Invalid input. Cancelling.");
-            press_enter_to_continue();
+            tui::invalid_input(None);
             main(user);
         }
     }
