@@ -1,6 +1,6 @@
 use albion_termrpg::lib::{
+    crypt,
     input::*,
-    password as crypt,
     tui::{self, page_header},
     user::profile::ProfileRetrievalResult,
     user::profile::UserProfile,

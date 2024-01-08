@@ -5,7 +5,7 @@ use super::inventory::*;
 use super::weapons::*;
 use super::xp::*;
 
-use crate::lib::password as crypt;
+use crate::lib::crypt;
 use serde::{Deserialize, Serialize};
 use serde_json as json;
 use std::{fs, path::Path};
