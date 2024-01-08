@@ -30,7 +30,7 @@ pub fn main_menu(user: &mut UserProfile) {
             "NAV: Go Back",
         ],
         0,
-        Some(""),
+        None,
     );
 
     match guild_choice {
@@ -135,7 +135,7 @@ fn job(
 
     println!();
 
-    let work_choice = selector(&["Work", "Go Back"], 0, Some(""));
+    let work_choice = selector(&["Work", "Go Back"], 0, None);
 
     match work_choice {
         0 => {

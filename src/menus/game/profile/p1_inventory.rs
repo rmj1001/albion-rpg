@@ -10,7 +10,7 @@ pub fn main(user: &mut UserProfile) {
     let menu_option = selector(
         &["1. Items", "2. Weapons", "3. Armor", "NAV: Go Back"],
         0,
-        Some(""),
+        None,
     );
 
     match menu_option {

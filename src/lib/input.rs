@@ -18,9 +18,6 @@ pub fn selector(options: &[&str], default_index: usize, optional_prompt: Option<
             }
         }
         None => dialoguer::Select::new()
-            .with_prompt(
-                "Use ↑ ↓ keys to select an option below, then press ENTER/RETURN to run it",
-            )
             .items(options)
             .default(0)
             .interact()

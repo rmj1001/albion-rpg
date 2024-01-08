@@ -17,7 +17,7 @@ pub fn main(user: &mut UserProfile) {
     let menu_option = selector(
         &["1. XP/Levels", "2. Achievements", "NAV: Go Back"],
         0,
-        Some(""),
+        None,
     );
 
     match menu_option {

@@ -20,7 +20,7 @@ pub fn main(user: &mut UserProfile) {
             "NAV: Go Back",
         ],
         0,
-        Some(""),
+        None,
     );
 
     match choice {
@@ -51,7 +51,7 @@ fn user_manager(user: &mut UserProfile) {
             "NAV: Go Back",
         ],
         0,
-        Some(""),
+        None,
     );
 
     match choice1 {
@@ -208,7 +208,7 @@ fn bank_manager(user: &mut UserProfile) {
             "NAV: Go Back",
         ],
         0,
-        Some(""),
+        None,
     );
 
     match account_choice {
@@ -221,7 +221,7 @@ fn bank_manager(user: &mut UserProfile) {
         _ => panic!("Dialoguer selected vector index out of bounds."),
     }
 
-    let option = selector(&["Add Money", "Subtract Money", "NAV: Cancel"], 0, Some(""));
+    let option = selector(&["Add Money", "Subtract Money", "NAV: Cancel"], 0, None);
 
     if option == 2 {
         main(user);

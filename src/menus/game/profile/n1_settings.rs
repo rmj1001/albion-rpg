@@ -125,7 +125,7 @@ pub fn menu(user: &mut UserProfile) {
                 "NAV: Go Back",
             ],
             0,
-            Some(""),
+            None,
         );
     } else {
         choice = selector(
@@ -137,7 +137,7 @@ pub fn menu(user: &mut UserProfile) {
                 "NAV: Go Back",
             ],
             0,
-            Some(""),
+            None,
         );
     }
 
