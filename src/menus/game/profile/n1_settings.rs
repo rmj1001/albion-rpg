@@ -1,4 +1,5 @@
 use albion_termrpg::lib::{
+    crypt,
     input::{out_of_bounds, prompt_input, selector},
     tui::{self, page_header, HeaderInstructions},
     user::profile::UserProfile,
@@ -34,8 +35,9 @@ fn change_username(user: &mut UserProfile) {
 fn change_password(user: &mut UserProfile) {
     page_header("Profile Settings", HeaderInstructions::None);
     let new_password = prompt_input("New Password");
+    let new_pass_is_old_pass = crypt::verify(new_password.clone(), user.password.clone());
 
-    if new_password == user.password {
+    if new_pass_is_old_pass {
         println!("\nThis is your current password.");
         tui::press_enter_to_continue();
         menu(user);

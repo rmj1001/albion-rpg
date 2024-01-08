@@ -8,7 +8,7 @@ use albion_termrpg::lib::{
 };
 
 pub fn main(user: &mut UserProfile) {
-    page_header("Developer Settings", HeaderInstructions::Keyboard);
+    page_header("Developer Mode", HeaderInstructions::Keyboard);
 
     let choice = selector(
         &[
@@ -36,7 +36,9 @@ pub fn main(user: &mut UserProfile) {
     }
 }
 
-fn disable_developer_mode(user: &mut UserProfile) {
+pub fn disable_developer_mode(user: &mut UserProfile) {
+    page_header("Developer Mode", HeaderInstructions::None);
+
     let confirm =
         prompt_input("Are you sure you want to disable developer mode? (y/n)").to_lowercase();
 

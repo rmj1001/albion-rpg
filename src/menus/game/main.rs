@@ -77,12 +77,17 @@ pub fn menu(user: &mut UserProfile) {
         }
 
         "3.141592" => {
-            user.achievements.hacked_the_game = true;
-            user.set_developer(true);
+            if !user.is_developer {
+                page_header("Developer Mode", HeaderInstructions::None);
+                user.achievements.hacked_the_game = true;
+                user.set_developer(true);
 
-            println!("\nDeveloper mode enabled.");
-            press_enter_to_continue();
-            menu(user);
+                println!("\nDeveloper mode enabled.");
+                press_enter_to_continue();
+                menu(user);
+            } else {
+                super::profile::d1_developer_menu::disable_developer_mode(user);
+            }
         }
 
         wrong_input => {
