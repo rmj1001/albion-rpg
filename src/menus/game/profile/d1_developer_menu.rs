@@ -278,12 +278,23 @@ fn inventory_manager(user: &mut UserProfile) {
         HeaderInstructions::None,
     );
 
-    // TODO: Inventory Manager
+    let manager_option = selector(
+        &["1. Items", "2. Weapons", "3. Armor", "NAV: Go Back"],
+        0,
+        None,
+    );
+
+    match manager_option {
+        0 => items_manager(user),
+        1 => weapons_manager(user),
+        2 => armor_manager(user),
+        3 => main(user),
+        _ => out_of_bounds(None),
+    }
 
     main(user);
 }
 
-#[allow(dead_code)]
 fn items_manager(user: &mut UserProfile) {
     page_header(
         "Developer Mode - Inventory Manager - Items",
@@ -292,10 +303,9 @@ fn items_manager(user: &mut UserProfile) {
 
     // TODO: Items Manager
 
-    main(user);
+    inventory_manager(user);
 }
 
-#[allow(dead_code)]
 fn weapons_manager(user: &mut UserProfile) {
     page_header(
         "Developer Mode - Inventory Manager - Weapons",
@@ -304,10 +314,9 @@ fn weapons_manager(user: &mut UserProfile) {
 
     // TODO: Weapons Manager
 
-    main(user);
+    inventory_manager(user);
 }
 
-#[allow(dead_code)]
 fn armor_manager(user: &mut UserProfile) {
     page_header(
         "Developer Mode - Inventory Manager - Armor",
@@ -316,5 +325,5 @@ fn armor_manager(user: &mut UserProfile) {
 
     // TODO: Armor Manager
 
-    main(user);
+    inventory_manager(user);
 }
