@@ -4,7 +4,6 @@ use albion_termrpg::lib::{
     user::{bank::*, profile::UserProfile},
 };
 
-#[allow(unused_variables)]
 pub fn main(user: &mut UserProfile) {
     let mut account: BankAccount = BankAccount::Account1;
 
