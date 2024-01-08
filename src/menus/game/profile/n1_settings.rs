@@ -78,88 +78,28 @@ fn delete_profile(user: &mut UserProfile) {
     crate::menus::accounts::main::menu();
 }
 
-fn disable_developer_mode(user: &mut UserProfile) {
-    let confirm =
-        prompt_input("Are you sure you want to disable developer mode? (y/n)").to_lowercase();
-
-    match &confirm[..] {
-        "n" => {
-            println!("\nAborting.");
-            tui::press_enter_to_continue();
-            menu(user);
-        }
-        "no" => {
-            println!("\nAborting.");
-            tui::press_enter_to_continue();
-            menu(user);
-        }
-        "y" => {}
-        "yes" => {}
-        _ => {
-            tui::invalid_input(None);
-            menu(user);
-        }
-    }
-
-    user.set_developer(false);
-    println!("\nDeveloper mode disabled.");
-    tui::press_enter_to_continue();
-
-    menu(user);
-}
-
 pub fn menu(user: &mut UserProfile) {
     page_header("Profile Settings", HeaderInstructions::Keyboard);
 
     #[allow(clippy::needless_late_init)]
-    let choice: usize;
-
-    if user.is_developer {
-        choice = selector(
-            &[
-                "1. Change Username",
-                "2. Change Password",
-                "3. Lock Profile",
-                "4. Delete Profile",
-                "5. Disable Developer Mode",
-                "NAV: Go Back",
-            ],
-            0,
-            None,
-        );
-    } else {
-        choice = selector(
-            &[
-                "1. Change Username",
-                "2. Change Password",
-                "3. Lock Profile",
-                "4. Delete Profile",
-                "NAV: Go Back",
-            ],
-            0,
-            None,
-        );
-    }
+    let choice: usize = selector(
+        &[
+            "1. Change Username",
+            "2. Change Password",
+            "3. Lock Profile",
+            "4. Delete Profile",
+            "NAV: Go Back",
+        ],
+        0,
+        None,
+    );
 
     match choice {
         0 => change_username(user),
         1 => change_password(user),
         2 => lock_profile(user),
         3 => delete_profile(user),
-        4 => {
-            if user.is_developer {
-                disable_developer_mode(user);
-            } else {
-                crate::menus::game::main::menu(user)
-            }
-        }
-        5 => {
-            if user.is_developer {
-                crate::menus::game::main::menu(user)
-            } else {
-                out_of_bounds(None);
-            }
-        }
+        4 => crate::menus::game::main::menu(user),
         _ => out_of_bounds(None),
     }
 }

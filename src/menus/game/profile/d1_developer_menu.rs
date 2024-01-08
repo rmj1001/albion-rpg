@@ -17,6 +17,7 @@ pub fn main(user: &mut UserProfile) {
             "3. Manipulate XP",
             "4. Manipulate Banks",
             "5. Manage User Profiles",
+            "6. Disable developer mode",
             "NAV: Go Back",
         ],
         0,
@@ -29,9 +30,40 @@ pub fn main(user: &mut UserProfile) {
         2 => xp_manager(user),
         3 => bank_manager(user),
         4 => user_manager(user),
-        5 => crate::menus::game::main::menu(user),
+        5 => disable_developer_mode(user),
+        6 => crate::menus::game::main::menu(user),
         _ => out_of_bounds(None),
     }
+}
+
+fn disable_developer_mode(user: &mut UserProfile) {
+    let confirm =
+        prompt_input("Are you sure you want to disable developer mode? (y/n)").to_lowercase();
+
+    match &confirm[..] {
+        "n" => {
+            println!("\nAborting.");
+            tui::press_enter_to_continue();
+            main(user);
+        }
+        "no" => {
+            println!("\nAborting.");
+            tui::press_enter_to_continue();
+            main(user);
+        }
+        "y" => {}
+        "yes" => {}
+        _ => {
+            tui::invalid_input(None);
+            main(user);
+        }
+    }
+
+    user.set_developer(false);
+    println!("\nDeveloper mode disabled.");
+    tui::press_enter_to_continue();
+
+    crate::menus::game::main::menu(user);
 }
 
 fn user_manager(user: &mut UserProfile) {
