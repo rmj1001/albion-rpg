@@ -1,22 +1,12 @@
 /// Returns the index of the element in the vector selected.
 pub fn selector(options: &[&str], default_index: usize, optional_prompt: Option<&str>) -> usize {
     match optional_prompt {
-        Some(prompt) => {
-            if prompt.is_empty() {
-                dialoguer::Select::new()
-                    .items(options)
-                    .default(0)
-                    .interact()
-                    .unwrap_or(default_index)
-            } else {
-                dialoguer::Select::new()
-                    .with_prompt(prompt)
-                    .items(options)
-                    .default(0)
-                    .interact()
-                    .unwrap_or(default_index)
-            }
-        }
+        Some(prompt) => dialoguer::Select::new()
+            .with_prompt(prompt)
+            .items(options)
+            .default(0)
+            .interact()
+            .unwrap_or(default_index),
         None => dialoguer::Select::new()
             .items(options)
             .default(0)
