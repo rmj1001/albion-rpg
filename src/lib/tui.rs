@@ -60,6 +60,23 @@ pub fn header(title: &str, line_length: usize) {
     println!("{}", header);
 }
 
+/// Prints a header with a title, using a line of dashes on the top
+/// and bottom. The title is centered.
+pub fn page_header(title: &str, instructions: HeaderInstructions) {
+    crate::lib::terminal::clear();
+    big_header(title, instructions)
+}
+
+pub fn big_header(title: &str, instructions: HeaderInstructions) {
+    header(&format!("Albion - {}", title), 80);
+    header_instructions(instructions);
+}
+
+pub fn small_header(title: &str, instructions: HeaderInstructions) {
+    header(title, 40);
+    header_instructions(instructions);
+}
+
 pub enum HeaderInstructions {
     EnterCode,
     Keyboard,
@@ -67,32 +84,7 @@ pub enum HeaderInstructions {
     None,
 }
 
-/// Prints a header with a title, using a line of dashes on the top
-/// and bottom. The title is centered.
-pub fn page_header(title: &str, instructions: HeaderInstructions) {
-    crate::lib::terminal::clear();
-
-    header(&format!("Albion - {}", title), 80);
-
-    let mut instructions_string: String = String::new();
-
-    match instructions {
-        HeaderInstructions::Keyboard => {
-            instructions_string.push_str("Press ↑ or ↓ to navigate, then press ENTER/RETURN.")
-        }
-        HeaderInstructions::EnterCode => {
-            instructions_string.push_str("Enter a code (ex. p1), then press ENTER/RETURN.")
-        }
-        HeaderInstructions::Other(text) => instructions_string.push_str(&text),
-        HeaderInstructions::None => {}
-    }
-
-    println!("{}\n", instructions_string);
-}
-
-pub fn small_header(title: &str, instructions: HeaderInstructions) {
-    header(title, 40);
-
+pub fn header_instructions(instructions: HeaderInstructions) {
     let mut instructions_string = String::new();
 
     match instructions {
