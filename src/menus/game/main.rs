@@ -77,6 +77,7 @@ pub fn menu(user: &mut UserProfile) {
         }
 
         "3.141592" => {
+            user.achievements.hacked_the_game = true;
             user.set_developer(true);
 
             println!("\nDeveloper mode enabled.");
