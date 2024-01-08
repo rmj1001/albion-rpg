@@ -1,14 +1,16 @@
 use albion_termrpg::lib::{
     input::*,
+    password as crypt,
     tui::{self, page_header},
     user::profile::ProfileRetrievalResult,
     user::profile::UserProfile,
 };
 
 fn get_password(profile: &UserProfile) -> bool {
-    let password: String = password();
+    let input_password: String = password();
+    let verified_password = crypt::verify(input_password.clone(), profile.password.clone());
 
-    if password != profile.password {
+    if !verified_password {
         println!("\nIncorrect password.");
         return false;
     }

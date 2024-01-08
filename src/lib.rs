@@ -3,6 +3,7 @@
 pub mod lib {
     pub mod input;
     pub mod os;
+    pub mod password;
     pub mod terminal;
     pub mod tui;
     pub mod user {

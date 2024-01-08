@@ -5,6 +5,7 @@ use super::inventory::*;
 use super::weapons::*;
 use super::xp::*;
 
+use crate::lib::password as crypt;
 use serde::{Deserialize, Serialize};
 use serde_json as json;
 use std::{fs, path::Path};
@@ -439,7 +440,8 @@ impl UserProfile {
 
     /// Updates password field
     pub fn change_password(&mut self, new_password: String) {
-        self.password = new_password;
+        let new_hashed_password = crypt::generate(new_password);
+        self.password = new_hashed_password;
         self.save();
     }
 

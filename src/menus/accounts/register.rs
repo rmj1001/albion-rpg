@@ -1,5 +1,6 @@
 use albion_termrpg::lib::{
     input::prompt_input,
+    password as crypt,
     tui::{self, page_header, HeaderInstructions},
     user::profile::{ProfileRetrievalResult, UserProfile},
 };
@@ -26,7 +27,9 @@ pub fn menu() {
         crate::menus::accounts::main::menu();
     }
 
-    let profile = UserProfile::from(&username, &password);
+    let password_hash = crypt::generate(password);
+
+    let profile = UserProfile::from(&username, &password_hash);
 
     profile.save();
     println!("\nRegistration successful.");
