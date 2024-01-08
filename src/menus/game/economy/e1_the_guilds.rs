@@ -1,5 +1,5 @@
 #![allow(unused_assignments, unused_variables, unused_mut)]
-use albion_termrpg::lib::input::selector;
+use albion_termrpg::lib::input::{out_of_bounds, selector};
 
 use albion_termrpg::lib::tui::HeaderInstructions;
 use albion_termrpg::lib::{
@@ -83,7 +83,7 @@ pub fn main_menu(user: &mut UserProfile) {
             &None,
         ),
         6 => crate::menus::game::main::menu(user),
-        _ => panic!("Dialogue selector picked invalid index."),
+        _ => out_of_bounds(None),
     }
 }
 
@@ -207,7 +207,7 @@ fn job(
             }
         }
         1 => main_menu(user),
-        _ => panic!("Dialogue selector picked invalid index."),
+        _ => out_of_bounds(None),
     }
 
     job(

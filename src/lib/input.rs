@@ -48,3 +48,10 @@ pub fn password() -> String {
         .interact()
         .unwrap()
 }
+
+pub fn out_of_bounds(optional_error: Option<&str>) {
+    match optional_error {
+        Some(error) => panic!("Dialogue selected index out of option's bounds: {}", error),
+        None => panic!("Dialogue selected index out of option's bounds."),
+    }
+}

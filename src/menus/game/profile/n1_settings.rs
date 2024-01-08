@@ -1,5 +1,5 @@
 use albion_termrpg::lib::{
-    input::{prompt_input, selector},
+    input::{out_of_bounds, prompt_input, selector},
     tui::{self, page_header, HeaderInstructions},
     user::profile::UserProfile,
 };
@@ -9,7 +9,7 @@ fn change_username(user: &mut UserProfile) {
     let new_username = prompt_input("New Username");
 
     if new_username == user.username {
-        println!("\nThis is your current username. Aborting.");
+        println!("\nThis is your current username.");
         tui::press_enter_to_continue();
         menu(user);
     }
@@ -36,7 +36,7 @@ fn change_password(user: &mut UserProfile) {
     let new_password = prompt_input("New Password");
 
     if new_password == user.password {
-        println!("\nThis is your current password Aborting.");
+        println!("\nThis is your current password.");
         tui::press_enter_to_continue();
         menu(user);
     }
@@ -157,9 +157,9 @@ pub fn menu(user: &mut UserProfile) {
             if user.is_developer {
                 crate::menus::game::main::menu(user)
             } else {
-                panic!("Dialoguer chose index out of bounds");
+                out_of_bounds(None);
             }
         }
-        _ => panic!("Dialoguer chose index out of bounds"),
+        _ => out_of_bounds(None),
     }
 }

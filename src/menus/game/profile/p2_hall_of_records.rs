@@ -1,5 +1,5 @@
 use albion_termrpg::lib::{
-    input::selector,
+    input::{out_of_bounds, selector},
     tui::{page_header, press_enter_to_continue, HeaderInstructions},
     user::xp::XP,
     user::{achievements::Achievements, profile::UserProfile},
@@ -24,7 +24,7 @@ pub fn main(user: &mut UserProfile) {
         0 => xp(user),
         1 => achievements(user),
         2 => crate::menus::game::main::menu(user),
-        _ => panic!("Dialoguer picked array index out of bounds"),
+        _ => out_of_bounds(None),
     }
 }
 

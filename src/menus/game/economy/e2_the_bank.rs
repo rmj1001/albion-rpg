@@ -1,5 +1,5 @@
 use albion_termrpg::lib::{
-    input::{prompt_input, selector},
+    input::{out_of_bounds, prompt_input, selector},
     tui::{self, page_header, press_enter_to_continue, HeaderInstructions},
     user::{bank::*, profile::UserProfile},
 };
@@ -34,7 +34,7 @@ pub fn main(user: &mut UserProfile) {
         2 => account = BankAccount::Account3,
         3 => account = BankAccount::Account4,
         4 => crate::menus::game::main::menu(user),
-        _ => panic!("Dialoguer selected vector index out of bounds."),
+        _ => out_of_bounds(None),
     }
 
     let option = selector(&["Deposit", "Withdraw", "NAV: Cancel"], 0, None);
@@ -62,7 +62,7 @@ pub fn main(user: &mut UserProfile) {
         // Withdrawal
         1 => bank_result = Bank::withdraw(user, account, amount, false),
         2 => main(user),
-        _ => panic!("Dialoguer selected vector index out of bounds."),
+        _ => out_of_bounds(None),
     }
 
     match bank_result {

@@ -1,5 +1,5 @@
 use albion_termrpg::lib::{
-    input::selector,
+    input::{out_of_bounds, selector},
     tui::{page_header, press_enter_to_continue, HeaderInstructions},
     user::profile::UserProfile,
 };
@@ -18,7 +18,7 @@ pub fn main(user: &mut UserProfile) {
         1 => weapons_inventory(user),
         2 => armor_inventory(user),
         3 => crate::menus::game::main::menu(user),
-        _ => panic!("Dialogue selected index out of option vec bounds"),
+        _ => out_of_bounds(None),
     }
 }
 

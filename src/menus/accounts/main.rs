@@ -1,4 +1,8 @@
-use albion_termrpg::lib::{input::selector, terminal::*, tui::*};
+use albion_termrpg::lib::{
+    input::{out_of_bounds, selector},
+    terminal::*,
+    tui::*,
+};
 
 pub fn menu() {
     clear();
@@ -12,8 +16,6 @@ pub fn menu() {
         0 => crate::menus::accounts::login::menu(),
         1 => crate::menus::accounts::register::menu(),
         2 => exit(),
-        _ => {
-            panic!("Invalid option chosen.");
-        }
+        _ => out_of_bounds(None),
     }
 }

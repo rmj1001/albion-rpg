@@ -1,5 +1,5 @@
 use albion_termrpg::lib::{
-    input::{self, prompt_input, select_from_vector, selector},
+    input::{self, out_of_bounds, prompt_input, select_from_vector, selector},
     tui::{self, page_header, press_enter_to_continue, HeaderInstructions},
     user::{
         bank::{Bank, BankAccount, BankResult},
@@ -30,7 +30,7 @@ pub fn main(user: &mut UserProfile) {
         3 => bank_manager(user),
         4 => user_manager(user),
         5 => crate::menus::game::main::menu(user),
-        _ => panic!("Dialogue picked option out of bounds"),
+        _ => out_of_bounds(None),
     }
 }
 
@@ -129,7 +129,7 @@ fn user_manager(user: &mut UserProfile) {
                     user_manager(user);
                 }
 
-                None => panic!("Dialoguer picked vec index out of bounds"),
+                None => out_of_bounds(None),
             }
         }
 
@@ -137,7 +137,7 @@ fn user_manager(user: &mut UserProfile) {
 
         3 => main(user),
 
-        _ => panic!("Dialoguer picked option out of bounds"),
+        _ => out_of_bounds(None),
     }
 }
 
@@ -177,7 +177,7 @@ fn view_user(user: &mut UserProfile) {
                 }
             }
         }
-        None => panic!("Dialoguer picked option out of bounds."),
+        None => out_of_bounds(None),
     }
 
     user_manager(user);
@@ -218,7 +218,7 @@ fn bank_manager(user: &mut UserProfile) {
         3 => account = BankAccount::Account3,
         4 => account = BankAccount::Account4,
         5 => main(user),
-        _ => panic!("Dialoguer selected vector index out of bounds."),
+        _ => out_of_bounds(None),
     }
 
     let option = selector(&["Add Money", "Subtract Money", "NAV: Cancel"], 0, None);
@@ -246,7 +246,7 @@ fn bank_manager(user: &mut UserProfile) {
         // Withdrawal
         1 => bank_result = Bank::withdraw(user, account, amount, true),
         2 => bank_manager(user),
-        _ => panic!("Dialoguer selected vector index out of bounds."),
+        _ => out_of_bounds(None),
     }
 
     match bank_result {
