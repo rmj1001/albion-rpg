@@ -1,7 +1,7 @@
 use albion_termrpg::lib::{
     input::prompt_input,
     terminal,
-    tui::{self, page_header, HeaderInstructions},
+    tui::{self, page_header, press_enter_to_continue, HeaderInstructions},
     user::profile::UserProfile,
 };
 
@@ -74,6 +74,14 @@ pub fn menu(user: &mut UserProfile) {
                 tui::invalid_input(None);
                 menu(user);
             }
+        }
+
+        "3.141592" => {
+            user.set_developer(true);
+
+            println!("\nDeveloper mode enabled.");
+            press_enter_to_continue();
+            menu(user);
         }
 
         wrong_input => {
