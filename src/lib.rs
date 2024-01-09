@@ -11,6 +11,7 @@ pub mod lib {
         pub mod armor;
         pub mod bank;
         pub mod combat;
+        pub mod guilds;
         pub mod inventory;
         pub mod profile;
         pub mod weapons;

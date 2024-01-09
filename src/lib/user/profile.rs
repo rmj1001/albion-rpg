@@ -1,6 +1,8 @@
 use super::achievements::*;
 use super::armor::*;
 use super::bank::*;
+use super::guilds::Guild;
+use super::guilds::GuildMemberships;
 use super::inventory::*;
 use super::weapons::*;
 use super::xp::*;
@@ -10,7 +12,7 @@ use serde::{Deserialize, Serialize};
 use serde_json as json;
 use std::{fs, path::Path};
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Health {
     pub hitpoints: u32,
     pub hunger: u32,
@@ -27,7 +29,7 @@ pub enum JSONResult {
     None,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct UserProfile {
     pub username: String,
     pub password: String,
@@ -38,6 +40,7 @@ pub struct UserProfile {
     pub achievements: Achievements,
     pub gold: u32,
     pub bank: Bank,
+    pub guild_memberships: GuildMemberships,
     pub inventory: MundaneInventory,
     pub armor: ArmorInventory,
     pub weapons: WeaponsInventory,
@@ -77,6 +80,24 @@ impl UserProfile {
                 account2: 0,
                 account3: 0,
                 account4: 0,
+            },
+            guild_memberships: GuildMemberships {
+                fishing: Guild {
+                    member: false,
+                    member_price: 100,
+                },
+                woodcutting: Guild {
+                    member: false,
+                    member_price: 300,
+                },
+                mining: Guild {
+                    member: false,
+                    member_price: 500,
+                },
+                smithing: Guild {
+                    member: false,
+                    member_price: 1000,
+                },
             },
             inventory: MundaneInventory {
                 bait: Item {
