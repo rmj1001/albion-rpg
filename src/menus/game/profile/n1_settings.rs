@@ -83,7 +83,6 @@ fn delete_profile(user: &mut UserProfile) {
 pub fn menu(user: &mut UserProfile) {
     page_header("Profile Settings", HeaderInstructions::Keyboard);
 
-    #[allow(clippy::needless_late_init)]
     let choice: usize = selector(
         &[
             "1. Change Username",
