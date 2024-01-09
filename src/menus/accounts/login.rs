@@ -1,7 +1,7 @@
 use albion_termrpg::lib::{
     crypt,
     input::*,
-    tui::{self, page_header},
+    tui::{self, page_header, press_enter_to_continue},
     user::profile::ProfileRetrievalResult,
     user::profile::UserProfile,
 };
@@ -35,31 +35,25 @@ pub fn menu() {
             let mut profile = profile;
 
             if profile.locked {
-                let unlock = prompt_input("\nProfile is locked. Unlock? (y/n)").to_lowercase();
+                let answer_option: Option<bool> = yes_or_no("\nProfile is locked. Unlock?");
 
-                match &unlock[..] {
-                    "y" => {
-                        if get_password(&profile) {
-                            profile.unlock();
-                            println!("\nProfile unlocked. Proceed with login.\n");
+                match answer_option {
+                    Some(is_yes) => {
+                        if is_yes {
+                            if get_password(&profile) {
+                                profile.unlock();
+                                println!("\nProfile unlocked. Proceed with login.\n");
+                            } else {
+                                profile_remains_locked()
+                            }
                         } else {
-                            profile_remains_locked()
+                            println!("\nCancelling.");
+                            press_enter_to_continue();
+                            crate::menus::accounts::main::menu();
                         }
                     }
-                    "yes" => {
-                        if get_password(&profile) {
-                            profile.unlock();
-                        } else {
-                            profile_remains_locked()
-                        }
-                    }
-                    "n" => profile_remains_locked(),
-                    "no" => profile_remains_locked(),
-                    invalid_input => {
-                        tui::invalid_input(Some(invalid_input));
-                        tui::press_enter_to_continue();
-                        crate::menus::accounts::main::menu();
-                    }
+
+                    None => crate::menus::accounts::main::menu(),
                 }
             }
 

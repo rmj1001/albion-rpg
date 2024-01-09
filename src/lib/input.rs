@@ -49,7 +49,7 @@ pub fn prompt_input(prompt: &str) -> String {
 /// Returns None if the input is not "yes", "no", "y", or "n".
 /// If None then it also gives an error message.
 pub fn yes_or_no(prompt: &str) -> Option<bool> {
-    let input = prompt_input(&format!("{}? (y/n)", prompt)).to_lowercase();
+    let input = prompt_input(&format!("{} (y/n)", prompt)).to_lowercase();
 
     match &input[..] {
         "y" => Some(true),

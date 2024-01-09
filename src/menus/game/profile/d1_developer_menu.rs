@@ -1,5 +1,5 @@
 use albion_termrpg::lib::{
-    input::{self, out_of_bounds, prompt_input, select_from_vector, selector},
+    input::{self, out_of_bounds, select_from_vector, selector, yes_or_no},
     tui::{self, page_header, press_enter_to_continue, HeaderInstructions},
     user::{
         bank::{Bank, BankAccount, BankResult},
@@ -39,26 +39,18 @@ pub fn main(user: &mut UserProfile) {
 pub fn disable_developer_mode(user: &mut UserProfile) {
     page_header("Developer Mode", HeaderInstructions::None);
 
-    let confirm =
-        prompt_input("Are you sure you want to disable developer mode? (y/n)").to_lowercase();
+    let confirm_option = yes_or_no("Are you sure you want to disable developer mode?");
 
-    match &confirm[..] {
-        "n" => {
-            println!("\nAborting.");
-            tui::press_enter_to_continue();
-            main(user);
+    match confirm_option {
+        Some(is_yes) => {
+            if !is_yes {
+                println!("\nAborting.");
+                press_enter_to_continue();
+                main(user);
+            }
         }
-        "no" => {
-            println!("\nAborting.");
-            tui::press_enter_to_continue();
-            main(user);
-        }
-        "y" => {}
-        "yes" => {}
-        _ => {
-            tui::invalid_input(None);
-            main(user);
-        }
+
+        None => main(user),
     }
 
     user.set_developer(false);
@@ -117,31 +109,20 @@ fn user_manager(user: &mut UserProfile) {
 
             match profile_choice {
                 Some(profile_string) => {
-                    match &prompt_input(&format!(
-                        "Are you sure you want to delete profile '{}'? (y/n)",
+                    let confirm = yes_or_no(&format!(
+                        "Are you sure you want to delete profile '{}'?",
                         profile_string
-                    ))
-                    .to_lowercase()[..]
-                    {
-                        "n" => {
-                            println!("\nAborting.");
-                            tui::press_enter_to_continue();
+                    ));
 
-                            user_manager(user);
+                    match confirm {
+                        Some(is_yes) => {
+                            if !is_yes {
+                                println!("\nAborting.");
+                                press_enter_to_continue();
+                                user_manager(user);
+                            }
                         }
-                        "no" => {
-                            println!("\nAborting.");
-                            tui::press_enter_to_continue();
-
-                            user_manager(user);
-                        }
-                        "y" => {}
-                        "yes" => {}
-
-                        _ => {
-                            tui::invalid_input(None);
-                            user_manager(user);
-                        }
+                        None => user_manager(user),
                     }
 
                     if *profile_string == user.username {
