@@ -1,13 +1,13 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Item {
     pub name: String,
     pub price: u32,
     pub quantity: u32,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub enum GuildItemNames {
     Fish,
     CookedFish,
@@ -16,7 +16,7 @@ pub enum GuildItemNames {
     Ingots,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct MundaneInventory {
     pub bait: Item,
     pub seeds: Item,

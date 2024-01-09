@@ -1,7 +1,7 @@
 use super::profile::*;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub enum BankAccount {
     CoinPurse,
     Account1,
@@ -10,13 +10,13 @@ pub enum BankAccount {
     Account4,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub enum BankResult {
     Ok,
     Error(&'static str),
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Bank {
     pub account1: u32,
     pub account2: u32,

@@ -1,7 +1,7 @@
 use rand::{thread_rng, Rng};
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Weapon {
     pub name: String,
     pub price: u32,
@@ -23,7 +23,7 @@ impl Weapon {
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct WeaponsInventory {
     pub wooden_sword: Weapon,
     pub bronze_sword: Weapon,
