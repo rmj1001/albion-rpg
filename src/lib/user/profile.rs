@@ -4,10 +4,10 @@ use super::bank::*;
 use super::guilds::Guild;
 use super::guilds::GuildMemberships;
 use super::inventory::*;
+use super::settings::Settings;
 use super::weapons::*;
 use super::xp::*;
 
-use crate::lib::crypt;
 use serde::{Deserialize, Serialize};
 use serde_json as json;
 use std::{fs, path::Path};
@@ -31,10 +31,6 @@ pub enum JSONResult {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct UserProfile {
-    pub username: String,
-    pub password: String,
-    pub locked: bool,
-    pub is_developer: bool,
     pub health: Health,
     pub xp: XP,
     pub achievements: Achievements,
@@ -44,16 +40,19 @@ pub struct UserProfile {
     pub inventory: MundaneInventory,
     pub armor: ArmorInventory,
     pub weapons: WeaponsInventory,
+    pub settings: Settings,
 }
 
 impl UserProfile {
     /// Creates new instance with empty username/password fields
     pub fn new() -> Self {
         let profile: UserProfile = UserProfile {
-            username: String::new(),
-            password: String::new(),
-            locked: false,
-            is_developer: false,
+            settings: Settings {
+                username: String::new(),
+                password: String::new(),
+                developer: false,
+                locked: false,
+            },
             health: Health {
                 hitpoints: 100,
                 hunger: 0,
@@ -285,8 +284,8 @@ impl UserProfile {
     pub fn from(username: &str, password: &str) -> UserProfile {
         let mut profile: UserProfile = UserProfile::new();
 
-        profile.username = username.to_string();
-        profile.password = password.to_string();
+        profile.settings.username = username.to_string();
+        profile.settings.password = password.to_string();
 
         profile.save();
 
@@ -374,7 +373,7 @@ impl UserProfile {
     /// If the file exists, it is overwritten with the current profile state.
     /// If the file does not exist, the default values are written to the file.
     pub fn save(&self) {
-        let path_string: String = UserProfile::file_path(&self.username);
+        let path_string: String = UserProfile::file_path(&self.settings.username);
 
         match fs::create_dir_all(UserProfile::directory_path()) {
             Ok(_) => {}
@@ -439,51 +438,6 @@ impl UserProfile {
 
     /// Deletes the profile file and logs out
     pub fn delete(&self) {
-        UserProfile::delete_from_username(&self.username);
-    }
-
-    /// Hinders profile login without double password entry
-    pub fn lock(&mut self) {
-        self.locked = true;
-        self.save();
-    }
-
-    /// Allows profile to login un-hindered.
-    pub fn unlock(&mut self) {
-        self.locked = false;
-        self.save();
-    }
-
-    /// Updates developer status
-    pub fn set_developer(&mut self, flag: bool) {
-        self.is_developer = flag;
-        self.save();
-    }
-
-    /// Updates password field
-    pub fn change_password(&mut self, new_password: String) {
-        let new_hashed_password = crypt::generate(new_password);
-        self.password = new_hashed_password;
-        self.save();
-    }
-
-    /// Updates the username field and profile file name.
-    pub fn change_username(&mut self, new_username: String) {
-        let old_profile_path: String = UserProfile::file_path(&self.username);
-        let old_file_path: &Path = Path::new(&old_profile_path);
-
-        let new_profile_path: String = UserProfile::file_path(&new_username);
-        let new_file_path: &Path = Path::new(&new_profile_path);
-
-        match fs::rename(old_file_path, new_file_path) {
-            Ok(_) => {
-                self.username = new_username;
-                self.save();
-            }
-
-            Err(error) => {
-                panic!("I couldn't rename the profile filename: {}", error);
-            }
-        }
+        UserProfile::delete_from_username(&self.settings.username);
     }
 }

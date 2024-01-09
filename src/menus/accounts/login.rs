@@ -8,7 +8,8 @@ use albion_termrpg::lib::{
 
 fn get_password(profile: &UserProfile) -> bool {
     let input_password: String = password();
-    let verified_password = crypt::verify(input_password.clone(), profile.password.clone());
+    let verified_password =
+        crypt::verify(input_password.clone(), profile.settings.password.clone());
 
     if !verified_password {
         println!("\nIncorrect password.");
@@ -34,14 +35,14 @@ pub fn menu() {
         ProfileRetrievalResult::Some(profile) => {
             let mut profile = profile;
 
-            if profile.locked {
+            if profile.settings.locked {
                 let answer_option: Option<bool> = yes_or_no("\nProfile is locked. Unlock?");
 
                 match answer_option {
                     Some(is_yes) => {
                         if is_yes {
                             if get_password(&profile) {
-                                profile.unlock();
+                                profile.settings.unlock();
                                 println!("\nProfile unlocked. Proceed with login.\n");
                             } else {
                                 profile_remains_locked()

@@ -9,7 +9,7 @@ fn change_username(user: &mut UserProfile) {
     page_header("Profile Settings", HeaderInstructions::None);
     let new_username = prompt_input("New Username");
 
-    if new_username == user.username {
+    if new_username == user.settings.username {
         println!("\nThis is your current username.");
         tui::press_enter_to_continue();
         menu(user);
@@ -23,7 +23,7 @@ fn change_username(user: &mut UserProfile) {
         menu(user);
     }
 
-    user.change_username(new_username);
+    user.settings.change_username(new_username);
 
     page_header("Profile Settings", HeaderInstructions::None);
     println!("Successfully changed username.");
@@ -35,7 +35,7 @@ fn change_username(user: &mut UserProfile) {
 fn change_password(user: &mut UserProfile) {
     page_header("Profile Settings", HeaderInstructions::None);
     let new_password = prompt_input("New Password");
-    let new_pass_is_old_pass = crypt::verify(new_password.clone(), user.password.clone());
+    let new_pass_is_old_pass = crypt::verify(new_password.clone(), user.settings.password.clone());
 
     if new_pass_is_old_pass {
         println!("\nThis is your current password.");
@@ -51,7 +51,7 @@ fn change_password(user: &mut UserProfile) {
         menu(user);
     }
 
-    user.change_password(new_password);
+    user.settings.change_password(new_password);
 
     page_header("Profile Settings", HeaderInstructions::None);
     println!("Successfully changed password.");
@@ -61,7 +61,7 @@ fn change_password(user: &mut UserProfile) {
 }
 
 fn lock_profile(user: &mut UserProfile) {
-    user.lock();
+    user.settings.lock();
 
     page_header("Profile Settings", HeaderInstructions::None);
     println!("Profile sucessfully locked.");

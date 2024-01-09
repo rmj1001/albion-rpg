@@ -53,7 +53,7 @@ pub fn disable_developer_mode(user: &mut UserProfile) {
         None => main(user),
     }
 
-    user.set_developer(false);
+    user.settings.set_developer(false);
     println!("\nDeveloper mode disabled.");
     tui::press_enter_to_continue();
 
@@ -125,8 +125,8 @@ fn user_manager(user: &mut UserProfile) {
                         None => user_manager(user),
                     }
 
-                    if *profile_string == user.username {
-                        UserProfile::delete_from_username(&user.username);
+                    if *profile_string == user.settings.username {
+                        UserProfile::delete_from_username(&user.settings.username);
 
                         page_header("Developer Mode - User Manager", HeaderInstructions::None);
                         println!("\nCurrent profile successfully deleted. Logging out.");
@@ -175,7 +175,7 @@ fn view_user(user: &mut UserProfile) {
                     let json_string = profile.to_pretty_json();
 
                     page_header(
-                        &format!("User Profile - {}", profile.username),
+                        &format!("User Profile - {}", profile.settings.username),
                         HeaderInstructions::None,
                     );
 

@@ -14,6 +14,7 @@ pub mod lib {
         pub mod guilds;
         pub mod inventory;
         pub mod profile;
+        pub mod settings;
         pub mod weapons;
         pub mod xp;
     }

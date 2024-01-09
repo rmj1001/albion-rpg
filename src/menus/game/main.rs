@@ -7,7 +7,7 @@ use albion_termrpg::lib::{
 
 pub fn menu(user: &mut UserProfile) {
     page_header(
-        &format!("Game Menu (user: {})", user.username),
+        &format!("Game Menu (user: {})", user.settings.username),
         tui::HeaderInstructions::EnterCode,
     );
 
@@ -30,7 +30,7 @@ pub fn menu(user: &mut UserProfile) {
     println!("p2. Hall of Records");
 
     println!("\n");
-    if user.is_developer {
+    if user.settings.developer {
         println!("d1. Developer Menu");
     }
     println!("n1. Settings");
@@ -68,7 +68,7 @@ pub fn menu(user: &mut UserProfile) {
 
         // Developer Mode
         "d1" => {
-            if user.is_developer {
+            if user.settings.developer {
                 crate::menus::game::profile::d1_developer_menu::main(user);
             } else {
                 tui::invalid_input(None);
@@ -77,10 +77,10 @@ pub fn menu(user: &mut UserProfile) {
         }
 
         "3.141592" => {
-            if !user.is_developer {
+            if !user.settings.developer {
                 page_header("Developer Mode", HeaderInstructions::None);
                 user.achievements.hacked_the_game = true;
-                user.set_developer(true);
+                user.settings.set_developer(true);
 
                 println!("\nDeveloper mode enabled.");
                 press_enter_to_continue();

@@ -64,7 +64,7 @@ pub fn xp(user: &mut UserProfile) {
 pub fn achievements(user: &mut UserProfile) {
     // These check to see if new achievements have been earned before
     // printing them
-    if !user.achievements.hacked_the_game && user.is_developer {
+    if !user.achievements.hacked_the_game && user.settings.developer {
         user.achievements.hacked_the_game = true;
     }
 
