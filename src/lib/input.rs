@@ -36,10 +36,12 @@ pub fn select_from_vector(
 }
 
 pub fn prompt_input(prompt: &str) -> String {
-    dialoguer::Input::new()
-        .with_prompt(prompt)
-        .interact_text()
-        .unwrap()
+    let input_result = dialoguer::Input::new().with_prompt(prompt).interact_text();
+
+    match input_result {
+        Ok(input) => input,
+        Err(error) => panic!("Dialoguer input failed: {}", error),
+    }
 }
 
 pub fn password() -> String {

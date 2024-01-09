@@ -328,7 +328,7 @@ impl UserProfile {
                         .expect("Could not list files")
                         .file_name()
                         .to_str()
-                        .unwrap()
+                        .unwrap_or("")
                         .to_string()
                         .contains(".json")
                 });
@@ -338,7 +338,7 @@ impl UserProfile {
                         file.unwrap()
                             .file_name()
                             .to_str()
-                            .unwrap()
+                            .unwrap_or("")
                             .to_string()
                             .replace(".json", "")
                     })
