@@ -58,7 +58,7 @@ pub fn yes_or_no(prompt: &str) -> Option<bool> {
         "no" => Some(false),
         invalid_input => {
             println!(
-                "\nInvalid input '{}'. Expected 'yes' or 'no;.",
+                "\nInvalid input '{}'. Expected 'yes' or 'no'.",
                 invalid_input
             );
             press_enter_to_continue();
