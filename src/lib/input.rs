@@ -68,10 +68,14 @@ pub fn yes_or_no(prompt: &str) -> Option<bool> {
 }
 
 pub fn password() -> String {
-    dialoguer::Password::new()
+    let dialoguer_result = dialoguer::Password::new()
         .with_prompt("Password")
-        .interact()
-        .unwrap()
+        .interact();
+
+    match dialoguer_result {
+        Ok(password) => password,
+        Err(error) => panic!("Failed to read password with dialogue: {}", error),
+    }
 }
 
 pub fn out_of_bounds(optional_error: Option<&str>) {

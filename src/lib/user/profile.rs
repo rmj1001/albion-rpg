@@ -346,29 +346,26 @@ impl UserProfile {
         let files_result = fs::read_dir(directory);
 
         match files_result {
-            Ok(directory_read) => {
-                let files = directory_read.filter(|file_result| {
+            Ok(directory_read) => directory_read
+                .filter(|file_result| {
                     file_result
                         .as_ref()
-                        .expect("Could not list files")
+                        .expect("Failed to list files.")
                         .file_name()
                         .to_str()
                         .unwrap_or("")
                         .to_string()
                         .contains(".json")
-                });
-
-                files
-                    .map(|file| {
-                        file.unwrap()
-                            .file_name()
-                            .to_str()
-                            .unwrap_or("")
-                            .to_string()
-                            .replace(".json", "")
-                    })
-                    .collect()
-            }
+                })
+                .map(|file| {
+                    file.expect("Failed to list files.")
+                        .file_name()
+                        .to_str()
+                        .unwrap_or("")
+                        .to_string()
+                        .replace(".json", "")
+                })
+                .collect(),
             Err(error) => panic!("Could not read the directory: {}", error),
         }
     }
