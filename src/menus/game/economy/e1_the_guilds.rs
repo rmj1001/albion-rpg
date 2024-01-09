@@ -36,6 +36,7 @@ pub fn main_menu(user: &mut UserProfile) {
 
     match guild_choice {
         0 => check_membership(user, PricedGuilds::Fishing),
+        1 => check_membership(user, PricedGuilds::Cooking),
         2 => check_membership(user, PricedGuilds::Woodcutting),
         3 => check_membership(user, PricedGuilds::Mining),
         4 => check_membership(user, PricedGuilds::Smithing),
@@ -115,10 +116,13 @@ fn check_membership(user: &mut UserProfile, job: PricedGuilds) {
             guild.member_price
         );
         press_enter_to_continue();
-        main_menu(user);
+        return main_menu(user);
     }
 
-    let ask_to_purchase = yes_or_no("This guild requires a membership (Cost: {} gold). Purchase");
+    let ask_to_purchase = yes_or_no(&format!(
+        "This guild requires a membership (Cost: {} gold). Purchase?",
+        guild.member_price
+    ));
 
     match ask_to_purchase {
         Some(is_yes) => {
