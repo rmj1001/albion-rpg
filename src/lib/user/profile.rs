@@ -86,6 +86,10 @@ impl UserProfile {
                     member: false,
                     member_price: 100,
                 },
+                cooking: Guild {
+                    member: false,
+                    member_price: 150,
+                },
                 woodcutting: Guild {
                     member: false,
                     member_price: 300,

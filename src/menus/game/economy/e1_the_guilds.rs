@@ -1,7 +1,8 @@
 #![allow(unused_assignments, unused_variables, unused_mut)]
-use albion_termrpg::lib::input::{out_of_bounds, selector};
+use albion_termrpg::lib::input::{out_of_bounds, selector, yes_or_no};
 
-use albion_termrpg::lib::tui::HeaderInstructions;
+use albion_termrpg::lib::tui::{press_enter_to_continue, HeaderInstructions};
+use albion_termrpg::lib::user::guilds::{GuildMemberships, PricedGuilds};
 use albion_termrpg::lib::{
     tui::{self, page_header},
     user::inventory::{GuildItemNames, Item},
@@ -32,6 +33,14 @@ pub fn main_menu(user: &mut UserProfile) {
         0,
         None,
     );
+
+    match guild_choice {
+        0 => check_membership(user, PricedGuilds::Fishing),
+        2 => check_membership(user, PricedGuilds::Woodcutting),
+        3 => check_membership(user, PricedGuilds::Mining),
+        4 => check_membership(user, PricedGuilds::Smithing),
+        _ => {}
+    }
 
     match guild_choice {
         0 => job(
@@ -84,6 +93,46 @@ pub fn main_menu(user: &mut UserProfile) {
         ),
         6 => crate::menus::game::main::menu(user),
         _ => out_of_bounds(None),
+    }
+}
+
+fn check_membership(user: &mut UserProfile, job: PricedGuilds) {
+    let guild = match job {
+        PricedGuilds::Fishing => &user.guild_memberships.fishing,
+        PricedGuilds::Cooking => &user.guild_memberships.cooking,
+        PricedGuilds::Woodcutting => &user.guild_memberships.woodcutting,
+        PricedGuilds::Mining => &user.guild_memberships.mining,
+        PricedGuilds::Smithing => &user.guild_memberships.smithing,
+    };
+
+    if guild.member {
+        return;
+    }
+
+    if user.gold < guild.member_price {
+        println!(
+            "This guild requires a membership, which you are too poor to purchase. (Cost: {} gold)",
+            guild.member_price
+        );
+        press_enter_to_continue();
+        main_menu(user);
+    }
+
+    let ask_to_purchase = yes_or_no("This guild requires a membership (Cost: {} gold). Purchase");
+
+    match ask_to_purchase {
+        Some(is_yes) => {
+            if is_yes {
+                GuildMemberships::purchase(user, job);
+                press_enter_to_continue();
+                main_menu(user);
+            } else {
+                println!("\nYou cannot work in this guild without a membership.");
+                press_enter_to_continue();
+                main_menu(user);
+            }
+        }
+        None => main_menu(user),
     }
 }
 
