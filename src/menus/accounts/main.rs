@@ -5,7 +5,7 @@ use crate::lib::{
 };
 
 pub fn main() {
-    clear();
+    clearscr();
     page_header("Accounts Menu", HeaderInstructions::Keyboard);
 
     let main_menu_options = vec!["Login", "Register", "Exit"];

@@ -62,7 +62,7 @@ pub fn header(title: &str, line_length: usize) {
 
 /// Clears terminal screen and prints big_header().
 pub fn page_header(title: &str, instructions: HeaderInstructions) {
-    crate::lib::terminal::clear();
+    crate::lib::terminal::clearscr();
     big_header(title, instructions)
 }
 

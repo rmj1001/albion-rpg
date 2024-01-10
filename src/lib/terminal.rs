@@ -1,6 +1,6 @@
 use std::process::Command;
 
-pub fn clear() {
+pub fn clearscr() {
     if cfg!(target_os = "windows") {
         Command::new("cmd")
             .args(["/c", "cls"])
@@ -18,6 +18,6 @@ pub fn clear() {
 }
 
 pub fn exit() {
-    clear();
+    clearscr();
     std::process::exit(0);
 }
