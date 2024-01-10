@@ -18,7 +18,7 @@ pub fn main(user: &mut UserProfile) {
         0 => mundane_inventory(user),
         1 => weapons_inventory(user),
         2 => armor_inventory(user),
-        3 => crate::menus::game::main::menu(user),
+        3 => crate::menus::game::main::main(user),
         _ => out_of_bounds(None),
     }
 }

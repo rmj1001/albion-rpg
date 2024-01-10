@@ -23,7 +23,7 @@ pub fn main(user: &mut UserProfile) {
     match menu_option {
         0 => xp(user),
         1 => achievements(user),
-        2 => crate::menus::game::main::menu(user),
+        2 => crate::menus::game::main::main(user),
         _ => out_of_bounds(None),
     }
 }

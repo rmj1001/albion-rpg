@@ -33,7 +33,7 @@ pub fn main(user: &mut UserProfile) {
         1 => account = BankAccount::Account2,
         2 => account = BankAccount::Account3,
         3 => account = BankAccount::Account4,
-        4 => crate::menus::game::main::menu(user),
+        4 => crate::menus::game::main::main(user),
         _ => out_of_bounds(None),
     }
 

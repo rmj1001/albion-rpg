@@ -22,10 +22,10 @@ fn get_password(profile: &UserProfile) -> bool {
 fn profile_remains_locked() {
     println!("\nProfile will remain locked.");
     tui::press_enter_to_continue();
-    crate::menus::accounts::main::menu();
+    crate::menus::accounts::main::main();
 }
 
-pub fn menu() {
+pub fn main() {
     page_header("Login", tui::HeaderInstructions::None);
 
     let username: String = prompt_input("Username");
@@ -50,29 +50,29 @@ pub fn menu() {
                         } else {
                             println!("\nCancelling.");
                             press_enter_to_continue();
-                            crate::menus::accounts::main::menu();
+                            crate::menus::accounts::main::main();
                         }
                     }
 
-                    None => crate::menus::accounts::main::menu(),
+                    None => crate::menus::accounts::main::main(),
                 }
             }
 
             if !get_password(&profile) {
                 tui::press_enter_to_continue();
-                crate::menus::accounts::main::menu();
+                crate::menus::accounts::main::main();
             }
 
             println!("\nLogin successful.");
             tui::press_enter_to_continue();
 
-            crate::menus::game::main::menu(&mut profile);
+            crate::menus::game::main::main(&mut profile);
         }
 
         ProfileRetrievalResult::None(message) => {
             println!("\n{}", message);
             tui::press_enter_to_continue();
-            crate::menus::accounts::main::menu();
+            crate::menus::accounts::main::main();
         }
     }
 }

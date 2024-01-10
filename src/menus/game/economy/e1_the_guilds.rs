@@ -11,7 +11,7 @@ use crate::user::{
 };
 use rand::Rng;
 
-pub fn main_menu(user: &mut UserProfile) {
+pub fn main(user: &mut UserProfile) {
     page_header("The Guilds", HeaderInstructions::Keyboard);
 
     let job_name: String;
@@ -92,7 +92,7 @@ pub fn main_menu(user: &mut UserProfile) {
             &None,
             &None,
         ),
-        6 => crate::menus::game::main::menu(user),
+        6 => crate::menus::game::main::main(user),
         _ => out_of_bounds(None),
     }
 }
@@ -116,7 +116,7 @@ fn check_membership(user: &mut UserProfile, job: PricedGuilds) {
             guild.member_price
         );
         press_enter_to_continue();
-        return main_menu(user);
+        return main(user);
     }
 
     let ask_to_purchase = yes_or_no(&format!(
@@ -129,14 +129,14 @@ fn check_membership(user: &mut UserProfile, job: PricedGuilds) {
             if is_yes {
                 GuildMemberships::purchase(user, job);
                 press_enter_to_continue();
-                main_menu(user);
+                main(user);
             } else {
                 println!("\nYou cannot work in this guild without a membership.");
                 press_enter_to_continue();
-                main_menu(user);
+                main(user);
             }
         }
-        None => main_menu(user),
+        None => main(user),
     }
 }
 
@@ -259,7 +259,7 @@ fn job(
                 None => {}
             }
         }
-        1 => main_menu(user),
+        1 => main(user),
         _ => out_of_bounds(None),
     }
 
@@ -276,5 +276,5 @@ fn job(
 fn too_low_items(user: &mut UserProfile, item_name: &str) {
     println!("\nYou do not have enough {} to work with.", item_name);
     tui::press_enter_to_continue();
-    main_menu(user);
+    main(user);
 }

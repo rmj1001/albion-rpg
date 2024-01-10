@@ -4,7 +4,7 @@ use crate::lib::{
     tui::*,
 };
 
-pub fn menu() {
+pub fn main() {
     clear();
     page_header("Accounts Menu", HeaderInstructions::Keyboard);
 
@@ -13,8 +13,8 @@ pub fn menu() {
     let chosen_option = selector(&main_menu_options, 0, None);
 
     match chosen_option {
-        0 => crate::menus::accounts::login::menu(),
-        1 => crate::menus::accounts::register::menu(),
+        0 => crate::menus::accounts::login::main(),
+        1 => crate::menus::accounts::register::main(),
         2 => exit(),
         _ => out_of_bounds(None),
     }

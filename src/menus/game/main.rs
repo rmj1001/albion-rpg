@@ -6,7 +6,7 @@ use crate::lib::{
 
 use crate::user::profile::UserProfile;
 
-pub fn menu(user: &mut UserProfile) {
+pub fn main(user: &mut UserProfile) {
     page_header(
         &format!("Game Menu (user: {})", user.settings.username),
         tui::HeaderInstructions::EnterCode,
@@ -46,7 +46,7 @@ pub fn menu(user: &mut UserProfile) {
         "c2" => crate::menus::game::combat::c2_wander_realm::main(user),
 
         // Economy
-        "e1" => crate::menus::game::economy::e1_the_guilds::main_menu(user),
+        "e1" => crate::menus::game::economy::e1_the_guilds::main(user),
         "e2" => crate::menus::game::economy::e2_the_bank::main(user),
         "e3" => crate::menus::game::economy::e3_trading_post::main(user),
         "e4" => crate::menus::game::economy::e4_weapons_shop::main(user),
@@ -57,10 +57,10 @@ pub fn menu(user: &mut UserProfile) {
         // Profile
         "p1" => crate::menus::game::profile::p1_inventory::main(user),
         "p2" => crate::menus::game::profile::p2_hall_of_records::main(user),
-        "n1" => crate::menus::game::profile::n1_settings::menu(user),
+        "n1" => crate::menus::game::profile::n1_settings::main(user),
         "n2" => {
             user.save();
-            crate::menus::accounts::main::menu();
+            crate::menus::accounts::main::main();
         }
         "n3" => {
             user.save();
@@ -73,7 +73,7 @@ pub fn menu(user: &mut UserProfile) {
                 crate::menus::game::profile::d1_developer_menu::main(user);
             } else {
                 tui::invalid_input(None);
-                menu(user);
+                main(user);
             }
         }
 
@@ -85,7 +85,7 @@ pub fn menu(user: &mut UserProfile) {
 
                 println!("\nDeveloper mode enabled.");
                 press_enter_to_continue();
-                menu(user);
+                main(user);
             } else {
                 super::profile::d1_developer_menu::disable_developer_mode(user);
             }
@@ -93,7 +93,7 @@ pub fn menu(user: &mut UserProfile) {
 
         wrong_input => {
             tui::invalid_input(Some(wrong_input));
-            menu(user);
+            main(user);
         }
     }
 }

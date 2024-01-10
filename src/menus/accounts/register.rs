@@ -6,7 +6,7 @@ use crate::lib::{
 
 use crate::user::profile::{ProfileRetrievalResult, UserProfile};
 
-pub fn menu() {
+pub fn main() {
     page_header("Registration", HeaderInstructions::None);
 
     let username: String = prompt_input("Username");
@@ -16,7 +16,7 @@ pub fn menu() {
     if let ProfileRetrievalResult::Some(_) = found_profile {
         println!("\nThat profile already exists.");
         tui::press_enter_to_continue();
-        crate::menus::accounts::main::menu();
+        crate::menus::accounts::main::main();
     }
 
     let password: String = prompt_input("Password");
@@ -25,7 +25,7 @@ pub fn menu() {
     if password != confirm_pass {
         println!("\nPasswords do not match.");
         tui::press_enter_to_continue();
-        crate::menus::accounts::main::menu();
+        crate::menus::accounts::main::main();
     }
 
     let password_hash = crypt::generate(password);
@@ -35,5 +35,5 @@ pub fn menu() {
     profile.save();
     println!("\nRegistration successful.");
     tui::press_enter_to_continue();
-    crate::menus::accounts::main::menu();
+    crate::menus::accounts::main::main();
 }
