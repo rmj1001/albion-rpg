@@ -3,7 +3,7 @@
 version = 3
 
 [[package]]
-name = "albion-termrpg"
+name = "albion_rpg"
 version = "0.1.0"
 dependencies = [
  "bcrypt",
