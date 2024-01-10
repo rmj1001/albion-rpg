@@ -1,4 +1,4 @@
-use albion_termrpg::lib::{
+use crate::lib::{
     input::{out_of_bounds, selector},
     terminal::*,
     tui::*,

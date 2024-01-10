@@ -1,10 +1,10 @@
-use albion_termrpg::lib::{
+use crate::lib::{
     crypt,
     input::*,
     tui::{self, page_header, press_enter_to_continue},
-    user::profile::ProfileRetrievalResult,
-    user::profile::UserProfile,
 };
+
+use crate::user::profile::{ProfileRetrievalResult, UserProfile};
 
 fn get_password(profile: &UserProfile) -> bool {
     let input_password: String = password();
@@ -42,7 +42,7 @@ pub fn menu() {
                     Some(is_yes) => {
                         if is_yes {
                             if get_password(&profile) {
-                                profile.settings.unlock();
+                                profile.settings.unlock(None);
                                 println!("\nProfile unlocked. Proceed with login.\n");
                             } else {
                                 profile_remains_locked()

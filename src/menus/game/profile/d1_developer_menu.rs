@@ -1,10 +1,11 @@
-use albion_termrpg::lib::{
+use crate::lib::{
     input::{self, out_of_bounds, select_from_vector, selector, yes_or_no},
     tui::{self, page_header, press_enter_to_continue, HeaderInstructions},
-    user::{
-        bank::{Bank, BankAccount, BankResult},
-        profile::{ProfileRetrievalResult, UserProfile},
-    },
+};
+
+use crate::user::{
+    bank::{Bank, BankAccount, BankResult},
+    profile::{ProfileRetrievalResult, UserProfile},
 };
 
 pub fn main(user: &mut UserProfile) {
@@ -53,7 +54,7 @@ pub fn disable_developer_mode(user: &mut UserProfile) {
         None => main(user),
     }
 
-    user.settings.set_developer(false);
+    user.settings.set_developer(None, false);
     println!("\nDeveloper mode disabled.");
     tui::press_enter_to_continue();
 

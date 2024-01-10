@@ -1,13 +1,13 @@
 #![allow(unused_assignments, unused_variables, unused_mut)]
-use albion_termrpg::lib::input::{out_of_bounds, selector, yes_or_no};
+use crate::lib::input::{out_of_bounds, selector, yes_or_no};
 
-use albion_termrpg::lib::tui::{press_enter_to_continue, HeaderInstructions};
-use albion_termrpg::lib::user::guilds::{GuildMemberships, PricedGuilds};
-use albion_termrpg::lib::{
-    tui::{self, page_header},
-    user::inventory::{GuildItemNames, Item},
-    user::profile::UserProfile,
-    user::xp::{XPType, XP},
+use crate::lib::tui::{self, page_header};
+use crate::lib::tui::{press_enter_to_continue, HeaderInstructions};
+use crate::user::{
+    guilds::{GuildMemberships, PricedGuilds},
+    inventory::{GuildItemNames, Item},
+    profile::UserProfile,
+    xp::{XPType, XP},
 };
 use rand::Rng;
 

@@ -1,4 +1,4 @@
-use albion_termrpg::lib::user::profile::UserProfile;
+use crate::user::profile::UserProfile;
 
 // TODO: Trading Post
 #[allow(unused_variables)]

@@ -1,4 +1,4 @@
-use albion_termrpg::lib::user::profile::UserProfile;
+use crate::user::profile::UserProfile;
 
 // TODO: The Stronghold
 #[allow(unused_variables)]

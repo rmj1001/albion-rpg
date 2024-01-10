@@ -1,8 +1,9 @@
-use albion_termrpg::lib::{
+use crate::lib::{
     input::{out_of_bounds, prompt_input, selector},
     tui::{self, page_header, press_enter_to_continue, HeaderInstructions},
-    user::{bank::*, profile::UserProfile},
 };
+
+use crate::user::{bank::*, profile::UserProfile};
 
 pub fn main(user: &mut UserProfile) {
     let mut account: BankAccount = BankAccount::Account1;

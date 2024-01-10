@@ -1,9 +1,9 @@
-use albion_termrpg::lib::{
+use crate::lib::{
     input::{out_of_bounds, selector},
     tui::{page_header, press_enter_to_continue, HeaderInstructions},
-    user::xp::XP,
-    user::{achievements::Achievements, profile::UserProfile},
 };
+
+use crate::user::{achievements::Achievements, profile::UserProfile, xp::XP};
 
 fn print_xp(xp: u32) {
     println!("XP: {}", xp);

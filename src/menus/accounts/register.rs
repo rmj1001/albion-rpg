@@ -1,9 +1,10 @@
-use albion_termrpg::lib::{
+use crate::lib::{
     crypt,
     input::prompt_input,
     tui::{self, page_header, HeaderInstructions},
-    user::profile::{ProfileRetrievalResult, UserProfile},
 };
+
+use crate::user::profile::{ProfileRetrievalResult, UserProfile};
 
 pub fn menu() {
     page_header("Registration", HeaderInstructions::None);

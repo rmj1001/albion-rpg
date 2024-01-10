@@ -1,9 +1,10 @@
-use albion_termrpg::lib::{
+use crate::lib::{
     crypt,
     input::{out_of_bounds, prompt_input, selector},
     tui::{self, page_header, HeaderInstructions},
-    user::profile::UserProfile,
 };
+
+use crate::user::profile::UserProfile;
 
 fn change_username(user: &mut UserProfile) {
     page_header("Profile Settings", HeaderInstructions::None);
@@ -23,7 +24,7 @@ fn change_username(user: &mut UserProfile) {
         menu(user);
     }
 
-    user.settings.change_username(new_username);
+    user.settings.change_username(None, new_username);
 
     page_header("Profile Settings", HeaderInstructions::None);
     println!("Successfully changed username.");
@@ -51,7 +52,7 @@ fn change_password(user: &mut UserProfile) {
         menu(user);
     }
 
-    user.settings.change_password(new_password);
+    user.settings.change_password(None, new_password);
 
     page_header("Profile Settings", HeaderInstructions::None);
     println!("Successfully changed password.");
@@ -61,7 +62,7 @@ fn change_password(user: &mut UserProfile) {
 }
 
 fn lock_profile(user: &mut UserProfile) {
-    user.settings.lock();
+    user.settings.lock(None);
 
     page_header("Profile Settings", HeaderInstructions::None);
     println!("Profile sucessfully locked.");

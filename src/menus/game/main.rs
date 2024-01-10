@@ -1,9 +1,10 @@
-use albion_termrpg::lib::{
+use crate::lib::{
     input::prompt_input,
     terminal,
     tui::{self, page_header, press_enter_to_continue, HeaderInstructions},
-    user::profile::UserProfile,
 };
+
+use crate::user::profile::UserProfile;
 
 pub fn menu(user: &mut UserProfile) {
     page_header(
@@ -80,7 +81,7 @@ pub fn menu(user: &mut UserProfile) {
             if !user.settings.developer {
                 page_header("Developer Mode", HeaderInstructions::None);
                 user.achievements.hacked_the_game = true;
-                user.settings.set_developer(true);
+                user.settings.set_developer(None, true);
 
                 println!("\nDeveloper mode enabled.");
                 press_enter_to_continue();
