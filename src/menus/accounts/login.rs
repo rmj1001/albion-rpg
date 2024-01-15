@@ -9,7 +9,7 @@ use crate::user::profile::{ProfileRetrievalResult, UserProfile};
 fn get_password(profile: &UserProfile) -> bool {
     let input_password: String = password();
     let verified_password =
-        crypt::verify(input_password.clone(), profile.settings.password.clone());
+        crypt::verify_hash(input_password.clone(), profile.settings.password.clone());
 
     if !verified_password {
         println!("\nIncorrect password.");
@@ -36,25 +36,19 @@ pub fn main() {
             let mut profile = profile;
 
             if profile.settings.locked {
-                let answer_option: Option<bool> = yes_or_no("\nProfile is locked. Unlock?");
+                let unlock_profile: bool = yes_or_no("\nProfile is locked. Unlock?");
 
-                match answer_option {
-                    Some(is_yes) => {
-                        if is_yes {
-                            if get_password(&profile) {
-                                profile.settings.unlock(None);
-                                println!("\nProfile unlocked. Proceed with login.\n");
-                            } else {
-                                profile_remains_locked()
-                            }
-                        } else {
-                            println!("\nCancelling.");
-                            press_enter_to_continue();
-                            crate::menus::accounts::main::main();
-                        }
+                if unlock_profile {
+                    if get_password(&profile) {
+                        profile.settings.unlock(None);
+                        println!("\nProfile unlocked. Proceed with login.\n");
+                    } else {
+                        profile_remains_locked()
                     }
-
-                    None => crate::menus::accounts::main::main(),
+                } else {
+                    println!("\nCancelling.");
+                    press_enter_to_continue();
+                    crate::menus::accounts::main::main();
                 }
             }
 

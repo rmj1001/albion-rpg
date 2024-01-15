@@ -1,6 +1,9 @@
-use crate::lib::{
-    input::{self, out_of_bounds, select_from_vector, selector, yes_or_no},
-    tui::{self, page_header, press_enter_to_continue, HeaderInstructions},
+use crate::{
+    lib::{
+        input::{self, out_of_bounds, prompt_input, select_from_vector, selector, yes_or_no},
+        tui::{self, page_header, press_enter_to_continue, HeaderInstructions},
+    },
+    user::xp::{MathOp, XPType},
 };
 
 use crate::user::{
@@ -40,18 +43,12 @@ pub fn main(user: &mut UserProfile) {
 pub fn disable_developer_mode(user: &mut UserProfile) {
     page_header("Developer Mode", HeaderInstructions::None);
 
-    let confirm_option = yes_or_no("Are you sure you want to disable developer mode?");
+    let disable_dev_mode = yes_or_no("Are you sure you want to disable developer mode?");
 
-    match confirm_option {
-        Some(is_yes) => {
-            if !is_yes {
-                println!("\nAborting.");
-                press_enter_to_continue();
-                main(user);
-            }
-        }
-
-        None => main(user),
+    if !disable_dev_mode {
+        println!("\nAborting.");
+        press_enter_to_continue();
+        main(user);
     }
 
     user.settings.set_developer(None, false);
@@ -110,20 +107,15 @@ fn user_manager(user: &mut UserProfile) {
 
             match profile_choice {
                 Some(profile_string) => {
-                    let confirm = yes_or_no(&format!(
+                    let delete_profile = yes_or_no(&format!(
                         "Are you sure you want to delete profile '{}'?",
                         profile_string
                     ));
 
-                    match confirm {
-                        Some(is_yes) => {
-                            if !is_yes {
-                                println!("\nAborting.");
-                                press_enter_to_continue();
-                                user_manager(user);
-                            }
-                        }
-                        None => user_manager(user),
+                    if !delete_profile {
+                        println!("\nAborting.");
+                        press_enter_to_continue();
+                        user_manager(user);
                     }
 
                     if *profile_string == user.settings.username {
@@ -249,7 +241,7 @@ fn bank_manager(user: &mut UserProfile) {
     match amount_result {
         Ok(number) => amount = number,
         Err(_) => {
-            tui::invalid_input(None);
+            input::invalid_input(None, None, true);
             bank_manager(user);
         }
     }
@@ -281,9 +273,75 @@ fn bank_manager(user: &mut UserProfile) {
 }
 
 fn xp_manager(user: &mut UserProfile) {
-    page_header("Developer Mode - XP Manager", HeaderInstructions::None);
+    page_header("Developer Mode - XP Manager", HeaderInstructions::Keyboard);
 
     // TODO: XP Manager
+    let xp_category = selector(
+        &[
+            "Combat",
+            "Fishing",
+            "Cooking",
+            "Woodcutting",
+            "Mining",
+            "Smithing",
+            "Thieving",
+            "NAV: Go Back",
+        ],
+        0,
+        None,
+    );
+
+    let mut xp_type: XPType = XPType::Combat;
+
+    match xp_category {
+        0 => xp_type = XPType::Combat,
+        1 => xp_type = XPType::Fishing,
+        2 => xp_type = XPType::Cooking,
+        3 => xp_type = XPType::Woodcutting,
+        4 => xp_type = XPType::Mining,
+        5 => xp_type = XPType::Smithing,
+        6 => xp_type = XPType::Thieving,
+        7 => main(user),
+        _ => out_of_bounds(None),
+    };
+
+    let calculation = prompt_input("Enter operation. Ex. +1, -1, *1, /1.");
+    let chars: Vec<char> = calculation.chars().collect();
+    let operator = chars[0];
+
+    match operator {
+        '+' => {}
+        '-' => {}
+        '*' => {}
+        '/' => {}
+        invalid => {
+            input::invalid_input(Some(&invalid.to_string()), None, true);
+            xp_manager(user);
+        }
+    }
+
+    let number_string = format!("{:?}", &chars[1..]);
+    let number_result = number_string.trim().parse::<usize>();
+
+    if number_result.is_err() {
+        println!("{} is not a valid number", number_string);
+        press_enter_to_continue();
+        xp_manager(user)
+    }
+
+    let mut operation: MathOp = MathOp::Add;
+
+    match operator {
+        '+' => operation = MathOp::Add,
+        '-' => operation = MathOp::Subtract,
+        '*' => operation = MathOp::Multiply,
+        '/' => operation = MathOp::Divide,
+        _ => {}
+    };
+
+    let number = number_result.unwrap();
+
+    let _ = user.xp.arithmetic(xp_type, operation, number as u32);
 
     main(user);
 }

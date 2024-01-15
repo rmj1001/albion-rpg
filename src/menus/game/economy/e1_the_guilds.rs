@@ -119,24 +119,19 @@ fn check_membership(user: &mut UserProfile, job: PricedGuilds) {
         return main(user);
     }
 
-    let ask_to_purchase = yes_or_no(&format!(
+    let permission_to_purchase = yes_or_no(&format!(
         "This guild requires a membership (Cost: {} gold). Purchase?",
         guild.member_price
     ));
 
-    match ask_to_purchase {
-        Some(is_yes) => {
-            if is_yes {
-                GuildMemberships::purchase(user, job);
-                press_enter_to_continue();
-                main(user);
-            } else {
-                println!("\nYou cannot work in this guild without a membership.");
-                press_enter_to_continue();
-                main(user);
-            }
-        }
-        None => main(user),
+    if permission_to_purchase {
+        GuildMemberships::purchase(user, job);
+        press_enter_to_continue();
+        main(user);
+    } else {
+        println!("\nYou cannot work in this guild without a membership.");
+        press_enter_to_continue();
+        main(user);
     }
 }
 
