@@ -42,6 +42,41 @@ impl XP {
         XP::level(self.total_xp())
     }
 
+    pub fn arithmetic(&mut self, flag: XPType, operation: MathOp, amount: u32) -> Result<(), &str> {
+        let xp = match flag {
+            XPType::Combat => &mut self.combat,
+            XPType::Fishing => &mut self.fishing,
+            XPType::Cooking => &mut self.cooking,
+            XPType::Woodcutting => &mut self.woodcutting,
+            XPType::Mining => &mut self.mining,
+            XPType::Smithing => &mut self.smithing,
+            XPType::Thieving => &mut self.thieving,
+        };
+
+        match operation {
+            MathOp::Add => {
+                *xp += amount;
+                Ok(())
+            }
+            MathOp::Subtract => {
+                if amount > *xp {
+                    Err("The amount is greater than the total XP.")
+                } else {
+                    *xp -= amount;
+                    Ok(())
+                }
+            }
+            MathOp::Multiply => {
+                *xp *= amount;
+                Ok(())
+            }
+            MathOp::Divide => {
+                *xp /= amount;
+                Ok(())
+            }
+        }
+    }
+
     pub fn increment(&mut self, flag: XPType) {
         let more_xp = rand::thread_rng().gen_range(1..5);
 
@@ -67,4 +102,11 @@ impl XP {
             XPType::Thieving => self.thieving,
         }
     }
+}
+
+pub enum MathOp {
+    Add,
+    Subtract,
+    Multiply,
+    Divide,
 }
