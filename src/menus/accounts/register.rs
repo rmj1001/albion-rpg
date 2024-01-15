@@ -1,6 +1,6 @@
 use crate::lib::{
     crypt,
-    input::prompt_input,
+    input::{self, prompt_input},
     tui::{self, page_header, HeaderInstructions},
 };
 
@@ -19,8 +19,8 @@ pub fn main() {
         crate::menus::accounts::main::main();
     }
 
-    let password: String = prompt_input("Password");
-    let confirm_pass: String = prompt_input("Confirm Password");
+    let password: String = input::password(false);
+    let confirm_pass: String = input::password(true);
 
     if password != confirm_pass {
         println!("\nPasswords do not match.");
