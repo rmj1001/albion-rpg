@@ -83,13 +83,18 @@ pub fn yes_or_no(prompt: &str) -> bool {
     }
 }
 
-pub fn password() -> String {
-    let dialoguer_result = dialoguer::Password::new()
-        .with_prompt("Password")
-        .interact();
+pub fn password(confirm: bool) -> String {
+    let dialoguer_result = match confirm {
+        true => dialoguer::Password::new()
+            .with_prompt("Confirm Password")
+            .interact(),
+        false => dialoguer::Password::new()
+            .with_prompt("Password")
+            .interact(),
+    };
 
     match dialoguer_result {
-        Ok(password) => password,
+        Ok(text) => text,
         Err(error) => panic!("Failed to read password with dialogue: {}", error),
     }
 }
