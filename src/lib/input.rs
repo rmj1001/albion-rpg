@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use crate::lib::tui::press_enter_to_continue;
 
 /// Returns the index of the element in the vector selected.
@@ -46,24 +48,38 @@ pub fn prompt_input(prompt: &str) -> String {
     }
 }
 
-/// Returns None if the input is not "yes", "no", "y", or "n".
-/// If None then it also gives an error message.
-pub fn yes_or_no(prompt: &str) -> Option<bool> {
-    let input = prompt_input(&format!("{} (y/n)", prompt)).to_lowercase();
+/// Attempts to cast the string to a generic type
+pub fn input_generic<T>(prompt: &str) -> Result<T, &str>
+where
+    T: FromStr,
+{
+    let input_string = prompt_input(prompt);
+    let trimmed = input_string.trim();
 
-    match &input[..] {
-        "y" => Some(true),
-        "yes" => Some(true),
-        "n" => Some(false),
-        "no" => Some(false),
-        invalid_input => {
-            println!(
-                "\nInvalid input '{}'. Expected 'yes' or 'no'.",
-                invalid_input
-            );
-            press_enter_to_continue();
-            None
+    match trimmed.parse::<T>() {
+        Ok(out) => Ok(out),
+        Err(_) => {
+            invalid_input(Some(&input_string), None, false);
+            Err("")
         }
+    }
+}
+
+/// "y" and "yes" return true. "n" and "no" return false.
+pub fn yes_or_no(prompt: &str) -> bool {
+    loop {
+        let input = prompt_input(&format!("{} (y/n)", prompt)).to_lowercase();
+
+        match &input[..] {
+            "y" => return true,
+            "yes" => return true,
+            "n" => return false,
+            "no" => return false,
+            text => {
+                invalid_input(Some(text), Some("'yes' or 'no'"), true);
+                continue;
+            }
+        };
     }
 }
 
@@ -78,9 +94,34 @@ pub fn password() -> String {
     }
 }
 
+/// Standard panic message for dialogue selector
 pub fn out_of_bounds(optional_error: Option<&str>) {
     match optional_error {
         Some(error) => panic!("Dialogue selected index out of option's bounds: {}", error),
         None => panic!("Dialogue selected index out of option's bounds."),
+    }
+}
+
+/// input: The invalid input
+///
+/// expected: The expected input
+///
+/// pause: Ask the user to press enter to continue?
+pub fn invalid_input(input: Option<&str>, expected: Option<&str>, pause: bool) {
+    let mut output_string = String::new();
+
+    match input {
+        Some(text) => output_string.push_str(&format!("Invalid input '{}'.", text)),
+        None => output_string.push_str("Invalid input."),
+    }
+
+    if let Some(text) = expected {
+        output_string.push_str(&format!(" Expected '{}'.", text));
+    }
+
+    println!("{}", output_string);
+
+    if pause {
+        press_enter_to_continue();
     }
 }
