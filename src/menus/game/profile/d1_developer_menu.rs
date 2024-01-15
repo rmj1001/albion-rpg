@@ -1,3 +1,5 @@
+use std::num::ParseIntError;
+
 use crate::{
     lib::{
         input::{self, out_of_bounds, prompt_input, select_from_vector, selector, yes_or_no},
@@ -275,16 +277,15 @@ fn bank_manager(user: &mut UserProfile) {
 fn xp_manager(user: &mut UserProfile) {
     page_header("Developer Mode - XP Manager", HeaderInstructions::Keyboard);
 
-    // TODO: XP Manager
     let xp_category = selector(
         &[
-            "Combat",
-            "Fishing",
-            "Cooking",
-            "Woodcutting",
-            "Mining",
-            "Smithing",
-            "Thieving",
+            "1. Combat",
+            "2. Fishing",
+            "3. Cooking",
+            "4. Woodcutting",
+            "5. Mining",
+            "6. Smithing",
+            "7. Thieving",
             "NAV: Go Back",
         ],
         0,
@@ -305,7 +306,7 @@ fn xp_manager(user: &mut UserProfile) {
         _ => out_of_bounds(None),
     };
 
-    let calculation = prompt_input("Enter operation. Ex. +1, -1, *1, /1.");
+    let calculation = prompt_input("Enter operation. (Ex. +1, -1, *1, /1)");
     let chars: Vec<char> = calculation.chars().collect();
     let operator = chars[0];
 
@@ -320,8 +321,8 @@ fn xp_manager(user: &mut UserProfile) {
         }
     }
 
-    let number_string = format!("{:?}", &chars[1..]);
-    let number_result = number_string.trim().parse::<usize>();
+    let number_string: String = String::from_iter(chars[1..].iter());
+    let number_result: Result<usize, ParseIntError> = number_string.trim().parse();
 
     if number_result.is_err() {
         println!("{} is not a valid number", number_string);
@@ -341,9 +342,20 @@ fn xp_manager(user: &mut UserProfile) {
 
     let number = number_result.unwrap();
 
-    let _ = user.xp.arithmetic(xp_type, operation, number as u32);
+    let result: Result<(), &str> = user.xp.arithmetic(xp_type, operation, number as u32);
 
-    main(user);
+    match result {
+        Ok(_) => {
+            println!("\nOperation successful.");
+            press_enter_to_continue();
+            xp_manager(user);
+        }
+        Err(message) => {
+            println!("\n{}", message);
+            press_enter_to_continue();
+            xp_manager(user);
+        }
+    }
 }
 
 fn inventory_manager(user: &mut UserProfile) {
