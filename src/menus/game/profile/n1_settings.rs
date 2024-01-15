@@ -61,7 +61,8 @@ fn change_username(user: &mut UserProfile) {
 fn change_password(user: &mut UserProfile) {
     page_header("Profile Settings", HeaderInstructions::None);
     let new_password = prompt_input("New Password");
-    let new_pass_is_old_pass = crypt::verify(new_password.clone(), user.settings.password.clone());
+    let new_pass_is_old_pass =
+        crypt::verify_hash(new_password.clone(), user.settings.password.clone());
 
     if new_pass_is_old_pass {
         println!("\nThis is your current password.");

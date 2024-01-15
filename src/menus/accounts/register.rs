@@ -28,7 +28,7 @@ pub fn main() {
         crate::menus::accounts::main::main();
     }
 
-    let password_hash = crypt::generate(password);
+    let password_hash = crypt::generate_hash(password);
 
     let profile = UserProfile::from(&username, &password_hash);
 

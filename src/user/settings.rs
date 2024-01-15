@@ -38,7 +38,7 @@ impl Settings {
 
     /// Updates password field
     pub fn change_password(&mut self, user: Option<&UserProfile>, new_password: String) {
-        let new_hashed_password = crypt::generate(new_password);
+        let new_hashed_password = crypt::generate_hash(new_password);
         self.password = new_hashed_password;
         Self::user_save(user);
     }

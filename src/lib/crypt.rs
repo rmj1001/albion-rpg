@@ -1,7 +1,7 @@
 use bcrypt::{hash, DEFAULT_COST};
 
-pub fn generate(password: String) -> String {
-    let hashed_result = hash(password, DEFAULT_COST);
+pub fn generate_hash(text: String) -> String {
+    let hashed_result = hash(text, DEFAULT_COST);
 
     match hashed_result {
         Ok(password_hash) => password_hash,
@@ -9,8 +9,8 @@ pub fn generate(password: String) -> String {
     }
 }
 
-pub fn verify(tried_password: String, user_password: String) -> bool {
-    let verified_result = bcrypt::verify(tried_password, &user_password);
+pub fn verify_hash(text: String, hash: String) -> bool {
+    let verified_result = bcrypt::verify(text, &hash);
 
     match verified_result {
         Ok(result) => result,
@@ -20,15 +20,15 @@ pub fn verify(tried_password: String, user_password: String) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use crate::lib::crypt::{generate, verify};
+    use crate::lib::crypt::{generate_hash, verify_hash};
 
     #[test]
     fn check_hashing() {
         const PASSWORD: &str = "1234";
-        let hashed = generate(PASSWORD.to_string());
+        let hashed = generate_hash(PASSWORD.to_string());
 
         assert!(
-            verify(PASSWORD.to_string(), hashed),
+            verify_hash(PASSWORD.to_string(), hashed),
             "The hashes of {} didn't match.",
             PASSWORD
         );
