@@ -111,18 +111,3 @@ pub fn press_enter_to_continue() {
     let mut garbage = String::new();
     let _ = std::io::stdin().read_line(&mut garbage);
 }
-
-/// Use this to print "Invalid Input" and pause the terminal
-pub fn invalid_input(input: Option<&str>) {
-    match input {
-        Some(data) => {
-            println!("\nInvalid input '{}'.", data);
-            press_enter_to_continue();
-        }
-
-        None => {
-            println!("\nInvalid input.");
-            press_enter_to_continue();
-        }
-    }
-}

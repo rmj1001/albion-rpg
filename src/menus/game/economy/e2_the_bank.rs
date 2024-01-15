@@ -1,6 +1,6 @@
 use crate::lib::{
-    input::{out_of_bounds, prompt_input, selector},
-    tui::{self, page_header, press_enter_to_continue, HeaderInstructions},
+    input::{self, out_of_bounds, prompt_input, selector},
+    tui::{page_header, press_enter_to_continue, HeaderInstructions},
 };
 
 use crate::user::{bank::*, profile::UserProfile};
@@ -49,7 +49,7 @@ pub fn main(user: &mut UserProfile) {
     match amount_result {
         Ok(number) => amount = number,
         Err(_) => {
-            tui::invalid_input(None);
+            input::invalid_input(None, None, true);
             main(user);
         }
     }

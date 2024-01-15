@@ -1,5 +1,5 @@
 use crate::lib::{
-    input::prompt_input,
+    input::{self, prompt_input},
     terminal,
     tui::{self, page_header, press_enter_to_continue, HeaderInstructions},
 };
@@ -72,7 +72,7 @@ pub fn main(user: &mut UserProfile) {
             if user.settings.developer {
                 crate::menus::game::profile::d1_developer_menu::main(user);
             } else {
-                tui::invalid_input(None);
+                input::invalid_input(None, None, true);
                 main(user);
             }
         }
@@ -92,7 +92,7 @@ pub fn main(user: &mut UserProfile) {
         }
 
         wrong_input => {
-            tui::invalid_input(Some(wrong_input));
+            input::invalid_input(Some(wrong_input), None, true);
             main(user);
         }
     }
