@@ -7,7 +7,7 @@ use crate::lib::{
 use crate::user::profile::{ProfileRetrievalResult, UserProfile};
 
 fn get_password(profile: &UserProfile) -> bool {
-    let input_password: String = password();
+    let input_password: String = password(false);
     let verified_password =
         crypt::verify_hash(input_password.clone(), profile.settings.password.clone());
 
