@@ -24,7 +24,6 @@ pub fn main(user: &mut UserProfile) {
             "Account 4",
             "NAV: Go Back",
         ],
-        0,
         None,
     );
 
@@ -37,7 +36,7 @@ pub fn main(user: &mut UserProfile) {
         _ => out_of_bounds(None),
     }
 
-    let option = selector(&["Deposit", "Withdraw", "NAV: Cancel"], 0, None);
+    let option = selector(&["Deposit", "Withdraw", "NAV: Cancel"], None);
 
     if option == 2 {
         main(user);

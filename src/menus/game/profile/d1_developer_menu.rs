@@ -25,7 +25,6 @@ pub fn main(user: &mut UserProfile) {
             "6. Disable developer mode",
             "NAV: Go Back",
         ],
-        0,
         None,
     );
 
@@ -75,7 +74,6 @@ fn user_manager(user: &mut UserProfile) {
             "3. View User File",
             "NAV: Go Back",
         ],
-        0,
         None,
     );
 
@@ -101,8 +99,7 @@ fn user_manager(user: &mut UserProfile) {
                 HeaderInstructions::Keyboard,
             );
 
-            let choice =
-                select_from_vector(profiles.clone(), 0, Some("Select a profile to delete"));
+            let choice = select_from_vector(profiles.clone(), Some("Select a profile to delete"));
 
             let profile_choice = profiles.get(choice);
 
@@ -155,7 +152,7 @@ fn view_user(user: &mut UserProfile) {
         "Developer Mode - User Manager - Data Viewer",
         HeaderInstructions::None,
     );
-    let choice = select_from_vector(UserProfile::list_all(), 0, Some("Select a user to view"));
+    let choice = select_from_vector(UserProfile::list_all(), Some("Select a user to view"));
 
     let profiles = UserProfile::list_all();
     let profile_choice = profiles.get(choice);
@@ -216,7 +213,6 @@ fn bank_manager(user: &mut UserProfile) {
             "Account 4",
             "NAV: Go Back",
         ],
-        0,
         None,
     );
 
@@ -268,7 +264,6 @@ fn xp_manager(user: &mut UserProfile) {
             "7. Thieving",
             "NAV: Go Back",
         ],
-        0,
         None,
     );
 
@@ -318,7 +313,6 @@ fn inventory_manager(user: &mut UserProfile) {
 
     let manager_option = selector(
         &["1. Items", "2. Weapons", "3. Armor", "NAV: Go Back"],
-        0,
         None,
     );
 

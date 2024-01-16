@@ -3,39 +3,35 @@ use std::str::FromStr;
 use crate::lib::tui::press_enter_to_continue;
 
 /// Returns the index of the element in the vector selected.
-pub fn selector(options: &[&str], default_index: usize, optional_prompt: Option<&str>) -> usize {
+pub fn selector(options: &[&str], optional_prompt: Option<&str>) -> usize {
     match optional_prompt {
         Some(prompt) => dialoguer::Select::new()
             .with_prompt(prompt)
             .items(options)
             .default(0)
             .interact()
-            .unwrap_or(default_index),
+            .unwrap_or(0),
         None => dialoguer::Select::new()
             .items(options)
             .default(0)
             .interact()
-            .unwrap_or(default_index),
+            .unwrap_or(0),
     }
 }
 
-pub fn select_from_vector(
-    options: Vec<String>,
-    default_index: usize,
-    optional_prompt: Option<&str>,
-) -> usize {
+pub fn select_from_vector(options: Vec<String>, optional_prompt: Option<&str>) -> usize {
     match optional_prompt {
         Some(prompt) => dialoguer::Select::new()
             .with_prompt(prompt)
             .items(&options[..])
             .default(0)
             .interact()
-            .unwrap_or(default_index),
+            .unwrap_or(0),
         None => dialoguer::Select::new()
             .items(&options[..])
             .default(0)
             .interact()
-            .unwrap_or(default_index),
+            .unwrap_or(0),
     }
 }
 

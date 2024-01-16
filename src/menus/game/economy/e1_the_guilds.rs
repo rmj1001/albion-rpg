@@ -30,7 +30,6 @@ pub fn main(user: &mut UserProfile) {
             "6. Thieving",
             "NAV: Go Back",
         ],
-        0,
         None,
     );
 
@@ -183,7 +182,7 @@ fn job(
 
     println!();
 
-    let work_choice = selector(&["Work", "Go Back"], 0, None);
+    let work_choice = selector(&["Work", "Go Back"], None);
 
     match work_choice {
         0 => {

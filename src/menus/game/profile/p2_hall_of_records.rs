@@ -14,11 +14,7 @@ fn print_xp(xp: usize) {
 pub fn main(user: &mut UserProfile) {
     page_header("Hall of Records", HeaderInstructions::Keyboard);
 
-    let menu_option = selector(
-        &["1. XP/Levels", "2. Achievements", "NAV: Go Back"],
-        0,
-        None,
-    );
+    let menu_option = selector(&["1. XP/Levels", "2. Achievements", "NAV: Go Back"], None);
 
     match menu_option {
         0 => xp(user),

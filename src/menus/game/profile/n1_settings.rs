@@ -17,7 +17,6 @@ pub fn main(user: &mut UserProfile) {
             "4. Delete Profile",
             "NAV: Go Back",
         ],
-        0,
         None,
     );
 

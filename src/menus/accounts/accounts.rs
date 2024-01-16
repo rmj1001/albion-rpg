@@ -10,7 +10,7 @@ pub fn main() {
 
     let main_menu_options = vec!["Login", "Register", "Exit"];
 
-    let chosen_option = selector(&main_menu_options, 0, None);
+    let chosen_option = selector(&main_menu_options, None);
 
     match chosen_option {
         0 => crate::menus::accounts::login::main(),
