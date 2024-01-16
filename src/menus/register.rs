@@ -9,7 +9,7 @@ use crate::user::profile::{ProfileRetrievalResult, UserProfile};
 pub fn main() {
     page_header("Registration", HeaderSubtext::None);
 
-    let username: String = prompt_input("Username");
+    let username: String = prompt_input("Username:");
 
     let found_profile = UserProfile::retrieve(&username);
 

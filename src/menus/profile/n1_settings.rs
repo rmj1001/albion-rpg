@@ -1,6 +1,6 @@
 use crate::lib::{
     crypt,
-    input::{confirm, out_of_bounds, prompt_input, selector},
+    input::{confirm, out_of_bounds, password, prompt_input, selector},
     tui::{self, page_header, HeaderSubtext},
 };
 
@@ -32,7 +32,7 @@ pub fn main(user: &mut UserProfile) {
 
 fn change_username(user: &mut UserProfile) {
     page_header("Profile Settings", HeaderSubtext::None);
-    let new_username = prompt_input("New Username");
+    let new_username = prompt_input("New Username:");
 
     if new_username == user.settings.username {
         println!("\nThis is your current username.");
@@ -40,7 +40,7 @@ fn change_username(user: &mut UserProfile) {
         main(user);
     }
 
-    let confirm_username = prompt_input("Confirm Username");
+    let confirm_username = prompt_input("Confirm Username:");
 
     if new_username != confirm_username {
         println!("\nUsernames do not match.");
@@ -58,8 +58,11 @@ fn change_username(user: &mut UserProfile) {
 }
 
 fn change_password(user: &mut UserProfile) {
-    page_header("Profile Settings", HeaderSubtext::None);
-    let new_password = prompt_input("New Password");
+    page_header(
+        "Profile Settings",
+        HeaderSubtext::Other("Enter new password."),
+    );
+    let new_password = password(false);
     let new_pass_is_old_pass =
         crypt::verify_hash(new_password.clone(), user.settings.password.clone());
 
@@ -69,7 +72,7 @@ fn change_password(user: &mut UserProfile) {
         main(user);
     }
 
-    let confirm_password = prompt_input("Confirm Password");
+    let confirm_password = password(true);
 
     if new_password != confirm_password {
         println!("\nPasswords do not match.");

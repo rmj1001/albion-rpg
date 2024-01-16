@@ -38,7 +38,7 @@ pub fn main(user: &mut UserProfile) {
     println!("n2. Logout");
     println!("n3. Exit Game\n");
 
-    let choice = prompt_input("Enter Menu Code").to_lowercase();
+    let choice = prompt_input("Enter Menu Code >").to_lowercase();
 
     match &choice[..] {
         // Combat

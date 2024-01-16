@@ -42,7 +42,7 @@ pub fn main(user: &mut UserProfile) {
         main(user);
     }
 
-    let amount_result = prompt_input("Amount").parse::<usize>();
+    let amount_result = prompt_input("Amount >").parse::<usize>();
     let mut amount: usize = 0;
 
     match amount_result {

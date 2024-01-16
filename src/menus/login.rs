@@ -28,7 +28,7 @@ fn profile_remains_locked() {
 pub fn main() {
     page_header("Login", tui::HeaderSubtext::None);
 
-    let username: String = prompt_input("Username");
+    let username: String = prompt_input("Username:");
     let profile_result = UserProfile::retrieve(&username);
 
     match profile_result {

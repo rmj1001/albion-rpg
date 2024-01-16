@@ -77,10 +77,10 @@ pub fn small_header(title: &str, instructions: HeaderSubtext) {
     header_subtext(instructions);
 }
 
-pub enum HeaderSubtext {
+pub enum HeaderSubtext<'a> {
     EnterCode,
     Keyboard,
-    Other(String),
+    Other(&'a str),
     None,
 }
 
@@ -95,7 +95,7 @@ pub fn header_subtext(instructions: HeaderSubtext) {
         HeaderSubtext::EnterCode => {
             instructions_string.push_str("Enter a code (ex. p1), then press ENTER/RETURN.")
         }
-        HeaderSubtext::Other(text) => instructions_string.push_str(&text),
+        HeaderSubtext::Other(text) => instructions_string.push_str(text),
         HeaderSubtext::None => {
             return;
         }

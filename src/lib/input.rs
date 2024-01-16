@@ -1,4 +1,4 @@
-use std::str::FromStr;
+use std::{io::Write, str::FromStr};
 
 use dialoguer::Confirm;
 
@@ -38,12 +38,17 @@ pub fn select_from_vector(options: Vec<String>, optional_prompt: Option<&str>) -
 }
 
 pub fn prompt_input(prompt: &str) -> String {
-    let input_result = dialoguer::Input::new().with_prompt(prompt).interact_text();
+    print!("{prompt} ");
 
-    match input_result {
-        Ok(input) => input,
-        Err(error) => panic!("Dialoguer input failed: {}", error),
+    std::io::stdout().flush().expect("Could not flush stdout");
+
+    let mut input: String = String::new();
+
+    if std::io::stdin().read_line(&mut input).is_err() {
+        return prompt_input(prompt);
     }
+
+    input.trim().to_string()
 }
 
 /// Attempts to cast the string to a generic type
