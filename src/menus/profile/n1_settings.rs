@@ -25,7 +25,7 @@ pub fn main(user: &mut UserProfile) {
         1 => change_password(user),
         2 => lock_profile(user),
         3 => delete_profile(user),
-        4 => crate::menus::game::game_menu::main(user),
+        4 => crate::menus::game_menu::main(user),
         _ => out_of_bounds(None),
     }
 }
@@ -93,7 +93,7 @@ fn lock_profile(user: &mut UserProfile) {
     println!("Profile sucessfully locked.");
     tui::press_enter_to_continue();
 
-    crate::menus::accounts::accounts::main();
+    crate::menus::accounts::main();
 }
 
 fn delete_profile(user: &mut UserProfile) {
@@ -103,5 +103,5 @@ fn delete_profile(user: &mut UserProfile) {
     println!("Profile sucessfully deleted.");
     tui::press_enter_to_continue();
 
-    crate::menus::accounts::accounts::main();
+    crate::menus::accounts::main();
 }

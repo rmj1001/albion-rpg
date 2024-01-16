@@ -13,8 +13,8 @@ pub fn main() {
     let chosen_option = selector(&main_menu_options, None);
 
     match chosen_option {
-        0 => crate::menus::accounts::login::main(),
-        1 => crate::menus::accounts::register::main(),
+        0 => crate::menus::login::main(),
+        1 => crate::menus::register::main(),
         2 => exit(),
         _ => out_of_bounds(None),
     }

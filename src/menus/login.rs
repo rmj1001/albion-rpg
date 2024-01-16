@@ -22,7 +22,7 @@ fn get_password(profile: &UserProfile) -> bool {
 fn profile_remains_locked() {
     println!("\nProfile will remain locked.");
     tui::press_enter_to_continue();
-    crate::menus::accounts::accounts::main();
+    crate::menus::accounts::main();
 }
 
 pub fn main() {
@@ -48,25 +48,25 @@ pub fn main() {
                 } else {
                     println!("\nCancelling.");
                     press_enter_to_continue();
-                    crate::menus::accounts::accounts::main();
+                    crate::menus::accounts::main();
                 }
             }
 
             if !get_password(&profile) {
                 tui::press_enter_to_continue();
-                crate::menus::accounts::accounts::main();
+                crate::menus::accounts::main();
             }
 
             println!("\nLogin successful.");
             tui::press_enter_to_continue();
 
-            crate::menus::game::game_menu::main(&mut profile);
+            crate::menus::game_menu::main(&mut profile);
         }
 
         ProfileRetrievalResult::None(message) => {
             println!("\n{}", message);
             tui::press_enter_to_continue();
-            crate::menus::accounts::accounts::main();
+            crate::menus::accounts::main();
         }
     }
 }

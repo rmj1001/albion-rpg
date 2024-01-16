@@ -35,7 +35,7 @@ pub fn main(user: &mut UserProfile) {
         3 => bank_manager(user),
         4 => user_manager(user),
         5 => disable_developer_mode(user),
-        6 => crate::menus::game::game_menu::main(user),
+        6 => crate::menus::game_menu::main(user),
         _ => out_of_bounds(None),
     }
 }
@@ -55,7 +55,7 @@ pub fn disable_developer_mode(user: &mut UserProfile) {
     println!("\nDeveloper mode disabled.");
     tui::press_enter_to_continue();
 
-    crate::menus::game::game_menu::main(user);
+    crate::menus::game_menu::main(user);
 }
 
 fn user_manager(user: &mut UserProfile) {
@@ -123,7 +123,7 @@ fn user_manager(user: &mut UserProfile) {
                         println!("\nCurrent profile successfully deleted. Logging out.");
                         tui::press_enter_to_continue();
 
-                        crate::menus::accounts::accounts::main();
+                        crate::menus::accounts::main();
                     }
 
                     UserProfile::delete_from_username(profile_string);

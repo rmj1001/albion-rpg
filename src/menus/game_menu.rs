@@ -42,25 +42,25 @@ pub fn main(user: &mut UserProfile) {
 
     match &choice[..] {
         // Combat
-        "c1" => crate::menus::game::combat::c1_the_stronghold::main(user),
-        "c2" => crate::menus::game::combat::c2_wander_realm::main(user),
+        "c1" => crate::menus::combat::c1_the_stronghold::main(user),
+        "c2" => crate::menus::combat::c2_wander_realm::main(user),
 
         // Economy
-        "e1" => crate::menus::game::economy::e1_the_guilds::main(user),
-        "e2" => crate::menus::game::economy::e2_the_bank::main(user),
-        "e3" => crate::menus::game::economy::e3_trading_post::main(user),
-        "e4" => crate::menus::game::economy::e4_weapons_shop::main(user),
-        "e5" => crate::menus::game::economy::e5_armor_shop::main(user),
-        "e6" => crate::menus::game::economy::e6_mystic_shop::main(user),
-        "e7" => crate::menus::game::economy::e7_celestial_shop::main(user),
+        "e1" => crate::menus::economy::e1_the_guilds::main(user),
+        "e2" => crate::menus::economy::e2_the_bank::main(user),
+        "e3" => crate::menus::economy::e3_trading_post::main(user),
+        "e4" => crate::menus::economy::e4_weapons_shop::main(user),
+        "e5" => crate::menus::economy::e5_armor_shop::main(user),
+        "e6" => crate::menus::economy::e6_mystic_shop::main(user),
+        "e7" => crate::menus::economy::e7_celestial_shop::main(user),
 
         // Profile
-        "p1" => crate::menus::game::profile::p1_inventory::main(user),
-        "p2" => crate::menus::game::profile::p2_hall_of_records::main(user),
-        "n1" => crate::menus::game::profile::n1_settings::main(user),
+        "p1" => crate::menus::profile::p1_inventory::main(user),
+        "p2" => crate::menus::profile::p2_hall_of_records::main(user),
+        "n1" => crate::menus::profile::n1_settings::main(user),
         "n2" => {
             user.save();
-            crate::menus::accounts::accounts::main();
+            crate::menus::accounts::main();
         }
         "n3" => {
             user.save();
@@ -70,7 +70,7 @@ pub fn main(user: &mut UserProfile) {
         // Developer Mode
         "d1" => {
             if user.settings.developer {
-                crate::menus::game::profile::d1_developer_menu::main(user);
+                crate::menus::profile::d1_developer_menu::main(user);
             } else {
                 input::invalid_input(None, None, true);
                 main(user);

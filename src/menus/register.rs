@@ -16,7 +16,7 @@ pub fn main() {
     if let ProfileRetrievalResult::Some(_) = found_profile {
         println!("\nThat profile already exists.");
         tui::press_enter_to_continue();
-        crate::menus::accounts::accounts::main();
+        crate::menus::accounts::main();
     }
 
     let password: String = input::password(false);
@@ -25,7 +25,7 @@ pub fn main() {
     if password != confirm_pass {
         println!("\nPasswords do not match.");
         tui::press_enter_to_continue();
-        crate::menus::accounts::accounts::main();
+        crate::menus::accounts::main();
     }
 
     let password_hash = crypt::generate_hash(password);
@@ -35,5 +35,5 @@ pub fn main() {
     profile.save();
     println!("\nRegistration successful.");
     tui::press_enter_to_continue();
-    crate::menus::accounts::accounts::main();
+    crate::menus::accounts::main();
 }
