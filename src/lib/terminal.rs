@@ -1,5 +1,9 @@
 use std::process::Command;
 
+use crate::lib::tui::press_enter_to_continue;
+
+use super::tui::page_header;
+
 /// Clears the terminal screen
 pub fn clearscr() {
     if cfg!(target_os = "windows") {
@@ -20,6 +24,10 @@ pub fn clearscr() {
 
 /// Sends an exit code of 0 (no errors)
 pub fn exit() {
+    page_header("Albion RPG", super::tui::HeaderSubtext::None);
+    println!("\nThanks for playing!");
+    press_enter_to_continue();
+
     clearscr();
     std::process::exit(0);
 }
