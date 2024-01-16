@@ -7,7 +7,8 @@ pub enum Operation<T> {
     Subtract(T),
     Multiply(T),
     Divide(T),
-    None,
+    Invalid,
+    Cancel,
 }
 
 /// Allowed input:
@@ -16,7 +17,15 @@ pub fn generic_calculator<T>() -> Operation<T>
 where
     T: FromStr<Err = std::num::ParseIntError>,
 {
-    let mut calculation = prompt_input("Enter operation. (Ex. +1, -1, *1, /1)");
+    let mut calculation =
+        prompt_input("Enter operation (Ex. +1, -1, *1, /1) or 'cancel' to go back").to_lowercase();
+
+    match &calculation[..] {
+        "cancel" => return Operation::Cancel,
+        "go back" => return Operation::Cancel,
+        "stop" => return Operation::Cancel,
+        _ => {}
+    }
 
     // Remove all whitespace for easier parsing
     calculation = calculation.replace(' ', "").to_string().trim().to_string();
@@ -31,7 +40,7 @@ where
         '/' => {}
         invalid => {
             input::invalid_input(Some(&invalid.to_string()), Some("+, -, *, or /"), true);
-            return Operation::None;
+            return Operation::Invalid;
         }
     }
 
@@ -40,7 +49,7 @@ where
 
     if number_result.is_err() {
         input::invalid_input(Some(&number_string), Some("integer"), true);
-        return Operation::None;
+        return Operation::Invalid;
     }
 
     let number: T = number_result.unwrap();
@@ -50,7 +59,7 @@ where
         '-' => Operation::Subtract(number),
         '*' => Operation::Multiply(number),
         '/' => Operation::Divide(number),
-        _ => Operation::None,
+        _ => Operation::Invalid,
     };
 
     operation

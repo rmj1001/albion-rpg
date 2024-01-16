@@ -219,12 +219,20 @@ fn bank_manager(user: &mut UserProfile) {
 
     let calculation = generic_calculator::<usize>();
 
+    // Return early if the operation was cancelled.
+    if let Operation::Cancel = calculation {
+        println!("\nCancelling.");
+        press_enter_to_continue();
+        bank_manager(user);
+    }
+
     let result: Result<(), &str> = match calculation {
         Operation::Add(_) => user.bank.arithmetic(account, calculation),
         Operation::Subtract(_) => user.bank.arithmetic(account, calculation),
         Operation::Multiply(_) => user.bank.arithmetic(account, calculation),
         Operation::Divide(_) => user.bank.arithmetic(account, calculation),
-        Operation::None => Err(""),
+        Operation::Cancel => Ok(()),
+        Operation::Invalid => Err(""),
     };
 
     match result {
@@ -285,12 +293,20 @@ fn xp_manager(user: &mut UserProfile) {
 
     let calculation = generic_calculator::<usize>();
 
+    if let Operation::Cancel = calculation {
+        println!("\nCancelling.");
+        press_enter_to_continue();
+        xp_manager(user);
+    }
+
+    // Return early if the operation was cancelled.
     let result: Result<(), &str> = match calculation {
         Operation::Add(_) => user.xp.arithmetic(xp_type, calculation),
         Operation::Subtract(_) => user.xp.arithmetic(xp_type, calculation),
         Operation::Multiply(_) => user.xp.arithmetic(xp_type, calculation),
         Operation::Divide(_) => user.xp.arithmetic(xp_type, calculation),
-        Operation::None => Err(""),
+        Operation::Cancel => Ok(()),
+        Operation::Invalid => Err(""),
     };
 
     match result {

@@ -59,7 +59,12 @@ impl Bank {
                 *account /= amount;
                 Ok(())
             }
-            Operation::None => {
+            Operation::Cancel => {
+                println!("\nCancelling.");
+                press_enter_to_continue();
+                Ok(())
+            }
+            Operation::Invalid => {
                 println!("\nOperation failed: Invalid Operator");
                 press_enter_to_continue();
                 Err("Operation failed: Invalid Operator")
