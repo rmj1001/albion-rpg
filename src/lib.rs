@@ -3,6 +3,7 @@
 pub mod lib {
     pub mod crypt;
     pub mod input;
+    pub mod math;
     pub mod os;
     pub mod terminal;
     pub mod tui;
