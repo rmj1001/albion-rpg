@@ -1,6 +1,6 @@
 use crate::lib::{
     input::{out_of_bounds, selector},
-    tui::{page_header, press_enter_to_continue, HeaderInstructions},
+    tui::{page_header, press_enter_to_continue, HeaderSubtext},
 };
 
 use crate::user::{achievements::Achievements, profile::UserProfile, xp::XP};
@@ -12,7 +12,7 @@ fn print_xp(xp: usize) {
 }
 
 pub fn main(user: &mut UserProfile) {
-    page_header("Hall of Records", HeaderInstructions::Keyboard);
+    page_header("Hall of Records", HeaderSubtext::Keyboard);
 
     let menu_option = selector(&["1. XP/Levels", "2. Achievements", "NAV: Go Back"], None);
 
@@ -27,7 +27,7 @@ pub fn main(user: &mut UserProfile) {
 pub fn xp(user: &mut UserProfile) {
     let xp: &XP = &user.xp;
 
-    page_header("Hall of Records - XP/Levels", HeaderInstructions::None);
+    page_header("Hall of Records - XP/Levels", HeaderSubtext::None);
 
     println!("# Profile");
     print_xp(xp.total_xp());
@@ -78,7 +78,7 @@ pub fn achievements(user: &mut UserProfile) {
     // Print out all achievements
     let achievements: &Achievements = &user.achievements;
 
-    page_header("Hall of Records - Achievements", HeaderInstructions::None);
+    page_header("Hall of Records - Achievements", HeaderSubtext::None);
 
     println!("Monsters Killed: {}\n", achievements.monsters_killed);
     println!(

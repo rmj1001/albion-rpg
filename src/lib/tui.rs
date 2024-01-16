@@ -1,6 +1,6 @@
 /// Create a string of dashes with desired length
 ///
-/// Example: create_line_string(3) // ---
+/// Example: create_line_string(3) -> ---
 pub fn create_line_string(total_length: usize, optional_character: Option<char>) -> String {
     let mut line_string: String = String::new();
     let mut current_length: usize = 1;
@@ -18,9 +18,7 @@ pub fn create_line_string(total_length: usize, optional_character: Option<char>)
     line_string
 }
 
-/// Print a line of dashes to STDOUT.
-///
-/// Default length is 80 characters
+/// Print a line of dashes to STDOUT. Default Length 80 characters.
 pub fn print_line_string(total_length: Option<usize>) {
     let mut line_string: String = String::new();
 
@@ -32,6 +30,7 @@ pub fn print_line_string(total_length: Option<usize>) {
     println!("{}", &line_string[..]);
 }
 
+/// Prints a header box to stdout with a custom line length. The title is centered between two lines.
 pub fn header(title: &str, line_length: usize) {
     fn add_spaces_to_string(s: &mut String, spaces: usize) {
         let mut index = 0;
@@ -61,43 +60,43 @@ pub fn header(title: &str, line_length: usize) {
 }
 
 /// Clears terminal screen and prints big_header().
-pub fn page_header(title: &str, instructions: HeaderInstructions) {
+pub fn page_header(title: &str, instructions: HeaderSubtext) {
     crate::lib::terminal::clearscr();
     big_header(title, instructions)
 }
 
 /// Prints a header with 80 character width
-pub fn big_header(title: &str, instructions: HeaderInstructions) {
+pub fn big_header(title: &str, instructions: HeaderSubtext) {
     header(&format!("Albion - {}", title), 80);
-    header_instructions(instructions);
+    header_subtext(instructions);
 }
 
 /// Prints a header with 40 character width
-pub fn small_header(title: &str, instructions: HeaderInstructions) {
+pub fn small_header(title: &str, instructions: HeaderSubtext) {
     header(title, 40);
-    header_instructions(instructions);
+    header_subtext(instructions);
 }
 
-pub enum HeaderInstructions {
+pub enum HeaderSubtext {
     EnterCode,
     Keyboard,
     Other(String),
     None,
 }
 
-/// Prints instructions under a header based on enum variant used
-pub fn header_instructions(instructions: HeaderInstructions) {
+/// Prints text under a header based on enum variant used
+pub fn header_subtext(instructions: HeaderSubtext) {
     let mut instructions_string = String::new();
 
     match instructions {
-        HeaderInstructions::Keyboard => {
+        HeaderSubtext::Keyboard => {
             instructions_string.push_str("Press ↑ or ↓ to navigate, then press ENTER/RETURN.")
         }
-        HeaderInstructions::EnterCode => {
+        HeaderSubtext::EnterCode => {
             instructions_string.push_str("Enter a code (ex. p1), then press ENTER/RETURN.")
         }
-        HeaderInstructions::Other(text) => instructions_string.push_str(&text),
-        HeaderInstructions::None => {
+        HeaderSubtext::Other(text) => instructions_string.push_str(&text),
+        HeaderSubtext::None => {
             return;
         }
     }

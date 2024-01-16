@@ -2,7 +2,7 @@
 use crate::lib::input::{out_of_bounds, selector, yes_or_no};
 
 use crate::lib::tui::{self, page_header};
-use crate::lib::tui::{press_enter_to_continue, HeaderInstructions};
+use crate::lib::tui::{press_enter_to_continue, HeaderSubtext};
 use crate::user::{
     guilds::{GuildMemberships, PricedGuilds},
     inventory::{GuildItemNames, Item},
@@ -12,7 +12,7 @@ use crate::user::{
 use rand::Rng;
 
 pub fn main(user: &mut UserProfile) {
-    page_header("The Guilds", HeaderInstructions::Keyboard);
+    page_header("The Guilds", HeaderSubtext::Keyboard);
 
     let job_name: String;
     let job_xp: XPType;
@@ -142,7 +142,7 @@ fn job(
     increase_item: &Option<GuildItemNames>,
     decrease_item: &Option<GuildItemNames>,
 ) {
-    page_header(&format!("Job: {}", job_name), HeaderInstructions::Keyboard);
+    page_header(&format!("Job: {}", job_name), HeaderSubtext::Keyboard);
 
     println!("XP: {}", user.xp.get(xp_type));
     println!("Level: {}", XP::level(user.xp.get(xp_type)));

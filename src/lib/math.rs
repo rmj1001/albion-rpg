@@ -10,6 +10,8 @@ pub enum Operation<T> {
     None,
 }
 
+/// Allowed input:
+/// +num, -num, *num, /num
 pub fn generic_calculator<T>() -> Operation<T>
 where
     T: FromStr<Err = std::num::ParseIntError>,

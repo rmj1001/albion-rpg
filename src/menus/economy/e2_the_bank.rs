@@ -1,6 +1,6 @@
 use crate::lib::{
     input::{self, out_of_bounds, prompt_input, selector},
-    tui::{page_header, press_enter_to_continue, HeaderInstructions},
+    tui::{page_header, press_enter_to_continue, HeaderSubtext},
 };
 
 use crate::user::{bank::*, profile::UserProfile};
@@ -8,7 +8,7 @@ use crate::user::{bank::*, profile::UserProfile};
 pub fn main(user: &mut UserProfile) {
     let mut account: BankAccount = BankAccount::Account1;
 
-    page_header("The Bank", HeaderInstructions::Keyboard);
+    page_header("The Bank", HeaderSubtext::Keyboard);
     println!("Gold: {} Gold", user.bank.wallet);
     println!();
     println!("Account 1: {} Gold", user.bank.account1);

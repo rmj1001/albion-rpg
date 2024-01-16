@@ -79,6 +79,11 @@ pub fn yes_or_no(prompt: &str) -> bool {
     }
 }
 
+/// Prompts for a password, hiding the text as it is typed.
+///
+/// Parameters:
+///
+/// - confirm (bool) -> False: "Password: ", True: "Confirm Password:"
 pub fn password(confirm: bool) -> String {
     let dialoguer_result = match confirm {
         true => dialoguer::Password::new()
@@ -105,9 +110,11 @@ pub fn out_of_bounds(optional_error: Option<&str>) {
 
 /// input: The invalid input
 ///
-/// expected: The expected input
+/// Parameters:
 ///
-/// pause: Ask the user to press enter to continue?
+/// - expected: The expected input
+///
+/// - pause: Ask the user to press enter to continue?
 pub fn invalid_input(input: Option<&str>, expected: Option<&str>, pause: bool) {
     let mut output_string = String::new();
 

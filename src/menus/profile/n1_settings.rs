@@ -1,13 +1,13 @@
 use crate::lib::{
     crypt,
     input::{out_of_bounds, prompt_input, selector},
-    tui::{self, page_header, HeaderInstructions},
+    tui::{self, page_header, HeaderSubtext},
 };
 
 use crate::user::profile::UserProfile;
 
 pub fn main(user: &mut UserProfile) {
-    page_header("Profile Settings", HeaderInstructions::Keyboard);
+    page_header("Profile Settings", HeaderSubtext::Keyboard);
 
     let choice: usize = selector(
         &[
@@ -31,7 +31,7 @@ pub fn main(user: &mut UserProfile) {
 }
 
 fn change_username(user: &mut UserProfile) {
-    page_header("Profile Settings", HeaderInstructions::None);
+    page_header("Profile Settings", HeaderSubtext::None);
     let new_username = prompt_input("New Username");
 
     if new_username == user.settings.username {
@@ -50,7 +50,7 @@ fn change_username(user: &mut UserProfile) {
 
     user.settings.change_username(None, new_username);
 
-    page_header("Profile Settings", HeaderInstructions::None);
+    page_header("Profile Settings", HeaderSubtext::None);
     println!("Successfully changed username.");
     tui::press_enter_to_continue();
 
@@ -58,7 +58,7 @@ fn change_username(user: &mut UserProfile) {
 }
 
 fn change_password(user: &mut UserProfile) {
-    page_header("Profile Settings", HeaderInstructions::None);
+    page_header("Profile Settings", HeaderSubtext::None);
     let new_password = prompt_input("New Password");
     let new_pass_is_old_pass =
         crypt::verify_hash(new_password.clone(), user.settings.password.clone());
@@ -79,7 +79,7 @@ fn change_password(user: &mut UserProfile) {
 
     user.settings.change_password(None, new_password);
 
-    page_header("Profile Settings", HeaderInstructions::None);
+    page_header("Profile Settings", HeaderSubtext::None);
     println!("Successfully changed password.");
     tui::press_enter_to_continue();
 
@@ -89,7 +89,7 @@ fn change_password(user: &mut UserProfile) {
 fn lock_profile(user: &mut UserProfile) {
     user.settings.lock(None);
 
-    page_header("Profile Settings", HeaderInstructions::None);
+    page_header("Profile Settings", HeaderSubtext::None);
     println!("Profile sucessfully locked.");
     tui::press_enter_to_continue();
 
@@ -99,7 +99,7 @@ fn lock_profile(user: &mut UserProfile) {
 fn delete_profile(user: &mut UserProfile) {
     user.delete();
 
-    page_header("Profile Settings", HeaderInstructions::None);
+    page_header("Profile Settings", HeaderSubtext::None);
     println!("Profile sucessfully deleted.");
     tui::press_enter_to_continue();
 

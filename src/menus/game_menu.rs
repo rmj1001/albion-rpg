@@ -1,7 +1,7 @@
 use crate::lib::{
     input::{self, prompt_input},
     terminal,
-    tui::{self, page_header, press_enter_to_continue, HeaderInstructions},
+    tui::{self, page_header, press_enter_to_continue, HeaderSubtext},
 };
 
 use crate::user::profile::UserProfile;
@@ -9,15 +9,15 @@ use crate::user::profile::UserProfile;
 pub fn main(user: &mut UserProfile) {
     page_header(
         &format!("Game Menu (user: {})", user.settings.username),
-        tui::HeaderInstructions::EnterCode,
+        tui::HeaderSubtext::EnterCode,
     );
 
-    tui::small_header("Combat", HeaderInstructions::None);
+    tui::small_header("Combat", HeaderSubtext::None);
     println!("c1. Wander the Realm");
     println!("c2. Enter the Stronghold");
     println!("\n");
 
-    tui::small_header("Economy", HeaderInstructions::None);
+    tui::small_header("Economy", HeaderSubtext::None);
     println!("e1. Work in the Guilds");
     println!("e2. The Bank");
     println!("e3. Trading Post");
@@ -26,7 +26,7 @@ pub fn main(user: &mut UserProfile) {
     println!("e6. Mystic Shop");
     println!("e7. Celestial Shop");
 
-    tui::small_header("Profile", HeaderInstructions::None);
+    tui::small_header("Profile", HeaderSubtext::None);
     println!("p1. Inventory");
     println!("p2. Hall of Records");
 
@@ -79,7 +79,7 @@ pub fn main(user: &mut UserProfile) {
 
         "3.141592" => {
             if !user.settings.developer {
-                page_header("Developer Mode", HeaderInstructions::None);
+                page_header("Developer Mode", HeaderSubtext::None);
                 user.achievements.hacked_the_game = true;
                 user.settings.set_developer(None, true);
 

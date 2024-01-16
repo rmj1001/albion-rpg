@@ -2,7 +2,7 @@ use crate::{
     lib::{
         input::{out_of_bounds, select_from_vector, selector, yes_or_no},
         math::{generic_calculator, Operation},
-        tui::{self, page_header, press_enter_to_continue, HeaderInstructions},
+        tui::{self, page_header, press_enter_to_continue, HeaderSubtext},
     },
     user::xp::XPType,
 };
@@ -13,7 +13,7 @@ use crate::user::{
 };
 
 pub fn main(user: &mut UserProfile) {
-    page_header("Developer Mode", HeaderInstructions::Keyboard);
+    page_header("Developer Mode", HeaderSubtext::Keyboard);
 
     let choice = selector(
         &[
@@ -41,7 +41,7 @@ pub fn main(user: &mut UserProfile) {
 }
 
 pub fn disable_developer_mode(user: &mut UserProfile) {
-    page_header("Developer Mode", HeaderInstructions::None);
+    page_header("Developer Mode", HeaderSubtext::None);
 
     let disable_dev_mode = yes_or_no("Are you sure you want to disable developer mode?");
 
@@ -59,10 +59,7 @@ pub fn disable_developer_mode(user: &mut UserProfile) {
 }
 
 fn user_manager(user: &mut UserProfile) {
-    page_header(
-        "Developer Mode - User Manager",
-        HeaderInstructions::Keyboard,
-    );
+    page_header("Developer Mode - User Manager", HeaderSubtext::Keyboard);
 
     // Listing profiles for printing or deletion
     let profiles: Vec<String> = UserProfile::list_all();
@@ -80,7 +77,7 @@ fn user_manager(user: &mut UserProfile) {
     match choice1 {
         // listing profiles
         0 => {
-            page_header("Developer Mode - User Manager", HeaderInstructions::None);
+            page_header("Developer Mode - User Manager", HeaderSubtext::None);
 
             for profile_string in &profiles {
                 println!("- {}", profile_string);
@@ -94,10 +91,7 @@ fn user_manager(user: &mut UserProfile) {
 
         // deleting profiles
         1 => {
-            page_header(
-                "Developer Mode - User Manager",
-                HeaderInstructions::Keyboard,
-            );
+            page_header("Developer Mode - User Manager", HeaderSubtext::Keyboard);
 
             let choice = select_from_vector(profiles.clone(), Some("Select a profile to delete"));
 
@@ -119,7 +113,7 @@ fn user_manager(user: &mut UserProfile) {
                     if *profile_string == user.settings.username {
                         UserProfile::delete_from_username(&user.settings.username);
 
-                        page_header("Developer Mode - User Manager", HeaderInstructions::None);
+                        page_header("Developer Mode - User Manager", HeaderSubtext::None);
                         println!("\nCurrent profile successfully deleted. Logging out.");
                         tui::press_enter_to_continue();
 
@@ -128,7 +122,7 @@ fn user_manager(user: &mut UserProfile) {
 
                     UserProfile::delete_from_username(profile_string);
 
-                    page_header("Developer Mode - User Manager", HeaderInstructions::None);
+                    page_header("Developer Mode - User Manager", HeaderSubtext::None);
                     println!("\nProfile '{}' successfully deleted.", profile_string);
                     tui::press_enter_to_continue();
 
@@ -150,7 +144,7 @@ fn user_manager(user: &mut UserProfile) {
 fn view_user(user: &mut UserProfile) {
     page_header(
         "Developer Mode - User Manager - Data Viewer",
-        HeaderInstructions::None,
+        HeaderSubtext::None,
     );
     let choice = select_from_vector(UserProfile::list_all(), Some("Select a user to view"));
 
@@ -167,7 +161,7 @@ fn view_user(user: &mut UserProfile) {
 
                     page_header(
                         &format!("User Profile - {}", profile.settings.username),
-                        HeaderInstructions::None,
+                        HeaderSubtext::None,
                     );
 
                     println!("{}\n", json_string);
@@ -192,10 +186,7 @@ fn view_user(user: &mut UserProfile) {
 fn bank_manager(user: &mut UserProfile) {
     let mut account: BankAccount = BankAccount::Account1;
 
-    page_header(
-        "Developer Mode - Bank Managert",
-        HeaderInstructions::Keyboard,
-    );
+    page_header("Developer Mode - Bank Managert", HeaderSubtext::Keyboard);
 
     println!("Gold: {} Gold", user.bank.wallet);
     println!();
@@ -251,7 +242,7 @@ fn bank_manager(user: &mut UserProfile) {
 }
 
 fn xp_manager(user: &mut UserProfile) {
-    page_header("Developer Mode - XP Manager", HeaderInstructions::Keyboard);
+    page_header("Developer Mode - XP Manager", HeaderSubtext::Keyboard);
 
     let xp_category = selector(
         &[
@@ -306,10 +297,7 @@ fn xp_manager(user: &mut UserProfile) {
 }
 
 fn inventory_manager(user: &mut UserProfile) {
-    page_header(
-        "Developer Mode - Inventory Manager",
-        HeaderInstructions::None,
-    );
+    page_header("Developer Mode - Inventory Manager", HeaderSubtext::None);
 
     let manager_option = selector(
         &["1. Items", "2. Weapons", "3. Armor", "NAV: Go Back"],
@@ -330,7 +318,7 @@ fn inventory_manager(user: &mut UserProfile) {
 fn items_manager(user: &mut UserProfile) {
     page_header(
         "Developer Mode - Inventory Manager - Items",
-        HeaderInstructions::None,
+        HeaderSubtext::None,
     );
 
     // TODO: Items Manager
@@ -341,7 +329,7 @@ fn items_manager(user: &mut UserProfile) {
 fn weapons_manager(user: &mut UserProfile) {
     page_header(
         "Developer Mode - Inventory Manager - Weapons",
-        HeaderInstructions::None,
+        HeaderSubtext::None,
     );
 
     // TODO: Weapons Manager
@@ -352,7 +340,7 @@ fn weapons_manager(user: &mut UserProfile) {
 fn armor_manager(user: &mut UserProfile) {
     page_header(
         "Developer Mode - Inventory Manager - Armor",
-        HeaderInstructions::None,
+        HeaderSubtext::None,
     );
 
     // TODO: Armor Manager

@@ -1,13 +1,13 @@
 use crate::lib::{
     crypt,
     input::{self, prompt_input},
-    tui::{self, page_header, HeaderInstructions},
+    tui::{self, page_header, HeaderSubtext},
 };
 
 use crate::user::profile::{ProfileRetrievalResult, UserProfile};
 
 pub fn main() {
-    page_header("Registration", HeaderInstructions::None);
+    page_header("Registration", HeaderSubtext::None);
 
     let username: String = prompt_input("Username");
 
