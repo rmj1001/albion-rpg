@@ -5,7 +5,7 @@ use crate::lib::{
 
 use crate::user::{achievements::Achievements, profile::UserProfile, xp::XP};
 
-fn print_xp(xp: u32) {
+fn print_xp(xp: usize) {
     println!("XP: {}", xp);
     println!("Level: {}", XP::level(xp));
     println!();
@@ -72,7 +72,7 @@ pub fn achievements(user: &mut UserProfile) {
         user.achievements.level_100_reached = true;
     }
 
-    if !user.achievements.earned_million_gold && user.gold >= 1_000_000 {
+    if !user.achievements.earned_million_gold && user.bank.wallet >= 1_000_000 {
         user.achievements.earned_million_gold = true;
     }
 

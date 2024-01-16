@@ -14,7 +14,7 @@ pub struct GuildMemberships {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Guild {
     pub member: bool,
-    pub member_price: u32,
+    pub member_price: usize,
 }
 
 pub enum PricedGuilds {
@@ -35,12 +35,12 @@ impl GuildMemberships {
             PricedGuilds::Smithing => &mut user.guild_memberships.smithing,
         };
 
-        if user.gold < guild.member_price {
+        if user.bank.wallet < guild.member_price {
             println!("You do not have enough gold.");
             return;
         }
 
-        user.gold -= guild.member_price;
+        user.bank.wallet -= guild.member_price;
         guild.member = true;
     }
 }

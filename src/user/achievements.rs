@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Achievements {
     // Determined in combat
-    pub monsters_killed: u32,
+    pub monsters_killed: usize,
     pub stronghold_defeated: bool,
 
     // Determined when achievements viewed

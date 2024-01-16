@@ -1,9 +1,11 @@
+use crate::lib::{math::Operation, tui::press_enter_to_continue};
+
 use super::profile::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub enum BankAccount {
-    CoinPurse,
+    Wallet,
     Account1,
     Account2,
     Account3,
@@ -11,107 +13,88 @@ pub enum BankAccount {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub enum BankResult {
-    Ok,
-    Error(&'static str),
-}
-
-#[derive(Serialize, Deserialize, Debug)]
 pub struct Bank {
-    pub account1: u32,
-    pub account2: u32,
-    pub account3: u32,
-    pub account4: u32,
+    pub wallet: usize,
+    pub account1: usize,
+    pub account2: usize,
+    pub account3: usize,
+    pub account4: usize,
 }
 
 impl Bank {
+    pub fn arithmetic(
+        &mut self,
+        account_flag: BankAccount,
+        operation: Operation<usize>,
+    ) -> Result<(), &str> {
+        let account = match account_flag {
+            BankAccount::Account1 => &mut self.account1,
+            BankAccount::Account2 => &mut self.account2,
+            BankAccount::Account3 => &mut self.account3,
+            BankAccount::Account4 => &mut self.account4,
+            BankAccount::Wallet => &mut self.wallet,
+        };
+
+        match operation {
+            Operation::Add(amount) => {
+                *account += amount;
+                Ok(())
+            }
+
+            Operation::Subtract(amount) => {
+                if amount > *account {
+                    Err("The amount is greater than the account balance.")
+                } else {
+                    *account -= amount;
+                    Ok(())
+                }
+            }
+
+            Operation::Multiply(amount) => {
+                *account *= amount;
+                Ok(())
+            }
+
+            Operation::Divide(amount) => {
+                *account /= amount;
+                Ok(())
+            }
+            Operation::None => {
+                println!("\nOperation failed: Invalid Operator");
+                press_enter_to_continue();
+                Err("Operation failed: Invalid Operator")
+            }
+        }
+    }
+
     pub fn deposit(
         user: &mut UserProfile,
         account_flag: BankAccount,
-        amount: u32,
+        amount: usize,
         add_only: bool,
-    ) -> BankResult {
-        if !add_only && user.gold < amount {
-            return BankResult::Error("There is not enough gold in the account");
+    ) -> Result<(), &str> {
+        if !add_only && user.bank.wallet < amount {
+            return Err("There is not enough gold in the account");
         }
 
         if !add_only {
-            user.gold -= amount;
+            user.bank.wallet -= amount;
         }
 
-        match account_flag {
-            BankAccount::CoinPurse => {
-                if add_only {
-                    user.gold += amount;
-                }
-            }
-            BankAccount::Account1 => {
-                user.bank.account1 += amount;
-            }
-            BankAccount::Account2 => {
-                user.bank.account2 += amount;
-            }
-            BankAccount::Account3 => {
-                user.bank.account3 += amount;
-            }
-            BankAccount::Account4 => {
-                user.bank.account4 += amount;
-            }
-        }
-
-        BankResult::Ok
+        user.bank.arithmetic(account_flag, Operation::Add(amount))
     }
 
     pub fn withdraw(
         user: &mut UserProfile,
         account_flag: BankAccount,
-        amount: u32,
+        amount: usize,
         subtract_only: bool,
-    ) -> BankResult {
-        match account_flag {
-            BankAccount::CoinPurse => {
-                if subtract_only {
-                    if user.gold < amount {
-                        return BankResult::Error("There is not enough gold.");
-                    } else {
-                        user.gold -= amount;
-                    }
-                }
-            }
-            BankAccount::Account1 => {
-                if user.bank.account1 < amount {
-                    return BankResult::Error("There is not enough gold.");
-                } else {
-                    user.bank.account1 -= amount;
-                }
-            }
-            BankAccount::Account2 => {
-                if user.bank.account2 < amount {
-                    return BankResult::Error("There is not enough gold.");
-                } else {
-                    user.bank.account2 -= amount;
-                }
-            }
-            BankAccount::Account3 => {
-                if user.bank.account3 < amount {
-                    return BankResult::Error("There is not enough gold.");
-                } else {
-                    user.bank.account3 -= amount;
-                }
-            }
-            BankAccount::Account4 => {
-                if user.bank.account4 < amount {
-                    return BankResult::Error("There is not enough gold.");
-                } else {
-                    user.bank.account4 -= amount;
-                }
-            }
-        }
-
+    ) -> Result<(), &str> {
         if !subtract_only {
-            user.gold += amount;
+            user.bank.wallet += amount;
         }
 
-        BankResult::Ok
+        user.bank
+            .arithmetic(account_flag, Operation::Subtract(amount))
     }
 }

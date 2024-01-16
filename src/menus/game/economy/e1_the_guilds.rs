@@ -110,7 +110,7 @@ fn check_membership(user: &mut UserProfile, job: PricedGuilds) {
         return;
     }
 
-    if user.gold < guild.member_price {
+    if user.bank.wallet < guild.member_price {
         println!(
             "This guild requires a membership, which you are too poor to purchase. (Cost: {} gold)",
             guild.member_price
@@ -150,7 +150,7 @@ fn job(
 
     if use_gold {
         println!();
-        println!("Gold: {}", user.gold);
+        println!("Gold: {}", user.bank.wallet);
     }
 
     println!();
@@ -190,7 +190,7 @@ fn job(
             user.xp.increment(xp_type);
 
             if use_gold {
-                user.gold += rand::thread_rng().gen_range(0..2);
+                user.bank.wallet += rand::thread_rng().gen_range(0..2);
 
                 job(
                     user,

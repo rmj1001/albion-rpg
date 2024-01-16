@@ -14,8 +14,8 @@ use std::{fs, path::Path};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Health {
-    pub hitpoints: u32,
-    pub hunger: u32,
+    pub hitpoints: usize,
+    pub hunger: usize,
 }
 
 #[allow(clippy::large_enum_variant)]
@@ -34,7 +34,6 @@ pub struct UserProfile {
     pub health: Health,
     pub xp: XP,
     pub achievements: Achievements,
-    pub gold: u32,
     pub bank: Bank,
     pub guild_memberships: GuildMemberships,
     pub inventory: MundaneInventory,
@@ -73,8 +72,8 @@ impl UserProfile {
                 stronghold_defeated: false,
                 hacked_the_game: false,
             },
-            gold: 0,
             bank: Bank {
+                wallet: 0,
                 account1: 0,
                 account2: 0,
                 account3: 0,

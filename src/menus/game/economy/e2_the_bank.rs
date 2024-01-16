@@ -9,7 +9,7 @@ pub fn main(user: &mut UserProfile) {
     let mut account: BankAccount = BankAccount::Account1;
 
     page_header("The Bank", HeaderInstructions::Keyboard);
-    println!("Coin Purse: {} Gold", user.gold);
+    println!("Gold: {} Gold", user.bank.wallet);
     println!();
     println!("Account 1: {} Gold", user.bank.account1);
     println!("Account 2: {} Gold", user.bank.account2);
@@ -43,8 +43,8 @@ pub fn main(user: &mut UserProfile) {
         main(user);
     }
 
-    let amount_result = prompt_input("Amount").parse::<u32>();
-    let mut amount: u32 = 0;
+    let amount_result = prompt_input("Amount").parse::<usize>();
+    let mut amount: usize = 0;
 
     match amount_result {
         Ok(number) => amount = number,
@@ -54,7 +54,7 @@ pub fn main(user: &mut UserProfile) {
         }
     }
 
-    let mut bank_result: BankResult = BankResult::Error("Uninitialized");
+    let mut bank_result: Result<(), &str> = Err("Unitialized");
 
     match option {
         // Deposit
@@ -66,13 +66,13 @@ pub fn main(user: &mut UserProfile) {
     }
 
     match bank_result {
-        BankResult::Ok => {
+        Ok(_) => {
             println!("\nOperation successful.");
             press_enter_to_continue();
             main(user);
         }
 
-        BankResult::Error(message) => {
+        Err(message) => {
             println!("\n{}", message);
             press_enter_to_continue();
             main(user);

@@ -1,15 +1,17 @@
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 
+use crate::lib::{math::Operation, tui::press_enter_to_continue};
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct XP {
-    pub combat: u32,
-    pub fishing: u32,
-    pub cooking: u32,
-    pub woodcutting: u32,
-    pub mining: u32,
-    pub smithing: u32,
-    pub thieving: u32,
+    pub combat: usize,
+    pub fishing: usize,
+    pub cooking: usize,
+    pub woodcutting: usize,
+    pub mining: usize,
+    pub smithing: usize,
+    pub thieving: usize,
 }
 
 #[derive(Clone, Copy, Serialize, Deserialize)]
@@ -24,11 +26,11 @@ pub enum XPType {
 }
 
 impl XP {
-    pub fn level(xp: u32) -> u32 {
+    pub fn level(xp: usize) -> usize {
         (xp / 100) + 1
     }
 
-    pub fn total_xp(&self) -> u32 {
+    pub fn total_xp(&self) -> usize {
         self.combat
             + self.fishing
             + self.cooking
@@ -38,11 +40,11 @@ impl XP {
             + self.thieving
     }
 
-    pub fn profile_level(&self) -> u32 {
+    pub fn profile_level(&self) -> usize {
         XP::level(self.total_xp())
     }
 
-    pub fn arithmetic(&mut self, flag: XPType, operation: MathOp, amount: u32) -> Result<(), &str> {
+    pub fn arithmetic(&mut self, flag: XPType, operation: Operation<usize>) -> Result<(), &str> {
         let xp = match flag {
             XPType::Combat => &mut self.combat,
             XPType::Fishing => &mut self.fishing,
@@ -54,11 +56,11 @@ impl XP {
         };
 
         match operation {
-            MathOp::Add => {
+            Operation::Add(amount) => {
                 *xp += amount;
                 Ok(())
             }
-            MathOp::Subtract => {
+            Operation::Subtract(amount) => {
                 if amount > *xp {
                     Err("The amount is greater than the total XP.")
                 } else {
@@ -66,13 +68,18 @@ impl XP {
                     Ok(())
                 }
             }
-            MathOp::Multiply => {
+            Operation::Multiply(amount) => {
                 *xp *= amount;
                 Ok(())
             }
-            MathOp::Divide => {
+            Operation::Divide(amount) => {
                 *xp /= amount;
                 Ok(())
+            }
+            Operation::None => {
+                println!("\nOperation failed: Invalid Operator");
+                press_enter_to_continue();
+                Err("Operation failed: Invalid Operator")
             }
         }
     }
@@ -91,7 +98,7 @@ impl XP {
         }
     }
 
-    pub fn get(&self, flag: XPType) -> u32 {
+    pub fn get(&self, flag: XPType) -> usize {
         match flag {
             XPType::Combat => self.combat,
             XPType::Fishing => self.fishing,
@@ -102,11 +109,4 @@ impl XP {
             XPType::Thieving => self.thieving,
         }
     }
-}
-
-pub enum MathOp {
-    Add,
-    Subtract,
-    Multiply,
-    Divide,
 }

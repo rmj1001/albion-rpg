@@ -4,11 +4,11 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Weapon {
     pub name: String,
-    pub price: u32,
+    pub price: usize,
     pub owns: bool,
-    pub damage: u16,
-    pub durability: i16,
-    pub default_durability: i16,
+    pub damage: usize,
+    pub durability: usize,
+    pub default_durability: usize,
 }
 
 impl Weapon {
@@ -16,7 +16,7 @@ impl Weapon {
         let random_damage = thread_rng().gen_range(1..5);
         self.durability -= random_damage;
 
-        if self.durability <= 0 {
+        if self.durability == 0 {
             self.owns = false;
             self.durability = self.default_durability
         }

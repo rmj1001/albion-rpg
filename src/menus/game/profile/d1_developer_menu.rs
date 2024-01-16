@@ -1,15 +1,14 @@
-use std::num::ParseIntError;
-
 use crate::{
     lib::{
-        input::{self, out_of_bounds, prompt_input, select_from_vector, selector, yes_or_no},
+        input::{out_of_bounds, select_from_vector, selector, yes_or_no},
+        math::{generic_calculator, Operation},
         tui::{self, page_header, press_enter_to_continue, HeaderInstructions},
     },
-    user::xp::{MathOp, XPType},
+    user::xp::XPType,
 };
 
 use crate::user::{
-    bank::{Bank, BankAccount, BankResult},
+    bank::BankAccount,
     profile::{ProfileRetrievalResult, UserProfile},
 };
 
@@ -201,7 +200,7 @@ fn bank_manager(user: &mut UserProfile) {
         HeaderInstructions::Keyboard,
     );
 
-    println!("Coin Purse: {} Gold", user.gold);
+    println!("Gold: {} Gold", user.bank.wallet);
     println!();
     println!("Account 1: {} Gold", user.bank.account1);
     println!("Account 2: {} Gold", user.bank.account2);
@@ -210,7 +209,7 @@ fn bank_manager(user: &mut UserProfile) {
 
     let account_choice = selector(
         &[
-            "Coin Purse",
+            "Wallet",
             "Account 1",
             "Account 2",
             "Account 3",
@@ -222,7 +221,7 @@ fn bank_manager(user: &mut UserProfile) {
     );
 
     match account_choice {
-        0 => account = BankAccount::CoinPurse,
+        0 => account = BankAccount::Wallet,
         1 => account = BankAccount::Account1,
         2 => account = BankAccount::Account2,
         3 => account = BankAccount::Account3,
@@ -231,42 +230,23 @@ fn bank_manager(user: &mut UserProfile) {
         _ => out_of_bounds(None),
     }
 
-    let option = selector(&["Add Money", "Subtract Money", "NAV: Cancel"], 0, None);
+    let calculation = generic_calculator::<usize>();
 
-    if option == 2 {
-        main(user);
-    }
+    let result: Result<(), &str> = match calculation {
+        Operation::Add(_) => user.bank.arithmetic(account, calculation),
+        Operation::Subtract(_) => user.bank.arithmetic(account, calculation),
+        Operation::Multiply(_) => user.bank.arithmetic(account, calculation),
+        Operation::Divide(_) => user.bank.arithmetic(account, calculation),
+        Operation::None => Err("Invalid operation"),
+    };
 
-    let amount_result = input::prompt_input("Amount").parse::<u32>();
-    let mut amount: u32 = 0;
-
-    match amount_result {
-        Ok(number) => amount = number,
-        Err(_) => {
-            input::invalid_input(None, None, true);
-            bank_manager(user);
-        }
-    }
-
-    let mut bank_result: BankResult = BankResult::Error("Uninitialized");
-
-    match option {
-        // Deposit
-        0 => bank_result = Bank::deposit(user, account, amount, true),
-        // Withdrawal
-        1 => bank_result = Bank::withdraw(user, account, amount, true),
-        2 => bank_manager(user),
-        _ => out_of_bounds(None),
-    }
-
-    match bank_result {
-        BankResult::Ok => {
+    match result {
+        Ok(_) => {
             println!("\nOperation successful.");
             press_enter_to_continue();
             bank_manager(user);
         }
-
-        BankResult::Error(message) => {
+        Err(message) => {
             println!("\n{}", message);
             press_enter_to_continue();
             bank_manager(user);
@@ -306,43 +286,15 @@ fn xp_manager(user: &mut UserProfile) {
         _ => out_of_bounds(None),
     };
 
-    let calculation = prompt_input("Enter operation. (Ex. +1, -1, *1, /1)");
-    let chars: Vec<char> = calculation.chars().collect();
-    let operator = chars[0];
+    let calculation = generic_calculator::<usize>();
 
-    match operator {
-        '+' => {}
-        '-' => {}
-        '*' => {}
-        '/' => {}
-        invalid => {
-            input::invalid_input(Some(&invalid.to_string()), None, true);
-            xp_manager(user);
-        }
-    }
-
-    let number_string: String = String::from_iter(chars[1..].iter());
-    let number_result: Result<usize, ParseIntError> = number_string.trim().parse();
-
-    if number_result.is_err() {
-        println!("{} is not a valid number", number_string);
-        press_enter_to_continue();
-        xp_manager(user)
-    }
-
-    let mut operation: MathOp = MathOp::Add;
-
-    match operator {
-        '+' => operation = MathOp::Add,
-        '-' => operation = MathOp::Subtract,
-        '*' => operation = MathOp::Multiply,
-        '/' => operation = MathOp::Divide,
-        _ => {}
+    let result: Result<(), &str> = match calculation {
+        Operation::Add(_) => user.xp.arithmetic(xp_type, calculation),
+        Operation::Subtract(_) => user.xp.arithmetic(xp_type, calculation),
+        Operation::Multiply(_) => user.xp.arithmetic(xp_type, calculation),
+        Operation::Divide(_) => user.xp.arithmetic(xp_type, calculation),
+        Operation::None => Err("Invalid Operation"),
     };
-
-    let number = number_result.unwrap();
-
-    let result: Result<(), &str> = user.xp.arithmetic(xp_type, operation, number as u32);
 
     match result {
         Ok(_) => {
