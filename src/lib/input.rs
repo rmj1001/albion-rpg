@@ -119,8 +119,8 @@ pub fn invalid_input(input: Option<&str>, expected: Option<&str>, pause: bool) {
     let mut output_string = String::new();
 
     match input {
-        Some(text) => output_string.push_str(&format!("Invalid input '{}'.", text)),
-        None => output_string.push_str("Invalid input."),
+        Some(text) => output_string.push_str(&format!("\nInvalid input '{}'.", text)),
+        None => output_string.push_str("\nInvalid input."),
     }
 
     if let Some(text) = expected {
