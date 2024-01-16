@@ -1,6 +1,6 @@
 use std::{num::ParseIntError, str::FromStr};
 
-use super::input::{self, prompt_input};
+use super::input::{self, prompt_arrow};
 
 pub enum Operation<T> {
     Add(T),
@@ -18,8 +18,7 @@ where
     T: FromStr<Err = std::num::ParseIntError>,
 {
     let mut calculation =
-        prompt_input("Enter operation (Ex. +1, -1, *1, /1) or 'cancel' to go back >")
-            .to_lowercase();
+        prompt_arrow("Enter operation (Ex. +1, -1, *1, /1) or 'cancel' to go back").to_lowercase();
 
     match &calculation[..] {
         "cancel" => return Operation::Cancel,

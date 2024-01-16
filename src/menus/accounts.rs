@@ -1,5 +1,5 @@
 use crate::lib::{
-    input::{out_of_bounds, selector},
+    input::{out_of_bounds, select_from_str_array},
     terminal::*,
     tui::*,
 };
@@ -10,7 +10,7 @@ pub fn main() {
 
     let main_menu_options = vec!["Login", "Register", "Exit"];
 
-    let chosen_option = selector(&main_menu_options, None);
+    let chosen_option = select_from_str_array(&main_menu_options, None);
 
     match chosen_option {
         0 => crate::menus::login::main(),

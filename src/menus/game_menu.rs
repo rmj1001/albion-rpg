@@ -1,5 +1,5 @@
 use crate::lib::{
-    input::{self, prompt_input},
+    input::{self, prompt_arrow},
     terminal,
     tui::{self, page_header, press_enter_to_continue, HeaderSubtext},
 };
@@ -38,7 +38,7 @@ pub fn main(user: &mut UserProfile) {
     println!("n2. Logout");
     println!("n3. Exit Game\n");
 
-    let choice = prompt_input("Enter Menu Code >").to_lowercase();
+    let choice = prompt_arrow("Enter Menu Code >").to_lowercase();
 
     match &choice[..] {
         // Combat

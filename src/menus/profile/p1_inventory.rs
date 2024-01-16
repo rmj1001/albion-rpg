@@ -1,5 +1,5 @@
 use crate::lib::{
-    input::{out_of_bounds, selector},
+    input::{out_of_bounds, select_from_str_array},
     tui::{page_header, press_enter_to_continue, HeaderSubtext},
 };
 
@@ -8,7 +8,7 @@ use crate::user::profile::UserProfile;
 pub fn main(user: &mut UserProfile) {
     page_header("Inventory Viewer", HeaderSubtext::None);
 
-    let menu_option = selector(
+    let menu_option = select_from_str_array(
         &["1. Items", "2. Weapons", "3. Armor", "NAV: Go Back"],
         None,
     );

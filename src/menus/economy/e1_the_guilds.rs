@@ -1,5 +1,5 @@
 #![allow(unused_assignments, unused_variables, unused_mut)]
-use crate::lib::input::{confirm, out_of_bounds, selector};
+use crate::lib::input::{confirm, out_of_bounds, select_from_str_array};
 
 use crate::lib::tui::{self, page_header};
 use crate::lib::tui::{press_enter_to_continue, HeaderSubtext};
@@ -20,7 +20,7 @@ pub fn main(user: &mut UserProfile) {
     let mut increase_item: Option<&mut Item>;
     let mut decrease_item: Option<&mut Item>;
 
-    let guild_choice = selector(
+    let guild_choice = select_from_str_array(
         &[
             "1. Fishing",
             "2. Cooking",
@@ -182,7 +182,7 @@ fn job(
 
     println!();
 
-    let work_choice = selector(&["Work", "Go Back"], None);
+    let work_choice = select_from_str_array(&["Work", "Go Back"], None);
 
     match work_choice {
         0 => {

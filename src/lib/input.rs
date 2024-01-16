@@ -4,59 +4,61 @@ use dialoguer::Confirm;
 
 use crate::lib::tui::press_enter_to_continue;
 
-/// Returns the index of the element in the vector selected.
-pub fn selector(options: &[&str], optional_prompt: Option<&str>) -> usize {
-    match optional_prompt {
-        Some(prompt) => dialoguer::Select::new()
-            .with_prompt(prompt)
-            .items(options)
-            .default(0)
-            .interact()
-            .unwrap_or(0),
-        None => dialoguer::Select::new()
-            .items(options)
-            .default(0)
-            .interact()
-            .unwrap_or(0),
+pub fn select_from_str_array(options: &[&str], optional_prompt: Option<&str>) -> usize {
+    if let Some(prompt_text) = optional_prompt {
+        println!("{prompt_text}");
     }
+
+    dialoguer::Select::new()
+        .items(options)
+        .default(0)
+        .interact()
+        .unwrap_or(0)
 }
 
 pub fn select_from_vector(options: Vec<String>, optional_prompt: Option<&str>) -> usize {
-    match optional_prompt {
-        Some(prompt) => dialoguer::Select::new()
-            .with_prompt(prompt)
-            .items(&options[..])
-            .default(0)
-            .interact()
-            .unwrap_or(0),
-        None => dialoguer::Select::new()
-            .items(&options[..])
-            .default(0)
-            .interact()
-            .unwrap_or(0),
+    if let Some(prompt_text) = optional_prompt {
+        println!("{prompt_text}");
     }
+
+    dialoguer::Select::new()
+        .items(&options[..])
+        .default(0)
+        .interact()
+        .unwrap_or(0)
 }
 
-pub fn prompt_input(prompt: &str) -> String {
-    print!("{prompt} ");
+/// NOTE: Don't use this unless you're using a custom prompt end character
+pub fn prompt(text: &str) -> String {
+    print!("{text} ");
 
     std::io::stdout().flush().expect("Could not flush stdout");
 
     let mut input: String = String::new();
 
     if std::io::stdin().read_line(&mut input).is_err() {
-        return prompt_input(prompt);
+        return prompt(text);
     }
 
     input.trim().to_string()
 }
 
+/// Example: prompt_colon("test"); -> test: {input here}
+pub fn prompt_colon(text: &str) -> String {
+    prompt(&format!("{text}:"))
+}
+
+/// Example: prompt_arrow("test"); -> test > {input here}
+pub fn prompt_arrow(text: &str) -> String {
+    prompt(&format!("{text} >"))
+}
+
 /// Attempts to cast the string to a generic type
-pub fn input_generic<T>(prompt: &str) -> Result<T, &str>
+pub fn input_generic<T>(text: &str) -> Result<T, &str>
 where
     T: FromStr,
 {
-    let input_string = prompt_input(prompt);
+    let input_string = prompt(text);
     let trimmed = input_string.trim();
 
     match trimmed.parse::<T>() {

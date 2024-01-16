@@ -1,6 +1,6 @@
 use crate::{
     lib::{
-        input::{confirm, out_of_bounds, select_from_vector, selector},
+        input::{confirm, out_of_bounds, select_from_str_array, select_from_vector},
         math::{generic_calculator, Operation},
         tui::{self, page_header, press_enter_to_continue, HeaderSubtext},
     },
@@ -15,7 +15,7 @@ use crate::user::{
 pub fn main(user: &mut UserProfile) {
     page_header("Developer Mode", HeaderSubtext::Keyboard);
 
-    let choice = selector(
+    let choice = select_from_str_array(
         &[
             "1. Throw a panic",
             "2. Manipulate Inventory",
@@ -64,7 +64,7 @@ fn user_manager(user: &mut UserProfile) {
     // Listing profiles for printing or deletion
     let profiles: Vec<String> = UserProfile::list_all();
 
-    let choice1 = selector(
+    let choice1 = select_from_str_array(
         &[
             "1. List Users",
             "2. Delete User",
@@ -195,7 +195,7 @@ fn bank_manager(user: &mut UserProfile) {
     println!("Account 3: {} Gold", user.bank.account3);
     println!("Account 4: {} Gold\n", user.bank.account4);
 
-    let account_choice = selector(
+    let account_choice = select_from_str_array(
         &[
             "Wallet",
             "Account 1",
@@ -250,7 +250,7 @@ fn bank_manager(user: &mut UserProfile) {
 fn xp_manager(user: &mut UserProfile) {
     page_header("Developer Mode - XP Manager", HeaderSubtext::Keyboard);
 
-    let xp_category = selector(
+    let xp_category = select_from_str_array(
         &[
             "1. Combat",
             "2. Fishing",
@@ -324,7 +324,7 @@ fn xp_manager(user: &mut UserProfile) {
 fn inventory_manager(user: &mut UserProfile) {
     page_header("Developer Mode - Inventory Manager", HeaderSubtext::None);
 
-    let manager_option = selector(
+    let manager_option = select_from_str_array(
         &["1. Items", "2. Weapons", "3. Armor", "NAV: Go Back"],
         None,
     );

@@ -1,5 +1,5 @@
 use crate::lib::{
-    input::{self, out_of_bounds, prompt_input, selector},
+    input::{self, out_of_bounds, prompt_arrow, select_from_str_array},
     tui::{page_header, press_enter_to_continue, HeaderSubtext},
 };
 
@@ -16,7 +16,7 @@ pub fn main(user: &mut UserProfile) {
     println!("Account 3: {} Gold", user.bank.account3);
     println!("Account 4: {} Gold\n", user.bank.account4);
 
-    let account_choice = selector(
+    let account_choice = select_from_str_array(
         &[
             "Account 1",
             "Account 2",
@@ -36,13 +36,13 @@ pub fn main(user: &mut UserProfile) {
         _ => out_of_bounds(None),
     }
 
-    let option = selector(&["Deposit", "Withdraw", "NAV: Cancel"], None);
+    let option = select_from_str_array(&["Deposit", "Withdraw", "NAV: Cancel"], None);
 
     if option == 2 {
         main(user);
     }
 
-    let amount_result = prompt_input("Amount >").parse::<usize>();
+    let amount_result = prompt_arrow("Amount").parse::<usize>();
     let mut amount: usize = 0;
 
     match amount_result {

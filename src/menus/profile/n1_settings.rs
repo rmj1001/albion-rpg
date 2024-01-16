@@ -1,6 +1,6 @@
 use crate::lib::{
     crypt,
-    input::{confirm, out_of_bounds, password, prompt_input, selector},
+    input::{confirm, out_of_bounds, password, prompt_colon, select_from_str_array},
     tui::{self, page_header, HeaderSubtext},
 };
 
@@ -9,7 +9,7 @@ use crate::user::profile::UserProfile;
 pub fn main(user: &mut UserProfile) {
     page_header("Profile Settings", HeaderSubtext::Keyboard);
 
-    let choice: usize = selector(
+    let choice: usize = select_from_str_array(
         &[
             "1. Change Username",
             "2. Change Password",
@@ -32,7 +32,7 @@ pub fn main(user: &mut UserProfile) {
 
 fn change_username(user: &mut UserProfile) {
     page_header("Profile Settings", HeaderSubtext::None);
-    let new_username = prompt_input("New Username:");
+    let new_username = prompt_colon("New Username");
 
     if new_username == user.settings.username {
         println!("\nThis is your current username.");
@@ -40,7 +40,7 @@ fn change_username(user: &mut UserProfile) {
         main(user);
     }
 
-    let confirm_username = prompt_input("Confirm Username:");
+    let confirm_username = prompt_colon("Confirm Username");
 
     if new_username != confirm_username {
         println!("\nUsernames do not match.");
