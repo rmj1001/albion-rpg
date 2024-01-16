@@ -26,7 +26,7 @@ pub fn main(user: &mut UserProfile) {
         1 => change_password(user),
         2 => lock_profile(user),
         3 => delete_profile(user),
-        4 => crate::menus::game::main::main(user),
+        4 => crate::menus::game::game_menu::main(user),
         _ => out_of_bounds(None),
     }
 }

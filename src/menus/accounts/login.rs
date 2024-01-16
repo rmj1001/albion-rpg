@@ -60,7 +60,7 @@ pub fn main() {
             println!("\nLogin successful.");
             tui::press_enter_to_continue();
 
-            crate::menus::game::main::main(&mut profile);
+            crate::menus::game::game_menu::main(&mut profile);
         }
 
         ProfileRetrievalResult::None(message) => {

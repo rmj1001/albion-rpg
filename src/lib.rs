@@ -52,6 +52,6 @@ pub mod menus {
             pub mod p2_hall_of_records;
         }
 
-        pub mod main;
+        pub mod game_menu;
     }
 }
