@@ -60,7 +60,7 @@ pub fn main(user: &mut UserProfile) {
         "n1" => crate::menus::game::profile::n1_settings::main(user),
         "n2" => {
             user.save();
-            crate::menus::accounts::main::main();
+            crate::menus::accounts::accounts::main();
         }
         "n3" => {
             user.save();

@@ -126,7 +126,7 @@ fn user_manager(user: &mut UserProfile) {
                         println!("\nCurrent profile successfully deleted. Logging out.");
                         tui::press_enter_to_continue();
 
-                        crate::menus::accounts::main::main();
+                        crate::menus::accounts::accounts::main();
                     }
 
                     UserProfile::delete_from_username(profile_string);

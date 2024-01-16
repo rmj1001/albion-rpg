@@ -22,7 +22,7 @@ fn get_password(profile: &UserProfile) -> bool {
 fn profile_remains_locked() {
     println!("\nProfile will remain locked.");
     tui::press_enter_to_continue();
-    crate::menus::accounts::main::main();
+    crate::menus::accounts::accounts::main();
 }
 
 pub fn main() {
@@ -48,13 +48,13 @@ pub fn main() {
                 } else {
                     println!("\nCancelling.");
                     press_enter_to_continue();
-                    crate::menus::accounts::main::main();
+                    crate::menus::accounts::accounts::main();
                 }
             }
 
             if !get_password(&profile) {
                 tui::press_enter_to_continue();
-                crate::menus::accounts::main::main();
+                crate::menus::accounts::accounts::main();
             }
 
             println!("\nLogin successful.");
@@ -66,7 +66,7 @@ pub fn main() {
         ProfileRetrievalResult::None(message) => {
             println!("\n{}", message);
             tui::press_enter_to_continue();
-            crate::menus::accounts::main::main();
+            crate::menus::accounts::accounts::main();
         }
     }
 }

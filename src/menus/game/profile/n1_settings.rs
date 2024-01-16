@@ -94,7 +94,7 @@ fn lock_profile(user: &mut UserProfile) {
     println!("Profile sucessfully locked.");
     tui::press_enter_to_continue();
 
-    crate::menus::accounts::main::main();
+    crate::menus::accounts::accounts::main();
 }
 
 fn delete_profile(user: &mut UserProfile) {
@@ -104,5 +104,5 @@ fn delete_profile(user: &mut UserProfile) {
     println!("Profile sucessfully deleted.");
     tui::press_enter_to_continue();
 
-    crate::menus::accounts::main::main();
+    crate::menus::accounts::accounts::main();
 }

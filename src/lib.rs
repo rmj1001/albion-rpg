@@ -24,8 +24,8 @@ pub mod user {
 
 pub mod menus {
     pub mod accounts {
+        pub mod accounts;
         pub mod login;
-        pub mod main;
         pub mod register;
     }
 
