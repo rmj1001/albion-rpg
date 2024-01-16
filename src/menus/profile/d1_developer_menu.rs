@@ -224,7 +224,7 @@ fn bank_manager(user: &mut UserProfile) {
         Operation::Subtract(_) => user.bank.arithmetic(account, calculation),
         Operation::Multiply(_) => user.bank.arithmetic(account, calculation),
         Operation::Divide(_) => user.bank.arithmetic(account, calculation),
-        Operation::None => Err("Invalid operation"),
+        Operation::None => Err(""),
     };
 
     match result {
@@ -233,9 +233,7 @@ fn bank_manager(user: &mut UserProfile) {
             press_enter_to_continue();
             bank_manager(user);
         }
-        Err(message) => {
-            println!("\n{}", message);
-            press_enter_to_continue();
+        Err(_) => {
             bank_manager(user);
         }
     }
@@ -272,6 +270,19 @@ fn xp_manager(user: &mut UserProfile) {
         _ => out_of_bounds(None),
     };
 
+    let current_xp = user.xp.get(xp_type);
+    let xp_title: &str = match xp_type {
+        XPType::Combat => "Combat",
+        XPType::Fishing => "Fishing",
+        XPType::Cooking => "Cooking",
+        XPType::Woodcutting => "Woodcutting",
+        XPType::Mining => "Mining",
+        XPType::Smithing => "Smithing",
+        XPType::Thieving => "Thieving",
+    };
+
+    println!("{}: {}xp\n", xp_title, current_xp);
+
     let calculation = generic_calculator::<usize>();
 
     let result: Result<(), &str> = match calculation {
@@ -279,7 +290,7 @@ fn xp_manager(user: &mut UserProfile) {
         Operation::Subtract(_) => user.xp.arithmetic(xp_type, calculation),
         Operation::Multiply(_) => user.xp.arithmetic(xp_type, calculation),
         Operation::Divide(_) => user.xp.arithmetic(xp_type, calculation),
-        Operation::None => Err("Invalid Operation"),
+        Operation::None => Err(""),
     };
 
     match result {
@@ -288,9 +299,7 @@ fn xp_manager(user: &mut UserProfile) {
             press_enter_to_continue();
             xp_manager(user);
         }
-        Err(message) => {
-            println!("\n{}", message);
-            press_enter_to_continue();
+        Err(_) => {
             xp_manager(user);
         }
     }

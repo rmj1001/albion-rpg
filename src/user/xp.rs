@@ -79,7 +79,7 @@ impl XP {
             Operation::None => {
                 println!("\nOperation failed: Invalid Operator");
                 press_enter_to_continue();
-                Err("Operation failed: Invalid Operator")
+                Err("")
             }
         }
     }
