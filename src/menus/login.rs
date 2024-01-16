@@ -36,7 +36,7 @@ pub fn main() {
             let mut profile = profile;
 
             if profile.settings.locked {
-                let unlock_profile: bool = yes_or_no("\nProfile is locked. Unlock?");
+                let unlock_profile: bool = confirm("\nProfile is locked. Unlock?");
 
                 if unlock_profile {
                     if get_password(&profile) {

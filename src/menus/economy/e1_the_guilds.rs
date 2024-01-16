@@ -1,5 +1,5 @@
 #![allow(unused_assignments, unused_variables, unused_mut)]
-use crate::lib::input::{out_of_bounds, selector, yes_or_no};
+use crate::lib::input::{confirm, out_of_bounds, selector};
 
 use crate::lib::tui::{self, page_header};
 use crate::lib::tui::{press_enter_to_continue, HeaderSubtext};
@@ -118,7 +118,7 @@ fn check_membership(user: &mut UserProfile, job: PricedGuilds) {
         return main(user);
     }
 
-    let permission_to_purchase = yes_or_no(&format!(
+    let permission_to_purchase = confirm(&format!(
         "This guild requires a membership (Cost: {} gold). Purchase?",
         guild.member_price
     ));

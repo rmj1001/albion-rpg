@@ -1,6 +1,6 @@
 use crate::lib::{
     crypt,
-    input::{out_of_bounds, prompt_input, selector},
+    input::{confirm, out_of_bounds, prompt_input, selector},
     tui::{self, page_header, HeaderSubtext},
 };
 
@@ -87,6 +87,14 @@ fn change_password(user: &mut UserProfile) {
 }
 
 fn lock_profile(user: &mut UserProfile) {
+    let confirm_lock = confirm("Are you sure you want to lock your profile?");
+
+    if !confirm_lock {
+        println!("\nCancelling.");
+        tui::press_enter_to_continue();
+        main(user);
+    }
+
     user.settings.lock(None);
 
     page_header("Profile Settings", HeaderSubtext::None);
@@ -97,6 +105,14 @@ fn lock_profile(user: &mut UserProfile) {
 }
 
 fn delete_profile(user: &mut UserProfile) {
+    let confirm_delete = confirm("Are you sure you want to delete your profile?");
+
+    if !confirm_delete {
+        println!("\nCancelling.");
+        tui::press_enter_to_continue();
+        main(user);
+    }
+
     user.delete();
 
     page_header("Profile Settings", HeaderSubtext::None);

@@ -1,5 +1,7 @@
 use std::str::FromStr;
 
+use dialoguer::Confirm;
+
 use crate::lib::tui::press_enter_to_continue;
 
 /// Returns the index of the element in the vector selected.
@@ -61,21 +63,18 @@ where
     }
 }
 
-/// "y" and "yes" return true. "n" and "no" return false.
-pub fn yes_or_no(prompt: &str) -> bool {
+/// 'y' returns true, 'n' returns false.
+pub fn confirm(prompt: &str) -> bool {
     loop {
-        let input = prompt_input(&format!("{} (y/n)", prompt)).to_lowercase();
+        let input: Result<bool, dialoguer::Error> = Confirm::new().with_prompt(prompt).interact();
 
-        match &input[..] {
-            "y" => return true,
-            "yes" => return true,
-            "n" => return false,
-            "no" => return false,
-            text => {
-                invalid_input(Some(text), Some("'yes' or 'no'"), true);
+        match input {
+            Ok(answer) => return answer,
+            Err(_) => {
+                invalid_input(None, None, true);
                 continue;
             }
-        };
+        }
     }
 }
 

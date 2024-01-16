@@ -1,6 +1,6 @@
 use crate::{
     lib::{
-        input::{out_of_bounds, select_from_vector, selector, yes_or_no},
+        input::{confirm, out_of_bounds, select_from_vector, selector},
         math::{generic_calculator, Operation},
         tui::{self, page_header, press_enter_to_continue, HeaderSubtext},
     },
@@ -43,7 +43,7 @@ pub fn main(user: &mut UserProfile) {
 pub fn disable_developer_mode(user: &mut UserProfile) {
     page_header("Developer Mode", HeaderSubtext::None);
 
-    let disable_dev_mode = yes_or_no("Are you sure you want to disable developer mode?");
+    let disable_dev_mode = confirm("Are you sure you want to disable developer mode?");
 
     if !disable_dev_mode {
         println!("\nAborting.");
@@ -99,7 +99,7 @@ fn user_manager(user: &mut UserProfile) {
 
             match profile_choice {
                 Some(profile_string) => {
-                    let delete_profile = yes_or_no(&format!(
+                    let delete_profile = confirm(&format!(
                         "Are you sure you want to delete profile '{}'?",
                         profile_string
                     ));
