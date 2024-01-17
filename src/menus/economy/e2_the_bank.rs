@@ -9,12 +9,15 @@ pub fn main(user: &mut UserProfile) {
     let mut account: BankAccount = BankAccount::Account1;
 
     page_header("The Bank", HeaderSubtext::Keyboard);
-    println!("Gold: {} Gold", user.bank.wallet);
+
     println!();
-    println!("Account 1: {} Gold", user.bank.account1);
-    println!("Account 2: {} Gold", user.bank.account2);
-    println!("Account 3: {} Gold", user.bank.account3);
-    println!("Account 4: {} Gold\n", user.bank.account4);
+    user.bank.print_table();
+
+    let option = select_from_str_array(&["Deposit", "Withdraw", "NAV: Go Back"], None);
+
+    if option == 2 {
+        crate::menus::game_menu::main(user);
+    }
 
     let account_choice = select_from_str_array(
         &[
@@ -22,7 +25,7 @@ pub fn main(user: &mut UserProfile) {
             "Account 2",
             "Account 3",
             "Account 4",
-            "NAV: Go Back",
+            "NAV: Cancel",
         ],
         None,
     );
@@ -32,14 +35,8 @@ pub fn main(user: &mut UserProfile) {
         1 => account = BankAccount::Account2,
         2 => account = BankAccount::Account3,
         3 => account = BankAccount::Account4,
-        4 => crate::menus::game_menu::main(user),
+        4 => main(user),
         _ => out_of_bounds(None),
-    }
-
-    let option = select_from_str_array(&["Deposit", "Withdraw", "NAV: Cancel"], None);
-
-    if option == 2 {
-        main(user);
     }
 
     let amount_result = prompt_arrow("Amount").parse::<usize>();
