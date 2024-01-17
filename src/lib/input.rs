@@ -188,7 +188,7 @@ pub fn get_item_and_quantity<'a>(items: Vec<String>) -> Result<(String, usize), 
     let quantity: Result<usize, &str> = input_generic::<usize>("Quantity:");
 
     if quantity.is_err() {
-        invalid_input(None, None, true);
+        press_enter_to_continue();
         return Err("Invalid input.");
     }
 
