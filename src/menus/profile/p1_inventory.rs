@@ -9,7 +9,13 @@ pub fn main(user: &mut UserProfile) {
     page_header("Inventory Viewer", HeaderSubtext::None);
 
     let menu_option = select_from_str_array(
-        &["1. Items", "2. Weapons", "3. Armor", "NAV: Go Back"],
+        &[
+            "1. Items",
+            "2. Weapons",
+            "3. Armor",
+            "4. Finances",
+            "NAV: Go Back",
+        ],
         None,
     );
 
@@ -17,7 +23,8 @@ pub fn main(user: &mut UserProfile) {
         0 => mundane_inventory(user),
         1 => weapons_inventory(user),
         2 => armor_inventory(user),
-        3 => crate::menus::game_menu::main(user),
+        3 => finances(user),
+        4 => crate::menus::game_menu::main(user),
         _ => out_of_bounds(None),
     }
 }
@@ -44,6 +51,15 @@ pub fn armor_inventory(user: &mut UserProfile) {
     page_header("Armor Inventory", HeaderSubtext::None);
 
     user.armor.print_table();
+
+    press_enter_to_continue();
+    main(user);
+}
+
+pub fn finances(user: &mut UserProfile) {
+    page_header("Finances", HeaderSubtext::None);
+
+    user.bank.print_table();
 
     press_enter_to_continue();
     main(user);
