@@ -110,3 +110,10 @@ pub fn press_enter_to_continue() {
     let mut garbage = String::new();
     let _ = std::io::stdin().read_line(&mut garbage);
 }
+
+pub fn print_table(strings: Vec<String>) {
+    let table_string = strings.join("\n");
+    let table = csv_to_table::iter::from_reader(table_string.as_bytes()).to_string();
+
+    println!("{}\n", table);
+}
