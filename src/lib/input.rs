@@ -139,3 +139,37 @@ pub fn invalid_input(input: Option<&str>, expected: Option<&str>, pause: bool) {
         press_enter_to_continue();
     }
 }
+
+pub fn prompt_input_completion(prompt: &str, completion_strings: Vec<String>) -> String {
+    struct Completion {
+        options: Vec<String>,
+    }
+
+    impl dialoguer::Completion for Completion {
+        fn get(&self, input: &str) -> Option<String> {
+            let matches = self
+                .options
+                .iter()
+                .filter(|option| option.starts_with(input))
+                .collect::<Vec<_>>();
+
+            if matches.len() == 1 {
+                Some(matches[0].to_string())
+            } else {
+                None
+            }
+        }
+    }
+
+    let completions = Completion {
+        options: completion_strings,
+    };
+
+    let input_string: String = dialoguer::Input::new()
+        .with_prompt(prompt)
+        .completion_with(&completions)
+        .interact_text()
+        .expect("Input failed.");
+
+    input_string
+}
