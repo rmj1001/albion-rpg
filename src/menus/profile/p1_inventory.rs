@@ -25,12 +25,13 @@ pub fn main(user: &mut UserProfile) {
 pub fn mundane_inventory(user: &mut UserProfile) {
     page_header("Items Inventory", HeaderSubtext::None);
 
-    // TODO: Mundane Items Inventory
+    user.inventory.print();
 
     press_enter_to_continue();
     main(user);
 }
 
+#[allow(unused_variables)]
 pub fn weapons_inventory(user: &mut UserProfile) {
     page_header("Weapons Inventory", HeaderSubtext::None);
 
@@ -40,6 +41,7 @@ pub fn weapons_inventory(user: &mut UserProfile) {
     main(user);
 }
 
+#[allow(unused_variables)]
 pub fn armor_inventory(user: &mut UserProfile) {
     page_header("Armor Inventory", HeaderSubtext::None);
 
