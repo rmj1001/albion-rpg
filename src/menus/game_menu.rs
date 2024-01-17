@@ -23,17 +23,17 @@ pub fn main(user: &mut UserProfile) {
     println!("e3. Trading Post");
     println!("e4. Weapons Shop");
     println!("e5. Armor Shop");
-    println!("e6. Mystic Shop");
-    println!("e7. Celestial Shop");
+    println!("\n");
 
     tui::small_header("Profile", HeaderSubtext::None);
     println!("p1. Inventory");
     println!("p2. Hall of Records");
-
     println!("\n");
+
     if user.settings.developer {
         println!("d1. Developer Menu");
     }
+
     println!("n1. Settings");
     println!("n2. Logout");
     println!("n3. Exit Game\n");
@@ -51,8 +51,6 @@ pub fn main(user: &mut UserProfile) {
         "e3" => crate::menus::economy::e3_trading_post::main(user),
         "e4" => crate::menus::economy::e4_weapons_shop::main(user),
         "e5" => crate::menus::economy::e5_armor_shop::main(user),
-        "e6" => crate::menus::economy::e6_mystic_shop::main(user),
-        "e7" => crate::menus::economy::e7_celestial_shop::main(user),
 
         // Profile
         "p1" => crate::menus::profile::p1_inventory::main(user),
