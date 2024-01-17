@@ -39,20 +39,12 @@ pub fn sell(user: &mut UserProfile) {
 
 fn get_item_and_quantity(user: &mut UserProfile) -> Option<(String, usize)> {
     let items: Vec<String> = vec![
-        "bait".to_string(),
-        "seeds".to_string(),
-        "furs".to_string(),
-        "fish".to_string(),
-        "food".to_string(),
-        "wood".to_string(),
-        "ore".to_string(),
-        "ingots".to_string(),
-        "potions".to_string(),
-        "rubies".to_string(),
-        "magic scrolls".to_string(),
-        "bones".to_string(),
-        "dragon hides".to_string(),
-        "runic_tablets".to_string(),
+        "wooden sword".to_string(),
+        "bronze sword".to_string(),
+        "iron sword".to_string(),
+        "steel sword".to_string(),
+        "mystic sword".to_string(),
+        "wizard staff".to_string(),
     ];
 
     let result = input::get_item_and_quantity(items);
