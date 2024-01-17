@@ -3,13 +3,7 @@ use crate::lib::{
     tui::{page_header, press_enter_to_continue, HeaderSubtext},
 };
 
-use crate::user::{achievements::Achievements, profile::UserProfile, xp::XP};
-
-fn print_xp(xp: usize) {
-    println!("XP: {}", xp);
-    println!("Level: {}", XP::level(xp));
-    println!();
-}
+use crate::user::{achievements::Achievements, profile::UserProfile};
 
 pub fn main(user: &mut UserProfile) {
     page_header("Hall of Records", HeaderSubtext::Keyboard);
@@ -26,33 +20,9 @@ pub fn main(user: &mut UserProfile) {
 }
 
 pub fn xp(user: &mut UserProfile) {
-    let xp: &XP = &user.xp;
-
     page_header("Hall of Records - XP/Levels", HeaderSubtext::None);
 
-    println!("# Profile");
-    print_xp(xp.total_xp());
-
-    println!("# Combat");
-    print_xp(xp.combat);
-
-    println!("# Fishing");
-    print_xp(xp.fishing);
-
-    println!("# Cooking");
-    print_xp(xp.cooking);
-
-    println!("# Woodcutting");
-    print_xp(xp.woodcutting);
-
-    println!("# Mining");
-    print_xp(xp.mining);
-
-    println!("# Smithing");
-    print_xp(xp.smithing);
-
-    println!("# Thieving");
-    print_xp(xp.thieving);
+    user.xp.print_table();
 
     press_enter_to_continue();
     main(user);

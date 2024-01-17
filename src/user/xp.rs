@@ -26,6 +26,37 @@ pub enum XPType {
 }
 
 impl XP {
+    pub fn print_table(&self) {
+        let xp_string = [
+            "Category,XP,Level".to_string(),
+            format!("Combat,{},{}", self.combat, self::XP::level(self.combat)),
+            format!("Fishing,{},{}", self.fishing, self::XP::level(self.fishing)),
+            format!("Cooking,{},{}", self.cooking, self::XP::level(self.cooking)),
+            format!(
+                "Woodcutting,{},{}",
+                self.woodcutting,
+                self::XP::level(self.woodcutting)
+            ),
+            format!("Mining,{},{}", self.mining, self::XP::level(self.mining)),
+            format!(
+                "Smithing,{},{}",
+                self.smithing,
+                self::XP::level(self.smithing)
+            ),
+            format!(
+                "Thieving,{},{}",
+                self.thieving,
+                self::XP::level(self.thieving)
+            ),
+            format!("Profile Total,{},{}", self.total_xp(), self.profile_level()),
+        ]
+        .join("\n");
+
+        let table = csv_to_table::iter::from_reader(xp_string.as_bytes()).to_string();
+
+        println!("{}\n", table);
+    }
+
     pub fn level(xp: usize) -> usize {
         (xp / 100) + 1
     }

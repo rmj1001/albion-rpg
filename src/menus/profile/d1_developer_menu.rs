@@ -188,12 +188,7 @@ fn bank_manager(user: &mut UserProfile) {
 
     page_header("Developer Mode - Bank Managert", HeaderSubtext::Keyboard);
 
-    println!("Gold: {} Gold", user.bank.wallet);
-    println!();
-    println!("Account 1: {} Gold", user.bank.account1);
-    println!("Account 2: {} Gold", user.bank.account2);
-    println!("Account 3: {} Gold", user.bank.account3);
-    println!("Account 4: {} Gold\n", user.bank.account4);
+    user.bank.print_table();
 
     let account_choice = select_from_str_array(
         &[
@@ -250,6 +245,8 @@ fn bank_manager(user: &mut UserProfile) {
 fn xp_manager(user: &mut UserProfile) {
     page_header("Developer Mode - XP Manager", HeaderSubtext::Keyboard);
 
+    user.xp.print_table();
+
     let xp_category = select_from_str_array(
         &[
             "1. Combat",
@@ -277,19 +274,6 @@ fn xp_manager(user: &mut UserProfile) {
         7 => main(user),
         _ => out_of_bounds(None),
     };
-
-    let current_xp = user.xp.get(xp_type);
-    let xp_title: &str = match xp_type {
-        XPType::Combat => "Combat",
-        XPType::Fishing => "Fishing",
-        XPType::Cooking => "Cooking",
-        XPType::Woodcutting => "Woodcutting",
-        XPType::Mining => "Mining",
-        XPType::Smithing => "Smithing",
-        XPType::Thieving => "Thieving",
-    };
-
-    println!("{}: {}xp\n", xp_title, current_xp);
 
     let calculation = generic_calculator::<usize>();
 
