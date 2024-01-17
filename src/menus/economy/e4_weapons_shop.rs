@@ -1,10 +1,7 @@
 use crate::{
     lib::{
-        input::{
-            self, input_generic, invalid_input, out_of_bounds, prompt_input_completion,
-            select_from_str_array,
-        },
-        tui::{page_header, press_enter_to_continue},
+        input::{self, out_of_bounds, select_from_str_array},
+        tui::page_header,
     },
     user::profile::UserProfile,
 };
