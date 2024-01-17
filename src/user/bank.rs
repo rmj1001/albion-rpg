@@ -22,9 +22,35 @@ pub struct Bank {
 }
 
 impl Bank {
+    pub fn balance(user: &UserProfile, account: &BankAccount) -> usize {
+        match account {
+            BankAccount::Wallet => user.bank.wallet,
+            BankAccount::Account1 => user.bank.account1,
+            BankAccount::Account2 => user.bank.account2,
+            BankAccount::Account3 => user.bank.account3,
+            BankAccount::Account4 => user.bank.account4,
+        }
+    }
+
+    pub fn print_table(&self) {
+        let accounts = [
+            "Account,Balance".to_string(),
+            format!("Wallet,{}", self.wallet),
+            format!("Account 1,{}", self.account1),
+            format!("Account 2,{}", self.account2),
+            format!("Account 3,{}", self.account3),
+            format!("Account 4,{}", self.account4),
+        ]
+        .join("\n");
+
+        let table = csv_to_table::iter::from_reader(accounts.as_bytes()).to_string();
+
+        println!("{}\n", table);
+    }
+
     pub fn arithmetic(
         &mut self,
-        account_flag: BankAccount,
+        account_flag: &BankAccount,
         operation: Operation<usize>,
     ) -> Result<(), &str> {
         let account = match account_flag {
@@ -79,14 +105,14 @@ impl Bank {
         add_only: bool,
     ) -> Result<(), &str> {
         if !add_only && user.bank.wallet < amount {
-            return Err("There is not enough gold in the account");
+            return Err("You do not have enough gold in your wallet.");
         }
 
         if !add_only {
             user.bank.wallet -= amount;
         }
 
-        user.bank.arithmetic(account_flag, Operation::Add(amount))
+        user.bank.arithmetic(&account_flag, Operation::Add(amount))
     }
 
     pub fn withdraw(
@@ -95,11 +121,16 @@ impl Bank {
         amount: usize,
         subtract_only: bool,
     ) -> Result<(), &str> {
-        if !subtract_only {
+        let account_balance: usize = Bank::balance(user, &account_flag);
+
+        if account_balance >= amount && !subtract_only {
             user.bank.wallet += amount;
         }
 
-        user.bank
-            .arithmetic(account_flag, Operation::Subtract(amount))
+        let withdraw_result = user
+            .bank
+            .arithmetic(&account_flag, Operation::Subtract(amount));
+
+        withdraw_result.to_owned()
     }
 }
