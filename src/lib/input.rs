@@ -173,3 +173,24 @@ pub fn prompt_input_completion(prompt: &str, completion_strings: Vec<String>) ->
 
     input_string
 }
+
+pub fn get_item_and_quantity<'a>(items: Vec<String>) -> Result<(String, usize), &'a str> {
+    let item = prompt_input_completion(
+        "Type the name of the item you wish to purchase",
+        items.clone(),
+    );
+
+    if !items.contains(&item.to_lowercase()) {
+        invalid_input(Some(&item), None, true);
+        return Err("Item does not exist.");
+    }
+
+    let quantity: Result<usize, &str> = input_generic::<usize>("Quantity:");
+
+    if quantity.is_err() {
+        invalid_input(None, None, true);
+        return Err("Invalid input.");
+    }
+
+    Ok((item, quantity.unwrap()))
+}
