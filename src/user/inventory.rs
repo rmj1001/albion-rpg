@@ -36,91 +36,105 @@ pub struct MundaneInventory {
 }
 
 impl MundaneInventory {
-    pub fn print(&self) {
+    pub fn print_table(&self) {
         let inv = &self;
 
-        let inventory: String = vec![
-            format!("Item,Quantity,Buy Price,Sale Price"),
+        let inventory: String = [
+            "Item,Quantity,Buy Price,Sale Price".to_string(),
             format!(
-                "Bait,{},{},{}",
+                "{},{},{},{}",
+                inv.bait.name,
                 inv.bait.quantity,
                 inv.bait.price,
                 inv.bait.price / 2
             ),
             format!(
-                "Seeds,{},{},{}",
+                "{},{},{},{}",
+                inv.seeds.name,
                 inv.seeds.quantity,
                 inv.seeds.price,
                 inv.seeds.price / 2
             ),
             format!(
-                "Furs,{},{},{}",
+                "{},{},{},{}",
+                inv.furs.name,
                 inv.furs.quantity,
                 inv.furs.price,
                 inv.furs.price / 2
             ),
             format!(
-                "Fish,{},{},{}",
+                "{},{},{},{}",
+                inv.fish.name,
                 inv.fish.quantity,
                 inv.fish.price,
                 inv.fish.price / 2
             ),
             format!(
-                "Food,{},{},{}",
+                "{},{},{},{}",
+                inv.food.name,
                 inv.food.quantity,
                 inv.food.price,
                 inv.food.price / 2
             ),
             format!(
-                "Wood,{},{},{}",
+                "{},{},{},{}",
+                inv.wood.name,
                 inv.wood.quantity,
                 inv.wood.price,
                 inv.wood.price / 2
             ),
             format!(
-                "Ore,{},{},{}",
+                "{},{},{},{}",
+                inv.ore.name,
                 inv.ore.quantity,
                 inv.ore.price,
                 inv.ore.price / 2
             ),
             format!(
-                "Ingots,{},{},{}",
+                "{},{},{},{}",
+                inv.ingots.name,
                 inv.ingots.quantity,
                 inv.ingots.price,
                 inv.ingots.price / 2
             ),
             format!(
-                "Potions,{},{},{}",
+                "{},{},{},{}",
+                inv.potions.name,
                 inv.potions.quantity,
                 inv.potions.price,
                 inv.potions.price / 2
             ),
             format!(
-                "Rubies,{},{},{}",
+                "{},{},{},{}",
+                inv.rubies.name,
                 inv.rubies.quantity,
                 inv.rubies.price,
                 inv.rubies.price / 2
             ),
             format!(
-                "Magic Scrolls,{},{},{}",
+                "{},{},{},{}",
+                inv.magic_scrolls.name,
                 inv.magic_scrolls.quantity,
                 inv.magic_scrolls.price,
                 inv.magic_scrolls.price / 2
             ),
             format!(
-                "Bones,{},{},{}",
+                "{},{},{},{}",
+                inv.bones.name,
                 inv.bones.quantity,
                 inv.bones.price,
                 inv.bones.price / 2
             ),
             format!(
-                "Dragon Hides,{},{},{}",
+                "{},{},{},{}",
+                inv.dragon_hides.name,
                 inv.dragon_hides.quantity,
                 inv.dragon_hides.price,
                 inv.dragon_hides.price / 2
             ),
             format!(
-                "Runic Tablets,{},{},{}",
+                "{},{},{},{}",
+                inv.runic_tablets.name,
                 inv.runic_tablets.quantity,
                 inv.runic_tablets.price,
                 inv.runic_tablets.price / 2

@@ -32,3 +32,58 @@ pub struct WeaponsInventory {
     pub mystic_sword: Weapon,
     pub wizard_staff: Weapon,
 }
+
+impl WeaponsInventory {
+    pub fn print_table(&self) {
+        let inventory: String = [
+            "Weapon,Purchased,Buy Price,Sale Price".to_string(),
+            format!(
+                "{},{},{},{}",
+                self.wooden_sword.name,
+                self.wooden_sword.owns,
+                self.wooden_sword.price,
+                self.wooden_sword.price / 2
+            ),
+            format!(
+                "{},{},{},{}",
+                self.bronze_sword.name,
+                self.bronze_sword.owns,
+                self.bronze_sword.price,
+                self.bronze_sword.price / 2
+            ),
+            format!(
+                "{},{},{},{}",
+                self.iron_sword.name,
+                self.iron_sword.owns,
+                self.iron_sword.price,
+                self.iron_sword.price / 2
+            ),
+            format!(
+                "{},{},{},{}",
+                self.steel_sword.name,
+                self.steel_sword.owns,
+                self.steel_sword.price,
+                self.steel_sword.price / 2
+            ),
+            format!(
+                "{},{},{},{}",
+                self.mystic_sword.name,
+                self.mystic_sword.owns,
+                self.mystic_sword.price,
+                self.mystic_sword.price / 2
+            ),
+            format!(
+                "{},{},{},{}",
+                self.wizard_staff.name,
+                self.wizard_staff.owns,
+                self.wizard_staff.price,
+                self.wizard_staff.price / 2
+            ),
+        ]
+        .join("\n");
+
+        let table = csv_to_table::iter::from_reader(inventory.as_bytes()).to_string();
+
+        println!("{table}\n");
+    }
+}

@@ -32,3 +32,58 @@ pub struct ArmorInventory {
     pub dragonhide: Armor,
     pub mystic: Armor,
 }
+
+impl ArmorInventory {
+    pub fn print_table(&self) {
+        let inventory: String = [
+            "Armor,Purchased,Buy Price,Sale Price".to_string(),
+            format!(
+                "{},{},{},{}",
+                self.leather.name,
+                self.leather.owns,
+                self.leather.price,
+                self.leather.price / 2
+            ),
+            format!(
+                "{},{},{},{}",
+                self.bronze.name,
+                self.bronze.owns,
+                self.bronze.price,
+                self.bronze.price / 2
+            ),
+            format!(
+                "{},{},{},{}",
+                self.iron.name,
+                self.iron.owns,
+                self.iron.price,
+                self.iron.price / 2
+            ),
+            format!(
+                "{},{},{},{}",
+                self.steel.name,
+                self.steel.owns,
+                self.steel.price,
+                self.steel.price / 2
+            ),
+            format!(
+                "{},{},{},{}",
+                self.dragonhide.name,
+                self.dragonhide.owns,
+                self.dragonhide.price,
+                self.dragonhide.price / 2
+            ),
+            format!(
+                "{},{},{},{}",
+                self.mystic.name,
+                self.mystic.owns,
+                self.mystic.price,
+                self.mystic.price / 2
+            ),
+        ]
+        .join("\n");
+
+        let table = csv_to_table::iter::from_reader(inventory.as_bytes()).to_string();
+
+        println!("{table}\n");
+    }
+}

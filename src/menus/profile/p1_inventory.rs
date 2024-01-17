@@ -25,27 +25,25 @@ pub fn main(user: &mut UserProfile) {
 pub fn mundane_inventory(user: &mut UserProfile) {
     page_header("Items Inventory", HeaderSubtext::None);
 
-    user.inventory.print();
+    user.inventory.print_table();
 
     press_enter_to_continue();
     main(user);
 }
 
-#[allow(unused_variables)]
 pub fn weapons_inventory(user: &mut UserProfile) {
     page_header("Weapons Inventory", HeaderSubtext::None);
 
-    // TODO: Weapons Inventory
+    user.weapons.print_table();
 
     press_enter_to_continue();
     main(user);
 }
 
-#[allow(unused_variables)]
 pub fn armor_inventory(user: &mut UserProfile) {
     page_header("Armor Inventory", HeaderSubtext::None);
 
-    // TODO: Armor Inventory
+    user.armor.print_table();
 
     press_enter_to_continue();
     main(user);
