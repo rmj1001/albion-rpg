@@ -1,5 +1,6 @@
-use csv_to_table as table;
 use serde::{Deserialize, Serialize};
+
+use crate::lib::tui::print_table;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Item {
@@ -39,7 +40,7 @@ impl MundaneInventory {
     pub fn print_table(&self) {
         let inv = &self;
 
-        let inventory: String = [
+        print_table(vec![
             "Item,Quantity,Buy Price,Sale Price".to_string(),
             format!(
                 "{},{},{},{}",
@@ -139,11 +140,6 @@ impl MundaneInventory {
                 inv.runic_tablets.price,
                 inv.runic_tablets.price / 2
             ),
-        ]
-        .join("\n");
-
-        let table = table::iter::from_reader(inventory.as_bytes()).to_string();
-
-        println!("{table}\n");
+        ])
     }
 }

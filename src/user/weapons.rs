@@ -1,6 +1,8 @@
 use rand::{thread_rng, Rng};
 use serde::{Deserialize, Serialize};
 
+use crate::lib::tui::print_table;
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Weapon {
     pub name: String,
@@ -35,7 +37,7 @@ pub struct WeaponsInventory {
 
 impl WeaponsInventory {
     pub fn print_table(&self) {
-        let inventory: String = [
+        print_table(vec![
             "Weapon,Purchased,Buy Price,Sale Price".to_string(),
             format!(
                 "{},{},{},{}",
@@ -79,11 +81,6 @@ impl WeaponsInventory {
                 self.wizard_staff.price,
                 self.wizard_staff.price / 2
             ),
-        ]
-        .join("\n");
-
-        let table = csv_to_table::iter::from_reader(inventory.as_bytes()).to_string();
-
-        println!("{table}\n");
+        ])
     }
 }

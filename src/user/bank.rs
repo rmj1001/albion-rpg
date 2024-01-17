@@ -1,4 +1,7 @@
-use crate::lib::{math::Operation, tui::press_enter_to_continue};
+use crate::lib::{
+    math::Operation,
+    tui::{press_enter_to_continue, print_table},
+};
 
 use super::profile::*;
 use serde::{Deserialize, Serialize};
@@ -33,19 +36,14 @@ impl Bank {
     }
 
     pub fn print_table(&self) {
-        let accounts = [
+        print_table(vec![
             "Account,Balance".to_string(),
             format!("Wallet,{}", self.wallet),
             format!("Account 1,{}", self.account1),
             format!("Account 2,{}", self.account2),
             format!("Account 3,{}", self.account3),
             format!("Account 4,{}", self.account4),
-        ]
-        .join("\n");
-
-        let table = csv_to_table::iter::from_reader(accounts.as_bytes()).to_string();
-
-        println!("{}\n", table);
+        ])
     }
 
     pub fn arithmetic(
