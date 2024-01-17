@@ -18,6 +18,23 @@ pub enum GuildItemNames {
     Ingots,
 }
 
+pub enum InventoryItem {
+    Bait,
+    Seeds,
+    Furs,
+    Fish,
+    Food,
+    Wood,
+    Ore,
+    Ingots,
+    Potions,
+    Rubies,
+    MagicScrolls,
+    Bones,
+    DragonHides,
+    RunicTablets,
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct MundaneInventory {
     pub bait: Item,
