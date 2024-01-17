@@ -1,13 +1,14 @@
 use rand::{thread_rng, Rng};
 use serde::{Deserialize, Serialize};
 
-use crate::lib::tui::print_table;
+use crate::lib::tui::{pretty_bool, print_table};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Weapon {
     pub name: String,
     pub price: usize,
     pub owns: bool,
+    pub equipped: bool,
     pub damage: usize,
     pub durability: usize,
     pub default_durability: usize,
@@ -38,46 +39,52 @@ pub struct WeaponsInventory {
 impl WeaponsInventory {
     pub fn print_table(&self) {
         print_table(vec![
-            "Weapon,Purchased,Buy Price,Sale Price".to_string(),
+            "Weapon,Purchased,Equipped,Buy Price,Sale Price".to_string(),
             format!(
-                "{},{},{},{}",
+                "{},{},{},{},{}",
                 self.wooden_sword.name,
-                self.wooden_sword.owns,
+                pretty_bool(self.wooden_sword.owns),
+                pretty_bool(self.wooden_sword.equipped),
                 self.wooden_sword.price,
                 self.wooden_sword.price / 2
             ),
             format!(
-                "{},{},{},{}",
+                "{},{},{},{},{}",
                 self.bronze_sword.name,
-                self.bronze_sword.owns,
+                pretty_bool(self.bronze_sword.owns),
+                pretty_bool(self.bronze_sword.equipped),
                 self.bronze_sword.price,
                 self.bronze_sword.price / 2
             ),
             format!(
-                "{},{},{},{}",
+                "{},{},{},{},{}",
                 self.iron_sword.name,
-                self.iron_sword.owns,
+                pretty_bool(self.iron_sword.owns),
+                pretty_bool(self.iron_sword.equipped),
                 self.iron_sword.price,
                 self.iron_sword.price / 2
             ),
             format!(
-                "{},{},{},{}",
+                "{},{},{},{},{}",
                 self.steel_sword.name,
-                self.steel_sword.owns,
+                pretty_bool(self.steel_sword.owns),
+                pretty_bool(self.steel_sword.equipped),
                 self.steel_sword.price,
                 self.steel_sword.price / 2
             ),
             format!(
-                "{},{},{},{}",
+                "{},{},{},{},{}",
                 self.mystic_sword.name,
-                self.mystic_sword.owns,
+                pretty_bool(self.mystic_sword.owns),
+                pretty_bool(self.mystic_sword.equipped),
                 self.mystic_sword.price,
                 self.mystic_sword.price / 2
             ),
             format!(
-                "{},{},{},{}",
+                "{},{},{},{},{}",
                 self.wizard_staff.name,
-                self.wizard_staff.owns,
+                pretty_bool(self.wizard_staff.owns),
+                pretty_bool(self.wizard_staff.equipped),
                 self.wizard_staff.price,
                 self.wizard_staff.price / 2
             ),

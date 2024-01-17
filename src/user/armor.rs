@@ -1,13 +1,14 @@
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 
-use crate::lib::tui::print_table;
+use crate::lib::tui::{pretty_bool, print_table};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Armor {
     pub name: String,
     pub price: usize,
     pub owns: bool,
+    pub equipped: bool,
     pub defense: usize,
     pub durability: usize,
     pub default_durability: usize,
@@ -38,46 +39,52 @@ pub struct ArmorInventory {
 impl ArmorInventory {
     pub fn print_table(&self) {
         print_table(vec![
-            "Armor,Purchased,Buy Price,Sale Price".to_string(),
+            "Armor,Purchased,Equipped,Buy Price,Sale Price".to_string(),
             format!(
-                "{},{},{},{}",
+                "{},{},{},{},{}",
                 self.leather.name,
-                self.leather.owns,
+                pretty_bool(self.leather.owns),
+                pretty_bool(self.leather.equipped),
                 self.leather.price,
                 self.leather.price / 2
             ),
             format!(
-                "{},{},{},{}",
+                "{},{},{},{},{}",
                 self.bronze.name,
-                self.bronze.owns,
+                pretty_bool(self.bronze.owns),
+                pretty_bool(self.bronze.equipped),
                 self.bronze.price,
                 self.bronze.price / 2
             ),
             format!(
-                "{},{},{},{}",
+                "{},{},{},{},{}",
                 self.iron.name,
-                self.iron.owns,
+                pretty_bool(self.iron.owns),
+                pretty_bool(self.iron.equipped),
                 self.iron.price,
                 self.iron.price / 2
             ),
             format!(
-                "{},{},{},{}",
+                "{},{},{},{},{}",
                 self.steel.name,
-                self.steel.owns,
+                pretty_bool(self.steel.owns),
+                pretty_bool(self.steel.equipped),
                 self.steel.price,
                 self.steel.price / 2
             ),
             format!(
-                "{},{},{},{}",
+                "{},{},{},{},{}",
                 self.dragonhide.name,
-                self.dragonhide.owns,
+                pretty_bool(self.dragonhide.owns),
+                pretty_bool(self.dragonhide.equipped),
                 self.dragonhide.price,
                 self.dragonhide.price / 2
             ),
             format!(
-                "{},{},{},{}",
+                "{},{},{},{},{}",
                 self.mystic.name,
-                self.mystic.owns,
+                pretty_bool(self.mystic.owns),
+                pretty_bool(self.mystic.equipped),
                 self.mystic.price,
                 self.mystic.price / 2
             ),

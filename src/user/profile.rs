@@ -181,6 +181,7 @@ impl UserProfile {
                     defense: 10,
                     durability: 100,
                     default_durability: 100,
+                    equipped: false,
                 },
                 bronze: Armor {
                     name: "Bronze".to_string(),
@@ -189,6 +190,7 @@ impl UserProfile {
                     defense: 30,
                     durability: 200,
                     default_durability: 200,
+                    equipped: false,
                 },
                 iron: Armor {
                     name: "Iron".to_string(),
@@ -197,6 +199,7 @@ impl UserProfile {
                     defense: 50,
                     durability: 300,
                     default_durability: 300,
+                    equipped: false,
                 },
                 steel: Armor {
                     name: "Steel".to_string(),
@@ -205,6 +208,7 @@ impl UserProfile {
                     defense: 100,
                     durability: 500,
                     default_durability: 500,
+                    equipped: false,
                 },
                 dragonhide: Armor {
                     name: "Dragonhide".to_string(),
@@ -213,6 +217,7 @@ impl UserProfile {
                     defense: 200,
                     durability: 500,
                     default_durability: 500,
+                    equipped: false,
                 },
                 mystic: Armor {
                     name: "Magic".to_string(),
@@ -221,6 +226,7 @@ impl UserProfile {
                     defense: 1000,
                     durability: 10000,
                     default_durability: 10000,
+                    equipped: false,
                 },
             },
             weapons: WeaponsInventory {
@@ -231,6 +237,7 @@ impl UserProfile {
                     damage: 10,
                     durability: 100,
                     default_durability: 100,
+                    equipped: false,
                 },
                 bronze_sword: Weapon {
                     name: "Bronze Sword".to_string(),
@@ -239,6 +246,7 @@ impl UserProfile {
                     damage: 20,
                     durability: 150,
                     default_durability: 150,
+                    equipped: false,
                 },
                 iron_sword: Weapon {
                     name: "Iron Sword".to_string(),
@@ -247,6 +255,7 @@ impl UserProfile {
                     damage: 50,
                     durability: 200,
                     default_durability: 200,
+                    equipped: false,
                 },
                 steel_sword: Weapon {
                     name: "Steel Rapier".to_string(),
@@ -255,6 +264,7 @@ impl UserProfile {
                     damage: 200,
                     durability: 500,
                     default_durability: 500,
+                    equipped: false,
                 },
                 mystic_sword: Weapon {
                     name: "Magic Sword".to_string(),
@@ -263,6 +273,7 @@ impl UserProfile {
                     damage: 500,
                     durability: 1000,
                     default_durability: 1000,
+                    equipped: false,
                 },
                 wizard_staff: Weapon {
                     name: "Wizard Staff".to_string(),
@@ -271,6 +282,7 @@ impl UserProfile {
                     damage: 1000,
                     durability: 2000,
                     default_durability: 2000,
+                    equipped: false,
                 },
             },
         };
