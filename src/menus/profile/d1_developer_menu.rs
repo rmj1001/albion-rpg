@@ -227,10 +227,10 @@ fn bank_manager(user: &mut UserProfile) {
     }
 
     let result: Result<(), &str> = match calculation {
-        Operation::Add(_) => user.bank.arithmetic(account, calculation),
-        Operation::Subtract(_) => user.bank.arithmetic(account, calculation),
-        Operation::Multiply(_) => user.bank.arithmetic(account, calculation),
-        Operation::Divide(_) => user.bank.arithmetic(account, calculation),
+        Operation::Add(_) => user.bank.arithmetic(&account, calculation),
+        Operation::Subtract(_) => user.bank.arithmetic(&account, calculation),
+        Operation::Multiply(_) => user.bank.arithmetic(&account, calculation),
+        Operation::Divide(_) => user.bank.arithmetic(&account, calculation),
         Operation::Cancel => Ok(()),
         Operation::Invalid => Err(""),
     };
