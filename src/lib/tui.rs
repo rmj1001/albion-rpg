@@ -117,3 +117,10 @@ pub fn print_table(strings: Vec<String>) {
 
     println!("{}\n", table);
 }
+
+pub fn pretty_bool<'a>(flag: bool) -> &'a str {
+    match flag {
+        true => "Yes",
+        false => "No",
+    }
+}
