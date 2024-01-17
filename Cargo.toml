@@ -7,7 +7,7 @@ license = "BSD-3-Clause"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-dialoguer = "0.11.0"
+dialoguer = { version = "0.11.0", features = ["completion"] }
 console = "0.15.7"
 rand = "0.8.5"
 serde_json = "1.0.0"
