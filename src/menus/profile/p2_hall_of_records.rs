@@ -3,7 +3,7 @@ use crate::lib::{
     tui::{page_header, press_enter_to_continue, HeaderSubtext},
 };
 
-use crate::user::{achievements::Achievements, profile::UserProfile};
+use crate::user::profile::UserProfile;
 
 pub fn main(user: &mut UserProfile) {
     page_header("Hall of Records", HeaderSubtext::Keyboard);
@@ -47,36 +47,10 @@ pub fn achievements(user: &mut UserProfile) {
     user.save();
 
     // Print out all achievements
-    let achievements: &Achievements = &user.achievements;
-
     page_header("Hall of Records - Achievements", HeaderSubtext::None);
 
-    println!("Monsters Killed: {}\n", achievements.monsters_killed);
-    println!(
-        "1,000,000 Gold? {}\n",
-        pretty_bool(achievements.earned_million_gold)
-    );
-    println!(
-        "Defeated Stronghold? {}\n",
-        pretty_bool(achievements.stronghold_defeated)
-    );
-    println!(
-        "Reached Level 100? {}\n",
-        pretty_bool(achievements.level_100_reached)
-    );
-    println!(
-        "Hacked the Game? {}\n",
-        pretty_bool(achievements.hacked_the_game)
-    );
+    user.achievements.print_table();
 
     press_enter_to_continue();
     main(user);
-}
-
-fn pretty_bool(flag: bool) -> &'static str {
-    if flag {
-        "Yes!"
-    } else {
-        "No."
-    }
 }
