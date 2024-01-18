@@ -3,6 +3,8 @@ use serde::{Deserialize, Serialize};
 
 use crate::lib::tui::{pretty_bool, print_table};
 
+use super::profile::UserProfile;
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Weapon {
     pub name: String,
@@ -24,6 +26,15 @@ impl Weapon {
             self.durability = self.default_durability
         }
     }
+}
+
+pub enum WeaponItemFlag {
+    WoodenSword,
+    BronzeSword,
+    IronSword,
+    SteelSword,
+    MysticSword,
+    WizardStaff,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -89,5 +100,55 @@ impl WeaponsInventory {
                 self.wizard_staff.price / 2
             ),
         ])
+    }
+
+    pub fn retrieve_item(&mut self, item_flag: WeaponItemFlag) -> &mut Weapon {
+        match item_flag {
+            WeaponItemFlag::BronzeSword => &mut self.bronze_sword,
+            WeaponItemFlag::IronSword => &mut self.iron_sword,
+            WeaponItemFlag::MysticSword => &mut self.mystic_sword,
+            WeaponItemFlag::SteelSword => &mut self.steel_sword,
+            WeaponItemFlag::WizardStaff => &mut self.wizard_staff,
+            WeaponItemFlag::WoodenSword => &mut self.wooden_sword,
+        }
+    }
+
+    /// For use in developer mode only
+    pub fn own_item(&mut self, item_flag: WeaponItemFlag, flag: bool) {
+        let item = self.retrieve_item(item_flag);
+
+        item.owns = flag;
+    }
+
+    pub fn purchase(
+        &mut self,
+        user: &mut UserProfile,
+        item_flag: WeaponItemFlag,
+    ) -> Result<(), String> {
+        let item = self.retrieve_item(item_flag);
+
+        if item.price > user.bank.wallet {
+            return Err("You do not have enough gold to purchase this.".to_string());
+        }
+
+        item.owns = true;
+        user.bank.wallet -= item.price;
+        Ok(())
+    }
+
+    pub fn sell(
+        &mut self,
+        user: &mut UserProfile,
+        item_flag: WeaponItemFlag,
+    ) -> Result<(), String> {
+        let item = self.retrieve_item(item_flag);
+
+        if !item.owns {
+            return Err("You do not own this item.".to_string());
+        }
+
+        item.owns = false;
+        user.bank.wallet += item.price / 2;
+        Ok(())
     }
 }

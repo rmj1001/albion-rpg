@@ -3,6 +3,8 @@ use serde::{Deserialize, Serialize};
 
 use crate::lib::tui::{pretty_bool, print_table};
 
+use super::profile::UserProfile;
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Armor {
     pub name: String,
@@ -34,6 +36,15 @@ pub struct ArmorInventory {
     pub steel: Armor,
     pub dragonhide: Armor,
     pub mystic: Armor,
+}
+
+pub enum ArmorItemFlag {
+    Leather,
+    Bronze,
+    Iron,
+    Steel,
+    DragonHide,
+    Mystic,
 }
 
 impl ArmorInventory {
@@ -89,5 +100,51 @@ impl ArmorInventory {
                 self.mystic.price / 2
             ),
         ])
+    }
+
+    pub fn retrieve_item(&mut self, item_flag: ArmorItemFlag) -> &mut Armor {
+        match item_flag {
+            ArmorItemFlag::Bronze => &mut self.bronze,
+            ArmorItemFlag::DragonHide => &mut self.dragonhide,
+            ArmorItemFlag::Iron => &mut self.iron,
+            ArmorItemFlag::Leather => &mut self.leather,
+            ArmorItemFlag::Mystic => &mut self.mystic,
+            ArmorItemFlag::Steel => &mut self.steel,
+        }
+    }
+
+    /// For use in developer mode only
+    pub fn own_item(&mut self, item_flag: ArmorItemFlag, flag: bool) {
+        let item = self.retrieve_item(item_flag);
+
+        item.owns = flag;
+    }
+
+    pub fn purchase(
+        &mut self,
+        user: &mut UserProfile,
+        item_flag: ArmorItemFlag,
+    ) -> Result<(), String> {
+        let item = self.retrieve_item(item_flag);
+
+        if item.price > user.bank.wallet {
+            return Err("You do not have enough gold to purchase this.".to_string());
+        }
+
+        item.owns = true;
+        user.bank.wallet -= item.price;
+        Ok(())
+    }
+
+    pub fn sell(&mut self, user: &mut UserProfile, item_flag: ArmorItemFlag) -> Result<(), String> {
+        let item = self.retrieve_item(item_flag);
+
+        if !item.owns {
+            return Err("You do not own this item.".to_string());
+        }
+
+        item.owns = false;
+        user.bank.wallet += item.price / 2;
+        Ok(())
     }
 }

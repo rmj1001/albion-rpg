@@ -1,6 +1,11 @@
 use serde::{Deserialize, Serialize};
 
-use crate::lib::tui::print_table;
+use crate::lib::{
+    math::Operation,
+    tui::{press_enter_to_continue, print_table},
+};
+
+use super::profile::UserProfile;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Item {
@@ -18,7 +23,7 @@ pub enum GuildItemNames {
     Ingots,
 }
 
-pub enum InventoryItem {
+pub enum InventoryItemFlag {
     Bait,
     Seeds,
     Furs,
@@ -158,5 +163,107 @@ impl MundaneInventory {
                 inv.runic_tablets.price / 2
             ),
         ])
+    }
+
+    pub fn retrieve_item(&mut self, item_flag: InventoryItemFlag) -> &mut Item {
+        match item_flag {
+            InventoryItemFlag::Bait => &mut self.bait,
+            InventoryItemFlag::Bones => &mut self.bones,
+            InventoryItemFlag::DragonHides => &mut self.dragon_hides,
+            InventoryItemFlag::Fish => &mut self.fish,
+            InventoryItemFlag::Food => &mut self.food,
+            InventoryItemFlag::Furs => &mut self.furs,
+            InventoryItemFlag::Ingots => &mut self.ingots,
+            InventoryItemFlag::MagicScrolls => &mut self.ingots,
+            InventoryItemFlag::Ore => &mut self.ore,
+            InventoryItemFlag::Potions => &mut self.potions,
+            InventoryItemFlag::Rubies => &mut self.rubies,
+            InventoryItemFlag::RunicTablets => &mut self.runic_tablets,
+            InventoryItemFlag::Seeds => &mut self.seeds,
+            InventoryItemFlag::Wood => &mut self.wood,
+        }
+    }
+
+    pub fn arithmetic(
+        &mut self,
+        item_flag: InventoryItemFlag,
+        operation: Operation<usize>,
+    ) -> Result<(), &str> {
+        let item = self.retrieve_item(item_flag);
+
+        match operation {
+            Operation::Add(amount) => {
+                item.quantity += amount;
+                Ok(())
+            }
+
+            Operation::Subtract(amount) => {
+                if amount > item.quantity {
+                    Err("The quantity is too small to subtract that amount.")
+                } else {
+                    item.quantity -= amount;
+                    Ok(())
+                }
+            }
+
+            Operation::Multiply(amount) => {
+                item.quantity *= amount;
+                Ok(())
+            }
+
+            Operation::Divide(amount) => {
+                item.quantity /= amount;
+                Ok(())
+            }
+            Operation::Cancel => {
+                println!("\nCancelling.");
+                press_enter_to_continue();
+                Ok(())
+            }
+            Operation::Invalid => {
+                println!("\nOperation failed: Invalid Operator");
+                press_enter_to_continue();
+                Err("Operation failed: Invalid Operator")
+            }
+        }
+    }
+
+    pub fn purchase(
+        &mut self,
+        user: &mut UserProfile,
+        item_flag: InventoryItemFlag,
+        amount: usize,
+    ) -> Result<(), String> {
+        let item = self.retrieve_item(item_flag);
+        let price = amount * item.price;
+
+        if price > user.bank.wallet {
+            return Err(format!(
+                "The price is too high to purchase {} {}.",
+                amount, item.name
+            ));
+        }
+
+        item.quantity += amount;
+        user.bank.wallet -= price;
+        Ok(())
+    }
+
+    pub fn sell(
+        &mut self,
+        user: &mut UserProfile,
+        item_flag: InventoryItemFlag,
+        amount: usize,
+    ) -> Result<(), String> {
+        let item = self.retrieve_item(item_flag);
+        let price = amount * (item.price / 2);
+
+        if amount > item.quantity {
+            return Err(format!("You do not have {} {}.", amount, item.name));
+        }
+
+        item.quantity -= amount;
+        user.bank.wallet += price;
+        Ok(())
     }
 }
