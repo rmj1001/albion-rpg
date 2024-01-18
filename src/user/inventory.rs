@@ -5,8 +5,6 @@ use crate::lib::{
     tui::{press_enter_to_continue, print_table},
 };
 
-use super::profile::UserProfile;
-
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Item {
     pub name: String,
@@ -38,6 +36,7 @@ pub enum InventoryItemFlag {
     Bones,
     DragonHides,
     RunicTablets,
+    Invalid,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -165,22 +164,23 @@ impl MundaneInventory {
         ])
     }
 
-    pub fn retrieve_item(&mut self, item_flag: InventoryItemFlag) -> &mut Item {
+    pub fn retrieve_item(&mut self, item_flag: &InventoryItemFlag) -> Option<&mut Item> {
         match item_flag {
-            InventoryItemFlag::Bait => &mut self.bait,
-            InventoryItemFlag::Bones => &mut self.bones,
-            InventoryItemFlag::DragonHides => &mut self.dragon_hides,
-            InventoryItemFlag::Fish => &mut self.fish,
-            InventoryItemFlag::Food => &mut self.food,
-            InventoryItemFlag::Furs => &mut self.furs,
-            InventoryItemFlag::Ingots => &mut self.ingots,
-            InventoryItemFlag::MagicScrolls => &mut self.ingots,
-            InventoryItemFlag::Ore => &mut self.ore,
-            InventoryItemFlag::Potions => &mut self.potions,
-            InventoryItemFlag::Rubies => &mut self.rubies,
-            InventoryItemFlag::RunicTablets => &mut self.runic_tablets,
-            InventoryItemFlag::Seeds => &mut self.seeds,
-            InventoryItemFlag::Wood => &mut self.wood,
+            InventoryItemFlag::Bait => Some(&mut self.bait),
+            InventoryItemFlag::Bones => Some(&mut self.bones),
+            InventoryItemFlag::DragonHides => Some(&mut self.dragon_hides),
+            InventoryItemFlag::Fish => Some(&mut self.fish),
+            InventoryItemFlag::Food => Some(&mut self.food),
+            InventoryItemFlag::Furs => Some(&mut self.furs),
+            InventoryItemFlag::Ingots => Some(&mut self.ingots),
+            InventoryItemFlag::MagicScrolls => Some(&mut self.ingots),
+            InventoryItemFlag::Ore => Some(&mut self.ore),
+            InventoryItemFlag::Potions => Some(&mut self.potions),
+            InventoryItemFlag::Rubies => Some(&mut self.rubies),
+            InventoryItemFlag::RunicTablets => Some(&mut self.runic_tablets),
+            InventoryItemFlag::Seeds => Some(&mut self.seeds),
+            InventoryItemFlag::Wood => Some(&mut self.wood),
+            InventoryItemFlag::Invalid => None,
         }
     }
 
@@ -189,7 +189,13 @@ impl MundaneInventory {
         item_flag: InventoryItemFlag,
         operation: Operation<usize>,
     ) -> Result<(), &str> {
-        let item = self.retrieve_item(item_flag);
+        let item_result = self.retrieve_item(&item_flag);
+
+        if item_result.is_none() {
+            return Err("The InventoryItemFlag passed was the Invalid variant.");
+        }
+
+        let item = item_result.unwrap();
 
         match operation {
             Operation::Add(amount) => {
@@ -230,32 +236,44 @@ impl MundaneInventory {
 
     pub fn purchase(
         &mut self,
-        user: &mut UserProfile,
-        item_flag: InventoryItemFlag,
+        wallet: &mut usize,
+        item_flag: &InventoryItemFlag,
         amount: usize,
     ) -> Result<(), String> {
-        let item = self.retrieve_item(item_flag);
+        let item_result = self.retrieve_item(item_flag);
+
+        if item_result.is_none() {
+            return Err("The InventoryItemFlag passed was the Invalid variant.".to_string());
+        }
+
+        let item = item_result.unwrap();
         let price = amount * item.price;
 
-        if price > user.bank.wallet {
+        if price > *wallet {
             return Err(format!(
-                "The price is too high to purchase {} {}.",
+                "You do not have enough gold to purchase {} {}.",
                 amount, item.name
             ));
         }
 
         item.quantity += amount;
-        user.bank.wallet -= price;
+        *wallet -= price;
         Ok(())
     }
 
     pub fn sell(
         &mut self,
-        user: &mut UserProfile,
-        item_flag: InventoryItemFlag,
+        wallet: &mut usize,
+        item_flag: &InventoryItemFlag,
         amount: usize,
     ) -> Result<(), String> {
-        let item = self.retrieve_item(item_flag);
+        let item_result = self.retrieve_item(item_flag);
+
+        if item_result.is_none() {
+            return Err("The InventoryItemFlag passed was the Invalid variant.".to_string());
+        }
+
+        let item = item_result.unwrap();
         let price = amount * (item.price / 2);
 
         if amount > item.quantity {
@@ -263,7 +281,7 @@ impl MundaneInventory {
         }
 
         item.quantity -= amount;
-        user.bank.wallet += price;
+        *wallet += price;
         Ok(())
     }
 }

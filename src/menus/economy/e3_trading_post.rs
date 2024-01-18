@@ -1,15 +1,18 @@
 use crate::{
     lib::{
-        input::{self, out_of_bounds, select_from_str_array},
-        tui::page_header,
+        input::{
+            input_generic, invalid_input, out_of_bounds, select_from_str_array, select_from_vector,
+        },
+        tui::{page_header, press_enter_to_continue},
     },
-    user::profile::UserProfile,
+    user::{inventory::InventoryItemFlag, profile::UserProfile},
 };
 
 pub fn main(user: &mut UserProfile) {
     page_header("Trading Post", crate::lib::tui::HeaderSubtext::None);
 
     user.inventory.print_table();
+    println!("Gold: {}\n", user.bank.wallet);
 
     let buysell = select_from_str_array(&["1. Purchase", "2. Sell", "NAV: Go Back"], None);
 
@@ -24,44 +27,112 @@ pub fn main(user: &mut UserProfile) {
 }
 
 pub fn purchase(user: &mut UserProfile) {
-    let (item, quantity) = get_item_and_quantity(user)
-        .expect("get_item_and_quantity() didn't go back to the main menu.");
+    let item_flag = get_item(user);
+    let quantity_result = get_quantity();
+    let mut quantity: usize = 0;
 
-    // TODO: inventory arithmetic here.
+    match quantity_result {
+        Ok(number) => quantity = number,
+        Err(_) => {
+            invalid_input(None, Some("number"), true);
+            main(user);
+        }
+    }
+
+    let result = user
+        .inventory
+        .purchase(&mut user.bank.wallet, &item_flag, quantity);
+
+    match result {
+        Ok(_) => {
+            println!("Operation successful.");
+            press_enter_to_continue();
+            main(user);
+        }
+        Err(message) => {
+            eprintln!("{}", message);
+            press_enter_to_continue();
+            main(user);
+        }
+    }
 }
 
 pub fn sell(user: &mut UserProfile) {
-    let (item, quantity) = get_item_and_quantity(user)
-        .expect("get_item_and_quantity() didn't go back to the main menu.");
+    let item_flag = get_item(user);
+    let quantity_result = get_quantity();
+    let mut quantity: usize = 0;
 
-    // TODO: inventory arithmetic here.
-}
-
-fn get_item_and_quantity(user: &mut UserProfile) -> Option<(String, usize)> {
-    let items: Vec<String> = vec![
-        "bait".to_string(),
-        "seeds".to_string(),
-        "furs".to_string(),
-        "fish".to_string(),
-        "food".to_string(),
-        "wood".to_string(),
-        "ore".to_string(),
-        "ingots".to_string(),
-        "potions".to_string(),
-        "rubies".to_string(),
-        "magic scrolls".to_string(),
-        "bones".to_string(),
-        "dragon hides".to_string(),
-        "runic_tablets".to_string(),
-    ];
-
-    let result = input::get_item_and_quantity(items);
-
-    match result {
-        Ok(tuple) => Some(tuple),
+    match quantity_result {
+        Ok(number) => quantity = number,
         Err(_) => {
+            invalid_input(None, Some("number"), true);
             main(user);
-            None
         }
     }
+
+    let result = user
+        .inventory
+        .sell(&mut user.bank.wallet, &item_flag, quantity);
+
+    match result {
+        Ok(_) => {
+            println!("\nOperation successful.");
+            press_enter_to_continue();
+            main(user);
+        }
+        Err(message) => {
+            eprintln!("\n{}", message);
+            press_enter_to_continue();
+            main(user);
+        }
+    }
+}
+
+fn get_item(user: &mut UserProfile) -> InventoryItemFlag {
+    let item_names: Vec<String> = vec![
+        user.inventory.bait.name.to_lowercase(),
+        user.inventory.seeds.name.to_lowercase(),
+        user.inventory.furs.name.to_lowercase(),
+        user.inventory.fish.name.to_lowercase(),
+        user.inventory.wood.name.to_lowercase(),
+        user.inventory.ore.name.to_lowercase(),
+        user.inventory.ingots.name.to_lowercase(),
+        user.inventory.potions.name.to_lowercase(),
+        user.inventory.rubies.name.to_lowercase(),
+        user.inventory.magic_scrolls.name.to_lowercase(),
+        user.inventory.bones.name.to_lowercase(),
+        user.inventory.dragon_hides.name.to_lowercase(),
+        user.inventory.runic_tablets.name.to_lowercase(),
+        String::from("NAV: Cancel"),
+    ];
+
+    let select = select_from_vector(item_names, None);
+
+    if select == 13 {
+        println!("\nCancelling.");
+        press_enter_to_continue();
+        main(user);
+        return InventoryItemFlag::Invalid;
+    }
+
+    match select {
+        0 => InventoryItemFlag::Bait,
+        1 => InventoryItemFlag::Seeds,
+        2 => InventoryItemFlag::Furs,
+        3 => InventoryItemFlag::Fish,
+        4 => InventoryItemFlag::Wood,
+        5 => InventoryItemFlag::Ore,
+        6 => InventoryItemFlag::Ingots,
+        7 => InventoryItemFlag::Potions,
+        8 => InventoryItemFlag::Rubies,
+        9 => InventoryItemFlag::MagicScrolls,
+        10 => InventoryItemFlag::Bones,
+        11 => InventoryItemFlag::DragonHides,
+        12 => InventoryItemFlag::RunicTablets,
+        _ => InventoryItemFlag::Invalid,
+    }
+}
+
+fn get_quantity<'a>() -> Result<usize, &'a str> {
+    input_generic::<usize>("Quantity:")
 }
