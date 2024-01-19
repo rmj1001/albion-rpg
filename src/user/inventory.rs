@@ -224,7 +224,7 @@ impl MundaneInventory {
             }
             Operation::Invalid => {
                 failure("Invalid Operator");
-                Err("Operation failed: Invalid Operator")
+                Err("")
             }
         }
     }
