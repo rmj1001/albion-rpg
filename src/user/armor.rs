@@ -45,6 +45,7 @@ pub enum ArmorItemFlag {
     Steel,
     DragonHide,
     Mystic,
+    Invalid,
 }
 
 impl ArmorInventory {
@@ -102,14 +103,15 @@ impl ArmorInventory {
         ])
     }
 
-    pub fn retrieve_item(&mut self, item_flag: ArmorItemFlag) -> &mut Armor {
+    pub fn retrieve_item(&mut self, item_flag: ArmorItemFlag) -> Option<&mut Armor> {
         match item_flag {
-            ArmorItemFlag::Bronze => &mut self.bronze,
-            ArmorItemFlag::DragonHide => &mut self.dragonhide,
-            ArmorItemFlag::Iron => &mut self.iron,
-            ArmorItemFlag::Leather => &mut self.leather,
-            ArmorItemFlag::Mystic => &mut self.mystic,
-            ArmorItemFlag::Steel => &mut self.steel,
+            ArmorItemFlag::Bronze => Some(&mut self.bronze),
+            ArmorItemFlag::DragonHide => Some(&mut self.dragonhide),
+            ArmorItemFlag::Iron => Some(&mut self.iron),
+            ArmorItemFlag::Leather => Some(&mut self.leather),
+            ArmorItemFlag::Mystic => Some(&mut self.mystic),
+            ArmorItemFlag::Steel => Some(&mut self.steel),
+            ArmorItemFlag::Invalid => None,
         }
     }
 
@@ -117,34 +119,49 @@ impl ArmorInventory {
     pub fn own_item(&mut self, item_flag: ArmorItemFlag, flag: bool) {
         let item = self.retrieve_item(item_flag);
 
-        item.owns = flag;
+        if item.is_none() {
+            return;
+        }
+
+        item.unwrap().owns = flag;
     }
 
-    pub fn purchase(
-        &mut self,
-        user: &mut UserProfile,
-        item_flag: ArmorItemFlag,
-    ) -> Result<(), String> {
-        let item = self.retrieve_item(item_flag);
+    pub fn purchase(&mut self, wallet: &mut usize, item_flag: ArmorItemFlag) -> Result<(), String> {
+        let item_option = self.retrieve_item(item_flag);
 
-        if item.price > user.bank.wallet {
-            return Err("You do not have enough gold to purchase this.".to_string());
+        if item_option.is_none() {
+            return Err("The item was invalid.".to_string());
+        }
+
+        let item = item_option.unwrap();
+
+        if item.price > *wallet {
+            return Err(format!(
+                "You do not have enough gold to purchase {}.",
+                item.name
+            ));
         }
 
         item.owns = true;
-        user.bank.wallet -= item.price;
+        *wallet -= item.price;
         Ok(())
     }
 
-    pub fn sell(&mut self, user: &mut UserProfile, item_flag: ArmorItemFlag) -> Result<(), String> {
-        let item = self.retrieve_item(item_flag);
+    pub fn sell(&mut self, wallet: &mut usize, item_flag: ArmorItemFlag) -> Result<(), String> {
+        let item_option = self.retrieve_item(item_flag);
+
+        if item_option.is_none() {
+            return Err("The item was invalid.".to_string());
+        }
+
+        let item = item_option.unwrap();
 
         if !item.owns {
             return Err("You do not own this item.".to_string());
         }
 
         item.owns = false;
-        user.bank.wallet += item.price / 2;
+        *wallet += item.price / 2;
         Ok(())
     }
 }

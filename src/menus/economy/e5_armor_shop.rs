@@ -1,15 +1,16 @@
 use crate::{
     lib::{
-        input::{self, out_of_bounds, select_from_str_array},
-        tui::page_header,
+        input::{out_of_bounds, select_from_str_array, select_from_vector},
+        tui::{page_header, press_enter_to_continue},
     },
-    user::profile::UserProfile,
+    user::{armor::ArmorItemFlag, profile::UserProfile},
 };
 
 pub fn main(user: &mut UserProfile) {
     page_header("Armor Shop", crate::lib::tui::HeaderSubtext::None);
 
-    user.weapons.print_table();
+    println!("Gold: {}\n", user.bank.wallet);
+    user.armor.print_table();
 
     let buysell = select_from_str_array(&["1. Purchase", "2. Sell", "NAV: Go Back"], None);
 
@@ -24,36 +25,72 @@ pub fn main(user: &mut UserProfile) {
 }
 
 pub fn purchase(user: &mut UserProfile) {
-    let (item, quantity) = get_item_and_quantity(user)
-        .expect("get_item_and_quantity() didn't go back to the main menu.");
+    let item = get_item(user);
 
-    // TODO: inventory arithmetic here.
+    let result = user.armor.purchase(&mut user.bank.wallet, item);
+
+    match result {
+        Ok(_) => {
+            println!("\nOperation successful.");
+            press_enter_to_continue();
+            main(user);
+        }
+        Err(message) => {
+            eprintln!("{}", message);
+            press_enter_to_continue();
+            main(user);
+        }
+    }
 }
 
 pub fn sell(user: &mut UserProfile) {
-    let (item, quantity) = get_item_and_quantity(user)
-        .expect("get_item_and_quantity() didn't go back to the main menu.");
+    let item = get_item(user);
 
-    // TODO: inventory arithmetic here.
-}
-
-fn get_item_and_quantity(user: &mut UserProfile) -> Option<(String, usize)> {
-    let items: Vec<String> = vec![
-        "leather armor".to_string(),
-        "bronze armor".to_string(),
-        "iron armor".to_string(),
-        "steel armor".to_string(),
-        "dragonhide armor".to_string(),
-        "mystic armor".to_string(),
-    ];
-
-    let result = input::get_item_and_quantity(items);
+    let result = user.armor.purchase(&mut user.bank.wallet, item);
 
     match result {
-        Ok(tuple) => Some(tuple),
-        Err(_) => {
+        Ok(_) => {
+            println!("\nOperation successful.");
+            press_enter_to_continue();
             main(user);
-            None
         }
+        Err(message) => {
+            eprintln!("{}", message);
+            press_enter_to_continue();
+            main(user);
+        }
+    }
+}
+
+fn get_item(user: &mut UserProfile) -> ArmorItemFlag {
+    let items: Vec<String> = vec![
+        user.armor.leather.name.to_string(),
+        user.armor.bronze.name.to_string(),
+        user.armor.iron.name.to_string(),
+        user.armor.steel.name.to_string(),
+        user.armor.dragonhide.name.to_string(),
+        user.armor.mystic.name.to_string(),
+        "NAV: Cancel".to_string(),
+    ];
+
+    let length = items.len();
+
+    let select = select_from_vector(items, None);
+
+    if select == length - 1 {
+        println!("\nCancelling.");
+        press_enter_to_continue();
+        main(user);
+        return ArmorItemFlag::Invalid;
+    }
+
+    match select {
+        0 => ArmorItemFlag::Leather,
+        1 => ArmorItemFlag::Bronze,
+        2 => ArmorItemFlag::Iron,
+        3 => ArmorItemFlag::Steel,
+        4 => ArmorItemFlag::DragonHide,
+        5 => ArmorItemFlag::Mystic,
+        _ => ArmorItemFlag::Invalid,
     }
 }
