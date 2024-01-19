@@ -1,7 +1,8 @@
 use crate::{
     lib::{
         input::{
-            input_generic, invalid_input, out_of_bounds, select_from_str_array, select_from_vector,
+            error, input_generic, invalid_input, out_of_bounds, select_from_str_array,
+            select_from_vector, success,
         },
         tui::{page_header, press_enter_to_continue, HeaderSubtext},
     },
@@ -61,13 +62,11 @@ fn items_manager(user: &mut UserProfile) {
 
         match result {
             Ok(_) => {
-                println!("\nOperation successful.");
-                press_enter_to_continue();
+                success();
                 add_item(user);
             }
             Err(message) => {
-                eprintln!("{}", message);
-                press_enter_to_continue();
+                error(message);
                 add_item(user);
             }
         }
@@ -92,13 +91,11 @@ fn items_manager(user: &mut UserProfile) {
 
         match result {
             Ok(_) => {
-                println!("\nOperation successful.");
-                press_enter_to_continue();
+                success();
                 main(user);
             }
             Err(message) => {
-                eprintln!("\n{}", message);
-                press_enter_to_continue();
+                error(message);
                 main(user);
             }
         }

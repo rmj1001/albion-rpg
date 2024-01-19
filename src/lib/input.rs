@@ -1,4 +1,4 @@
-use std::{io::Write, str::FromStr};
+use std::{fmt::Display, io::Write, str::FromStr};
 
 use dialoguer::Confirm;
 
@@ -138,6 +138,19 @@ pub fn invalid_input(input: Option<&str>, expected: Option<&str>, pause: bool) {
     if pause {
         press_enter_to_continue();
     }
+}
+
+pub fn success() {
+    println!("\nSuccess!");
+    press_enter_to_continue();
+}
+
+pub fn error<T>(error: T)
+where
+    T: Display,
+{
+    eprintln!("\nError: {}", error);
+    press_enter_to_continue();
 }
 
 pub fn prompt_input_completion(prompt: &str, completion_strings: Vec<String>) -> String {

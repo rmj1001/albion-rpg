@@ -1,6 +1,6 @@
 use crate::{
     lib::{
-        input::{out_of_bounds, select_from_str_array, select_from_vector},
+        input::{error, out_of_bounds, select_from_str_array, select_from_vector, success},
         tui::{page_header, press_enter_to_continue},
     },
     user::{profile::UserProfile, weapons::WeaponItemFlag},
@@ -31,13 +31,11 @@ pub fn purchase(user: &mut UserProfile) {
 
     match result {
         Ok(_) => {
-            println!("\nOperation successful.");
-            press_enter_to_continue();
+            success();
             main(user);
         }
         Err(message) => {
-            eprintln!("{}", message);
-            press_enter_to_continue();
+            error(message);
             main(user);
         }
     }
@@ -50,13 +48,11 @@ pub fn sell(user: &mut UserProfile) {
 
     match result {
         Ok(_) => {
-            println!("\nOperation successful.");
-            press_enter_to_continue();
+            success();
             main(user);
         }
         Err(message) => {
-            eprintln!("{}", message);
-            press_enter_to_continue();
+            error(message);
             main(user);
         }
     }

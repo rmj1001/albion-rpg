@@ -1,5 +1,5 @@
 use crate::lib::{
-    input::{self, out_of_bounds, prompt_arrow, select_from_str_array},
+    input::{self, error, out_of_bounds, prompt_arrow, select_from_str_array, success},
     tui::{page_header, press_enter_to_continue, HeaderSubtext},
 };
 
@@ -63,14 +63,12 @@ pub fn main(user: &mut UserProfile) {
 
     match bank_result {
         Ok(_) => {
-            println!("\nOperation successful.");
-            press_enter_to_continue();
+            success();
             main(user);
         }
 
         Err(message) => {
-            println!("\n{}", message);
-            press_enter_to_continue();
+            error(message);
             main(user);
         }
     }

@@ -1,6 +1,6 @@
 use crate::{
     lib::{
-        input::{out_of_bounds, select_from_str_array},
+        input::{out_of_bounds, select_from_str_array, success},
         math::{generic_calculator, Operation},
         tui::{page_header, press_enter_to_continue, HeaderSubtext},
     },
@@ -56,8 +56,7 @@ pub fn main(user: &mut UserProfile) {
 
     match result {
         Ok(_) => {
-            println!("\nOperation successful.");
-            press_enter_to_continue();
+            success();
             main(user);
         }
         Err(_) => {
