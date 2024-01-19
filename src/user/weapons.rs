@@ -3,8 +3,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::lib::tui::{pretty_bool, print_table};
 
-use super::profile::UserProfile;
-
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Weapon {
     pub name: String,
@@ -35,6 +33,7 @@ pub enum WeaponItemFlag {
     SteelSword,
     MysticSword,
     WizardStaff,
+    InvalidItem,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -102,53 +101,69 @@ impl WeaponsInventory {
         ])
     }
 
-    pub fn retrieve_item(&mut self, item_flag: WeaponItemFlag) -> &mut Weapon {
+    pub fn retrieve_item(&mut self, item_flag: WeaponItemFlag) -> Option<&mut Weapon> {
         match item_flag {
-            WeaponItemFlag::BronzeSword => &mut self.bronze_sword,
-            WeaponItemFlag::IronSword => &mut self.iron_sword,
-            WeaponItemFlag::MysticSword => &mut self.mystic_sword,
-            WeaponItemFlag::SteelSword => &mut self.steel_sword,
-            WeaponItemFlag::WizardStaff => &mut self.wizard_staff,
-            WeaponItemFlag::WoodenSword => &mut self.wooden_sword,
+            WeaponItemFlag::BronzeSword => Some(&mut self.bronze_sword),
+            WeaponItemFlag::IronSword => Some(&mut self.iron_sword),
+            WeaponItemFlag::MysticSword => Some(&mut self.mystic_sword),
+            WeaponItemFlag::SteelSword => Some(&mut self.steel_sword),
+            WeaponItemFlag::WizardStaff => Some(&mut self.wizard_staff),
+            WeaponItemFlag::WoodenSword => Some(&mut self.wooden_sword),
+            WeaponItemFlag::InvalidItem => None,
         }
     }
 
     /// For use in developer mode only
     pub fn own_item(&mut self, item_flag: WeaponItemFlag, flag: bool) {
-        let item = self.retrieve_item(item_flag);
+        let item_result = self.retrieve_item(item_flag);
 
-        item.owns = flag;
+        if item_result.is_none() {
+            return;
+        }
+
+        item_result.unwrap().owns = flag;
     }
 
     pub fn purchase(
         &mut self,
-        user: &mut UserProfile,
+        wallet: &mut usize,
         item_flag: WeaponItemFlag,
     ) -> Result<(), String> {
-        let item = self.retrieve_item(item_flag);
+        let item_option = self.retrieve_item(item_flag);
 
-        if item.price > user.bank.wallet {
-            return Err("You do not have enough gold to purchase this.".to_string());
+        if item_option.is_none() {
+            return Err("The item was invalid.".to_string());
+        }
+
+        let item = item_option.unwrap();
+
+        if item.price > *wallet {
+            return Err(format!(
+                "You do not have enough gold to purchase {}.",
+                item.name
+            ));
         }
 
         item.owns = true;
-        user.bank.wallet -= item.price;
+        *wallet -= item.price;
         Ok(())
     }
 
-    pub fn sell(
-        &mut self,
-        user: &mut UserProfile,
-        item_flag: WeaponItemFlag,
-    ) -> Result<(), String> {
-        let item = self.retrieve_item(item_flag);
+    pub fn sell(&mut self, wallet: &mut usize, item_flag: WeaponItemFlag) -> Result<(), String> {
+        let item_option = self.retrieve_item(item_flag);
+
+        if item_option.is_none() {
+            return Err("The item was invalid.".to_string());
+        }
+
+        let item = item_option.unwrap();
 
         if !item.owns {
             return Err("You do not own this item.".to_string());
         }
 
         item.owns = false;
-        user.bank.wallet += item.price / 2;
+        *wallet += item.price / 2;
         Ok(())
     }
 }
