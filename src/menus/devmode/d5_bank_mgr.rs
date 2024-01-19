@@ -34,7 +34,7 @@ pub fn main(user: &mut UserProfile) {
         3 => account = BankAccount::Account3,
         4 => account = BankAccount::Account4,
         5 => super::d1_developer_menu::main(user),
-        _ => out_of_bounds(None),
+        _ => out_of_bounds::<String>(None),
     }
 
     let calculation = generic_calculator::<usize>();

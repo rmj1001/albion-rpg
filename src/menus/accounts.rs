@@ -12,6 +12,6 @@ pub fn main() {
         0 => crate::menus::login::main(),
         1 => crate::menus::register::main(),
         2 => exit(),
-        _ => out_of_bounds(None),
+        _ => out_of_bounds::<String>(None),
     }
 }

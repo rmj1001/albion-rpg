@@ -30,7 +30,7 @@ pub fn main(user: &mut UserProfile) {
         4 => super::d2_user_mgr::main(user),
         5 => disable_developer_mode(user),
         6 => crate::menus::game_menu::main(user),
-        _ => out_of_bounds(None),
+        _ => out_of_bounds::<String>(None),
     }
 }
 

@@ -16,7 +16,7 @@ pub fn main(user: &mut UserProfile) {
         0 => xp(user),
         1 => achievements(user),
         2 => crate::menus::game_menu::main(user),
-        _ => out_of_bounds(None),
+        _ => out_of_bounds::<String>(None),
     }
 }
 

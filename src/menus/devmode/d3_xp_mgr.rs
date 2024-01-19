@@ -38,7 +38,7 @@ pub fn main(user: &mut UserProfile) {
         5 => xp_type = XPType::Smithing,
         6 => xp_type = XPType::Thieving,
         7 => super::d1_developer_menu::main(user),
-        _ => out_of_bounds(None),
+        _ => out_of_bounds::<String>(None),
     };
 
     let calculation = generic_calculator::<usize>();

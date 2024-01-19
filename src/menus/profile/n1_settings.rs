@@ -27,7 +27,7 @@ pub fn main(user: &mut UserProfile) {
         2 => lock_profile(user),
         3 => delete_profile(user),
         4 => crate::menus::game_menu::main(user),
-        _ => out_of_bounds(None),
+        _ => out_of_bounds::<String>(None),
     }
 }
 

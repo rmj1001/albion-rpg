@@ -95,7 +95,7 @@ pub fn main(user: &mut UserProfile) {
             &None,
         ),
         6 => crate::menus::game_menu::main(user),
-        _ => out_of_bounds(None),
+        _ => out_of_bounds::<String>(None),
     }
 }
 
@@ -257,7 +257,7 @@ fn job(
             }
         }
         1 => main(user),
-        _ => out_of_bounds(None),
+        _ => out_of_bounds::<String>(None),
     }
 
     job(

@@ -19,7 +19,7 @@ pub fn main(user: &mut UserProfile) {
         0 => purchase(user),
         1 => sell(user),
         2 => crate::menus::game_menu::main(user),
-        _ => out_of_bounds(None),
+        _ => out_of_bounds::<String>(None),
     }
 
     crate::menus::game_menu::main(user);

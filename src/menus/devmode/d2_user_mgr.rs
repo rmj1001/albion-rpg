@@ -25,7 +25,7 @@ pub fn main(user: &mut UserProfile) {
         1 => delete_users(user),
         2 => view_user(user),
         3 => super::d1_developer_menu::main(user),
-        _ => out_of_bounds(None),
+        _ => out_of_bounds::<String>(None),
     }
 }
 
@@ -83,7 +83,7 @@ fn delete_users(user: &mut UserProfile) {
             main(user);
         }
 
-        None => out_of_bounds(None),
+        None => out_of_bounds::<String>(None),
     }
 }
 
@@ -123,7 +123,7 @@ fn view_user(user: &mut UserProfile) {
                 }
             }
         }
-        None => out_of_bounds(None),
+        None => out_of_bounds::<String>(None),
     }
 
     main(user);
