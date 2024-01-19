@@ -23,10 +23,10 @@ pub fn main(user: &mut UserProfile) {
 
     match choice {
         0 => panic!("This is a panic!"),
-        1 => super::inventory_mgr::main(user),
-        2 => super::xp_mgr::main(user),
-        3 => super::bank_mgr::main(user),
-        4 => super::user_mgr::main(user),
+        1 => super::d4_inventory_mgr::main(user),
+        2 => super::d3_xp_mgr::main(user),
+        3 => super::d5_bank_mgr::main(user),
+        4 => super::d2_user_mgr::main(user),
         5 => disable_developer_mode(user),
         6 => crate::menus::game_menu::main(user),
         _ => out_of_bounds(None),

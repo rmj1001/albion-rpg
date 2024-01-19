@@ -29,11 +29,11 @@ pub mod menus {
     }
 
     pub mod devmode {
-        pub mod bank_mgr;
         pub mod d1_developer_menu;
-        pub mod inventory_mgr;
-        pub mod user_mgr;
-        pub mod xp_mgr;
+        pub mod d2_user_mgr;
+        pub mod d3_xp_mgr;
+        pub mod d4_inventory_mgr;
+        pub mod d5_bank_mgr;
     }
 
     pub mod economy {
