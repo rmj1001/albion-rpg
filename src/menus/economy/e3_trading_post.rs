@@ -1,7 +1,7 @@
 use crate::{
     lib::{
         input::{input_generic, select_from_str_array, select_from_vector},
-        stdmsgs::*,
+        messages::*,
         tui::page_header,
     },
     user::{inventory::InventoryItemFlag, profile::UserProfile},
@@ -48,7 +48,7 @@ pub fn purchase(user: &mut UserProfile) {
             main(user);
         }
         Err(message) => {
-            error(message);
+            failure(message);
             main(user);
         }
     }
@@ -77,7 +77,7 @@ pub fn sell(user: &mut UserProfile) {
             main(user);
         }
         Err(message) => {
-            error(message);
+            failure(message);
             main(user);
         }
     }

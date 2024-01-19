@@ -2,7 +2,7 @@ use crate::{
     lib::{
         input::select_from_str_array,
         math::{generic_calculator, Operation},
-        stdmsgs::*,
+        messages::*,
         tui::{page_header, press_enter_to_continue, HeaderSubtext},
     },
     user::{bank::BankAccount, profile::UserProfile},

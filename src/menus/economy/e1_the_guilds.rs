@@ -1,7 +1,7 @@
 #![allow(unused_assignments, unused_variables, unused_mut)]
 use crate::lib::{
     input::{confirm, select_from_str_array},
-    stdmsgs::*,
+    messages::*,
 };
 
 use crate::lib::tui::{self, page_header};

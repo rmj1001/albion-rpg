@@ -38,11 +38,11 @@ pub fn success() {
     press_enter_to_continue();
 }
 
-pub fn error<T>(error: T)
+pub fn failure<T>(message: T)
 where
     T: Display,
 {
-    eprintln!("\nError: {}", error);
+    eprintln!("\nFailure: {}", message);
     press_enter_to_continue();
 }
 

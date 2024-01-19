@@ -1,7 +1,7 @@
 use crate::lib::{
     crypt,
     input::*,
-    stdmsgs::*,
+    messages::*,
     tui::{self, page_header},
 };
 

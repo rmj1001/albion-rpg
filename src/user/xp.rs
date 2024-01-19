@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::lib::{
     math::Operation,
-    stdmsgs::*,
+    messages::*,
     tui::{press_enter_to_continue, print_table},
 };
 
@@ -111,8 +111,7 @@ impl XP {
                 Ok(())
             }
             Operation::Invalid => {
-                println!("\nOperation failed: Invalid Operator");
-                press_enter_to_continue();
+                failure("Invalid Operator");
                 Err("")
             }
         }

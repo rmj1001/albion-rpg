@@ -1,7 +1,7 @@
 use crate::{
     lib::{
         input::{input_generic, select_from_str_array, select_from_vector},
-        stdmsgs::*,
+        messages::*,
         tui::{page_header, HeaderSubtext},
     },
     user::{inventory::InventoryItemFlag, profile::UserProfile},
@@ -64,7 +64,7 @@ fn items_manager(user: &mut UserProfile) {
                 add_item(user);
             }
             Err(message) => {
-                error(message);
+                failure(message);
                 add_item(user);
             }
         }
@@ -93,7 +93,7 @@ fn items_manager(user: &mut UserProfile) {
                 main(user);
             }
             Err(message) => {
-                error(message);
+                failure(message);
                 main(user);
             }
         }

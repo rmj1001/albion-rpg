@@ -1,7 +1,7 @@
 use crate::{
     lib::{
         input::{confirm, select_from_str_array, select_from_vector},
-        stdmsgs::*,
+        messages::*,
         tui::{self, page_header, press_enter_to_continue, HeaderSubtext},
     },
     user::profile::{ProfileRetrievalResult, UserProfile},

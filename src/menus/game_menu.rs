@@ -1,6 +1,6 @@
 use crate::lib::{
     input::prompt_arrow,
-    stdmsgs, terminal,
+    messages, terminal,
     tui::{self, page_header, press_enter_to_continue, HeaderSubtext},
 };
 
@@ -70,7 +70,7 @@ pub fn main(user: &mut UserProfile) {
             if user.settings.developer {
                 crate::menus::devmode::d1_developer_menu::main(user);
             } else {
-                stdmsgs::invalid_input(None, None, true);
+                messages::invalid_input(None, None, true);
                 main(user);
             }
         }
@@ -90,7 +90,7 @@ pub fn main(user: &mut UserProfile) {
         }
 
         wrong_input => {
-            stdmsgs::invalid_input(Some(wrong_input), None, true);
+            messages::invalid_input(Some(wrong_input), None, true);
             main(user);
         }
     }

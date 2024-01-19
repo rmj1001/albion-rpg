@@ -1,7 +1,7 @@
 use crate::lib::{
     crypt,
     input::{confirm, password, prompt_colon, select_from_str_array},
-    stdmsgs::*,
+    messages::*,
     tui::{self, page_header, HeaderSubtext},
 };
 

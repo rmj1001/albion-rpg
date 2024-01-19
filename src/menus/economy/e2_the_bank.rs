@@ -1,6 +1,6 @@
 use crate::lib::{
     input::{prompt_arrow, select_from_str_array},
-    stdmsgs::{self, *},
+    messages::{self, *},
     tui::{page_header, HeaderSubtext},
 };
 
@@ -46,7 +46,7 @@ pub fn main(user: &mut UserProfile) {
     match amount_result {
         Ok(number) => amount = number,
         Err(_) => {
-            stdmsgs::invalid_input(None, None, true);
+            messages::invalid_input(None, None, true);
             main(user);
         }
     }
@@ -69,7 +69,7 @@ pub fn main(user: &mut UserProfile) {
         }
 
         Err(message) => {
-            error(message);
+            failure(message);
             main(user);
         }
     }

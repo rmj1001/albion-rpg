@@ -1,6 +1,6 @@
 use crate::lib::{
     input::{confirm, select_from_str_array},
-    stdmsgs::*,
+    messages::*,
     tui::{self, page_header, press_enter_to_continue, HeaderSubtext},
 };
 
