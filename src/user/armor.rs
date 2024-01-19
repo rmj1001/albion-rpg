@@ -163,17 +163,17 @@ impl ArmorInventory {
         wallet: &mut usize,
         item_flag: ArmorItemFlag,
         add_to_wallet: bool,
-    ) -> Result<(), String> {
+    ) -> Result<(), &str> {
         let item_option = self.retrieve_item(item_flag);
 
         if item_option.is_none() {
-            return Err("The item was invalid.".to_string());
+            return Err("The item was invalid.");
         }
 
         let item = item_option.unwrap();
 
         if !item.owns {
-            return Err("You do not own this item.".to_string());
+            return Err("You do not own this item.");
         }
 
         item.owns = false;
