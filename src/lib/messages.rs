@@ -1,5 +1,3 @@
-use std::fmt::Display;
-
 use crate::lib::tui::press_enter_to_continue;
 
 /// input: The invalid input
@@ -40,18 +38,21 @@ pub fn success() {
 
 pub fn failure<T>(message: T)
 where
-    T: Display,
+    T: Into<String>,
 {
-    eprintln!("\nFailure: {}", message);
+    eprintln!("\nFailure: {}", message.into());
     press_enter_to_continue();
 }
 
 /// Standard panic message for dialogue selector
-pub fn out_of_bounds(optional_error: Option<&str>) {
+pub fn out_of_bounds<T>(optional_error: Option<T>)
+where
+    T: Into<String>,
+{
     match optional_error {
         Some(error) => panic!(
             "\nDialogue selected index out of option's bounds: {}",
-            error
+            error.into()
         ),
         None => panic!("\nDialogue selected index out of option's bounds."),
     }
