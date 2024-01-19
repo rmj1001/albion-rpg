@@ -28,6 +28,14 @@ pub mod menus {
         pub mod c2_wander_realm;
     }
 
+    pub mod devmode {
+        pub mod bank_mgr;
+        pub mod d1_developer_menu;
+        pub mod inventory_mgr;
+        pub mod user_mgr;
+        pub mod xp_mgr;
+    }
+
     pub mod economy {
         pub mod e1_the_guilds;
         pub mod e2_the_bank;
@@ -37,7 +45,6 @@ pub mod menus {
     }
 
     pub mod profile {
-        pub mod d1_developer_menu;
         pub mod n1_settings;
         pub mod p1_inventory;
         pub mod p2_hall_of_records;

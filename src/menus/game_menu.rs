@@ -68,7 +68,7 @@ pub fn main(user: &mut UserProfile) {
         // Developer Mode
         "d1" => {
             if user.settings.developer {
-                crate::menus::profile::d1_developer_menu::main(user);
+                crate::menus::devmode::d1_developer_menu::main(user);
             } else {
                 input::invalid_input(None, None, true);
                 main(user);
@@ -85,7 +85,7 @@ pub fn main(user: &mut UserProfile) {
                 press_enter_to_continue();
                 main(user);
             } else {
-                super::profile::d1_developer_menu::disable_developer_mode(user);
+                super::devmode::d1_developer_menu::disable_developer_mode(user);
             }
         }
 
