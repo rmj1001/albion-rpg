@@ -49,7 +49,10 @@ where
 /// Standard panic message for dialogue selector
 pub fn out_of_bounds(optional_error: Option<&str>) {
     match optional_error {
-        Some(error) => panic!("Dialogue selected index out of option's bounds: {}", error),
-        None => panic!("Dialogue selected index out of option's bounds."),
+        Some(error) => panic!(
+            "\nDialogue selected index out of option's bounds: {}",
+            error
+        ),
+        None => panic!("\nDialogue selected index out of option's bounds."),
     }
 }
