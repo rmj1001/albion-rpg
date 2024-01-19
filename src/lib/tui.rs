@@ -31,7 +31,12 @@ pub fn print_line_string(total_length: Option<usize>) {
 }
 
 /// Prints a header box to stdout with a custom line length. The title is centered between two lines.
-pub fn header(title: &str, line_length: usize) {
+pub fn header<T>(title: T, line_length: usize)
+where
+    T: Into<String>,
+{
+    let title = title.into();
+
     fn add_spaces_to_string(s: &mut String, spaces: usize) {
         let mut index = 0;
 
@@ -51,7 +56,7 @@ pub fn header(title: &str, line_length: usize) {
 
     add_spaces_to_string(&mut header, spaces_on_one_side);
 
-    header.push_str(title);
+    header.push_str(&title);
 
     header.push('\n');
     header.push_str(&create_line_string(line_length, None));
@@ -60,20 +65,29 @@ pub fn header(title: &str, line_length: usize) {
 }
 
 /// Clears terminal screen and prints big_header().
-pub fn page_header(title: &str, instructions: HeaderSubtext) {
+pub fn page_header<T>(title: T, instructions: HeaderSubtext)
+where
+    T: Into<String>,
+{
     crate::lib::terminal::clearscr();
-    big_header(title, instructions)
+    big_header(title.into(), instructions)
 }
 
 /// Prints a header with 80 character width
-pub fn big_header(title: &str, instructions: HeaderSubtext) {
-    header(&format!("Albion - {}", title), 80);
+pub fn big_header<T>(title: T, instructions: HeaderSubtext)
+where
+    T: Into<String>,
+{
+    header(format!("Albion - {}", title.into()), 80);
     header_subtext(instructions);
 }
 
 /// Prints a header with 40 character width
-pub fn small_header(title: &str, instructions: HeaderSubtext) {
-    header(title, 40);
+pub fn small_header<T>(title: T, instructions: HeaderSubtext)
+where
+    T: Into<String>,
+{
+    header(title.into(), 40);
     header_subtext(instructions);
 }
 

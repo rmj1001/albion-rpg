@@ -8,7 +8,7 @@ use crate::user::profile::UserProfile;
 
 pub fn main(user: &mut UserProfile) {
     page_header(
-        &format!("Game Menu (user: {})", user.settings.username),
+        format!("Game Menu (user: {})", user.settings.username),
         tui::HeaderSubtext::EnterCode,
     );
 

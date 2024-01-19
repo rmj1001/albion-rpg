@@ -106,7 +106,7 @@ fn view_user(user: &mut UserProfile) {
                     let json_string = profile.to_pretty_json();
 
                     page_header(
-                        &format!("User Profile - {}", profile.settings.username),
+                        format!("User Profile - {}", profile.settings.username),
                         HeaderSubtext::None,
                     );
 
