@@ -41,7 +41,7 @@ pub fn purchase(user: &mut UserProfile) {
 
     let result = user
         .inventory
-        .purchase(&mut user.bank.wallet, &item_flag, quantity);
+        .purchase(&mut user.bank.wallet, &item_flag, quantity, true);
 
     match result {
         Ok(_) => {
@@ -72,7 +72,7 @@ pub fn sell(user: &mut UserProfile) {
 
     let result = user
         .inventory
-        .sell(&mut user.bank.wallet, &item_flag, quantity);
+        .sell(&mut user.bank.wallet, &item_flag, quantity, true);
 
     match result {
         Ok(_) => {

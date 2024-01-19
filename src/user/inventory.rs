@@ -239,6 +239,7 @@ impl MundaneInventory {
         wallet: &mut usize,
         item_flag: &InventoryItemFlag,
         amount: usize,
+        deduct_wallet: bool,
     ) -> Result<(), String> {
         let item_result = self.retrieve_item(item_flag);
 
@@ -249,7 +250,7 @@ impl MundaneInventory {
         let item = item_result.unwrap();
         let price = amount * item.price;
 
-        if price > *wallet {
+        if deduct_wallet && price > *wallet {
             return Err(format!(
                 "You do not have enough gold to purchase {} {}.",
                 amount, item.name
@@ -257,7 +258,11 @@ impl MundaneInventory {
         }
 
         item.quantity += amount;
-        *wallet -= price;
+
+        if deduct_wallet {
+            *wallet -= price;
+        }
+
         Ok(())
     }
 
@@ -266,6 +271,7 @@ impl MundaneInventory {
         wallet: &mut usize,
         item_flag: &InventoryItemFlag,
         amount: usize,
+        add_to_wallet: bool,
     ) -> Result<(), String> {
         let item_result = self.retrieve_item(item_flag);
 
@@ -281,7 +287,11 @@ impl MundaneInventory {
         }
 
         item.quantity -= amount;
-        *wallet += price;
+
+        if add_to_wallet {
+            *wallet += price;
+        }
+
         Ok(())
     }
 }
