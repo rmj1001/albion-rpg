@@ -45,7 +45,7 @@ pub fn purchase(user: &mut UserProfile) {
 
     match result {
         Ok(_) => {
-            println!("Operation successful.");
+            println!("\nOperation successful.");
             press_enter_to_continue();
             main(user);
         }

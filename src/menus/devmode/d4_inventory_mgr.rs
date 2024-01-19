@@ -36,13 +36,13 @@ fn items_manager(user: &mut UserProfile) {
     let buysell = select_from_str_array(&["1. Add", "2. Subtract", "NAV: Go Back"], None);
 
     match buysell {
-        0 => purchase(user),
-        1 => sell(user),
+        0 => add_item(user),
+        1 => subtract_item(user),
         2 => main(user),
         _ => out_of_bounds(None),
     }
 
-    pub fn purchase(user: &mut UserProfile) {
+    pub fn add_item(user: &mut UserProfile) {
         let item_flag = get_item(user);
         let quantity_result = get_quantity();
         let mut quantity: usize = 0;
@@ -61,19 +61,19 @@ fn items_manager(user: &mut UserProfile) {
 
         match result {
             Ok(_) => {
-                println!("Operation successful.");
+                println!("\nOperation successful.");
                 press_enter_to_continue();
-                purchase(user);
+                add_item(user);
             }
             Err(message) => {
                 eprintln!("{}", message);
                 press_enter_to_continue();
-                purchase(user);
+                add_item(user);
             }
         }
     }
 
-    pub fn sell(user: &mut UserProfile) {
+    pub fn subtract_item(user: &mut UserProfile) {
         let item_flag = get_item(user);
         let quantity_result = get_quantity();
         let mut quantity: usize = 0;
