@@ -142,7 +142,7 @@ impl WeaponsInventory {
             return Err(format!("You already own {}.", item.name));
         }
 
-        if item.price > *wallet {
+        if deduct_wallet && item.price > *wallet {
             return Err(format!(
                 "You do not have enough gold to purchase {}.",
                 item.name
