@@ -1,5 +1,16 @@
 use crate::lib::tui::press_enter_to_continue;
 
+fn response_msg<T>(message: T, pause: bool)
+where
+    T: Into<String>,
+{
+    println!("\n{}", message.into());
+
+    if pause {
+        press_enter_to_continue();
+    }
+}
+
 /// input: The invalid input
 ///
 /// Parameters:
@@ -8,40 +19,33 @@ use crate::lib::tui::press_enter_to_continue;
 ///
 /// - pause: Ask the user to press enter to continue?
 pub fn invalid_input(input: Option<&str>, expected: Option<&str>, pause: bool) {
-    let mut output_string = String::new();
+    let mut message = String::new();
 
     match input {
-        Some(text) => output_string.push_str(&format!("\nInvalid input '{}'.", text)),
-        None => output_string.push_str("\nInvalid input."),
+        Some(text) => message.push_str(&format!("\nInvalid input '{}'.", text)),
+        None => message.push_str("\nInvalid input."),
     }
 
     if let Some(text) = expected {
-        output_string.push_str(&format!(" Expected '{}'.", text));
+        message.push_str(&format!(" Expected '{}'.", text));
     }
 
-    println!("{}", output_string);
-
-    if pause {
-        press_enter_to_continue();
-    }
+    response_msg(message, pause);
 }
 
 pub fn cancelling() {
-    println!("\nCancelling.");
-    press_enter_to_continue();
+    response_msg("Cancelling.", true);
 }
 
 pub fn success() {
-    println!("\nSuccess!");
-    press_enter_to_continue();
+    response_msg("Success!", true);
 }
 
 pub fn failure<T>(message: T)
 where
     T: Into<String>,
 {
-    eprintln!("\nFailure: {}", message.into());
-    press_enter_to_continue();
+    response_msg(format!("Failure: {}", message.into()), true);
 }
 
 /// Standard panic message for dialogue selector
