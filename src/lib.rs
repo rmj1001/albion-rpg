@@ -1,7 +1,9 @@
 #![allow(unused_assignments, clippy::new_without_default)]
 
 pub mod lib {
+    pub mod config_encoding;
     pub mod crypt;
+    pub mod files;
     pub mod input;
     pub mod math;
     pub mod messages;
@@ -14,7 +16,6 @@ pub mod user {
     pub mod achievements;
     pub mod armor;
     pub mod bank;
-    pub mod combat;
     pub mod guilds;
     pub mod inventory;
     pub mod profile;
@@ -55,4 +56,11 @@ pub mod menus {
     pub mod game_menu;
     pub mod login;
     pub mod register;
+}
+
+pub mod combat {
+
+    pub mod battle;
+    // pub mod enemy;
+    pub mod inventory;
 }

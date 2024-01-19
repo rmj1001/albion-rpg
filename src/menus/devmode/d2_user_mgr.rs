@@ -1,10 +1,11 @@
 use crate::{
     lib::{
+        files,
         input::{confirm, select_from_str_array, select_from_vector},
-        messages::*,
+        messages::{self, *},
         tui::{self, page_header, press_enter_to_continue, HeaderSubtext},
     },
-    user::profile::{ProfileRetrievalResult, UserProfile},
+    user::profile::UserProfile,
 };
 
 pub fn main(user: &mut UserProfile) {
@@ -32,7 +33,7 @@ pub fn main(user: &mut UserProfile) {
 fn list_users(user: &mut UserProfile) {
     page_header("Developer Mode - User Manager", HeaderSubtext::None);
 
-    let profiles: Vec<String> = UserProfile::list_all();
+    let profiles: Vec<String> = files::list_all();
 
     for profile_string in &profiles {
         println!("- {}", profile_string);
@@ -47,7 +48,7 @@ fn list_users(user: &mut UserProfile) {
 fn delete_users(user: &mut UserProfile) {
     page_header("Developer Mode - User Manager", HeaderSubtext::Keyboard);
 
-    let profiles = UserProfile::list_all();
+    let profiles = files::list_all();
     let choice = select_from_vector(profiles.clone(), Some("Select a profile to delete"));
     let profile_choice = profiles.get(choice);
 
@@ -92,9 +93,9 @@ fn view_user(user: &mut UserProfile) {
         "Developer Mode - User Manager - Data Viewer",
         HeaderSubtext::None,
     );
-    let choice = select_from_vector(UserProfile::list_all(), Some("Select a user to view"));
+    let choice = select_from_vector(files::list_all(), Some("Select a user to view"));
 
-    let profiles = UserProfile::list_all();
+    let profiles = files::list_all();
     let profile_choice = profiles.get(choice);
 
     match profile_choice {
@@ -102,20 +103,28 @@ fn view_user(user: &mut UserProfile) {
             let profile_result = UserProfile::retrieve(profile_string);
 
             match profile_result {
-                ProfileRetrievalResult::Some(profile) => {
-                    let json_string = profile.to_pretty_json();
+                Ok(profile) => {
+                    let pretty_string_result = crate::lib::config_encoding::serialize_user(user);
+                    let mut pretty_string: String = String::new();
+
+                    match pretty_string_result {
+                        Ok(data) => pretty_string = data,
+                        Err(message) => {
+                            messages::failure(format!("{}", message));
+                        }
+                    }
 
                     page_header(
                         format!("User Profile - {}", profile.settings.username),
                         HeaderSubtext::None,
                     );
 
-                    println!("{}\n", json_string);
+                    println!("{}\n", pretty_string);
 
                     press_enter_to_continue();
                     main(user);
                 }
-                ProfileRetrievalResult::None(message) => {
+                Err(message) => {
                     println!("\n{}", message);
                     press_enter_to_continue();
 

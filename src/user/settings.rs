@@ -1,5 +1,5 @@
 use super::profile::UserProfile;
-use crate::lib::crypt;
+use crate::lib::{crypt, files};
 use serde::{Deserialize, Serialize};
 use std::{fs, path::Path};
 
@@ -45,10 +45,10 @@ impl Settings {
 
     /// Updates the username field and profile file name.
     pub fn change_username(&mut self, user: Option<&UserProfile>, new_username: String) {
-        let old_profile_path: String = UserProfile::file_path(&self.username);
+        let old_profile_path: String = files::file_path(&self.username);
         let old_file_path: &Path = Path::new(&old_profile_path);
 
-        let new_profile_path: String = UserProfile::file_path(&new_username);
+        let new_profile_path: String = files::file_path(&new_username);
         let new_file_path: &Path = Path::new(&new_profile_path);
 
         match fs::rename(old_file_path, new_file_path) {

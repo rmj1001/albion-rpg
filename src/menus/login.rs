@@ -5,7 +5,7 @@ use crate::lib::{
     tui::{self, page_header},
 };
 
-use crate::user::profile::{ProfileRetrievalResult, UserProfile};
+use crate::user::profile::UserProfile;
 
 fn get_password(profile: &UserProfile) -> bool {
     let input_password: String = password(false);
@@ -33,7 +33,7 @@ pub fn main() {
     let profile_result = UserProfile::retrieve(&username);
 
     match profile_result {
-        ProfileRetrievalResult::Some(profile) => {
+        Ok(profile) => {
             let mut profile = profile;
 
             if profile.settings.locked {
@@ -63,7 +63,7 @@ pub fn main() {
             crate::menus::game_menu::main(&mut profile);
         }
 
-        ProfileRetrievalResult::None(message) => {
+        Err(message) => {
             println!("\n{}", message);
             tui::press_enter_to_continue();
             crate::menus::accounts::main();

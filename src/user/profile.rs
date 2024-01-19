@@ -8,25 +8,14 @@ use super::settings::Settings;
 use super::weapons::*;
 use super::xp::*;
 
+use crate::lib::files;
+use crate::lib::files::file_path;
 use serde::{Deserialize, Serialize};
-use serde_json as json;
-use std::{fs, path::Path};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Health {
     pub hp: usize,
     pub hunger: usize,
-}
-
-#[allow(clippy::large_enum_variant)]
-pub enum ProfileRetrievalResult {
-    Some(UserProfile),
-    None(String),
-}
-
-pub enum JSONResult {
-    Some(String),
-    None,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -300,151 +289,40 @@ impl UserProfile {
         profile
     }
 
-    /// Writes the current state of the UserProfile to a JSON string
-    pub fn to_pretty_json(&self) -> String {
-        match json::to_string_pretty(self) {
-            Ok(json_string) => json_string,
-            Err(error) => panic!("Could not serialize player data to JSON: {}", error),
-        }
-    }
+    pub fn retrieve(username: &str) -> Result<UserProfile, String> {
+        let profile_path: String = file_path(username);
+        let mut contents: String = String::new();
 
-    /// Generates the profile directory path for multiple platforms
-    pub fn directory_path() -> String {
-        let os: &str = std::env::consts::OS;
-        let mut directory_path: String = String::new();
+        let file_result = files::read(profile_path);
 
-        match os {
-            "linux" => directory_path = format!("/home/{}/.anglandia/profiles", whoami::username()),
-
-            "macos" => {
-                directory_path = format!("/Users/{}/.anglandia/profiles", whoami::username())
-            }
-
-            "freebsd" => {
-                directory_path = format!("/home/{}/.anglandia/profiles", whoami::username())
-            }
-
-            "dragonfly" => {
-                directory_path = format!("/home/{}/.anglandia/profiles", whoami::username())
-            }
-
-            "netbsd" => {
-                directory_path = format!("/home/{}/.anglandia/profiles", whoami::username())
-            }
-
-            "openbsd" => {
-                directory_path = format!("/home/{}/.anglandia/profiles", whoami::username())
-            }
-
-            _ => {}
+        match file_result {
+            Ok(data) => contents = data,
+            Err(_) => return Err(format!("Profile '{}' does not exist.", username)),
         }
 
-        directory_path
-    }
-
-    /// Generates the full path string for profiles depending on platform.
-    pub fn file_path(username: &str) -> String {
-        format!("{}/{}.json", UserProfile::directory_path(), username)
-    }
-
-    /// Lists all profiles registered with the game and removes the .json from the filename.
-    pub fn list_all() -> Vec<String> {
-        let directory = UserProfile::directory_path();
-        let files_result = fs::read_dir(directory);
-
-        match files_result {
-            Ok(directory_read) => directory_read
-                .filter(|file_result| {
-                    file_result
-                        .as_ref()
-                        .expect("Failed to list files.")
-                        .file_name()
-                        .to_str()
-                        .unwrap_or("")
-                        .to_string()
-                        .contains(".json")
-                })
-                .map(|file| {
-                    file.expect("Failed to list files.")
-                        .file_name()
-                        .to_str()
-                        .unwrap_or("")
-                        .to_string()
-                        .replace(".json", "")
-                })
-                .collect(),
-            Err(error) => panic!("Could not read the directory: {}", error),
-        }
-    }
-
-    /// Writes the UserProfile data to a config file.
-    /// If the file exists, it is overwritten with the current profile state.
-    /// If the file does not exist, the default values are written to the file.
-    pub fn save(&self) {
-        let path_string: String = UserProfile::file_path(&self.settings.username);
-
-        match fs::create_dir_all(UserProfile::directory_path()) {
-            Ok(_) => {}
-            Err(error) => panic!(
-                "Could not write profile to disk or create parent folders: {}",
-                error
-            ),
-        }
-
-        if !Path::new(&path_string).exists() {
-            match fs::write(&path_string, UserProfile::new().to_pretty_json()) {
-                Ok(_) => {}
-                Err(write_error) => panic!("Could not write profile to disk: {}", write_error),
-            }
-        }
-
-        match fs::write(path_string, self.to_pretty_json()) {
-            Ok(_) => {}
-            Err(error) => panic!("Could not write profile to disk: {}", error),
-        }
-    }
-
-    /// Retrieves a profile from a config file. If no profile is retrieved then the login handler
-    /// will handle the result
-    pub fn retrieve(username: &str) -> ProfileRetrievalResult {
-        let profile_path: String = UserProfile::file_path(username);
-        let file_path: &Path = Path::new(&profile_path);
-        let mut profile_contents: String = String::new();
-
-        match fs::read_to_string(file_path) {
-            Ok(contents) => profile_contents = contents,
-            Err(_) => {
-                return ProfileRetrievalResult::None(format!(
-                    "User profile '{}' does not exist.",
-                    username
-                ));
-            }
-        }
-
-        match json::from_str(&profile_contents) {
-            Ok(profile) => ProfileRetrievalResult::Some(profile),
-            Err(_) => {
+        match crate::lib::config_encoding::deserialize_user(contents) {
+            Ok(user) => Ok(user),
+            Err(message) => {
                 UserProfile::delete_from_username(username);
-
-                ProfileRetrievalResult::None(
-                    "This user profile is corrupted and will be deleted.".to_string(),
-                )
+                Err(message)
             }
         }
     }
 
-    /// API for deleting a profile based on a username string
-    pub fn delete_from_username(username: &str) {
-        let profile_path_string: String = UserProfile::file_path(username);
-        let profile_path = Path::new(&profile_path_string);
+    pub fn save(&self) {
+        let serialize_result = crate::lib::config_encoding::serialize_user(self)
+            .expect("Could not convert user to config file format.");
 
-        match fs::remove_file(profile_path) {
-            Ok(_) => {}
-            Err(error) => panic!("Could not delete profile file: {}", error),
-        }
+        let path = files::file_path(&self.settings.username);
+        files::write(path, serialize_result)
     }
 
-    /// Deletes the profile file and logs out
+    pub fn delete_from_username(username: &str) {
+        let profile_path: String = file_path(username);
+
+        files::delete(profile_path);
+    }
+
     pub fn delete(&self) {
         UserProfile::delete_from_username(&self.settings.username);
     }

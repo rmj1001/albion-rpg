@@ -3,7 +3,6 @@ use crate::lib::{math::Operation, messages::*, tui::print_table};
 use super::profile::*;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug)]
 pub enum BankAccount {
     Wallet,
     Account1,

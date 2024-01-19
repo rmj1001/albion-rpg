@@ -1,10 +1,11 @@
-use crate::lib::{
-    crypt,
-    input::{self, prompt_colon},
-    tui::{self, page_header, HeaderSubtext},
+use crate::{
+    lib::{
+        crypt,
+        input::{self, prompt_colon},
+        tui::{self, page_header, HeaderSubtext},
+    },
+    user::profile::UserProfile,
 };
-
-use crate::user::profile::{ProfileRetrievalResult, UserProfile};
 
 pub fn main() {
     page_header("Registration", HeaderSubtext::None);
@@ -13,7 +14,7 @@ pub fn main() {
 
     let found_profile = UserProfile::retrieve(&username);
 
-    if let ProfileRetrievalResult::Some(_) = found_profile {
+    if found_profile.is_ok() {
         println!("\nThat profile already exists.");
         tui::press_enter_to_continue();
         crate::menus::accounts::main();

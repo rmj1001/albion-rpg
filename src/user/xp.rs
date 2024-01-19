@@ -14,7 +14,7 @@ pub struct XP {
     pub thieving: usize,
 }
 
-#[derive(Clone, Copy, Serialize, Deserialize)]
+#[derive(Clone, Copy)]
 pub enum XPType {
     Combat,
     Fishing,
@@ -48,7 +48,7 @@ impl XP {
                 self.thieving,
                 self::XP::level(self.thieving)
             ),
-            format!("Profile Total,{},{}", self.total_xp(), self.profile_level()),
+            format!("Profile Total,{},{}", self.profile(), self.profile_level()),
         ])
     }
 
@@ -56,7 +56,7 @@ impl XP {
         (xp / 100) + 1
     }
 
-    pub fn total_xp(&self) -> usize {
+    pub fn profile(&self) -> usize {
         self.combat
             + self.fishing
             + self.cooking
@@ -67,7 +67,7 @@ impl XP {
     }
 
     pub fn profile_level(&self) -> usize {
-        XP::level(self.total_xp())
+        XP::level(self.profile())
     }
 
     pub fn arithmetic(&mut self, flag: XPType, operation: Operation<usize>) -> Result<(), &str> {

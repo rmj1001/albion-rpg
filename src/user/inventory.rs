@@ -9,7 +9,6 @@ pub struct Item {
     pub quantity: usize,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
 pub enum GuildItemNames {
     Fish,
     CookedFish,

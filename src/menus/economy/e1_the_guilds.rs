@@ -147,8 +147,10 @@ fn job(
 ) {
     page_header(format!("Job: {}", job_name), HeaderSubtext::Keyboard);
 
-    println!("XP: {}", user.xp.get(xp_type));
-    println!("Level: {}", XP::level(user.xp.get(xp_type)));
+    let xp = user.xp.get(xp_type);
+
+    println!("XP: {}", xp);
+    println!("Level: {}", XP::level(xp));
 
     if use_gold {
         println!();
