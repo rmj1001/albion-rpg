@@ -1,9 +1,6 @@
 use std::{num::ParseIntError, str::FromStr};
 
-use super::{
-    input::{self, prompt_arrow},
-    messages,
-};
+use super::{input::prompt_arrow, messages};
 
 pub enum Operation<T> {
     Add(T),

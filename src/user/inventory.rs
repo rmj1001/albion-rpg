@@ -1,10 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::lib::{
-    math::Operation,
-    messages::*,
-    tui::{press_enter_to_continue, print_table},
-};
+use crate::lib::{math::Operation, messages::*, tui::print_table};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Item {

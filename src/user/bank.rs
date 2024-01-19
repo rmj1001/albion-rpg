@@ -1,8 +1,4 @@
-use crate::lib::{
-    math::Operation,
-    messages::*,
-    tui::{press_enter_to_continue, print_table},
-};
+use crate::lib::{math::Operation, messages::*, tui::print_table};
 
 use super::profile::*;
 use serde::{Deserialize, Serialize};
