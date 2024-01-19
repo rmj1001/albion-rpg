@@ -44,6 +44,8 @@ pub fn weapons_inventory(user: &mut UserProfile) {
 
     user.weapons.print_table();
 
+    // TODO: Equip/Unequip weapons
+
     press_enter_to_continue();
     main(user);
 }
@@ -52,6 +54,8 @@ pub fn armor_inventory(user: &mut UserProfile) {
     page_header("Armor Inventory", HeaderSubtext::None);
 
     user.armor.print_table();
+
+    // TODO: Equip/Unequip armor
 
     press_enter_to_continue();
     main(user);
