@@ -14,7 +14,7 @@ use std::{fs, path::Path};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Health {
-    pub hitpoints: usize,
+    pub hp: usize,
     pub hunger: usize,
 }
 
@@ -52,10 +52,7 @@ impl UserProfile {
                 developer: false,
                 locked: false,
             },
-            health: Health {
-                hitpoints: 100,
-                hunger: 0,
-            },
+            health: Health { hp: 100, hunger: 0 },
             xp: XP {
                 combat: 0,
                 fishing: 0,
