@@ -81,7 +81,7 @@ fn get_item(user: &mut UserProfile) -> ArmorItemFlag {
         println!("\nCancelling.");
         press_enter_to_continue();
         main(user);
-        return ArmorItemFlag::Invalid;
+        return ArmorItemFlag::InvalidItem;
     }
 
     match select {
@@ -91,6 +91,6 @@ fn get_item(user: &mut UserProfile) -> ArmorItemFlag {
         3 => ArmorItemFlag::Steel,
         4 => ArmorItemFlag::DragonHide,
         5 => ArmorItemFlag::Mystic,
-        _ => ArmorItemFlag::Invalid,
+        _ => ArmorItemFlag::InvalidItem,
     }
 }

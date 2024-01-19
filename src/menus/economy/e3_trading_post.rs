@@ -112,7 +112,7 @@ fn get_item(user: &mut UserProfile) -> InventoryItemFlag {
         println!("\nCancelling.");
         press_enter_to_continue();
         main(user);
-        return InventoryItemFlag::Invalid;
+        return InventoryItemFlag::InvalidItem;
     }
 
     match select {
@@ -129,7 +129,7 @@ fn get_item(user: &mut UserProfile) -> InventoryItemFlag {
         10 => InventoryItemFlag::Bones,
         11 => InventoryItemFlag::DragonHides,
         12 => InventoryItemFlag::RunicTablets,
-        _ => InventoryItemFlag::Invalid,
+        _ => InventoryItemFlag::InvalidItem,
     }
 }
 

@@ -36,7 +36,7 @@ pub enum InventoryItemFlag {
     Bones,
     DragonHides,
     RunicTablets,
-    Invalid,
+    InvalidItem,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -180,7 +180,7 @@ impl MundaneInventory {
             InventoryItemFlag::RunicTablets => Some(&mut self.runic_tablets),
             InventoryItemFlag::Seeds => Some(&mut self.seeds),
             InventoryItemFlag::Wood => Some(&mut self.wood),
-            InventoryItemFlag::Invalid => None,
+            InventoryItemFlag::InvalidItem => None,
         }
     }
 

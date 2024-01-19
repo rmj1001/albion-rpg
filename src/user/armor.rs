@@ -43,7 +43,7 @@ pub enum ArmorItemFlag {
     Steel,
     DragonHide,
     Mystic,
-    Invalid,
+    InvalidItem,
 }
 
 impl ArmorInventory {
@@ -109,7 +109,7 @@ impl ArmorInventory {
             ArmorItemFlag::Leather => Some(&mut self.leather),
             ArmorItemFlag::Mystic => Some(&mut self.mystic),
             ArmorItemFlag::Steel => Some(&mut self.steel),
-            ArmorItemFlag::Invalid => None,
+            ArmorItemFlag::InvalidItem => None,
         }
     }
 
