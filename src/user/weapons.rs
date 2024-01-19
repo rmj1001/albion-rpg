@@ -128,6 +128,7 @@ impl WeaponsInventory {
         &mut self,
         wallet: &mut usize,
         item_flag: WeaponItemFlag,
+        deduct_wallet: bool,
     ) -> Result<(), String> {
         let item_option = self.retrieve_item(item_flag);
 
@@ -137,6 +138,10 @@ impl WeaponsInventory {
 
         let item = item_option.unwrap();
 
+        if item.owns {
+            return Err(format!("You already own {}.", item.name));
+        }
+
         if item.price > *wallet {
             return Err(format!(
                 "You do not have enough gold to purchase {}.",
@@ -144,12 +149,20 @@ impl WeaponsInventory {
             ));
         }
 
+        if deduct_wallet {
+            *wallet -= item.price;
+        }
+
         item.owns = true;
-        *wallet -= item.price;
         Ok(())
     }
 
-    pub fn sell(&mut self, wallet: &mut usize, item_flag: WeaponItemFlag) -> Result<(), String> {
+    pub fn sell(
+        &mut self,
+        wallet: &mut usize,
+        item_flag: WeaponItemFlag,
+        add_to_wallet: bool,
+    ) -> Result<(), String> {
         let item_option = self.retrieve_item(item_flag);
 
         if item_option.is_none() {
@@ -163,7 +176,11 @@ impl WeaponsInventory {
         }
 
         item.owns = false;
-        *wallet += item.price / 2;
+
+        if add_to_wallet {
+            *wallet += item.price / 2;
+        }
+
         Ok(())
     }
 }
