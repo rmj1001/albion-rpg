@@ -90,19 +90,19 @@ pub fn sell(user: &mut UserProfile) {
 
 fn get_item(user: &mut UserProfile) -> InventoryItemFlag {
     let item_names: Vec<String> = vec![
-        user.inventory.bait.name.to_lowercase(),
-        user.inventory.seeds.name.to_lowercase(),
-        user.inventory.furs.name.to_lowercase(),
-        user.inventory.fish.name.to_lowercase(),
-        user.inventory.wood.name.to_lowercase(),
-        user.inventory.ore.name.to_lowercase(),
-        user.inventory.ingots.name.to_lowercase(),
-        user.inventory.potions.name.to_lowercase(),
-        user.inventory.rubies.name.to_lowercase(),
-        user.inventory.magic_scrolls.name.to_lowercase(),
-        user.inventory.bones.name.to_lowercase(),
-        user.inventory.dragon_hides.name.to_lowercase(),
-        user.inventory.runic_tablets.name.to_lowercase(),
+        user.inventory.bait.name.to_string(),
+        user.inventory.seeds.name.to_string(),
+        user.inventory.furs.name.to_string(),
+        user.inventory.fish.name.to_string(),
+        user.inventory.wood.name.to_string(),
+        user.inventory.ore.name.to_string(),
+        user.inventory.ingots.name.to_string(),
+        user.inventory.potions.name.to_string(),
+        user.inventory.rubies.name.to_string(),
+        user.inventory.magic_scrolls.name.to_string(),
+        user.inventory.bones.name.to_string(),
+        user.inventory.dragon_hides.name.to_string(),
+        user.inventory.runic_tablets.name.to_string(),
         String::from("NAV: Cancel"),
     ];
 
