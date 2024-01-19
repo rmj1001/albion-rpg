@@ -1,8 +1,9 @@
 use crate::{
     lib::{
-        input::{out_of_bounds, select_from_str_array, success},
+        input::select_from_str_array,
         math::{generic_calculator, Operation},
-        tui::{page_header, press_enter_to_continue, HeaderSubtext},
+        stdmsgs::*,
+        tui::{page_header, HeaderSubtext},
     },
     user::{profile::UserProfile, xp::XPType},
 };
@@ -43,8 +44,7 @@ pub fn main(user: &mut UserProfile) {
     let calculation = generic_calculator::<usize>();
 
     if let Operation::Cancel = calculation {
-        println!("\nCancelling.");
-        press_enter_to_continue();
+        cancelling();
         main(user);
     }
 

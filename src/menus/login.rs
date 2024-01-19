@@ -1,7 +1,8 @@
 use crate::lib::{
     crypt,
     input::*,
-    tui::{self, page_header, press_enter_to_continue},
+    stdmsgs::*,
+    tui::{self, page_header},
 };
 
 use crate::user::profile::{ProfileRetrievalResult, UserProfile};
@@ -46,8 +47,7 @@ pub fn main() {
                         profile_remains_locked()
                     }
                 } else {
-                    println!("\nCancelling.");
-                    press_enter_to_continue();
+                    cancelling();
                     crate::menus::accounts::main();
                 }
             }

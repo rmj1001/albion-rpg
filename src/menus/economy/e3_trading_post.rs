@@ -1,10 +1,8 @@
 use crate::{
     lib::{
-        input::{
-            error, input_generic, invalid_input, out_of_bounds, select_from_str_array,
-            select_from_vector, success,
-        },
-        tui::{page_header, press_enter_to_continue},
+        input::{input_generic, select_from_str_array, select_from_vector},
+        stdmsgs::*,
+        tui::page_header,
     },
     user::{inventory::InventoryItemFlag, profile::UserProfile},
 };
@@ -106,8 +104,7 @@ fn get_item(user: &mut UserProfile) -> InventoryItemFlag {
     let select = select_from_vector(item_names, None);
 
     if select == 13 {
-        println!("\nCancelling.");
-        press_enter_to_continue();
+        cancelling();
         main(user);
         return InventoryItemFlag::InvalidItem;
     }

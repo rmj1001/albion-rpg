@@ -1,6 +1,7 @@
 use crate::{
     lib::{
-        input::{confirm, out_of_bounds, select_from_str_array, select_from_vector},
+        input::{confirm, select_from_str_array, select_from_vector},
+        stdmsgs::*,
         tui::{self, page_header, press_enter_to_continue, HeaderSubtext},
     },
     user::profile::{ProfileRetrievalResult, UserProfile},

@@ -1,7 +1,8 @@
 use crate::{
     lib::{
-        input::{error, out_of_bounds, select_from_str_array, select_from_vector, success},
-        tui::{page_header, press_enter_to_continue},
+        input::{select_from_str_array, select_from_vector},
+        stdmsgs::*,
+        tui::page_header,
     },
     user::{armor::ArmorItemFlag, profile::UserProfile},
 };
@@ -74,8 +75,7 @@ fn get_item(user: &mut UserProfile) -> ArmorItemFlag {
     let select = select_from_vector(items, None);
 
     if select == length - 1 {
-        println!("\nCancelling.");
-        press_enter_to_continue();
+        cancelling();
         main(user);
         return ArmorItemFlag::InvalidItem;
     }

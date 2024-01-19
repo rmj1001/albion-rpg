@@ -1,8 +1,8 @@
-use std::{fmt::Display, io::Write, str::FromStr};
+use std::{io::Write, str::FromStr};
 
 use dialoguer::Confirm;
 
-use crate::lib::tui::press_enter_to_continue;
+use crate::lib::{stdmsgs::*, tui::press_enter_to_continue};
 
 pub fn select_from_str_array(options: &[&str], optional_prompt: Option<&str>) -> usize {
     if let Some(prompt_text) = optional_prompt {
@@ -104,53 +104,6 @@ pub fn password(confirm: bool) -> String {
         Ok(text) => text,
         Err(error) => panic!("Failed to read password with dialogue: {}", error),
     }
-}
-
-/// Standard panic message for dialogue selector
-pub fn out_of_bounds(optional_error: Option<&str>) {
-    match optional_error {
-        Some(error) => panic!("Dialogue selected index out of option's bounds: {}", error),
-        None => panic!("Dialogue selected index out of option's bounds."),
-    }
-}
-
-/// input: The invalid input
-///
-/// Parameters:
-///
-/// - expected: The expected input
-///
-/// - pause: Ask the user to press enter to continue?
-pub fn invalid_input(input: Option<&str>, expected: Option<&str>, pause: bool) {
-    let mut output_string = String::new();
-
-    match input {
-        Some(text) => output_string.push_str(&format!("\nInvalid input '{}'.", text)),
-        None => output_string.push_str("\nInvalid input."),
-    }
-
-    if let Some(text) = expected {
-        output_string.push_str(&format!(" Expected '{}'.", text));
-    }
-
-    println!("{}", output_string);
-
-    if pause {
-        press_enter_to_continue();
-    }
-}
-
-pub fn success() {
-    println!("\nSuccess!");
-    press_enter_to_continue();
-}
-
-pub fn error<T>(error: T)
-where
-    T: Display,
-{
-    eprintln!("\nError: {}", error);
-    press_enter_to_continue();
 }
 
 pub fn prompt_input_completion(prompt: &str, completion_strings: Vec<String>) -> String {

@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::lib::{
     math::Operation,
+    stdmsgs::*,
     tui::{press_enter_to_continue, print_table},
 };
 
@@ -222,8 +223,7 @@ impl MundaneInventory {
                 Ok(())
             }
             Operation::Cancel => {
-                println!("\nCancelling.");
-                press_enter_to_continue();
+                cancelling();
                 Ok(())
             }
             Operation::Invalid => {

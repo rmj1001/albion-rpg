@@ -1,6 +1,7 @@
 use crate::lib::{
     crypt,
-    input::{confirm, out_of_bounds, password, prompt_colon, select_from_str_array},
+    input::{confirm, password, prompt_colon, select_from_str_array},
+    stdmsgs::*,
     tui::{self, page_header, HeaderSubtext},
 };
 
@@ -93,8 +94,7 @@ fn lock_profile(user: &mut UserProfile) {
     let confirm_lock = confirm("Are you sure you want to lock your profile?");
 
     if !confirm_lock {
-        println!("\nCancelling.");
-        tui::press_enter_to_continue();
+        cancelling();
         main(user);
     }
 
@@ -111,8 +111,7 @@ fn delete_profile(user: &mut UserProfile) {
     let confirm_delete = confirm("Are you sure you want to delete your profile?");
 
     if !confirm_delete {
-        println!("\nCancelling.");
-        tui::press_enter_to_continue();
+        cancelling();
         main(user);
     }
 

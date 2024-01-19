@@ -1,6 +1,9 @@
 use std::{num::ParseIntError, str::FromStr};
 
-use super::input::{self, prompt_arrow};
+use super::{
+    input::{self, prompt_arrow},
+    stdmsgs,
+};
 
 pub enum Operation<T> {
     Add(T),
@@ -39,7 +42,7 @@ where
         '*' => {}
         '/' => {}
         invalid => {
-            input::invalid_input(Some(&invalid.to_string()), Some("+, -, *, or /"), true);
+            stdmsgs::invalid_input(Some(&invalid.to_string()), Some("+, -, *, or /"), true);
             return Operation::Invalid;
         }
     }
@@ -48,7 +51,7 @@ where
     let number_result: Result<T, ParseIntError> = number_string.trim().parse();
 
     if number_result.is_err() {
-        input::invalid_input(Some(&number_string), Some("integer"), true);
+        stdmsgs::invalid_input(Some(&number_string), Some("integer"), true);
         return Operation::Invalid;
     }
 

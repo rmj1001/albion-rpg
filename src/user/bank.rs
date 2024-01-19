@@ -1,5 +1,6 @@
 use crate::lib::{
     math::Operation,
+    stdmsgs::*,
     tui::{press_enter_to_continue, print_table},
 };
 
@@ -84,8 +85,7 @@ impl Bank {
                 Ok(())
             }
             Operation::Cancel => {
-                println!("\nCancelling.");
-                press_enter_to_continue();
+                cancelling();
                 Ok(())
             }
             Operation::Invalid => {

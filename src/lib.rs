@@ -5,6 +5,7 @@ pub mod lib {
     pub mod input;
     pub mod math;
     pub mod os;
+    pub mod stdmsgs;
     pub mod terminal;
     pub mod tui;
 }

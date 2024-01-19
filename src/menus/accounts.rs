@@ -1,8 +1,4 @@
-use crate::lib::{
-    input::{out_of_bounds, select_from_str_array},
-    terminal::*,
-    tui::*,
-};
+use crate::lib::{input::select_from_str_array, stdmsgs::*, terminal::*, tui::*};
 
 pub fn main() {
     clearscr();
