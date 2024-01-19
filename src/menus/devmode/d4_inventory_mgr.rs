@@ -4,7 +4,10 @@ use crate::{
         messages::*,
         tui::{page_header, HeaderSubtext},
     },
-    user::{inventory::InventoryItemFlag, profile::UserProfile},
+    user::{
+        armor::ArmorItemFlag, inventory::InventoryItemFlag, profile::UserProfile,
+        weapons::WeaponItemFlag,
+    },
 };
 
 pub fn main(user: &mut UserProfile) {
@@ -50,7 +53,7 @@ fn items_manager(user: &mut UserProfile) {
             Ok(number) => quantity = number,
             Err(_) => {
                 invalid_input(None, Some("number"), true);
-                main(user);
+                items_manager(user);
             }
         }
 
@@ -61,11 +64,11 @@ fn items_manager(user: &mut UserProfile) {
         match result {
             Ok(_) => {
                 success();
-                add_item(user);
+                items_manager(user);
             }
             Err(message) => {
                 failure(message);
-                add_item(user);
+                items_manager(user);
             }
         }
     }
@@ -79,7 +82,7 @@ fn items_manager(user: &mut UserProfile) {
             Ok(number) => quantity = number,
             Err(_) => {
                 invalid_input(None, Some("number"), true);
-                main(user);
+                items_manager(user);
             }
         }
 
@@ -90,11 +93,11 @@ fn items_manager(user: &mut UserProfile) {
         match result {
             Ok(_) => {
                 success();
-                main(user);
+                items_manager(user);
             }
             Err(message) => {
                 failure(message);
-                main(user);
+                items_manager(user);
             }
         }
     }
@@ -121,7 +124,7 @@ fn items_manager(user: &mut UserProfile) {
 
         if select == 13 {
             cancelling();
-            main(user);
+            items_manager(user);
             return InventoryItemFlag::InvalidItem;
         }
 
@@ -154,9 +157,83 @@ fn weapons_manager(user: &mut UserProfile) {
         HeaderSubtext::None,
     );
 
-    // TODO: Weapons Manager
+    user.weapons.print_table();
 
-    main(user);
+    let buysell =
+        select_from_str_array(&["1. Own Weapon", "2. Disown Weapon", "NAV: Go Back"], None);
+
+    match buysell {
+        0 => own_weapon(user),
+        1 => disown_weapon(user),
+        2 => main(user),
+        _ => out_of_bounds(None),
+    }
+
+    pub fn own_weapon(user: &mut UserProfile) {
+        let item = get_item(user);
+
+        let result = user.weapons.purchase(&mut user.bank.wallet, item, false);
+
+        match result {
+            Ok(_) => {
+                success();
+                weapons_manager(user);
+            }
+            Err(message) => {
+                failure(message);
+                weapons_manager(user);
+            }
+        }
+    }
+
+    pub fn disown_weapon(user: &mut UserProfile) {
+        let item = get_item(user);
+
+        let result = user.weapons.sell(&mut user.bank.wallet, item, false);
+
+        match result {
+            Ok(_) => {
+                success();
+                weapons_manager(user);
+            }
+            Err(message) => {
+                failure(message);
+                weapons_manager(user);
+            }
+        }
+    }
+
+    fn get_item(user: &mut UserProfile) -> WeaponItemFlag {
+        let items: Vec<String> = vec![
+            user.weapons.wooden_sword.name.to_string(),
+            user.weapons.bronze_sword.name.to_string(),
+            user.weapons.iron_sword.name.to_string(),
+            user.weapons.steel_sword.name.to_string(),
+            user.weapons.mystic_sword.name.to_string(),
+            user.weapons.wizard_staff.name.to_string(),
+            "NAV: Cancel".to_string(),
+        ];
+
+        let length = items.len();
+
+        let select = select_from_vector(items, None);
+
+        if select == length - 1 {
+            cancelling();
+            weapons_manager(user);
+            return WeaponItemFlag::InvalidItem;
+        }
+
+        match select {
+            0 => WeaponItemFlag::WoodenSword,
+            1 => WeaponItemFlag::BronzeSword,
+            2 => WeaponItemFlag::IronSword,
+            3 => WeaponItemFlag::SteelSword,
+            4 => WeaponItemFlag::MysticSword,
+            5 => WeaponItemFlag::WizardStaff,
+            _ => WeaponItemFlag::InvalidItem,
+        }
+    }
 }
 
 fn armor_manager(user: &mut UserProfile) {
@@ -165,7 +242,80 @@ fn armor_manager(user: &mut UserProfile) {
         HeaderSubtext::None,
     );
 
-    // TODO: Armor Manager
+    user.armor.print_table();
 
-    main(user);
+    let buysell = select_from_str_array(&["1. Own Armor", "2. Disown Armor", "NAV: Go Back"], None);
+
+    match buysell {
+        0 => own_armor(user),
+        1 => disown_armor(user),
+        2 => main(user),
+        _ => out_of_bounds(None),
+    }
+
+    pub fn own_armor(user: &mut UserProfile) {
+        let item = get_item(user);
+
+        let result = user.armor.purchase(&mut user.bank.wallet, item, false);
+
+        match result {
+            Ok(_) => {
+                success();
+                armor_manager(user);
+            }
+            Err(message) => {
+                failure(message);
+                armor_manager(user);
+            }
+        }
+    }
+
+    pub fn disown_armor(user: &mut UserProfile) {
+        let item = get_item(user);
+
+        let result = user.armor.sell(&mut user.bank.wallet, item, false);
+
+        match result {
+            Ok(_) => {
+                success();
+                armor_manager(user);
+            }
+            Err(message) => {
+                failure(message);
+                armor_manager(user);
+            }
+        }
+    }
+
+    fn get_item(user: &mut UserProfile) -> ArmorItemFlag {
+        let items: Vec<String> = vec![
+            user.armor.leather.name.to_string(),
+            user.armor.bronze.name.to_string(),
+            user.armor.iron.name.to_string(),
+            user.armor.steel.name.to_string(),
+            user.armor.dragonhide.name.to_string(),
+            user.armor.mystic.name.to_string(),
+            "NAV: Cancel".to_string(),
+        ];
+
+        let length = items.len();
+
+        let select = select_from_vector(items, None);
+
+        if select == length - 1 {
+            cancelling();
+            armor_manager(user);
+            return ArmorItemFlag::InvalidItem;
+        }
+
+        match select {
+            0 => ArmorItemFlag::Leather,
+            1 => ArmorItemFlag::Bronze,
+            2 => ArmorItemFlag::Iron,
+            3 => ArmorItemFlag::Steel,
+            4 => ArmorItemFlag::DragonHide,
+            5 => ArmorItemFlag::Mystic,
+            _ => ArmorItemFlag::InvalidItem,
+        }
+    }
 }
