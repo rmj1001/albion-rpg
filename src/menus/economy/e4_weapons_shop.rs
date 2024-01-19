@@ -45,7 +45,7 @@ pub fn purchase(user: &mut UserProfile) {
 pub fn sell(user: &mut UserProfile) {
     let item = get_item(user);
 
-    let result = user.weapons.purchase(&mut user.bank.wallet, item, true);
+    let result = user.weapons.sell(&mut user.bank.wallet, item, true);
 
     match result {
         Ok(_) => {
