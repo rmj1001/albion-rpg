@@ -63,12 +63,12 @@ fn items_manager(user: &mut UserProfile) {
             Ok(_) => {
                 println!("Operation successful.");
                 press_enter_to_continue();
-                main(user);
+                purchase(user);
             }
             Err(message) => {
                 eprintln!("{}", message);
                 press_enter_to_continue();
-                main(user);
+                purchase(user);
             }
         }
     }
