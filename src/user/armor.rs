@@ -3,8 +3,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::lib::tui::{pretty_bool, print_table};
 
-use super::profile::UserProfile;
-
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Armor {
     pub name: String,
