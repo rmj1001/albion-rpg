@@ -3,7 +3,7 @@ use crate::{
     user::profile::UserProfile,
 };
 
-// TODO: The Stronghold
+// TODO: The Stronghold: Gauntlet of 50 consecutive battles. If won then the game is complete.
 pub fn main(user: &mut UserProfile) {
     page_header("The Stronghold", HeaderSubtext::None);
 
