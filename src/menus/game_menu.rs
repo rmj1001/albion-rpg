@@ -46,8 +46,8 @@ pub fn main(user: &mut UserProfile) {
 
     match &choice[..] {
         // Combat
-        "c1" => crate::menus::combat::c1_the_stronghold::main(user),
-        "c2" => crate::menus::combat::c2_wander_realm::main(user),
+        "c1" => crate::menus::combat::c2_wander_realm::main(user),
+        "c2" => crate::menus::combat::c1_the_stronghold::main(user),
 
         // Economy
         "e1" => crate::menus::economy::e1_the_guilds::main(user),
