@@ -120,7 +120,7 @@ pub fn header_subtext(instructions: HeaderSubtext) {
 
 /// Equivalent to DOS "pause" command
 pub fn press_enter_to_continue() {
-    println!("[PRESS RETURN/ENTER TO CONTINUE.]");
+    println!("[PRESS (RETURN/ENTER) TO CONTINUE]");
     let mut garbage = String::new();
     let _ = std::io::stdin().read_line(&mut garbage);
 }
@@ -137,4 +137,8 @@ pub fn pretty_bool(flag: bool) -> &'static str {
         true => "Yes",
         false => "No",
     }
+}
+
+pub fn sleep(seconds: u64) {
+    std::thread::sleep(std::time::Duration::from_secs(seconds))
 }
