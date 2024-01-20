@@ -1,32 +1,45 @@
-use rand::Rng;
-
-use crate::user::xp::XP;
+use crate::{
+    lib::math::{self, random_num},
+    user::xp::XP,
+};
 
 pub enum EnemyType {
     Animal(AnimalType),
     Human,
     Monster(MonsterType),
     Undead(UndeadType),
+    Invalid,
 }
 
 pub enum AnimalType {
     Bear,
     DireWolf,
     GiantSpider,
+    WhiteApe,
+    Owlbear,
+    Wyrm,
+    Invalid,
 }
 
 pub enum MonsterType {
-    Goblin,
-    Orc,
+    Centaur,
     DarkElf,
     Dragon,
+    Giant,
+    Goblin,
+    Orc,
+    Troll,
+    Werewolf,
+    Invalid,
 }
 
 pub enum UndeadType {
+    Banshee,
     Ghost,
     Skeleton,
     Vampire,
     Zombie,
+    Invalid,
 }
 
 pub enum Rewards {
@@ -36,6 +49,7 @@ pub enum Rewards {
     Bones(usize),
     DragonHides(usize),
     RunicTablets(usize),
+    Invalid,
 }
 
 pub struct Enemy {
@@ -48,15 +62,15 @@ pub struct Enemy {
 }
 
 impl Enemy {
-    pub fn new(combat_xp: usize) -> Self {
-        let user_level = XP::level(combat_xp);
+    pub fn new(user_combat_xp: usize, user_hp: usize) -> Self {
+        let user_level = XP::level(user_combat_xp);
 
         Self {
             kind: pick_enemy(),
-            hp: calculate_hp(user_level),
-            damage: calculate_damage(user_level),
-            xp: calculate_xp(user_level),
-            gold: calculate_gold(user_level),
+            hp: calculate_hp(user_hp),
+            damage: calculate_damage(user_hp),
+            xp: linear_xp_gold(user_level),
+            gold: linear_xp_gold(user_level),
             rewards: generate_rewards(user_level),
         }
     }
@@ -65,32 +79,128 @@ impl Enemy {
 // Enemy type
 
 fn pick_enemy() -> EnemyType {
-    let kind_number = rand::thread_rng().gen_range(1..4);
+    let number = math::random_num(1, 4);
 
-    match kind_number {
+    match number {
         1 => EnemyType::Animal(pick_animal()),
         2 => EnemyType::Human,
         3 => EnemyType::Monster(pick_monster()),
         4 => EnemyType::Undead(pick_undead()),
+        _ => EnemyType::Invalid,
     }
 }
 
-fn pick_animal() -> AnimalType {}
+fn pick_animal() -> AnimalType {
+    let number = math::random_num(0, 5);
 
-fn pick_monster() -> MonsterType {}
+    match number {
+        0 => AnimalType::Bear,
+        1 => AnimalType::DireWolf,
+        2 => AnimalType::GiantSpider,
+        3 => AnimalType::Owlbear,
+        4 => AnimalType::WhiteApe,
+        5 => AnimalType::Wyrm,
+        _ => AnimalType::Invalid,
+    }
+}
 
-fn pick_undead() -> UndeadType {}
+fn pick_monster() -> MonsterType {
+    let number = math::random_num(0, 8);
+
+    match number {
+        0 => MonsterType::Centaur,
+        1 => MonsterType::DarkElf,
+        2 => MonsterType::Dragon,
+        4 => MonsterType::Giant,
+        5 => MonsterType::Goblin,
+        6 => MonsterType::Orc,
+        7 => MonsterType::Troll,
+        8 => MonsterType::Werewolf,
+        _ => MonsterType::Invalid,
+    }
+}
+
+fn pick_undead() -> UndeadType {
+    let number = math::random_num(0, 4);
+
+    match number {
+        0 => UndeadType::Banshee,
+        1 => UndeadType::Ghost,
+        2 => UndeadType::Skeleton,
+        3 => UndeadType::Vampire,
+        4 => UndeadType::Zombie,
+        _ => UndeadType::Invalid,
+    }
+}
 
 // Strength
 
-fn calculate_hp(player_level: usize) -> usize {}
+fn calculate_hp(player_hp: usize) -> usize {
+    let deviation = random_num(10, 30);
+    let operation = random_num(0, 1);
 
-fn calculate_damage(player_level: usize) -> usize {}
+    match operation {
+        0 => player_hp + deviation,
+        1 => player_hp - deviation,
+        _ => player_hp,
+    }
+}
+
+fn calculate_damage(player_hp: usize) -> usize {
+    let deviation = random_num(1, 10);
+
+    (player_hp / 10) + deviation
+}
 
 // Rewards
 
-fn calculate_xp(player_level: usize) -> usize {}
+fn linear_xp_gold(player_level: usize) -> usize {
+    let mut working_xp = 0;
 
-fn calculate_gold(player_level: usize) -> usize {}
+    if player_level > 1 {
+        working_xp += random_num(0, 10);
+    }
 
-fn generate_rewards(player_level: usize) -> Vec<Rewards> {}
+    if player_level > 10 {
+        working_xp += random_num(10, 20);
+    }
+
+    if player_level > 25 {
+        working_xp += random_num(20, 50);
+    }
+
+    if player_level > 50 {
+        working_xp += random_num(50, 75);
+    }
+
+    if player_level > 100 {
+        working_xp += random_num(75, 100)
+    }
+
+    working_xp
+}
+
+fn generate_rewards(player_level: usize) -> Vec<Rewards> {
+    let mut rewards: Vec<Rewards> = vec![
+        Rewards::Potions(random_num(1, 3)),
+        Rewards::Bones(random_num(1, 3)),
+    ];
+
+    if player_level > 10 {
+        rewards.push(Rewards::MagicScrolls(random_num(0, 3)));
+    }
+
+    if player_level > 25 {
+        rewards.push(Rewards::DragonHides(random_num(0, 3)));
+    }
+
+    if player_level > 50 {
+        rewards.push(Rewards::Rubies(random_num(0, 3)));
+    }
+
+    if player_level > 100 {
+        rewards.push(Rewards::RunicTablets(random_num(0, 3)));
+    }
+
+    rewards
+}
