@@ -1,5 +1,4 @@
 use crate::lib::tui::press_enter_to_continue;
-use ansi_term::Colour;
 
 pub fn response_msg<T>(message: T, pause: bool)
 where
@@ -31,7 +30,7 @@ pub fn invalid_input(input: Option<&str>, expected: Option<&str>, pause: bool) {
         message.push_str(&format!(" Expected '{}'.", text));
     }
 
-    response_msg(Colour::Red.paint(message).to_string(), pause);
+    response_msg(console::style(message).red().bright().to_string(), pause);
 }
 
 pub fn warn<T>(optional_message: Option<T>)
@@ -44,13 +43,13 @@ where
         message.push_str(&added_text.into());
     }
 
-    let painted = Colour::Yellow.paint(message).to_string();
+    let painted: String = console::style(message).yellow().to_string();
     response_msg(painted, true);
 }
 
 pub fn cancelling() {
-    let message = "Cancelling.";
-    let painted = Colour::Yellow.paint(message).to_string();
+    let message: &str = "Cancelling.";
+    let painted: String = console::style(message).yellow().to_string();
     response_msg(painted, true);
 }
 
@@ -58,15 +57,14 @@ pub fn custom_cancel<T>(added_message: T)
 where
     T: Into<String>,
 {
-    let message = format!("Cancelling. {}", added_message.into());
-
-    let painted = Colour::Yellow.paint(message).to_string();
+    let message: String = format!("Cancelling. {}", added_message.into());
+    let painted: String = console::style(message).yellow().bright().to_string();
     response_msg(painted, true);
 }
 
 pub fn success() {
-    let message = "Success!";
-    let painted = Colour::Green.paint(message).to_string();
+    let message: &str = "Success!";
+    let painted: String = console::style(message).green().bright().to_string();
     response_msg(painted, true);
 }
 
@@ -74,18 +72,17 @@ pub fn custom_success<T>(added_message: T)
 where
     T: Into<String>,
 {
-    let message = format!("Success! {}", added_message.into());
-
-    let painted = Colour::Green.paint(message).to_string();
+    let message: String = format!("Success! {}", added_message.into());
+    let painted: String = console::style(message).green().bright().to_string();
     response_msg(painted, true);
 }
 
-pub fn failure<T>(message: T)
+pub fn failure<T>(added_message: T)
 where
     T: Into<String>,
 {
-    let text = format!("Failure: {}", message.into());
-    let painted = Colour::Red.paint(text).to_string();
+    let message: String = format!("Failure: {}", added_message.into());
+    let painted: String = console::style(message).red().bright().to_string();
     response_msg(painted, true);
 }
 
