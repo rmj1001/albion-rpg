@@ -1,5 +1,7 @@
 use std::{num::ParseIntError, str::FromStr};
 
+use rand::Rng;
+
 use super::{input::prompt_arrow, messages};
 
 pub enum Operation<T> {
@@ -71,4 +73,8 @@ pub fn usize_calculator() -> Operation<usize> {
 
 pub fn isize_calculator() -> Operation<isize> {
     generic_calculator::<isize>()
+}
+
+pub fn random_num(min: usize, max: usize) -> usize {
+    rand::thread_rng().gen_range(min..max)
 }
