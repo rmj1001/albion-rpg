@@ -1,5 +1,8 @@
 use crate::{
-    lib::tui::{page_header, press_enter_to_continue, HeaderSubtext},
+    lib::{
+        messages::failure,
+        tui::{self, page_header, HeaderSubtext},
+    },
     user::profile::UserProfile,
 };
 
@@ -7,8 +10,10 @@ use crate::{
 pub fn main(user: &mut UserProfile) {
     page_header("Wandering the Realm", HeaderSubtext::None);
 
-    println!("This is not yet implemented.");
-    press_enter_to_continue();
+    println!("You are wandering the realm...");
+    tui::sleep(3);
+
+    failure("This is not yet implemented.");
 
     crate::menus::game_menu::main(user);
 }
