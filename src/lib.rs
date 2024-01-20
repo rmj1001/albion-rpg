@@ -61,6 +61,6 @@ pub mod menus {
 pub mod combat {
 
     pub mod battle;
-    // pub mod enemy;
+    pub mod enemy;
     pub mod inventory;
 }
