@@ -2,7 +2,8 @@ use crate::{
     lib::{
         crypt,
         input::{self, prompt_colon},
-        tui::{self, page_header, HeaderSubtext},
+        messages::{failure, success},
+        tui::{page_header, HeaderSubtext},
     },
     user::profile::UserProfile,
 };
@@ -15,8 +16,7 @@ pub fn main() {
     let found_profile = UserProfile::retrieve(&username);
 
     if found_profile.is_ok() {
-        println!("\nThat profile already exists.");
-        tui::press_enter_to_continue();
+        failure(format!("Profile '{}' already exists.", username));
         crate::menus::accounts::main();
     }
 
@@ -24,8 +24,7 @@ pub fn main() {
     let confirm_pass: String = input::password(true);
 
     if password != confirm_pass {
-        println!("\nPasswords do not match.");
-        tui::press_enter_to_continue();
+        failure("Passwords do not match.");
         crate::menus::accounts::main();
     }
 
@@ -34,7 +33,6 @@ pub fn main() {
     let profile = UserProfile::from(&username, &password_hash);
 
     profile.save();
-    println!("\nRegistration successful.");
-    tui::press_enter_to_continue();
+    success();
     crate::menus::accounts::main();
 }

@@ -1,8 +1,11 @@
-use crate::lib::{
-    crypt,
-    input::*,
-    messages::*,
-    tui::{self, page_header},
+use crate::{
+    lib::{
+        crypt,
+        input::*,
+        messages::*,
+        tui::{self, page_header},
+    },
+    user::settings::Settings,
 };
 
 use crate::user::profile::UserProfile;
@@ -13,7 +16,7 @@ fn get_password(profile: &UserProfile) -> bool {
         crypt::verify_hash(input_password.clone(), profile.settings.password.clone());
 
     if !verified_password {
-        println!("\nIncorrect password.");
+        failure("Incorrect password.");
         return false;
     }
 
@@ -21,8 +24,7 @@ fn get_password(profile: &UserProfile) -> bool {
 }
 
 fn profile_remains_locked() {
-    println!("\nProfile will remain locked.");
-    tui::press_enter_to_continue();
+    custom_cancel("Profile will remain locked.");
     crate::menus::accounts::main();
 }
 
@@ -41,8 +43,8 @@ pub fn main() {
 
                 if unlock_profile {
                     if get_password(&profile) {
-                        profile.settings.unlock(None);
-                        println!("\nProfile unlocked. Proceed with login.\n");
+                        Settings::unlock(&mut profile);
+                        custom_success("Profile unlocked.");
                     } else {
                         profile_remains_locked()
                     }
@@ -53,19 +55,16 @@ pub fn main() {
             }
 
             if !get_password(&profile) {
-                tui::press_enter_to_continue();
                 crate::menus::accounts::main();
             }
 
-            println!("\nLogin successful.");
-            tui::press_enter_to_continue();
+            success();
 
             crate::menus::game_menu::main(&mut profile);
         }
 
         Err(message) => {
-            println!("\n{}", message);
-            tui::press_enter_to_continue();
+            failure(message);
             crate::menus::accounts::main();
         }
     }

@@ -1,8 +1,11 @@
-use crate::lib::{
-    crypt,
-    input::{confirm, password, prompt_colon, select_from_str_array},
-    messages::*,
-    tui::{self, page_header, HeaderSubtext},
+use crate::{
+    lib::{
+        crypt,
+        input::{confirm, password, prompt_colon, select_from_str_array},
+        messages::*,
+        tui::{page_header, HeaderSubtext},
+    },
+    user::settings::Settings,
 };
 
 use crate::user::profile::UserProfile;
@@ -36,24 +39,21 @@ fn change_username(user: &mut UserProfile) {
     let new_username = prompt_colon("New Username");
 
     if new_username == user.settings.username {
-        println!("\nThis is your current username.");
-        tui::press_enter_to_continue();
+        failure("This is your current username.");
         main(user);
     }
 
     let confirm_username = prompt_colon("Confirm Username");
 
     if new_username != confirm_username {
-        println!("\nUsernames do not match.");
-        tui::press_enter_to_continue();
+        failure("Usernames do not match");
         main(user);
     }
 
-    user.settings.change_username(None, new_username);
+    Settings::change_username(user, new_username);
 
     page_header("Profile Settings", HeaderSubtext::None);
-    println!("Successfully changed username.");
-    tui::press_enter_to_continue();
+    custom_success("Username changed.");
 
     main(user);
 }
@@ -68,24 +68,21 @@ fn change_password(user: &mut UserProfile) {
         crypt::verify_hash(new_password.clone(), user.settings.password.clone());
 
     if new_pass_is_old_pass {
-        println!("\nThis is your current password.");
-        tui::press_enter_to_continue();
+        failure("This is your current password.");
         main(user);
     }
 
     let confirm_password = password(true);
 
     if new_password != confirm_password {
-        println!("\nPasswords do not match.");
-        tui::press_enter_to_continue();
+        failure("Passwords do not match.");
         main(user);
     }
 
-    user.settings.change_password(None, new_password);
+    Settings::change_password(user, new_password);
 
     page_header("Profile Settings", HeaderSubtext::None);
-    println!("Successfully changed password.");
-    tui::press_enter_to_continue();
+    custom_success("Password changed.");
 
     main(user);
 }
@@ -98,11 +95,10 @@ fn lock_profile(user: &mut UserProfile) {
         main(user);
     }
 
-    user.settings.lock(None);
+    Settings::lock(user);
 
     page_header("Profile Settings", HeaderSubtext::None);
-    println!("Profile sucessfully locked.");
-    tui::press_enter_to_continue();
+    custom_success("Profile locked.");
 
     crate::menus::accounts::main();
 }
@@ -118,8 +114,7 @@ fn delete_profile(user: &mut UserProfile) {
     user.delete();
 
     page_header("Profile Settings", HeaderSubtext::None);
-    println!("Profile sucessfully deleted.");
-    tui::press_enter_to_continue();
+    custom_success("Profile deleted.");
 
     crate::menus::accounts::main();
 }

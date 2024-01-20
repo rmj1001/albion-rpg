@@ -60,8 +60,7 @@ fn delete_users(user: &mut UserProfile) {
             ));
 
             if !delete_profile {
-                println!("\nAborting.");
-                press_enter_to_continue();
+                cancelling();
                 main(user);
             }
 
@@ -69,8 +68,7 @@ fn delete_users(user: &mut UserProfile) {
                 UserProfile::delete_from_username(&user.settings.username);
 
                 page_header("Developer Mode - User Manager", HeaderSubtext::None);
-                println!("\nCurrent profile successfully deleted. Logging out.");
-                tui::press_enter_to_continue();
+                custom_success("Current profile deleted. Logging out.");
 
                 crate::menus::accounts::main();
             }
@@ -78,8 +76,7 @@ fn delete_users(user: &mut UserProfile) {
             UserProfile::delete_from_username(profile_string);
 
             page_header("Developer Mode - User Manager", HeaderSubtext::None);
-            println!("\nProfile '{}' successfully deleted.", profile_string);
-            tui::press_enter_to_continue();
+            custom_success(format!("Profile '{}' deleted.", profile_string));
 
             main(user);
         }
@@ -125,9 +122,7 @@ fn view_user(user: &mut UserProfile) {
                     main(user);
                 }
                 Err(message) => {
-                    println!("\n{}", message);
-                    press_enter_to_continue();
-
+                    failure(message);
                     main(user);
                 }
             }

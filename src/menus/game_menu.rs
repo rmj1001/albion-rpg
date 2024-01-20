@@ -1,7 +1,11 @@
-use crate::lib::{
-    input::prompt_arrow,
-    messages, terminal,
-    tui::{self, page_header, press_enter_to_continue, HeaderSubtext},
+use crate::{
+    lib::{
+        input::prompt_arrow,
+        messages::{self, custom_success},
+        terminal,
+        tui::{self, page_header, HeaderSubtext},
+    },
+    user::settings::Settings,
 };
 
 use crate::user::profile::UserProfile;
@@ -79,10 +83,10 @@ pub fn main(user: &mut UserProfile) {
             if !user.settings.developer {
                 page_header("Developer Mode", HeaderSubtext::None);
                 user.achievements.hacked_the_game = true;
-                user.settings.set_developer(None, true);
+                Settings::set_developer(user, true);
 
-                println!("\nDeveloper mode enabled.");
-                press_enter_to_continue();
+                custom_success("Developer mode enabled.");
+
                 main(user);
             } else {
                 super::devmode::d1_developer_menu::disable_developer_mode(user);

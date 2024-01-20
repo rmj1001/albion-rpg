@@ -1,7 +1,10 @@
-use crate::lib::{
-    input::{confirm, select_from_str_array},
-    messages::*,
-    tui::{self, page_header, press_enter_to_continue, HeaderSubtext},
+use crate::{
+    lib::{
+        input::{confirm, select_from_str_array},
+        messages::*,
+        tui::{page_header, HeaderSubtext},
+    },
+    user::settings::Settings,
 };
 
 use crate::user::profile::UserProfile;
@@ -40,14 +43,12 @@ pub fn disable_developer_mode(user: &mut UserProfile) {
     let disable_dev_mode = confirm("Are you sure you want to disable developer mode?");
 
     if !disable_dev_mode {
-        println!("\nAborting.");
-        press_enter_to_continue();
+        cancelling();
         main(user);
     }
 
-    user.settings.set_developer(None, false);
-    println!("\nDeveloper mode disabled.");
-    tui::press_enter_to_continue();
+    Settings::set_developer(user, false);
+    custom_success("Developer mode disabled.");
 
     crate::menus::game_menu::main(user);
 }

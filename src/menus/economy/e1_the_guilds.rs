@@ -4,8 +4,8 @@ use crate::lib::{
     messages::*,
 };
 
-use crate::lib::tui::{self, page_header};
-use crate::lib::tui::{press_enter_to_continue, HeaderSubtext};
+use crate::lib::tui::page_header;
+use crate::lib::tui::HeaderSubtext;
 use crate::user::{
     guilds::{GuildMemberships, PricedGuilds},
     inventory::{GuildItemNames, Item},
@@ -113,11 +113,11 @@ fn check_membership(user: &mut UserProfile, job: PricedGuilds) {
     }
 
     if user.bank.wallet < guild.member_price {
-        println!(
+        failure(format!(
             "This guild requires a membership, which you are too poor to purchase. (Cost: {} gold)",
             guild.member_price
-        );
-        press_enter_to_continue();
+        ));
+
         return main(user);
     }
 
@@ -127,12 +127,13 @@ fn check_membership(user: &mut UserProfile, job: PricedGuilds) {
     ));
 
     if permission_to_purchase {
-        GuildMemberships::purchase(user, job);
-        press_enter_to_continue();
+        if let Err(message) = GuildMemberships::purchase(user, job) {
+            failure(message);
+        }
+
         main(user);
     } else {
-        println!("\nYou cannot work in this guild without a membership.");
-        press_enter_to_continue();
+        failure("You cannot work in this guild without a membership.");
         main(user);
     }
 }
@@ -273,7 +274,9 @@ fn job(
 }
 
 fn too_low_items(user: &mut UserProfile, item_name: &str) {
-    println!("\nYou do not have enough {} to work with.", item_name);
-    tui::press_enter_to_continue();
+    failure(format!(
+        "You do not have enough {} to work with.",
+        item_name
+    ));
     main(user);
 }

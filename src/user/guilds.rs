@@ -26,7 +26,7 @@ pub enum PricedGuilds {
 }
 
 impl GuildMemberships {
-    pub fn purchase(user: &mut UserProfile, guild_flag: PricedGuilds) {
+    pub fn purchase<'a>(user: &mut UserProfile, guild_flag: PricedGuilds) -> Result<(), &'a str> {
         let guild: &mut Guild = match guild_flag {
             PricedGuilds::Fishing => &mut user.guild_memberships.fishing,
             PricedGuilds::Cooking => &mut user.guild_memberships.cooking,
@@ -36,11 +36,11 @@ impl GuildMemberships {
         };
 
         if user.bank.wallet < guild.member_price {
-            println!("You do not have enough gold.");
-            return;
+            return Err("You do not have enough gold.");
         }
 
         user.bank.wallet -= guild.member_price;
         guild.member = true;
+        Ok(())
     }
 }

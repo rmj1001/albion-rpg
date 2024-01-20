@@ -1,6 +1,7 @@
 use crate::lib::tui::press_enter_to_continue;
+use ansi_term::Colour;
 
-fn response_msg<T>(message: T, pause: bool)
+pub fn response_msg<T>(message: T, pause: bool)
 where
     T: Into<String>,
 {
@@ -30,22 +31,62 @@ pub fn invalid_input(input: Option<&str>, expected: Option<&str>, pause: bool) {
         message.push_str(&format!(" Expected '{}'.", text));
     }
 
-    response_msg(message, pause);
+    response_msg(Colour::Red.paint(message).to_string(), pause);
+}
+
+pub fn warn<T>(optional_message: Option<T>)
+where
+    T: Into<String>,
+{
+    let mut message = "Warning: ".to_string();
+
+    if let Some(added_text) = optional_message {
+        message.push_str(&added_text.into());
+    }
+
+    let painted = Colour::Yellow.paint(message).to_string();
+    response_msg(painted, true);
 }
 
 pub fn cancelling() {
-    response_msg("Cancelling.", true);
+    let message = "Cancelling.";
+    let painted = Colour::Yellow.paint(message).to_string();
+    response_msg(painted, true);
+}
+
+pub fn custom_cancel<T>(added_message: T)
+where
+    T: Into<String>,
+{
+    let message = format!("Cancelling. {}", added_message.into());
+
+    let painted = Colour::Yellow.paint(message).to_string();
+    response_msg(painted, true);
 }
 
 pub fn success() {
-    response_msg("Success!", true);
+    let message = "Success!";
+    let painted = Colour::Green.paint(message).to_string();
+    response_msg(painted, true);
+}
+
+pub fn custom_success<T>(added_message: T)
+where
+    T: Into<String>,
+{
+    let message = format!("Success! {}", added_message.into());
+
+    let painted = Colour::Green.paint(message).to_string();
+    response_msg(painted, true);
 }
 
 pub fn failure<T>(message: T)
 where
     T: Into<String>,
 {
-    response_msg(format!("Failure: {}", message.into()), true);
+    let text = format!("Failure: {}", message.into());
+    let painted = Colour::Red.paint(text).to_string();
+    response_msg(painted, true);
 }
 
 /// Standard panic message for dialogue selector
