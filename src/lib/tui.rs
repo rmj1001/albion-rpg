@@ -91,10 +91,10 @@ where
     header_subtext(instructions);
 }
 
-pub enum HeaderSubtext<'a> {
+pub enum HeaderSubtext {
     EnterCode,
     Keyboard,
-    Other(&'a str),
+    Other(&'static str),
     None,
 }
 
@@ -132,7 +132,7 @@ pub fn print_table(strings: Vec<String>) {
     println!("{}\n", table);
 }
 
-pub fn pretty_bool<'a>(flag: bool) -> &'a str {
+pub fn pretty_bool(flag: bool) -> &'static str {
     match flag {
         true => "Yes",
         false => "No",

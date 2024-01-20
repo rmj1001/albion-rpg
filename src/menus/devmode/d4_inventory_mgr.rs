@@ -146,7 +146,7 @@ fn items_manager(user: &mut UserProfile) {
         }
     }
 
-    fn get_quantity<'a>() -> Result<usize, &'a str> {
+    fn get_quantity() -> Result<usize, &'static str> {
         input_generic::<usize>("Quantity:")
     }
 }

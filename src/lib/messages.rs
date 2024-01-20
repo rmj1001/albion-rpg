@@ -11,13 +11,6 @@ where
     }
 }
 
-/// input: The invalid input
-///
-/// Parameters:
-///
-/// - expected: The expected input
-///
-/// - pause: Ask the user to press enter to continue?
 pub fn invalid_input(input: Option<&str>, expected: Option<&str>, pause: bool) {
     let mut message = String::new();
 

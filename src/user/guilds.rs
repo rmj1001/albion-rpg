@@ -26,7 +26,7 @@ pub enum PricedGuilds {
 }
 
 impl GuildMemberships {
-    pub fn purchase<'a>(user: &mut UserProfile, guild_flag: PricedGuilds) -> Result<(), &'a str> {
+    pub fn purchase(user: &mut UserProfile, guild_flag: PricedGuilds) -> Result<(), &'static str> {
         let guild: &mut Guild = match guild_flag {
             PricedGuilds::Fishing => &mut user.guild_memberships.fishing,
             PricedGuilds::Cooking => &mut user.guild_memberships.cooking,

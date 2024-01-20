@@ -127,6 +127,6 @@ fn get_item(user: &mut UserProfile) -> InventoryItemFlag {
     }
 }
 
-fn get_quantity<'a>() -> Result<usize, &'a str> {
+fn get_quantity() -> Result<usize, &'static str> {
     input_generic::<usize>("Quantity:")
 }

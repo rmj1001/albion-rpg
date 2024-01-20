@@ -140,7 +140,7 @@ pub fn prompt_input_completion(prompt: &str, completion_strings: Vec<String>) ->
     input_string
 }
 
-pub fn get_item_and_quantity<'a>(items: Vec<String>) -> Result<(String, usize), &'a str> {
+pub fn get_item_and_quantity(items: Vec<String>) -> Result<(String, usize), &'static str> {
     let item = prompt_input_completion(
         "Type the name of the item you wish to purchase",
         items.clone(),
