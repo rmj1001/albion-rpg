@@ -33,7 +33,7 @@ pub fn main(user: &mut UserProfile) {
         4 => super::d2_user_mgr::main(user),
         5 => disable_developer_mode(user),
         6 => crate::menus::game_menu::main(user),
-        _ => out_of_bounds::<String>(None),
+        _ => out_of_bounds(),
     }
 }
 
@@ -48,7 +48,7 @@ pub fn disable_developer_mode(user: &mut UserProfile) {
     }
 
     Settings::set_developer(user, false);
-    custom_success("Developer mode disabled.");
+    success_msg("Developer mode disabled.");
 
     crate::menus::game_menu::main(user);
 }

@@ -23,7 +23,7 @@ pub fn main(user: &mut UserProfile) {
         1 => weapons_manager(user),
         2 => armor_manager(user),
         3 => super::d1_developer_menu::main(user),
-        _ => out_of_bounds::<String>(None),
+        _ => out_of_bounds(),
     }
 }
 
@@ -41,7 +41,7 @@ fn items_manager(user: &mut UserProfile) {
         0 => add_item(user),
         1 => subtract_item(user),
         2 => main(user),
-        _ => out_of_bounds::<String>(None),
+        _ => out_of_bounds(),
     }
 
     pub fn add_item(user: &mut UserProfile) {
@@ -166,7 +166,7 @@ fn weapons_manager(user: &mut UserProfile) {
         0 => own_weapon(user),
         1 => disown_weapon(user),
         2 => main(user),
-        _ => out_of_bounds::<String>(None),
+        _ => out_of_bounds(),
     }
 
     pub fn own_weapon(user: &mut UserProfile) {
@@ -250,7 +250,7 @@ fn armor_manager(user: &mut UserProfile) {
         0 => own_armor(user),
         1 => disown_armor(user),
         2 => main(user),
-        _ => out_of_bounds::<String>(None),
+        _ => out_of_bounds(),
     }
 
     pub fn own_armor(user: &mut UserProfile) {

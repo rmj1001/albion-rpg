@@ -26,7 +26,7 @@ pub fn main(user: &mut UserProfile) {
         1 => delete_users(user),
         2 => view_user(user),
         3 => super::d1_developer_menu::main(user),
-        _ => out_of_bounds::<String>(None),
+        _ => out_of_bounds(),
     }
 }
 
@@ -68,7 +68,7 @@ fn delete_users(user: &mut UserProfile) {
                 UserProfile::delete_from_username(&user.settings.username);
 
                 page_header("Developer Mode - User Manager", HeaderSubtext::None);
-                custom_success("Current profile deleted. Logging out.");
+                success_msg("Current profile deleted. Logging out.");
 
                 crate::menus::accounts::main();
             }
@@ -76,12 +76,12 @@ fn delete_users(user: &mut UserProfile) {
             UserProfile::delete_from_username(profile_string);
 
             page_header("Developer Mode - User Manager", HeaderSubtext::None);
-            custom_success(format!("Profile '{}' deleted.", profile_string));
+            success_msg(format!("Profile '{}' deleted.", profile_string));
 
             main(user);
         }
 
-        None => out_of_bounds::<String>(None),
+        None => out_of_bounds(),
     }
 }
 
@@ -127,7 +127,7 @@ fn view_user(user: &mut UserProfile) {
                 }
             }
         }
-        None => out_of_bounds::<String>(None),
+        None => out_of_bounds(),
     }
 
     main(user);

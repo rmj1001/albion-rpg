@@ -30,7 +30,7 @@ pub fn main(user: &mut UserProfile) {
         2 => lock_profile(user),
         3 => delete_profile(user),
         4 => crate::menus::game_menu::main(user),
-        _ => out_of_bounds::<String>(None),
+        _ => out_of_bounds(),
     }
 }
 
@@ -53,7 +53,7 @@ fn change_username(user: &mut UserProfile) {
     Settings::change_username(user, new_username);
 
     page_header("Profile Settings", HeaderSubtext::None);
-    custom_success("Username changed.");
+    success_msg("Username changed.");
 
     main(user);
 }
@@ -82,7 +82,7 @@ fn change_password(user: &mut UserProfile) {
     Settings::change_password(user, new_password);
 
     page_header("Profile Settings", HeaderSubtext::None);
-    custom_success("Password changed.");
+    success_msg("Password changed.");
 
     main(user);
 }
@@ -98,7 +98,7 @@ fn lock_profile(user: &mut UserProfile) {
     Settings::lock(user);
 
     page_header("Profile Settings", HeaderSubtext::None);
-    custom_success("Profile locked.");
+    success_msg("Profile locked.");
 
     crate::menus::accounts::main();
 }
@@ -114,7 +114,7 @@ fn delete_profile(user: &mut UserProfile) {
     user.delete();
 
     page_header("Profile Settings", HeaderSubtext::None);
-    custom_success("Profile deleted.");
+    success_msg("Profile deleted.");
 
     crate::menus::accounts::main();
 }

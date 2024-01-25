@@ -26,7 +26,7 @@ pub fn main(user: &mut UserProfile) {
         2 => armor_inventory(user),
         3 => finances(user),
         4 => crate::menus::game_menu::main(user),
-        _ => out_of_bounds::<String>(None),
+        _ => out_of_bounds(),
     }
 }
 

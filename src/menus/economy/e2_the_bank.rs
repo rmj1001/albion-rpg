@@ -37,7 +37,7 @@ pub fn main(user: &mut UserProfile) {
         2 => account = BankAccount::Account3,
         3 => account = BankAccount::Account4,
         4 => main(user),
-        _ => out_of_bounds::<String>(None),
+        _ => out_of_bounds(),
     }
 
     let amount_result = prompt_arrow("Amount").parse::<usize>();
@@ -59,7 +59,7 @@ pub fn main(user: &mut UserProfile) {
         // Withdrawal
         1 => bank_result = Bank::withdraw(user, account, amount, false),
         2 => main(user),
-        _ => out_of_bounds::<String>(None),
+        _ => out_of_bounds(),
     }
 
     match bank_result {
