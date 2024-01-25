@@ -1,7 +1,7 @@
 use crate::{
     lib::{
         input::prompt_arrow,
-        messages::{self, custom_success},
+        messages::{self, success_msg},
         terminal,
         tui::{self, page_header, HeaderSubtext},
     },
@@ -85,7 +85,7 @@ pub fn main(user: &mut UserProfile) {
                 user.achievements.hacked_the_game = true;
                 Settings::set_developer(user, true);
 
-                custom_success("Developer mode enabled.");
+                success_msg("Developer mode enabled.");
 
                 main(user);
             } else {

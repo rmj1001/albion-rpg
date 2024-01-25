@@ -24,7 +24,7 @@ fn get_password(profile: &UserProfile) -> bool {
 }
 
 fn profile_remains_locked() {
-    custom_cancel("Profile will remain locked.");
+    cancel_msg("Profile will remain locked.");
     crate::menus::accounts::main();
 }
 
@@ -44,7 +44,7 @@ pub fn main() {
                 if unlock_profile {
                     if get_password(&profile) {
                         Settings::unlock(&mut profile);
-                        custom_success("Profile unlocked.");
+                        success_msg("Profile unlocked.");
                     } else {
                         profile_remains_locked()
                     }
