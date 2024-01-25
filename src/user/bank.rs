@@ -31,6 +31,7 @@ impl Bank {
         }
     }
 
+    /// Prints Bank information as a table using CSV formatting.
     pub fn print_table(&self) {
         print_table(vec![
             "Account,Balance".to_string(),
