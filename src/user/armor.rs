@@ -1,7 +1,7 @@
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 
-use crate::lib::tui::{pretty_bool, print_table};
+use crate::misc::tui::{pretty_bool, print_table};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Armor {
@@ -143,10 +143,7 @@ impl ArmorInventory {
         }
 
         if deduct_wallet && item.price > *wallet {
-            return Err(format!(
-                "You do not have enough gold to purchase {}.",
-                item.name
-            ));
+            return Err(format!("You do not have enough gold to purchase {}.", item.name));
         }
 
         if deduct_wallet {
@@ -158,12 +155,7 @@ impl ArmorInventory {
         Ok(())
     }
 
-    pub fn sell(
-        &mut self,
-        wallet: &mut usize,
-        item_flag: ArmorItemFlag,
-        add_to_wallet: bool,
-    ) -> Result<(), &str> {
+    pub fn sell(&mut self, wallet: &mut usize, item_flag: ArmorItemFlag, add_to_wallet: bool) -> Result<(), &str> {
         let item_option = self.retrieve_item(item_flag);
 
         if item_option.is_none() {

@@ -19,8 +19,7 @@ pub fn generic_calculator<T>() -> Operation<T>
 where
     T: FromStr<Err = std::num::ParseIntError>,
 {
-    let mut calculation =
-        prompt_arrow("Enter operation (Ex. +1, -1, *1, /1) or 'cancel' to go back").to_lowercase();
+    let mut calculation = prompt_arrow("Enter operation (Ex. +1, -1, *1, /1) or 'cancel' to go back").to_lowercase();
 
     match &calculation[..] {
         "cancel" => return Operation::Cancel,

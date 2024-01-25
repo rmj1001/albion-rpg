@@ -1,4 +1,4 @@
-use crate::lib::{
+use crate::misc::{
     input::{prompt_arrow, select_from_str_array},
     messages::{self, *},
     tui::{page_header, HeaderSubtext},
@@ -21,13 +21,7 @@ pub fn main(user: &mut UserProfile) {
     }
 
     let account_choice = select_from_str_array(
-        &[
-            "Account 1",
-            "Account 2",
-            "Account 3",
-            "Account 4",
-            "NAV: Cancel",
-        ],
+        &["Account 1", "Account 2", "Account 3", "Account 4", "NAV: Cancel"],
         None,
     );
 

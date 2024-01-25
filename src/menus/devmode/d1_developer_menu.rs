@@ -1,5 +1,5 @@
 use crate::{
-    lib::{
+    misc::{
         input::{confirm, select_from_str_array},
         messages::*,
         tui::{page_header, HeaderSubtext},

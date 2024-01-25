@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::lib::{math::Operation, messages::*, tui::print_table};
+use crate::misc::{math::Operation, messages::*, tui::print_table};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Item {
@@ -180,11 +180,7 @@ impl MundaneInventory {
         }
     }
 
-    pub fn arithmetic(
-        &mut self,
-        item_flag: InventoryItemFlag,
-        operation: Operation<usize>,
-    ) -> Result<(), &str> {
+    pub fn arithmetic(&mut self, item_flag: InventoryItemFlag, operation: Operation<usize>) -> Result<(), &str> {
         let item_result = self.retrieve_item(&item_flag);
 
         if item_result.is_none() {

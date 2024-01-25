@@ -1,5 +1,5 @@
 use crate::{
-    lib::{
+    misc::{
         input::{select_from_str_array, select_from_vector},
         messages::*,
         tui::page_header,
@@ -8,7 +8,7 @@ use crate::{
 };
 
 pub fn main(user: &mut UserProfile) {
-    page_header("Armor Shop", crate::lib::tui::HeaderSubtext::None);
+    page_header("Armor Shop", crate::misc::tui::HeaderSubtext::None);
 
     println!("Gold: {}\n", user.bank.wallet);
     user.armor.print_table();

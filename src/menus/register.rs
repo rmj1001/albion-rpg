@@ -1,5 +1,5 @@
 use crate::{
-    lib::{
+    misc::{
         crypt,
         input::{self, prompt_colon},
         messages::{failure, success},

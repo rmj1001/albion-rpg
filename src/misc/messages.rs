@@ -1,4 +1,4 @@
-use crate::lib::tui::press_enter_to_continue;
+use crate::misc::tui::press_enter_to_continue;
 
 pub enum MessageLevel {
     Success,

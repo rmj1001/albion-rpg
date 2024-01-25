@@ -1,6 +1,6 @@
 #![allow(unused_assignments, clippy::new_without_default)]
 
-pub mod lib {
+pub mod misc {
     pub mod config_encoding;
     pub mod crypt;
     pub mod files;

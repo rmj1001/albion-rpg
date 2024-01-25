@@ -5,10 +5,7 @@ pub fn deserialize_user(data: String) -> Result<UserProfile, String> {
 
     match user_result {
         Ok(profile) => Ok(profile),
-        Err(message) => Err(format!(
-            "This profile is corrupted and will be deleted: {}",
-            message
-        )),
+        Err(message) => Err(format!("This profile is corrupted and will be deleted: {}", message)),
     }
 }
 

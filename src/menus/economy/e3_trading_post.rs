@@ -1,5 +1,5 @@
 use crate::{
-    lib::{
+    misc::{
         input::{input_generic, select_from_str_array, select_from_vector},
         messages::*,
         tui::page_header,
@@ -8,7 +8,7 @@ use crate::{
 };
 
 pub fn main(user: &mut UserProfile) {
-    page_header("Trading Post", crate::lib::tui::HeaderSubtext::None);
+    page_header("Trading Post", crate::misc::tui::HeaderSubtext::None);
 
     user.inventory.print_table();
     println!("Gold: {}\n", user.bank.wallet);
@@ -67,9 +67,7 @@ pub fn sell(user: &mut UserProfile) {
         }
     }
 
-    let result = user
-        .inventory
-        .sell(&mut user.bank.wallet, &item_flag, quantity, true);
+    let result = user.inventory.sell(&mut user.bank.wallet, &item_flag, quantity, true);
 
     match result {
         Ok(_) => {

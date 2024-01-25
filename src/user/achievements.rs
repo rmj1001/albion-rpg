@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::lib::tui::{pretty_bool, print_table};
+use crate::misc::tui::{pretty_bool, print_table};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Achievements {
@@ -19,14 +19,8 @@ impl Achievements {
         print_table(vec![
             "Achievement,Data".to_string(),
             format!("Monsters Killed,{}", self.monsters_killed),
-            format!(
-                "Stronghold Defeated?,{}",
-                pretty_bool(self.stronghold_defeated)
-            ),
-            format!(
-                "Earned One Million Gold?,{}",
-                pretty_bool(self.earned_million_gold)
-            ),
+            format!("Stronghold Defeated?,{}", pretty_bool(self.stronghold_defeated)),
+            format!("Earned One Million Gold?,{}", pretty_bool(self.earned_million_gold)),
             format!("Passed level 100?,{}", pretty_bool(self.level_100_reached)),
             format!("Hacked the Game?,{}", pretty_bool(self.hacked_the_game)),
         ])

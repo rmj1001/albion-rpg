@@ -2,7 +2,7 @@ use std::{io::Write, str::FromStr};
 
 use dialoguer::Confirm;
 
-use crate::lib::{messages::*, tui::press_enter_to_continue};
+use crate::misc::{messages::*, tui::press_enter_to_continue};
 
 pub fn select_from_str_array(options: &[&str], optional_prompt: Option<&str>) -> usize {
     if let Some(prompt_text) = optional_prompt {
@@ -92,17 +92,15 @@ pub fn confirm(prompt: &str) -> bool {
 /// - confirm (bool) -> False: "Password: ", True: "Confirm Password:"
 pub fn password(confirm: bool) -> String {
     let dialoguer_result = match confirm {
-        true => dialoguer::Password::new()
-            .with_prompt("Confirm Password")
-            .interact(),
-        false => dialoguer::Password::new()
-            .with_prompt("Password")
-            .interact(),
+        true => dialoguer::Password::new().with_prompt("Confirm Password").interact(),
+        false => dialoguer::Password::new().with_prompt("Password").interact(),
     };
 
     match dialoguer_result {
         Ok(text) => text,
-        Err(error) => panic!("Failed to read password with dialogue: {}", error),
+        Err(error) => {
+            panic!("Failed to read password with dialogue: {}", error)
+        }
     }
 }
 
@@ -141,10 +139,7 @@ pub fn prompt_input_completion(prompt: &str, completion_strings: Vec<String>) ->
 }
 
 pub fn get_item_and_quantity(items: Vec<String>) -> Result<(String, usize), &'static str> {
-    let item = prompt_input_completion(
-        "Type the name of the item you wish to purchase",
-        items.clone(),
-    );
+    let item = prompt_input_completion("Type the name of the item you wish to purchase", items.clone());
 
     if !items.contains(&item.to_lowercase()) {
         invalid_input(Some(&item), None, true);

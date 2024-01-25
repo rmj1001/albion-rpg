@@ -1,4 +1,4 @@
-use crate::lib::{math::Operation, messages::*, tui::print_table};
+use crate::misc::{math::Operation, messages::*, tui::print_table};
 
 use super::profile::*;
 use serde::{Deserialize, Serialize};
@@ -43,11 +43,7 @@ impl Bank {
         ])
     }
 
-    pub fn arithmetic(
-        &mut self,
-        account_flag: &BankAccount,
-        operation: Operation<usize>,
-    ) -> Result<(), &str> {
+    pub fn arithmetic(&mut self, account_flag: &BankAccount, operation: Operation<usize>) -> Result<(), &str> {
         let account = match account_flag {
             BankAccount::Account1 => &mut self.account1,
             BankAccount::Account2 => &mut self.account2,
@@ -120,9 +116,7 @@ impl Bank {
             user.bank.wallet += amount;
         }
 
-        let withdraw_result = user
-            .bank
-            .arithmetic(&account_flag, Operation::Subtract(amount));
+        let withdraw_result = user.bank.arithmetic(&account_flag, Operation::Subtract(amount));
 
         withdraw_result.to_owned()
     }

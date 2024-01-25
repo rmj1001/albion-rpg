@@ -1,11 +1,11 @@
 #![allow(unused_assignments, unused_variables, unused_mut)]
-use crate::lib::{
+use crate::misc::{
     input::{confirm, select_from_str_array},
     messages::*,
 };
 
-use crate::lib::tui::page_header;
-use crate::lib::tui::HeaderSubtext;
+use crate::misc::tui::page_header;
+use crate::misc::tui::HeaderSubtext;
 use crate::user::{
     guilds::{GuildMemberships, PricedGuilds},
     inventory::{GuildItemNames, Item},
@@ -86,14 +86,7 @@ pub fn main(user: &mut UserProfile) {
             &Some(GuildItemNames::Ingots),
             &Some(GuildItemNames::Ore),
         ),
-        5 => job(
-            user,
-            "Thieving".to_string(),
-            XPType::Thieving,
-            true,
-            &None,
-            &None,
-        ),
+        5 => job(user, "Thieving".to_string(), XPType::Thieving, true, &None, &None),
         6 => crate::menus::game_menu::main(user),
         _ => out_of_bounds(),
     }
@@ -165,10 +158,18 @@ fn job(
             GuildItemNames::CookedFish => {
                 println!("Cooked Fish: {}", user.inventory.food.quantity)
             }
-            GuildItemNames::Fish => println!("Fish: {}", user.inventory.fish.quantity),
-            GuildItemNames::Wood => println!("Wood: {}", user.inventory.wood.quantity),
-            GuildItemNames::Ingots => println!("Ingots: {}", user.inventory.ingots.quantity),
-            GuildItemNames::Ore => println!("Ores: {}", user.inventory.ore.quantity),
+            GuildItemNames::Fish => {
+                println!("Fish: {}", user.inventory.fish.quantity)
+            }
+            GuildItemNames::Wood => {
+                println!("Wood: {}", user.inventory.wood.quantity)
+            }
+            GuildItemNames::Ingots => {
+                println!("Ingots: {}", user.inventory.ingots.quantity)
+            }
+            GuildItemNames::Ore => {
+                println!("Ores: {}", user.inventory.ore.quantity)
+            }
         },
         None => {}
     }
@@ -178,10 +179,18 @@ fn job(
             GuildItemNames::CookedFish => {
                 println!("Cooked Fish: {}", user.inventory.food.quantity)
             }
-            GuildItemNames::Fish => println!("Fish: {}", user.inventory.fish.quantity),
-            GuildItemNames::Wood => println!("Wood: {}", user.inventory.wood.quantity),
-            GuildItemNames::Ingots => println!("Ingots: {}", user.inventory.ingots.quantity),
-            GuildItemNames::Ore => println!("Ores: {}", user.inventory.ore.quantity),
+            GuildItemNames::Fish => {
+                println!("Fish: {}", user.inventory.fish.quantity)
+            }
+            GuildItemNames::Wood => {
+                println!("Wood: {}", user.inventory.wood.quantity)
+            }
+            GuildItemNames::Ingots => {
+                println!("Ingots: {}", user.inventory.ingots.quantity)
+            }
+            GuildItemNames::Ore => {
+                println!("Ores: {}", user.inventory.ore.quantity)
+            }
         },
         None => {}
     }
@@ -197,14 +206,7 @@ fn job(
             if use_gold {
                 user.bank.wallet += rand::thread_rng().gen_range(0..2);
 
-                job(
-                    user,
-                    job_name.clone(),
-                    xp_type,
-                    use_gold,
-                    increase_item,
-                    decrease_item,
-                );
+                job(user, job_name.clone(), xp_type, use_gold, increase_item, decrease_item);
             }
 
             match increase_item {
@@ -263,20 +265,10 @@ fn job(
         _ => out_of_bounds(),
     }
 
-    job(
-        user,
-        job_name.clone(),
-        xp_type,
-        use_gold,
-        increase_item,
-        decrease_item,
-    );
+    job(user, job_name.clone(), xp_type, use_gold, increase_item, decrease_item);
 }
 
 fn too_low_items(user: &mut UserProfile, item_name: &str) {
-    failure(format!(
-        "You do not have enough {} to work with.",
-        item_name
-    ));
+    failure(format!("You do not have enough {} to work with.", item_name));
     main(user);
 }

@@ -1,5 +1,5 @@
 use crate::{
-    lib::{
+    misc::{
         input::prompt_arrow,
         messages::{self, success_msg},
         terminal,

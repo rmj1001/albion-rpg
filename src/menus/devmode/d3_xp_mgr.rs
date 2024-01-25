@@ -1,5 +1,5 @@
 use crate::{
-    lib::{
+    misc::{
         input::select_from_str_array,
         math::{generic_calculator, Operation},
         messages::*,

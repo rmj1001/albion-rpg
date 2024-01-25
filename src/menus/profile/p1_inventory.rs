@@ -1,4 +1,4 @@
-use crate::lib::{
+use crate::misc::{
     input::select_from_str_array,
     messages::*,
     tui::{page_header, press_enter_to_continue, HeaderSubtext},
@@ -10,13 +10,7 @@ pub fn main(user: &mut UserProfile) {
     page_header("Inventory Viewer", HeaderSubtext::None);
 
     let menu_option = select_from_str_array(
-        &[
-            "1. Items",
-            "2. Weapons",
-            "3. Armor",
-            "4. Finances",
-            "NAV: Go Back",
-        ],
+        &["1. Items", "2. Weapons", "3. Armor", "4. Finances", "NAV: Go Back"],
         None,
     );
 

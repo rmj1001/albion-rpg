@@ -1,7 +1,7 @@
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 
-use crate::lib::{math::Operation, messages::*, tui::print_table};
+use crate::misc::{math::Operation, messages::*, tui::print_table};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct XP {
@@ -32,22 +32,10 @@ impl XP {
             format!("Combat,{},{}", self.combat, self::XP::level(self.combat)),
             format!("Fishing,{},{}", self.fishing, self::XP::level(self.fishing)),
             format!("Cooking,{},{}", self.cooking, self::XP::level(self.cooking)),
-            format!(
-                "Woodcutting,{},{}",
-                self.woodcutting,
-                self::XP::level(self.woodcutting)
-            ),
+            format!("Woodcutting,{},{}", self.woodcutting, self::XP::level(self.woodcutting)),
             format!("Mining,{},{}", self.mining, self::XP::level(self.mining)),
-            format!(
-                "Smithing,{},{}",
-                self.smithing,
-                self::XP::level(self.smithing)
-            ),
-            format!(
-                "Thieving,{},{}",
-                self.thieving,
-                self::XP::level(self.thieving)
-            ),
+            format!("Smithing,{},{}", self.smithing, self::XP::level(self.smithing)),
+            format!("Thieving,{},{}", self.thieving, self::XP::level(self.thieving)),
             format!("Profile Total,{},{}", self.profile(), self.profile_level()),
         ])
     }
@@ -57,13 +45,7 @@ impl XP {
     }
 
     pub fn profile(&self) -> usize {
-        self.combat
-            + self.fishing
-            + self.cooking
-            + self.woodcutting
-            + self.mining
-            + self.smithing
-            + self.thieving
+        self.combat + self.fishing + self.cooking + self.woodcutting + self.mining + self.smithing + self.thieving
     }
 
     pub fn profile_level(&self) -> usize {

@@ -1,5 +1,5 @@
 use crate::{
-    lib::{
+    misc::{
         crypt,
         input::*,
         messages::*,
@@ -12,8 +12,7 @@ use crate::user::profile::UserProfile;
 
 fn get_password(profile: &UserProfile) -> bool {
     let input_password: String = password(false);
-    let verified_password =
-        crypt::verify_hash(input_password.clone(), profile.settings.password.clone());
+    let verified_password = crypt::verify_hash(input_password.clone(), profile.settings.password.clone());
 
     if !verified_password {
         failure("Incorrect password.");

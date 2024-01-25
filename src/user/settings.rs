@@ -1,5 +1,5 @@
 use super::profile::UserProfile;
-use crate::lib::{crypt, files};
+use crate::misc::{crypt, files};
 use serde::{Deserialize, Serialize};
 use std::{fs, path::Path};
 

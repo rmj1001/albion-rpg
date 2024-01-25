@@ -1,22 +1,16 @@
 use crate::{
-    lib::{
+    misc::{
         input::{input_generic, select_from_str_array, select_from_vector},
         messages::*,
         tui::{page_header, HeaderSubtext},
     },
-    user::{
-        armor::ArmorItemFlag, inventory::InventoryItemFlag, profile::UserProfile,
-        weapons::WeaponItemFlag,
-    },
+    user::{armor::ArmorItemFlag, inventory::InventoryItemFlag, profile::UserProfile, weapons::WeaponItemFlag},
 };
 
 pub fn main(user: &mut UserProfile) {
     page_header("Developer Mode - Inventory Manager", HeaderSubtext::None);
 
-    let manager_option = select_from_str_array(
-        &["1. Items", "2. Weapons", "3. Armor", "NAV: Go Back"],
-        None,
-    );
+    let manager_option = select_from_str_array(&["1. Items", "2. Weapons", "3. Armor", "NAV: Go Back"], None);
 
     match manager_option {
         0 => items_manager(user),
@@ -28,10 +22,7 @@ pub fn main(user: &mut UserProfile) {
 }
 
 fn items_manager(user: &mut UserProfile) {
-    page_header(
-        "Developer Mode - Inventory Manager - Items",
-        HeaderSubtext::None,
-    );
+    page_header("Developer Mode - Inventory Manager - Items", HeaderSubtext::None);
 
     user.inventory.print_table();
 
@@ -86,9 +77,7 @@ fn items_manager(user: &mut UserProfile) {
             }
         }
 
-        let result = user
-            .inventory
-            .sell(&mut user.bank.wallet, &item_flag, quantity, false);
+        let result = user.inventory.sell(&mut user.bank.wallet, &item_flag, quantity, false);
 
         match result {
             Ok(_) => {
@@ -152,15 +141,11 @@ fn items_manager(user: &mut UserProfile) {
 }
 
 fn weapons_manager(user: &mut UserProfile) {
-    page_header(
-        "Developer Mode - Inventory Manager - Weapons",
-        HeaderSubtext::None,
-    );
+    page_header("Developer Mode - Inventory Manager - Weapons", HeaderSubtext::None);
 
     user.weapons.print_table();
 
-    let buysell =
-        select_from_str_array(&["1. Own Weapon", "2. Disown Weapon", "NAV: Go Back"], None);
+    let buysell = select_from_str_array(&["1. Own Weapon", "2. Disown Weapon", "NAV: Go Back"], None);
 
     match buysell {
         0 => own_weapon(user),
@@ -237,10 +222,7 @@ fn weapons_manager(user: &mut UserProfile) {
 }
 
 fn armor_manager(user: &mut UserProfile) {
-    page_header(
-        "Developer Mode - Inventory Manager - Armor",
-        HeaderSubtext::None,
-    );
+    page_header("Developer Mode - Inventory Manager - Armor", HeaderSubtext::None);
 
     user.armor.print_table();
 

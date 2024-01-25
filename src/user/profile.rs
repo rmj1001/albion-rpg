@@ -8,8 +8,8 @@ use super::settings::Settings;
 use super::weapons::*;
 use super::xp::*;
 
-use crate::lib::files;
-use crate::lib::files::file_path;
+use crate::misc::files;
+use crate::misc::files::file_path;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -300,7 +300,7 @@ impl UserProfile {
             Err(_) => return Err(format!("Profile '{}' does not exist.", username)),
         }
 
-        match crate::lib::config_encoding::deserialize_user(contents) {
+        match crate::misc::config_encoding::deserialize_user(contents) {
             Ok(user) => Ok(user),
             Err(message) => {
                 UserProfile::delete_from_username(username);
@@ -310,8 +310,8 @@ impl UserProfile {
     }
 
     pub fn save(&self) {
-        let serialize_result = crate::lib::config_encoding::serialize_user(self)
-            .expect("Could not convert user to config file format.");
+        let serialize_result =
+            crate::misc::config_encoding::serialize_user(self).expect("Could not convert user to config file format.");
 
         let path = files::file_path(&self.settings.username);
         files::write(path, serialize_result)

@@ -1,5 +1,5 @@
 use crate::{
-    lib::math::{self, random_num},
+    misc::math::{self, random_num},
     user::xp::XP,
 };
 
@@ -181,10 +181,7 @@ fn linear_xp_gold(player_level: usize) -> usize {
 }
 
 fn generate_rewards(player_level: usize) -> Vec<Rewards> {
-    let mut rewards: Vec<Rewards> = vec![
-        Rewards::Potions(random_num(1, 3)),
-        Rewards::Bones(random_num(1, 3)),
-    ];
+    let mut rewards: Vec<Rewards> = vec![Rewards::Potions(random_num(1, 3)), Rewards::Bones(random_num(1, 3))];
 
     if player_level > 10 {
         rewards.push(Rewards::MagicScrolls(random_num(0, 3)));

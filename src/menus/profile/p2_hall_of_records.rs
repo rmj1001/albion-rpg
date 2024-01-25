@@ -1,4 +1,4 @@
-use crate::lib::{
+use crate::misc::{
     input::select_from_str_array,
     messages::*,
     tui::{page_header, press_enter_to_continue, HeaderSubtext},
@@ -9,8 +9,7 @@ use crate::user::profile::UserProfile;
 pub fn main(user: &mut UserProfile) {
     page_header("Hall of Records", HeaderSubtext::Keyboard);
 
-    let menu_option =
-        select_from_str_array(&["1. XP/Levels", "2. Achievements", "NAV: Go Back"], None);
+    let menu_option = select_from_str_array(&["1. XP/Levels", "2. Achievements", "NAV: Go Back"], None);
 
     match menu_option {
         0 => xp(user),

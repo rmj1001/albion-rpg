@@ -1,5 +1,5 @@
 use crate::{
-    lib::{
+    misc::{
         messages::failure,
         tui::{self, page_header, HeaderSubtext},
     },

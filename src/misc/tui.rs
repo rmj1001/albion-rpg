@@ -69,7 +69,7 @@ pub fn page_header<T>(title: T, instructions: HeaderSubtext)
 where
     T: Into<String>,
 {
-    crate::lib::terminal::clearscr();
+    crate::misc::terminal::clearscr();
     big_header(title.into(), instructions)
 }
 
@@ -103,12 +103,8 @@ pub fn header_subtext(instructions: HeaderSubtext) {
     let mut instructions_string = String::new();
 
     match instructions {
-        HeaderSubtext::Keyboard => {
-            instructions_string.push_str("Press ↑ or ↓ to navigate, then press ENTER/RETURN.")
-        }
-        HeaderSubtext::EnterCode => {
-            instructions_string.push_str("Enter a code (ex. p1), then press ENTER/RETURN.")
-        }
+        HeaderSubtext::Keyboard => instructions_string.push_str("Press ↑ or ↓ to navigate, then press ENTER/RETURN."),
+        HeaderSubtext::EnterCode => instructions_string.push_str("Enter a code (ex. p1), then press ENTER/RETURN."),
         HeaderSubtext::Other(text) => instructions_string.push_str(text),
         HeaderSubtext::None => {
             return;

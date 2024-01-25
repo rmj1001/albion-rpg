@@ -1,5 +1,5 @@
 use crate::{
-    lib::{
+    misc::{
         files,
         input::{confirm, select_from_str_array, select_from_vector},
         messages::{self, *},
@@ -12,12 +12,7 @@ pub fn main(user: &mut UserProfile) {
     page_header("Developer Mode - User Manager", HeaderSubtext::Keyboard);
 
     let choice1 = select_from_str_array(
-        &[
-            "1. List Users",
-            "2. Delete User",
-            "3. View User File",
-            "NAV: Go Back",
-        ],
+        &["1. List Users", "2. Delete User", "3. View User File", "NAV: Go Back"],
         None,
     );
 
@@ -86,10 +81,7 @@ fn delete_users(user: &mut UserProfile) {
 }
 
 fn view_user(user: &mut UserProfile) {
-    page_header(
-        "Developer Mode - User Manager - Data Viewer",
-        HeaderSubtext::None,
-    );
+    page_header("Developer Mode - User Manager - Data Viewer", HeaderSubtext::None);
     let choice = select_from_vector(files::list_all(), Some("Select a user to view"));
 
     let profiles = files::list_all();
@@ -101,7 +93,7 @@ fn view_user(user: &mut UserProfile) {
 
             match profile_result {
                 Ok(profile) => {
-                    let pretty_string_result = crate::lib::config_encoding::serialize_user(user);
+                    let pretty_string_result = crate::misc::config_encoding::serialize_user(user);
                     let mut pretty_string: String = String::new();
 
                     match pretty_string_result {

@@ -1,5 +1,5 @@
 use crate::{
-    lib::tui::{page_header, press_enter_to_continue, HeaderSubtext},
+    misc::tui::{page_header, press_enter_to_continue, HeaderSubtext},
     user::profile::UserProfile,
 };
 
