@@ -4,7 +4,7 @@ use crate::{
         files,
         input::{confirm, select_from_str_array, select_from_vector},
         messages::{self, *},
-        tui::{self, page_header, press_enter_to_continue, HeaderSubtext},
+        tui::{self, page_header, paginate_string, press_enter_to_continue, HeaderSubtext},
     },
 };
 
@@ -109,7 +109,7 @@ fn view_user(player: &mut Player) {
                         }
                     }
 
-                    paginated_file = paginate_string(pretty_string);
+                    paginated_file = paginate_string(pretty_string, 20);
                     let mut page_number: usize = 1;
                     let total_pages = paginated_file.len();
 
@@ -140,27 +140,4 @@ fn view_user(player: &mut Player) {
     }
 
     main(player);
-}
-
-fn paginate_string<T>(string: T) -> Vec<String>
-where
-    T: Into<String>,
-{
-    let string: String = string.into();
-    let lines: Vec<String> = string.split('\n').map(|s| format!("{}\n", s)).collect();
-
-    const PAGE_LENGTH: usize = 20;
-
-    let mut pages: Vec<String> = Vec::new();
-
-    for chunk in lines.chunks(PAGE_LENGTH) {
-        let mut page: String = String::new();
-        for line in chunk {
-            page.push_str(line);
-        }
-
-        pages.push(page);
-    }
-
-    pages
 }

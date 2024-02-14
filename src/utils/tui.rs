@@ -137,6 +137,27 @@ pub fn sleep(seconds: u64) {
     std::thread::sleep(std::time::Duration::from_secs(seconds))
 }
 
+pub fn paginate_string<T>(string: T, lines_per_page: usize) -> Vec<String>
+where
+    T: Into<String>,
+{
+    let string: String = string.into();
+    let lines: Vec<String> = string.split('\n').map(|s| format!("{}\n", s)).collect();
+
+    let mut pages: Vec<String> = Vec::new();
+
+    for chunk in lines.chunks(lines_per_page) {
+        let mut page: String = String::new();
+        for line in chunk {
+            page.push_str(line);
+        }
+
+        pages.push(page);
+    }
+
+    pages
+}
+
 mod tests {
     #[test]
     fn line() {
