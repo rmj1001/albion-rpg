@@ -257,7 +257,11 @@ pub fn victory(battle: &mut BattleSettings) {
     press_enter_to_continue();
     battle.player.save();
 
-    if battle.loops > 0 {
+    if !battle.is_looped {
+        crate::menus::game_menu::main(battle.player);
+    }
+
+    if battle.is_looped && battle.loops > 0 {
         new_battle(battle);
     }
 
