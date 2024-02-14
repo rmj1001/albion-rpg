@@ -3,7 +3,7 @@ use crate::utils::{crypt, files};
 use serde::{Deserialize, Serialize};
 use std::{fs, path::Path};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct Settings {
     pub username: String,
     pub password: String,

@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::utils::{math::Operation, messages::*, tui::print_table};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct XP {
     pub combat: usize,
     pub fishing: usize,

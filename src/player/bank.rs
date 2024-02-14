@@ -11,7 +11,7 @@ pub enum BankAccount {
     Account4,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Bank {
     pub wallet: usize,
     pub account1: usize,

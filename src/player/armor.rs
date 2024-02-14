@@ -31,7 +31,7 @@ impl Armor {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ArmorInventory {
     pub leather: Armor,
     pub bronze: Armor,

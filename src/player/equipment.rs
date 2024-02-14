@@ -8,7 +8,7 @@ use crate::utils::{
 
 use super::{armor::Armor, profile::Player, weapons::Weapon};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct Equipment {
     pub armor: Option<Armor>,
     pub weapon: Option<Weapon>,

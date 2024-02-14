@@ -15,7 +15,11 @@ pub struct BattleSettings<'a> {
     pub player: &'a mut Player,
     pub enemy: Enemy,
     pub loops: usize,
+    pub floor: usize,
     pub is_first_battle: bool,
+    pub is_looped: bool,
+    pub pause_seconds: u64,
+    pub end_function: Option<fn(&mut Player)>,
 }
 
 use super::inventory::battle_inventory;
@@ -35,8 +39,13 @@ pub fn new_battle(battle: &mut BattleSettings) {
         }
     }
 
+    if battle.loops > 0 {
+        battle.floor += 1;
+        battle.loops -= 1;
+    }
+
     println!("{}", battle.prompt);
-    sleep(3);
+    sleep(battle.pause_seconds);
 
     if !battle.is_first_battle {
         battle.enemy = Enemy::new(battle.player.xp.combat, battle.player.health.hp);
@@ -69,9 +78,16 @@ pub fn battle_menu(battle: &mut BattleSettings) {
         }
     }
 
+    if battle.is_looped {
+        println!("Floor: {}", battle.floor);
+        println!("Floors Left: {}", battle.loops);
+        println!();
+    }
+
     println!("Enemy: {}", battle.enemy.type_string());
     println!("Enemy HP: {}", battle.enemy.hp);
     println!();
+
     println!("Player HP: {}", battle.player.health.hp);
     println!("Player Hunger: {}", battle.player.health.hunger);
     println!();
@@ -125,7 +141,7 @@ fn player_attack(battle: &mut BattleSettings) {
     let enemy_type = battle.enemy.type_string();
 
     println!("You attack the {}...", enemy_type);
-    sleep(1);
+    sleep(battle.pause_seconds);
 
     let hit = success_or_fail();
 
@@ -154,7 +170,7 @@ fn player_attack(battle: &mut BattleSettings) {
         println!("You missed the {}.", enemy_type);
     }
 
-    sleep(1);
+    sleep(battle.pause_seconds);
 }
 
 fn enemy_attack(battle: &mut BattleSettings) {
@@ -183,7 +199,7 @@ fn enemy_attack(battle: &mut BattleSettings) {
     }
 
     println!("The {} attacks you...", enemy_type);
-    sleep(1);
+    sleep(battle.pause_seconds);
 
     let hit = success_or_fail();
 
@@ -201,7 +217,7 @@ fn enemy_attack(battle: &mut BattleSettings) {
         println!("The {} missed you.", enemy_type);
     }
 
-    sleep(1);
+    sleep(battle.pause_seconds);
 }
 
 fn success_or_fail() -> bool {
@@ -242,8 +258,11 @@ pub fn victory(battle: &mut BattleSettings) {
     battle.player.save();
 
     if battle.loops > 0 {
-        battle.loops -= 1;
         new_battle(battle);
+    }
+
+    if battle.is_looped && battle.loops == 0 && battle.end_function.is_some() {
+        battle.end_function.unwrap()(battle.player);
     }
 }
 
@@ -251,10 +270,10 @@ pub fn defeat(battle: &mut BattleSettings) {
     page_header(format!("{} - Defeat", battle.header), HeaderSubtext::None);
 
     println!("You have been defeated in battle.");
-    tui::sleep(1);
+    sleep(battle.pause_seconds);
 
     println!("You have been rushed to the local physician.");
-    tui::sleep(1);
+    sleep(battle.pause_seconds);
 
     if battle.player.settings.hardmode {
         hardmode(battle);
@@ -280,7 +299,7 @@ pub fn hardmode(battle: &mut BattleSettings) {
             println!("The {} stole all your gold and inventory.", battle.enemy.type_string());
             battle.player.reset_inventory();
             battle.player.save();
-            tui::sleep(1);
+            sleep(battle.pause_seconds);
 
             revived(battle);
         }

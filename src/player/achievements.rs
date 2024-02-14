@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::utils::tui::{pretty_bool, print_table};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Achievements {
     // Determined in combat
     pub monsters_killed: usize,

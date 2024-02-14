@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::utils::{math::Operation, messages::*, tui::print_table};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Item {
     pub name: String,
     pub price: usize,
@@ -35,7 +35,7 @@ pub enum InventoryItemFlag {
     InvalidItem,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct MundaneInventory {
     pub bait: Item,
     pub seeds: Item,

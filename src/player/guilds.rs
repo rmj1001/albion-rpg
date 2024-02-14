@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use super::profile::Player;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct GuildMemberships {
     pub fishing: Guild,
     pub cooking: Guild,
@@ -11,7 +11,7 @@ pub struct GuildMemberships {
     pub smithing: Guild,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Guild {
     pub member: bool,
     pub member_price: usize,

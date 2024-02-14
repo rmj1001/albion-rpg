@@ -41,7 +41,7 @@ pub enum WeaponItemFlag {
     InvalidItem,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct WeaponsInventory {
     pub wooden_sword: Weapon,
     pub bronze_sword: Weapon,

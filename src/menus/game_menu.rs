@@ -4,6 +4,7 @@ use crate::{
     utils::{
         input::{confirm, prompt_arrow},
         messages::{self, success, success_msg},
+        terminal::exit,
         tui::{self, page_header, press_enter_to_continue, sleep, HeaderSubtext},
     },
 };
@@ -54,17 +55,26 @@ pub fn main(player: &mut Player) {
                 enemy: Enemy::new(player.xp.combat, player.health.hp),
                 player,
                 loops: 0,
+                floor: 0,
                 is_first_battle: true,
+                is_looped: false,
+                pause_seconds: 1,
+                end_function: None,
             };
 
             crate::combat::battle::new_battle(&mut battle_settings);
         }
         "c2" | "enter the stronghold" => {
             page_header("The Stronghold", HeaderSubtext::None);
-            let confirm_stronghold =
-                confirm("Are you sure you want to enter the stronghold? You must win 50 hard battles.");
 
-            if !confirm_stronghold {
+            fn exit_stronghold(player: &mut Player) {
+                page_header("The Stronghold", HeaderSubtext::None);
+
+                println!("\nYou have successfully completed the stronghold and won the game! Congratulations!");
+                player.achievements.stronghold_defeated = true;
+                player.save();
+
+                press_enter_to_continue();
                 main(player);
             }
 
@@ -72,19 +82,25 @@ pub fn main(player: &mut Player) {
                 header: "The Stronghold",
                 prompt: "You delve into the stronghold...",
                 enemy: Enemy::new(player.xp.combat, player.health.hp),
-                player,
+                player: &mut player.clone(),
                 loops: 50,
+                floor: 0,
                 is_first_battle: true,
+                is_looped: true,
+                pause_seconds: 2,
+                end_function: Some(exit_stronghold),
             };
 
+            let confirm_stronghold = confirm(&format!(
+                "Are you sure you want to enter the stronghold? You must win {} hard battles.",
+                battle_settings.loops
+            ));
+
+            if !confirm_stronghold {
+                main(player);
+            }
+
             crate::combat::battle::new_battle(&mut battle_settings);
-
-            page_header("The Stronghold", HeaderSubtext::None);
-            println!("\nYou have successfully completed the stronghold and won the game! Congratulations!");
-            player.achievements.stronghold_defeated = true;
-            player.save();
-
-            press_enter_to_continue();
         }
 
         // Economy
@@ -114,6 +130,11 @@ pub fn main(player: &mut Player) {
             sleep(2);
 
             crate::menus::accounts::main();
+        }
+
+        "exit" => {
+            player.save();
+            exit();
         }
 
         // Developer Mode

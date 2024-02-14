@@ -12,13 +12,13 @@ use super::xp::*;
 use crate::utils::files;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Health {
     pub hp: usize,
     pub hunger: usize,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Player {
     pub health: Health,
     pub xp: XP,
