@@ -87,7 +87,7 @@ pub fn main(player: &mut Player) {
                 floor: 0,
                 is_first_battle: true,
                 is_looped: true,
-                pause_seconds: 2,
+                pause_seconds: 1,
                 end_function: Some(exit_stronghold),
             };
 
