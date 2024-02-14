@@ -229,7 +229,7 @@ default_durability = 2000
 
 [settings]
 username = "admin"
-password = "password"
+password_hash = "password"
 developer = false
 locked = false
 hardmode = false
