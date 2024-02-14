@@ -3,8 +3,7 @@ use crate::{
     utils::{
         input::prompt_arrow,
         messages::{self, success, success_msg},
-        terminal,
-        tui::{self, page_header, press_enter_to_continue, sleep, HeaderSubtext},
+        tui::{self, page_header, sleep, HeaderSubtext},
     },
 };
 
@@ -19,7 +18,7 @@ pub fn main(player: &mut Player) {
     tui::small_header("Combat", HeaderSubtext::None);
     println!("c1. Wander the Realm");
     println!("c2. Enter the Stronghold");
-    println!("\n");
+    println!();
 
     tui::small_header("Economy", HeaderSubtext::None);
     println!("e1. Work in the Guilds");
@@ -27,12 +26,12 @@ pub fn main(player: &mut Player) {
     println!("e3. Trading Post");
     println!("e4. Weapons Shop");
     println!("e5. Armor Shop");
-    println!("\n");
+    println!();
 
     tui::small_header("Profile", HeaderSubtext::None);
     println!("p1. Inventory");
     println!("p2. Hall of Records");
-    println!("\n");
+    println!();
 
     if player.settings.developer {
         println!("d1. Developer Menu");
@@ -41,48 +40,48 @@ pub fn main(player: &mut Player) {
     println!("n1. Settings");
     println!("n2. Save Game");
     println!("n3. Logout");
-    println!("n4. Exit Game\n");
+    println!();
 
     let choice = prompt_arrow("Enter Menu Code").to_lowercase();
 
     match &choice[..] {
         // Combat
-        "c1" => crate::combat::battle::battle("Wandering the Realm", "You are wandering the realm...", player, false),
-        "c2" => crate::menus::combat::c1_the_stronghold::main(player),
+        "c1" | "wander the realm" => {
+            crate::combat::battle::battle("Wandering the Realm", "You are wandering the realm...", player, false)
+        }
+        "c2" | "enter the stronghold" => crate::menus::combat::c1_the_stronghold::main(player),
 
         // Economy
-        "e1" => crate::menus::economy::e1_the_guilds::main(player),
-        "e2" => crate::menus::economy::e2_the_bank::main(player),
-        "e3" => crate::menus::economy::e3_trading_post::main(player),
-        "e4" => crate::menus::economy::e4_weapons_shop::main(player),
-        "e5" => crate::menus::economy::e5_armor_shop::main(player),
+        "e1" | "work in the guilds" => crate::menus::economy::e1_the_guilds::main(player),
+        "e2" | "the bank" => crate::menus::economy::e2_the_bank::main(player),
+        "e3" | "trading post" => crate::menus::economy::e3_trading_post::main(player),
+        "e4" | "weapons shop" => crate::menus::economy::e4_weapons_shop::main(player),
+        "e5" | "armor shop" => crate::menus::economy::e5_armor_shop::main(player),
 
         // Profile
-        "p1" => crate::menus::profile::p1_inventory::main(player),
-        "p2" => crate::menus::profile::p2_hall_of_records::main(player),
-        "n1" => crate::menus::profile::n1_settings::main(player),
-        "n2" => {
-            page_header("Save Game", HeaderSubtext::None);
-            println!("Saving game...");
-            sleep(1);
+        "p1" | "inventory" => crate::menus::profile::p1_inventory::main(player),
+        "p2" | "hall of records" => crate::menus::profile::p2_hall_of_records::main(player),
+        "n1" | "settings" => crate::menus::profile::n1_settings::main(player),
+        "n2" | "save game" | "save" => {
+            println!("\nSaving game...");
+            sleep(2);
 
             player.save();
             success();
-            press_enter_to_continue();
 
             main(player);
         }
-        "n3" => {
+        "n3" | "logout" => {
             player.save();
+
+            println!("\nLogging out...");
+            sleep(2);
+
             crate::menus::accounts::main();
-        }
-        "n4" => {
-            player.save();
-            terminal::exit();
         }
 
         // Developer Mode
-        "d1" => {
+        "d1" | "developer menu" => {
             if player.settings.developer {
                 crate::menus::devmode::d1_developer_menu::main(player);
             } else {
