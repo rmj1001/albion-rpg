@@ -34,18 +34,17 @@ pub fn main() {
     let profile_result = Player::retrieve(&username);
 
     match profile_result {
-        Ok(profile) => {
-            let mut profile = profile;
+        Ok(player) => {
+            let mut player = player;
 
-            if profile.settings.locked {
+            if player.settings.locked {
                 let unlock_profile: bool = confirm("\nProfile is locked. Unlock?");
 
                 if unlock_profile {
-                    if get_password(&profile) {
-                        Settings::unlock(&mut profile);
-                        success_msg("Profile unlocked.");
+                    if get_password(&player) {
+                        Settings::toggle_lock(&mut player);
                     } else {
-                        profile_remains_locked()
+                        profile_remains_locked();
                     }
                 } else {
                     cancelling();
@@ -53,13 +52,13 @@ pub fn main() {
                 }
             }
 
-            if !get_password(&profile) {
+            if !get_password(&player) {
                 crate::menus::accounts::main();
             }
 
             success();
 
-            crate::menus::game_menu::main(&mut profile);
+            crate::menus::game_menu::main(&mut player);
         }
 
         Err(message) => {

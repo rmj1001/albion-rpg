@@ -3,7 +3,7 @@ use crate::{
     player::settings::Settings,
     utils::{
         input::{confirm, prompt_arrow},
-        messages::{self, success, success_msg},
+        messages::{self, success},
         terminal::exit,
         tui::{self, page_header, press_enter_to_continue, sleep, HeaderSubtext},
     },
@@ -147,17 +147,10 @@ pub fn main(player: &mut Player) {
         }
 
         "3.141592" => {
-            if !player.settings.developer {
-                page_header("Developer Mode", HeaderSubtext::None);
-                player.achievements.hacked_the_game = true;
-                Settings::set_developer(player, true);
+            Settings::toggle_developer(player);
+            player.achievements.hacked_the_game = true;
 
-                success_msg("Developer mode enabled.");
-
-                main(player);
-            } else {
-                super::devmode::d1_developer_menu::disable_developer_mode(player);
-            }
+            main(player);
         }
 
         wrong_input => {

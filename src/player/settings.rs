@@ -1,5 +1,5 @@
 use super::profile::Player;
-use crate::utils::{crypt, files};
+use crate::utils::{crypt, files, messages::success_msg};
 use serde::{Deserialize, Serialize};
 use std::{fs, path::Path};
 
@@ -14,21 +14,39 @@ pub struct Settings {
 
 impl Settings {
     /// Hinders profile login without double password entry
-    pub fn lock(player: &mut Player) {
-        player.settings.locked = true;
+    pub fn toggle_lock(player: &mut Player) {
+        player.settings.locked = !player.settings.locked;
         player.save();
+
+        if player.settings.locked {
+            success_msg("Player locked.");
+        } else {
+            success_msg("Player unlocked.");
+        }
     }
 
-    /// Allows profile to login un-hindered.
-    pub fn unlock(player: &mut Player) {
-        player.settings.locked = false;
+    /// Either reset inventory or delete profile if defeated in battle
+    pub fn toggle_hardmode(player: &mut Player) {
+        player.settings.hardmode = !player.settings.hardmode;
         player.save();
+
+        if player.settings.hardmode {
+            success_msg("Hardmode enabled.");
+        } else {
+            success_msg("Hardmode disabled.");
+        }
     }
 
     /// Updates developer status
-    pub fn set_developer(player: &mut Player, flag: bool) {
-        player.settings.developer = flag;
+    pub fn toggle_developer(player: &mut Player) {
+        player.settings.developer = !player.settings.developer;
         player.save();
+
+        if player.settings.developer {
+            success_msg("Developer mode enabled.");
+        } else {
+            success_msg("Developer mode disabled.");
+        }
     }
 
     /// Updates password field
@@ -57,9 +75,5 @@ impl Settings {
         }
 
         player.save();
-    }
-
-    pub fn toggle_hardmode(player: &mut Player) {
-        player.settings.hardmode = !player.settings.hardmode;
     }
 }

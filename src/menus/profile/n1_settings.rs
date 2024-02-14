@@ -19,7 +19,7 @@ pub fn main(player: &mut Player) {
             "2. Change Password",
             "3. Lock Profile",
             "4. Delete Profile",
-            "5. Enable Hardmode",
+            "5. Toggle Hard Mode",
             "NAV: Go Back",
         ],
         None,
@@ -93,10 +93,7 @@ fn lock_profile(player: &mut Player) {
         main(player);
     }
 
-    Settings::lock(player);
-
-    page_header("Profile Settings", HeaderSubtext::None);
-    success_msg("Profile locked.");
+    Settings::toggle_lock(player);
 
     crate::menus::accounts::main();
 }
@@ -126,8 +123,6 @@ fn hardmode(player: &mut Player) {
             cancelling();
             main(player);
         }
-
-        player.settings.hardmode = true;
     } else {
         let confirmation = confirm("Are you sure you want to disable hardmode?");
 
@@ -135,9 +130,9 @@ fn hardmode(player: &mut Player) {
             cancelling();
             main(player);
         }
-
-        player.settings.hardmode = false;
     }
+
+    Settings::toggle_hardmode(player);
 
     main(player);
 }

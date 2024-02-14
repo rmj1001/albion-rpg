@@ -43,6 +43,11 @@ pub fn main(player: &mut Player) {
 pub fn disable_developer_mode(player: &mut Player) {
     page_header("Developer Mode", HeaderSubtext::None);
 
+    if !player.settings.developer {
+        failure("Developer mode is already disabled.");
+        crate::menus::game_menu::main(player);
+    }
+
     let disable_dev_mode = confirm("Are you sure you want to disable developer mode?");
 
     if !disable_dev_mode {
@@ -50,8 +55,7 @@ pub fn disable_developer_mode(player: &mut Player) {
         main(player);
     }
 
-    Settings::set_developer(player, false);
-    success_msg("Developer mode disabled.");
+    Settings::toggle_developer(player);
 
     crate::menus::game_menu::main(player);
 }
