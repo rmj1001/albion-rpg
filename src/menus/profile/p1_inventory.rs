@@ -1,12 +1,12 @@
-use crate::misc::{
+use crate::utils::{
     input::select_from_str_array,
     messages::*,
     tui::{page_header, press_enter_to_continue, HeaderSubtext},
 };
 
-use crate::user::profile::UserProfile;
+use crate::player::profile::UserProfile;
 
-pub fn main(user: &mut UserProfile) {
+pub fn main(player: &mut UserProfile) {
     page_header("Inventory Viewer", HeaderSubtext::None);
 
     let menu_option = select_from_str_array(
@@ -15,51 +15,51 @@ pub fn main(user: &mut UserProfile) {
     );
 
     match menu_option {
-        0 => mundane_inventory(user),
-        1 => weapons_inventory(user),
-        2 => armor_inventory(user),
-        3 => finances(user),
-        4 => crate::menus::game_menu::main(user),
+        0 => mundane_inventory(player),
+        1 => weapons_inventory(player),
+        2 => armor_inventory(player),
+        3 => finances(player),
+        4 => crate::menus::game_menu::main(player),
         _ => out_of_bounds(),
     }
 }
 
-pub fn mundane_inventory(user: &mut UserProfile) {
+pub fn mundane_inventory(player: &mut UserProfile) {
     page_header("Items Inventory", HeaderSubtext::None);
 
-    user.inventory.print_table();
+    player.inventory.print_table();
 
     press_enter_to_continue();
-    main(user);
+    main(player);
 }
 
-pub fn weapons_inventory(user: &mut UserProfile) {
+pub fn weapons_inventory(player: &mut UserProfile) {
     page_header("Weapons Inventory", HeaderSubtext::None);
 
-    user.weapons.print_table();
+    player.weapons.print_table();
 
     // TODO: Equip/Unequip weapons
 
     press_enter_to_continue();
-    main(user);
+    main(player);
 }
 
-pub fn armor_inventory(user: &mut UserProfile) {
+pub fn armor_inventory(player: &mut UserProfile) {
     page_header("Armor Inventory", HeaderSubtext::None);
 
-    user.armor.print_table();
+    player.armor.print_table();
 
     // TODO: Equip/Unequip armor
 
     press_enter_to_continue();
-    main(user);
+    main(player);
 }
 
-pub fn finances(user: &mut UserProfile) {
+pub fn finances(player: &mut UserProfile) {
     page_header("Finances", HeaderSubtext::None);
 
-    user.bank.print_table();
+    player.bank.print_table();
 
     press_enter_to_continue();
-    main(user);
+    main(player);
 }

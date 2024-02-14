@@ -1,72 +1,72 @@
 use crate::{
-    misc::{
+    player::{profile::UserProfile, weapons::WeaponItemFlag},
+    utils::{
         input::{select_from_str_array, select_from_vector},
         messages::*,
         tui::page_header,
     },
-    user::{profile::UserProfile, weapons::WeaponItemFlag},
 };
 
-pub fn main(user: &mut UserProfile) {
-    page_header("Weapons Shop", crate::misc::tui::HeaderSubtext::None);
+pub fn main(player: &mut UserProfile) {
+    page_header("Weapons Shop", crate::utils::tui::HeaderSubtext::None);
 
-    println!("Gold: {}\n", user.bank.wallet);
-    user.weapons.print_table();
+    println!("Gold: {}\n", player.bank.wallet);
+    player.weapons.print_table();
 
     let buysell = select_from_str_array(&["1. Purchase", "2. Sell", "NAV: Go Back"], None);
 
     match buysell {
-        0 => purchase(user),
-        1 => sell(user),
-        2 => crate::menus::game_menu::main(user),
+        0 => purchase(player),
+        1 => sell(player),
+        2 => crate::menus::game_menu::main(player),
         _ => out_of_bounds(),
     }
 
-    crate::menus::game_menu::main(user);
+    crate::menus::game_menu::main(player);
 }
 
-pub fn purchase(user: &mut UserProfile) {
-    let item = get_item(user);
+pub fn purchase(player: &mut UserProfile) {
+    let item = get_item(player);
 
-    let result = user.weapons.purchase(&mut user.bank.wallet, item, true);
+    let result = player.weapons.purchase(&mut player.bank.wallet, item, true);
 
     match result {
         Ok(_) => {
             success();
-            main(user);
+            main(player);
         }
         Err(message) => {
             failure(message);
-            main(user);
+            main(player);
         }
     }
 }
 
-pub fn sell(user: &mut UserProfile) {
-    let item = get_item(user);
+pub fn sell(player: &mut UserProfile) {
+    let item = get_item(player);
 
-    let result = user.weapons.sell(&mut user.bank.wallet, item, true);
+    let result = player.weapons.sell(&mut player.bank.wallet, item, true);
 
     match result {
         Ok(_) => {
             success();
-            main(user);
+            main(player);
         }
         Err(message) => {
             failure(message);
-            main(user);
+            main(player);
         }
     }
 }
 
-fn get_item(user: &mut UserProfile) -> WeaponItemFlag {
+fn get_item(player: &mut UserProfile) -> WeaponItemFlag {
     let items: Vec<String> = vec![
-        user.weapons.wooden_sword.name.to_string(),
-        user.weapons.bronze_sword.name.to_string(),
-        user.weapons.iron_sword.name.to_string(),
-        user.weapons.steel_sword.name.to_string(),
-        user.weapons.mystic_sword.name.to_string(),
-        user.weapons.wizard_staff.name.to_string(),
+        player.weapons.wooden_sword.name.to_string(),
+        player.weapons.bronze_sword.name.to_string(),
+        player.weapons.iron_sword.name.to_string(),
+        player.weapons.steel_sword.name.to_string(),
+        player.weapons.mystic_sword.name.to_string(),
+        player.weapons.wizard_staff.name.to_string(),
         "NAV: Cancel".to_string(),
     ];
 
@@ -76,7 +76,7 @@ fn get_item(user: &mut UserProfile) -> WeaponItemFlag {
 
     if select == length - 1 {
         cancelling();
-        main(user);
+        main(player);
         return WeaponItemFlag::InvalidItem;
     }
 

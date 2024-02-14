@@ -1,7 +1,7 @@
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 
-use crate::misc::{math::Operation, messages::*, tui::print_table};
+use crate::utils::{math::Operation, messages::*, tui::print_table};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct XP {

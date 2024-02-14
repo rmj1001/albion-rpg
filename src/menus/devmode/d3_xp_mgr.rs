@@ -1,17 +1,17 @@
 use crate::{
-    misc::{
+    player::{profile::UserProfile, xp::XPType},
+    utils::{
         input::select_from_str_array,
         math::{generic_calculator, Operation},
         messages::*,
         tui::{page_header, HeaderSubtext},
     },
-    user::{profile::UserProfile, xp::XPType},
 };
 
-pub fn main(user: &mut UserProfile) {
+pub fn main(player: &mut UserProfile) {
     page_header("Developer Mode - XP Manager", HeaderSubtext::Keyboard);
 
-    user.xp.print_table();
+    player.xp.print_table();
 
     let xp_category = select_from_str_array(
         &[
@@ -37,7 +37,7 @@ pub fn main(user: &mut UserProfile) {
         4 => xp_type = XPType::Mining,
         5 => xp_type = XPType::Smithing,
         6 => xp_type = XPType::Thieving,
-        7 => super::d1_developer_menu::main(user),
+        7 => super::d1_developer_menu::main(player),
         _ => out_of_bounds(),
     };
 
@@ -45,15 +45,15 @@ pub fn main(user: &mut UserProfile) {
 
     if let Operation::Cancel = calculation {
         cancelling();
-        main(user);
+        main(player);
     }
 
     // Return early if the operation was cancelled.
     let result: Result<(), &str> = match calculation {
-        Operation::Add(_) => user.xp.arithmetic(xp_type, calculation),
-        Operation::Subtract(_) => user.xp.arithmetic(xp_type, calculation),
-        Operation::Multiply(_) => user.xp.arithmetic(xp_type, calculation),
-        Operation::Divide(_) => user.xp.arithmetic(xp_type, calculation),
+        Operation::Add(_) => player.xp.arithmetic(xp_type, calculation),
+        Operation::Subtract(_) => player.xp.arithmetic(xp_type, calculation),
+        Operation::Multiply(_) => player.xp.arithmetic(xp_type, calculation),
+        Operation::Divide(_) => player.xp.arithmetic(xp_type, calculation),
         Operation::Cancel => Ok(()),
         Operation::Invalid => Err(""),
     };
@@ -61,10 +61,10 @@ pub fn main(user: &mut UserProfile) {
     match result {
         Ok(_) => {
             success();
-            main(user);
+            main(player);
         }
         Err(_) => {
-            main(user);
+            main(player);
         }
     }
 }

@@ -1,34 +1,39 @@
 use crate::{
-    misc::{
+    player::profile::UserProfile,
+    utils::{
         files,
         input::{confirm, select_from_str_array, select_from_vector},
         messages::{self, *},
         tui::{self, page_header, press_enter_to_continue, HeaderSubtext},
     },
-    user::profile::UserProfile,
 };
 
-pub fn main(user: &mut UserProfile) {
-    page_header("Developer Mode - User Manager", HeaderSubtext::Keyboard);
+pub fn main(player: &mut UserProfile) {
+    page_header("Developer Mode - Player Manager", HeaderSubtext::Keyboard);
 
     let choice1 = select_from_str_array(
-        &["1. List Users", "2. Delete User", "3. View User File", "NAV: Go Back"],
+        &[
+            "1. List Players",
+            "2. Delete Player",
+            "3. View Player File",
+            "NAV: Go Back",
+        ],
         None,
     );
 
     match choice1 {
-        0 => list_users(user),
-        1 => delete_users(user),
-        2 => view_user(user),
-        3 => super::d1_developer_menu::main(user),
+        0 => list_users(player),
+        1 => delete_users(player),
+        2 => view_user(player),
+        3 => super::d1_developer_menu::main(player),
         _ => out_of_bounds(),
     }
 }
 
-fn list_users(user: &mut UserProfile) {
-    page_header("Developer Mode - User Manager", HeaderSubtext::None);
+fn list_users(player: &mut UserProfile) {
+    page_header("Developer Mode - Player Manager", HeaderSubtext::None);
 
-    let profiles: Vec<String> = files::list_all();
+    let profiles: Vec<String> = files::handler::list_all_profiles();
 
     for profile_string in &profiles {
         println!("- {}", profile_string);
@@ -37,13 +42,13 @@ fn list_users(user: &mut UserProfile) {
     println!();
     tui::press_enter_to_continue();
 
-    main(user);
+    main(player);
 }
 
-fn delete_users(user: &mut UserProfile) {
-    page_header("Developer Mode - User Manager", HeaderSubtext::Keyboard);
+fn delete_users(player: &mut UserProfile) {
+    page_header("Developer Mode - Player Manager", HeaderSubtext::Keyboard);
 
-    let profiles = files::list_all();
+    let profiles = files::handler::list_all_profiles();
     let choice = select_from_vector(profiles.clone(), Some("Select a profile to delete"));
     let profile_choice = profiles.get(choice);
 
@@ -56,13 +61,13 @@ fn delete_users(user: &mut UserProfile) {
 
             if !delete_profile {
                 cancelling();
-                main(user);
+                main(player);
             }
 
-            if *profile_string == user.settings.username {
-                UserProfile::delete_from_username(&user.settings.username);
+            if *profile_string == player.settings.username {
+                UserProfile::delete_from_username(&player.settings.username);
 
-                page_header("Developer Mode - User Manager", HeaderSubtext::None);
+                page_header("Developer Mode - Player Manager", HeaderSubtext::None);
                 success_msg("Current profile deleted. Logging out.");
 
                 crate::menus::accounts::main();
@@ -70,21 +75,21 @@ fn delete_users(user: &mut UserProfile) {
 
             UserProfile::delete_from_username(profile_string);
 
-            page_header("Developer Mode - User Manager", HeaderSubtext::None);
+            page_header("Developer Mode - Player Manager", HeaderSubtext::None);
             success_msg(format!("Profile '{}' deleted.", profile_string));
 
-            main(user);
+            main(player);
         }
 
         None => out_of_bounds(),
     }
 }
 
-fn view_user(user: &mut UserProfile) {
-    page_header("Developer Mode - User Manager - Data Viewer", HeaderSubtext::None);
-    let choice = select_from_vector(files::list_all(), Some("Select a user to view"));
+fn view_user(player: &mut UserProfile) {
+    page_header("Developer Mode - Player Manager - Data Viewer", HeaderSubtext::None);
+    let choice = select_from_vector(files::handler::list_all_profiles(), Some("Select a player to view"));
 
-    let profiles = files::list_all();
+    let profiles = files::handler::list_all_profiles();
     let profile_choice = profiles.get(choice);
 
     match profile_choice {
@@ -93,7 +98,7 @@ fn view_user(user: &mut UserProfile) {
 
             match profile_result {
                 Ok(profile) => {
-                    let pretty_string_result = crate::misc::config_encoding::serialize_user(user);
+                    let pretty_string_result = crate::utils::files::encoding::serialize_user(player);
                     let mut pretty_string: String = String::new();
 
                     match pretty_string_result {
@@ -104,23 +109,23 @@ fn view_user(user: &mut UserProfile) {
                     }
 
                     page_header(
-                        format!("User Profile - {}", profile.settings.username),
+                        format!("Player Profile - {}", profile.settings.username),
                         HeaderSubtext::None,
                     );
 
                     println!("{}\n", pretty_string);
 
                     press_enter_to_continue();
-                    main(user);
+                    main(player);
                 }
                 Err(message) => {
                     failure(message);
-                    main(user);
+                    main(player);
                 }
             }
         }
         None => out_of_bounds(),
     }
 
-    main(user);
+    main(player);
 }

@@ -1,15 +1,15 @@
 use crate::{
-    misc::{
+    player::settings::Settings,
+    utils::{
         input::{confirm, select_from_str_array},
         messages::*,
         tui::{page_header, HeaderSubtext},
     },
-    user::settings::Settings,
 };
 
-use crate::user::profile::UserProfile;
+use crate::player::profile::UserProfile;
 
-pub fn main(user: &mut UserProfile) {
+pub fn main(player: &mut UserProfile) {
     page_header("Developer Mode", HeaderSubtext::Keyboard);
 
     let choice = select_from_str_array(
@@ -18,7 +18,7 @@ pub fn main(user: &mut UserProfile) {
             "2. Manipulate Inventory",
             "3. Manipulate XP",
             "4. Manipulate Banks",
-            "5. Manage User Profiles",
+            "5. Manage Player Profiles",
             "6. Disable developer mode",
             "NAV: Go Back",
         ],
@@ -27,28 +27,28 @@ pub fn main(user: &mut UserProfile) {
 
     match choice {
         0 => panic!("This is a panic!"),
-        1 => super::d4_inventory_mgr::main(user),
-        2 => super::d3_xp_mgr::main(user),
-        3 => super::d5_bank_mgr::main(user),
-        4 => super::d2_user_mgr::main(user),
-        5 => disable_developer_mode(user),
-        6 => crate::menus::game_menu::main(user),
+        1 => super::d4_inventory_mgr::main(player),
+        2 => super::d3_xp_mgr::main(player),
+        3 => super::d5_bank_mgr::main(player),
+        4 => super::d2_user_mgr::main(player),
+        5 => disable_developer_mode(player),
+        6 => crate::menus::game_menu::main(player),
         _ => out_of_bounds(),
     }
 }
 
-pub fn disable_developer_mode(user: &mut UserProfile) {
+pub fn disable_developer_mode(player: &mut UserProfile) {
     page_header("Developer Mode", HeaderSubtext::None);
 
     let disable_dev_mode = confirm("Are you sure you want to disable developer mode?");
 
     if !disable_dev_mode {
         cancelling();
-        main(user);
+        main(player);
     }
 
-    Settings::set_developer(user, false);
+    Settings::set_developer(player, false);
     success_msg("Developer mode disabled.");
 
-    crate::menus::game_menu::main(user);
+    crate::menus::game_menu::main(player);
 }

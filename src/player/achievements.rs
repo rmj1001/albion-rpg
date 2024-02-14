@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::misc::tui::{pretty_bool, print_table};
+use crate::utils::tui::{pretty_bool, print_table};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Achievements {

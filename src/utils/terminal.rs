@@ -1,6 +1,6 @@
 use std::process::Command;
 
-use crate::misc::tui::press_enter_to_continue;
+use crate::utils::tui::press_enter_to_continue;
 
 use super::tui::page_header;
 

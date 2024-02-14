@@ -1,6 +1,6 @@
 use crate::{
-    misc::math::{self, random_num},
-    user::xp::XP,
+    player::{profile::UserProfile, xp::XP},
+    utils::math::{self, random_num},
 };
 
 pub enum EnemyType {
@@ -42,16 +42,6 @@ pub enum UndeadType {
     Invalid,
 }
 
-pub enum Rewards {
-    Potions(usize),
-    Rubies(usize),
-    MagicScrolls(usize),
-    Bones(usize),
-    DragonHides(usize),
-    RunicTablets(usize),
-    Invalid,
-}
-
 pub struct Enemy {
     pub kind: EnemyType,
     pub hp: usize,
@@ -74,9 +64,42 @@ impl Enemy {
             rewards: generate_rewards(user_level),
         }
     }
-}
 
-// Enemy type
+    pub fn type_string(&self) -> &'static str {
+        match &self.kind {
+            EnemyType::Human => "Human",
+            EnemyType::Invalid => "Invalid Enemy",
+            EnemyType::Animal(animal) => match animal {
+                AnimalType::Bear => "Bear",
+                AnimalType::Wyrm => "Wyrm",
+                AnimalType::Invalid => "Invalid Animal",
+                AnimalType::Owlbear => "Owlbear",
+                AnimalType::DireWolf => "Dire Wolf",
+                AnimalType::WhiteApe => "White Ape",
+                AnimalType::GiantSpider => "Giant Spider",
+            },
+            EnemyType::Undead(undead) => match undead {
+                UndeadType::Banshee => "Banshee",
+                UndeadType::Ghost => "Ghost",
+                UndeadType::Zombie => "Zombie",
+                UndeadType::Invalid => "Invalid Undead",
+                UndeadType::Vampire => "Vampire",
+                UndeadType::Skeleton => "Skeleton",
+            },
+            EnemyType::Monster(monster) => match monster {
+                MonsterType::Centaur => "Centaur",
+                MonsterType::Orc => "Orc",
+                MonsterType::Giant => "Giant",
+                MonsterType::Troll => "Troll",
+                MonsterType::Dragon => "Dragon",
+                MonsterType::Goblin => "Goblin",
+                MonsterType::DarkElf => "Dark Elf",
+                MonsterType::Invalid => "Invalid Monster",
+                MonsterType::Werewolf => "Werewolf",
+            },
+        }
+    }
+}
 
 fn pick_enemy() -> EnemyType {
     let number = math::random_num(1, 4);
@@ -154,8 +177,19 @@ fn calculate_damage(player_hp: usize) -> usize {
 
 // Rewards
 
-fn linear_xp_gold(player_level: usize) -> usize {
-    let mut working_xp = 0;
+#[derive(Debug)]
+pub enum Rewards {
+    Potions(usize),
+    Rubies(usize),
+    MagicScrolls(usize),
+    Bones(usize),
+    DragonHides(usize),
+    RunicTablets(usize),
+    Invalid,
+}
+
+pub fn linear_xp_gold(player_level: usize) -> usize {
+    let mut working_xp: usize = 0;
 
     if player_level > 1 {
         working_xp += random_num(0, 10);
@@ -180,7 +214,7 @@ fn linear_xp_gold(player_level: usize) -> usize {
     working_xp
 }
 
-fn generate_rewards(player_level: usize) -> Vec<Rewards> {
+pub fn generate_rewards(player_level: usize) -> Vec<Rewards> {
     let mut rewards: Vec<Rewards> = vec![Rewards::Potions(random_num(1, 3)), Rewards::Bones(random_num(1, 3))];
 
     if player_level > 10 {
@@ -200,4 +234,18 @@ fn generate_rewards(player_level: usize) -> Vec<Rewards> {
     }
 
     rewards
+}
+
+pub fn add_rewards_to_user(player: &mut UserProfile, rewards: Vec<Rewards>) {
+    for reward in rewards {
+        match reward {
+            Rewards::Potions(quantity) => player.inventory.potions.quantity += quantity,
+            Rewards::Bones(quantity) => player.inventory.bones.quantity += quantity,
+            Rewards::Rubies(quantity) => player.inventory.rubies.quantity += quantity,
+            Rewards::DragonHides(quantity) => player.inventory.dragon_hides.quantity += quantity,
+            Rewards::MagicScrolls(quantity) => player.inventory.magic_scrolls.quantity += quantity,
+            Rewards::RunicTablets(quantity) => player.inventory.runic_tablets.quantity += quantity,
+            Rewards::Invalid => {}
+        }
+    }
 }

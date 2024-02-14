@@ -20,7 +20,7 @@ pub fn verify_hash(text: String, hash: String) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use crate::misc::crypt::{generate_hash, verify_hash};
+    use crate::utils::crypt::{generate_hash, verify_hash};
 
     #[test]
     fn check_hashing() {

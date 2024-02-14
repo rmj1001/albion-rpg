@@ -69,7 +69,7 @@ pub fn page_header<T>(title: T, instructions: HeaderSubtext)
 where
     T: Into<String>,
 {
-    crate::misc::terminal::clearscr();
+    crate::utils::terminal::clearscr();
     big_header(title.into(), instructions)
 }
 
@@ -137,4 +137,14 @@ pub fn pretty_bool(flag: bool) -> &'static str {
 
 pub fn sleep(seconds: u64) {
     std::thread::sleep(std::time::Duration::from_secs(seconds))
+}
+
+mod tests {
+    #[test]
+    fn line() {
+        let output = crate::utils::tui::create_line_string(10, None);
+        let compare: String = "----------".to_string();
+
+        assert!(output == compare);
+    }
 }

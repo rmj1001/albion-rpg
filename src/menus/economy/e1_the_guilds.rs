@@ -1,20 +1,20 @@
 #![allow(unused_assignments, unused_variables, unused_mut)]
-use crate::misc::{
+use crate::utils::{
     input::{confirm, select_from_str_array},
     messages::*,
 };
 
-use crate::misc::tui::page_header;
-use crate::misc::tui::HeaderSubtext;
-use crate::user::{
+use crate::player::{
     guilds::{GuildMemberships, PricedGuilds},
     inventory::{GuildItemNames, Item},
     profile::UserProfile,
     xp::{XPType, XP},
 };
+use crate::utils::tui::page_header;
+use crate::utils::tui::HeaderSubtext;
 use rand::Rng;
 
-pub fn main(user: &mut UserProfile) {
+pub fn main(player: &mut UserProfile) {
     page_header("The Guilds", HeaderSubtext::Keyboard);
 
     let job_name: String;
@@ -37,17 +37,17 @@ pub fn main(user: &mut UserProfile) {
     );
 
     match guild_choice {
-        0 => check_membership(user, PricedGuilds::Fishing),
-        1 => check_membership(user, PricedGuilds::Cooking),
-        2 => check_membership(user, PricedGuilds::Woodcutting),
-        3 => check_membership(user, PricedGuilds::Mining),
-        4 => check_membership(user, PricedGuilds::Smithing),
+        0 => check_membership(player, PricedGuilds::Fishing),
+        1 => check_membership(player, PricedGuilds::Cooking),
+        2 => check_membership(player, PricedGuilds::Woodcutting),
+        3 => check_membership(player, PricedGuilds::Mining),
+        4 => check_membership(player, PricedGuilds::Smithing),
         _ => {}
     }
 
     match guild_choice {
         0 => job(
-            user,
+            player,
             "Fishing".to_string(),
             XPType::Fishing,
             false,
@@ -55,7 +55,7 @@ pub fn main(user: &mut UserProfile) {
             &None,
         ),
         1 => job(
-            user,
+            player,
             "Cooking".to_string(),
             XPType::Cooking,
             false,
@@ -63,7 +63,7 @@ pub fn main(user: &mut UserProfile) {
             &Some(GuildItemNames::Fish),
         ),
         2 => job(
-            user,
+            player,
             "Woodcutting".to_string(),
             XPType::Woodcutting,
             false,
@@ -71,7 +71,7 @@ pub fn main(user: &mut UserProfile) {
             &None,
         ),
         3 => job(
-            user,
+            player,
             "Mining".to_string(),
             XPType::Mining,
             false,
@@ -79,39 +79,39 @@ pub fn main(user: &mut UserProfile) {
             &None,
         ),
         4 => job(
-            user,
+            player,
             "Smithing".to_string(),
             XPType::Smithing,
             false,
             &Some(GuildItemNames::Ingots),
             &Some(GuildItemNames::Ore),
         ),
-        5 => job(user, "Thieving".to_string(), XPType::Thieving, true, &None, &None),
-        6 => crate::menus::game_menu::main(user),
+        5 => job(player, "Thieving".to_string(), XPType::Thieving, true, &None, &None),
+        6 => crate::menus::game_menu::main(player),
         _ => out_of_bounds(),
     }
 }
 
-fn check_membership(user: &mut UserProfile, job: PricedGuilds) {
+fn check_membership(player: &mut UserProfile, job: PricedGuilds) {
     let guild = match job {
-        PricedGuilds::Fishing => &user.guild_memberships.fishing,
-        PricedGuilds::Cooking => &user.guild_memberships.cooking,
-        PricedGuilds::Woodcutting => &user.guild_memberships.woodcutting,
-        PricedGuilds::Mining => &user.guild_memberships.mining,
-        PricedGuilds::Smithing => &user.guild_memberships.smithing,
+        PricedGuilds::Fishing => &player.guild_memberships.fishing,
+        PricedGuilds::Cooking => &player.guild_memberships.cooking,
+        PricedGuilds::Woodcutting => &player.guild_memberships.woodcutting,
+        PricedGuilds::Mining => &player.guild_memberships.mining,
+        PricedGuilds::Smithing => &player.guild_memberships.smithing,
     };
 
     if guild.member {
         return;
     }
 
-    if user.bank.wallet < guild.member_price {
+    if player.bank.wallet < guild.member_price {
         failure(format!(
             "This guild requires a membership, which you are too poor to purchase. (Cost: {} gold)",
             guild.member_price
         ));
 
-        return main(user);
+        return main(player);
     }
 
     let permission_to_purchase = confirm(&format!(
@@ -120,19 +120,19 @@ fn check_membership(user: &mut UserProfile, job: PricedGuilds) {
     ));
 
     if permission_to_purchase {
-        if let Err(message) = GuildMemberships::purchase(user, job) {
+        if let Err(message) = GuildMemberships::purchase(player, job) {
             failure(message);
         }
 
-        main(user);
+        main(player);
     } else {
         failure("You cannot work in this guild without a membership.");
-        main(user);
+        main(player);
     }
 }
 
 fn job(
-    user: &mut UserProfile,
+    player: &mut UserProfile,
     job_name: String,
     xp_type: XPType,
     use_gold: bool,
@@ -141,14 +141,14 @@ fn job(
 ) {
     page_header(format!("Job: {}", job_name), HeaderSubtext::Keyboard);
 
-    let xp = user.xp.get(xp_type);
+    let xp = player.xp.get(xp_type);
 
     println!("XP: {}", xp);
     println!("Level: {}", XP::level(xp));
 
     if use_gold {
         println!();
-        println!("Gold: {}", user.bank.wallet);
+        println!("Gold: {}", player.bank.wallet);
     }
 
     println!();
@@ -156,19 +156,19 @@ fn job(
     match increase_item {
         Some(item) => match item {
             GuildItemNames::CookedFish => {
-                println!("Cooked Fish: {}", user.inventory.food.quantity)
+                println!("Cooked Fish: {}", player.inventory.food.quantity)
             }
             GuildItemNames::Fish => {
-                println!("Fish: {}", user.inventory.fish.quantity)
+                println!("Fish: {}", player.inventory.fish.quantity)
             }
             GuildItemNames::Wood => {
-                println!("Wood: {}", user.inventory.wood.quantity)
+                println!("Wood: {}", player.inventory.wood.quantity)
             }
             GuildItemNames::Ingots => {
-                println!("Ingots: {}", user.inventory.ingots.quantity)
+                println!("Ingots: {}", player.inventory.ingots.quantity)
             }
             GuildItemNames::Ore => {
-                println!("Ores: {}", user.inventory.ore.quantity)
+                println!("Ores: {}", player.inventory.ore.quantity)
             }
         },
         None => {}
@@ -177,19 +177,19 @@ fn job(
     match decrease_item {
         Some(item) => match item {
             GuildItemNames::CookedFish => {
-                println!("Cooked Fish: {}", user.inventory.food.quantity)
+                println!("Cooked Fish: {}", player.inventory.food.quantity)
             }
             GuildItemNames::Fish => {
-                println!("Fish: {}", user.inventory.fish.quantity)
+                println!("Fish: {}", player.inventory.fish.quantity)
             }
             GuildItemNames::Wood => {
-                println!("Wood: {}", user.inventory.wood.quantity)
+                println!("Wood: {}", player.inventory.wood.quantity)
             }
             GuildItemNames::Ingots => {
-                println!("Ingots: {}", user.inventory.ingots.quantity)
+                println!("Ingots: {}", player.inventory.ingots.quantity)
             }
             GuildItemNames::Ore => {
-                println!("Ores: {}", user.inventory.ore.quantity)
+                println!("Ores: {}", player.inventory.ore.quantity)
             }
         },
         None => {}
@@ -201,21 +201,28 @@ fn job(
 
     match work_choice {
         0 => {
-            user.xp.increment(xp_type);
+            player.xp.increment(xp_type);
 
             if use_gold {
-                user.bank.wallet += rand::thread_rng().gen_range(0..2);
+                player.bank.wallet += rand::thread_rng().gen_range(0..2);
 
-                job(user, job_name.clone(), xp_type, use_gold, increase_item, decrease_item);
+                job(
+                    player,
+                    job_name.clone(),
+                    xp_type,
+                    use_gold,
+                    increase_item,
+                    decrease_item,
+                );
             }
 
             match increase_item {
                 Some(item) => match item {
-                    GuildItemNames::CookedFish => user.inventory.food.quantity += 1,
-                    GuildItemNames::Fish => user.inventory.fish.quantity += 1,
-                    GuildItemNames::Wood => user.inventory.wood.quantity += 1,
-                    GuildItemNames::Ingots => user.inventory.ingots.quantity += 1,
-                    GuildItemNames::Ore => user.inventory.ore.quantity += 1,
+                    GuildItemNames::CookedFish => player.inventory.food.quantity += 1,
+                    GuildItemNames::Fish => player.inventory.fish.quantity += 1,
+                    GuildItemNames::Wood => player.inventory.wood.quantity += 1,
+                    GuildItemNames::Ingots => player.inventory.ingots.quantity += 1,
+                    GuildItemNames::Ore => player.inventory.ore.quantity += 1,
                 },
                 None => {}
             }
@@ -223,52 +230,59 @@ fn job(
             match decrease_item {
                 Some(item) => match item {
                     GuildItemNames::CookedFish => {
-                        if user.inventory.food.quantity == 0 {
-                            too_low_items(user, "cooked fish");
+                        if player.inventory.food.quantity == 0 {
+                            too_low_items(player, "cooked fish");
                         }
 
-                        user.inventory.food.quantity -= 1;
+                        player.inventory.food.quantity -= 1;
                     }
                     GuildItemNames::Fish => {
-                        if user.inventory.fish.quantity == 0 {
-                            too_low_items(user, "fish");
+                        if player.inventory.fish.quantity == 0 {
+                            too_low_items(player, "fish");
                         }
 
-                        user.inventory.fish.quantity -= 1;
+                        player.inventory.fish.quantity -= 1;
                     }
                     GuildItemNames::Wood => {
-                        if user.inventory.wood.quantity == 0 {
-                            too_low_items(user, "wood");
+                        if player.inventory.wood.quantity == 0 {
+                            too_low_items(player, "wood");
                         }
 
-                        user.inventory.wood.quantity -= 1;
+                        player.inventory.wood.quantity -= 1;
                     }
                     GuildItemNames::Ingots => {
-                        if user.inventory.ingots.quantity == 0 {
-                            too_low_items(user, "ingots");
+                        if player.inventory.ingots.quantity == 0 {
+                            too_low_items(player, "ingots");
                         }
 
-                        user.inventory.ingots.quantity -= 1;
+                        player.inventory.ingots.quantity -= 1;
                     }
                     GuildItemNames::Ore => {
-                        if user.inventory.ore.quantity == 0 {
-                            too_low_items(user, "ores");
+                        if player.inventory.ore.quantity == 0 {
+                            too_low_items(player, "ores");
                         }
 
-                        user.inventory.ore.quantity -= 1;
+                        player.inventory.ore.quantity -= 1;
                     }
                 },
                 None => {}
             }
         }
-        1 => main(user),
+        1 => main(player),
         _ => out_of_bounds(),
     }
 
-    job(user, job_name.clone(), xp_type, use_gold, increase_item, decrease_item);
+    job(
+        player,
+        job_name.clone(),
+        xp_type,
+        use_gold,
+        increase_item,
+        decrease_item,
+    );
 }
 
-fn too_low_items(user: &mut UserProfile, item_name: &str) {
+fn too_low_items(player: &mut UserProfile, item_name: &str) {
     failure(format!("You do not have enough {} to work with.", item_name));
-    main(user);
+    main(player);
 }

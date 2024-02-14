@@ -1,19 +1,19 @@
 use crate::{
-    misc::{
+    player::{bank::BankAccount, profile::UserProfile},
+    utils::{
         input::select_from_str_array,
         math::{generic_calculator, Operation},
         messages::*,
         tui::{page_header, press_enter_to_continue, HeaderSubtext},
     },
-    user::{bank::BankAccount, profile::UserProfile},
 };
 
-pub fn main(user: &mut UserProfile) {
+pub fn main(player: &mut UserProfile) {
     let mut account: BankAccount = BankAccount::Account1;
 
     page_header("Developer Mode - Bank Managert", HeaderSubtext::Keyboard);
 
-    user.bank.print_table();
+    player.bank.print_table();
 
     let account_choice = select_from_str_array(
         &[
@@ -33,7 +33,7 @@ pub fn main(user: &mut UserProfile) {
         2 => account = BankAccount::Account2,
         3 => account = BankAccount::Account3,
         4 => account = BankAccount::Account4,
-        5 => super::d1_developer_menu::main(user),
+        5 => super::d1_developer_menu::main(player),
         _ => out_of_bounds(),
     }
 
@@ -43,14 +43,14 @@ pub fn main(user: &mut UserProfile) {
     if let Operation::Cancel = calculation {
         cancelling();
         press_enter_to_continue();
-        main(user);
+        main(player);
     }
 
     let result: Result<(), &str> = match calculation {
-        Operation::Add(_) => user.bank.arithmetic(&account, calculation),
-        Operation::Subtract(_) => user.bank.arithmetic(&account, calculation),
-        Operation::Multiply(_) => user.bank.arithmetic(&account, calculation),
-        Operation::Divide(_) => user.bank.arithmetic(&account, calculation),
+        Operation::Add(_) => player.bank.arithmetic(&account, calculation),
+        Operation::Subtract(_) => player.bank.arithmetic(&account, calculation),
+        Operation::Multiply(_) => player.bank.arithmetic(&account, calculation),
+        Operation::Divide(_) => player.bank.arithmetic(&account, calculation),
         Operation::Cancel => Ok(()),
         Operation::Invalid => Err(""),
     };
@@ -58,10 +58,10 @@ pub fn main(user: &mut UserProfile) {
     match result {
         Ok(_) => {
             success();
-            main(user);
+            main(player);
         }
         Err(_) => {
-            main(user);
+            main(player);
         }
     }
 }

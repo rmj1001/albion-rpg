@@ -1,2 +1,81 @@
-// TODO: Armor/Weapon equip/unequip
-// TODO: Potion drinking/food consumption for health
+use crate::{
+    player::profile::UserProfile,
+    utils::{
+        input::select_from_str_array,
+        math::random_num,
+        messages::out_of_bounds,
+        tui::{page_header, press_enter_to_continue, HeaderSubtext},
+    },
+};
+
+pub fn battle_inventory(player: &mut UserProfile) {
+    page_header("Battle Inventory", HeaderSubtext::Keyboard);
+
+    let choice: usize = select_from_str_array(&["Armor", "Weapons", "Healing", "NAV: Go Back"], None);
+
+    match choice {
+        0 => {
+            player.armor.management_menu();
+            battle_inventory(player);
+        }
+        1 => {
+            player.weapons.management_menu();
+            battle_inventory(player);
+        }
+        2 => healing_inventory(player),
+        3 => {} // just returns to battle menu since the battle menu function is recursive called after this menu
+        _ => out_of_bounds(),
+    }
+}
+
+pub fn healing_inventory(player: &mut UserProfile) {
+    page_header("Healing Inventory", HeaderSubtext::Keyboard);
+
+    let choice: usize = select_from_str_array(&["Use Potion", "Eat Food", "NAV: Go Back"], None);
+
+    match choice {
+        0 => {
+            use_potion(player);
+            healing_inventory(player);
+        }
+        1 => {
+            eat_food(player);
+            healing_inventory(player);
+        }
+        2 => battle_inventory(player),
+        _ => out_of_bounds(),
+    }
+}
+
+pub fn use_potion(player: &mut UserProfile) {
+    if player.inventory.potions.quantity == 0 {
+        println!("You do not have enough potions.");
+        press_enter_to_continue();
+    }
+
+    player.inventory.potions.quantity -= 1;
+
+    let health = random_num(1, 5);
+    player.health.hp += health;
+
+    println!("Your health increased {} hp, and is now {}.", health, player.health.hp);
+    press_enter_to_continue();
+}
+
+pub fn eat_food(player: &mut UserProfile) {
+    if player.inventory.food.quantity == 0 {
+        println!("You do not have enough food.");
+        press_enter_to_continue();
+    }
+
+    player.inventory.food.quantity -= 1;
+
+    let hunger = random_num(1, 5);
+    player.health.hunger -= hunger;
+
+    println!(
+        "Your hunger decreased {} points, and is now {}.",
+        hunger, player.health.hunger
+    );
+    press_enter_to_continue();
+}

@@ -1,18 +1,18 @@
 use crate::{
-    misc::{
+    player::settings::Settings,
+    utils::{
         input::prompt_arrow,
         messages::{self, success_msg},
         terminal,
         tui::{self, page_header, HeaderSubtext},
     },
-    user::settings::Settings,
 };
 
-use crate::user::profile::UserProfile;
+use crate::player::profile::UserProfile;
 
-pub fn main(user: &mut UserProfile) {
+pub fn main(player: &mut UserProfile) {
     page_header(
-        format!("Game Menu (user: {})", user.settings.username),
+        format!("Game Menu (Player: {})", player.settings.username),
         tui::HeaderSubtext::EnterCode,
     );
 
@@ -34,7 +34,7 @@ pub fn main(user: &mut UserProfile) {
     println!("p2. Hall of Records");
     println!("\n");
 
-    if user.settings.developer {
+    if player.settings.developer {
         println!("d1. Developer Menu");
     }
 
@@ -46,56 +46,56 @@ pub fn main(user: &mut UserProfile) {
 
     match &choice[..] {
         // Combat
-        "c1" => crate::menus::combat::c2_wander_realm::main(user),
-        "c2" => crate::menus::combat::c1_the_stronghold::main(user),
+        "c1" => crate::menus::combat::c2_wander_realm::main(player),
+        "c2" => crate::menus::combat::c1_the_stronghold::main(player),
 
         // Economy
-        "e1" => crate::menus::economy::e1_the_guilds::main(user),
-        "e2" => crate::menus::economy::e2_the_bank::main(user),
-        "e3" => crate::menus::economy::e3_trading_post::main(user),
-        "e4" => crate::menus::economy::e4_weapons_shop::main(user),
-        "e5" => crate::menus::economy::e5_armor_shop::main(user),
+        "e1" => crate::menus::economy::e1_the_guilds::main(player),
+        "e2" => crate::menus::economy::e2_the_bank::main(player),
+        "e3" => crate::menus::economy::e3_trading_post::main(player),
+        "e4" => crate::menus::economy::e4_weapons_shop::main(player),
+        "e5" => crate::menus::economy::e5_armor_shop::main(player),
 
         // Profile
-        "p1" => crate::menus::profile::p1_inventory::main(user),
-        "p2" => crate::menus::profile::p2_hall_of_records::main(user),
-        "n1" => crate::menus::profile::n1_settings::main(user),
+        "p1" => crate::menus::profile::p1_inventory::main(player),
+        "p2" => crate::menus::profile::p2_hall_of_records::main(player),
+        "n1" => crate::menus::profile::n1_settings::main(player),
         "n2" => {
-            user.save();
+            player.save();
             crate::menus::accounts::main();
         }
         "n3" => {
-            user.save();
+            player.save();
             terminal::exit();
         }
 
         // Developer Mode
         "d1" => {
-            if user.settings.developer {
-                crate::menus::devmode::d1_developer_menu::main(user);
+            if player.settings.developer {
+                crate::menus::devmode::d1_developer_menu::main(player);
             } else {
                 messages::invalid_input(None, None, true);
-                main(user);
+                main(player);
             }
         }
 
         "3.141592" => {
-            if !user.settings.developer {
+            if !player.settings.developer {
                 page_header("Developer Mode", HeaderSubtext::None);
-                user.achievements.hacked_the_game = true;
-                Settings::set_developer(user, true);
+                player.achievements.hacked_the_game = true;
+                Settings::set_developer(player, true);
 
                 success_msg("Developer mode enabled.");
 
-                main(user);
+                main(player);
             } else {
-                super::devmode::d1_developer_menu::disable_developer_mode(user);
+                super::devmode::d1_developer_menu::disable_developer_mode(player);
             }
         }
 
         wrong_input => {
             messages::invalid_input(Some(wrong_input), None, true);
-            main(user);
+            main(player);
         }
     }
 }

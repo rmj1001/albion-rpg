@@ -1,7 +1,6 @@
 #![allow(unused_assignments, clippy::new_without_default)]
 
-pub mod misc {
-    pub mod config_encoding;
+pub mod utils {
     pub mod crypt;
     pub mod files;
     pub mod input;
@@ -12,7 +11,7 @@ pub mod misc {
     pub mod tui;
 }
 
-pub mod user {
+pub mod player {
     pub mod achievements;
     pub mod armor;
     pub mod bank;

@@ -2,7 +2,7 @@ use std::{io::Write, str::FromStr};
 
 use dialoguer::Confirm;
 
-use crate::misc::{messages::*, tui::press_enter_to_continue};
+use crate::utils::{messages::*, tui::press_enter_to_continue};
 
 pub fn select_from_str_array(options: &[&str], optional_prompt: Option<&str>) -> usize {
     if let Some(prompt_text) = optional_prompt {

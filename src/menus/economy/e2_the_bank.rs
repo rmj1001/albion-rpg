@@ -1,23 +1,23 @@
-use crate::misc::{
+use crate::utils::{
     input::{prompt_arrow, select_from_str_array},
     messages::{self, *},
     tui::{page_header, HeaderSubtext},
 };
 
-use crate::user::{bank::*, profile::UserProfile};
+use crate::player::{bank::*, profile::UserProfile};
 
-pub fn main(user: &mut UserProfile) {
+pub fn main(player: &mut UserProfile) {
     let mut account: BankAccount = BankAccount::Account1;
 
     page_header("The Bank", HeaderSubtext::Keyboard);
 
     println!();
-    user.bank.print_table();
+    player.bank.print_table();
 
     let option = select_from_str_array(&["Deposit", "Withdraw", "NAV: Go Back"], None);
 
     if option == 2 {
-        crate::menus::game_menu::main(user);
+        crate::menus::game_menu::main(player);
     }
 
     let account_choice = select_from_str_array(
@@ -30,7 +30,7 @@ pub fn main(user: &mut UserProfile) {
         1 => account = BankAccount::Account2,
         2 => account = BankAccount::Account3,
         3 => account = BankAccount::Account4,
-        4 => main(user),
+        4 => main(player),
         _ => out_of_bounds(),
     }
 
@@ -41,7 +41,7 @@ pub fn main(user: &mut UserProfile) {
         Ok(number) => amount = number,
         Err(_) => {
             messages::invalid_input(None, None, true);
-            main(user);
+            main(player);
         }
     }
 
@@ -49,22 +49,22 @@ pub fn main(user: &mut UserProfile) {
 
     match option {
         // Deposit
-        0 => bank_result = Bank::deposit(user, account, amount, false),
+        0 => bank_result = Bank::deposit(player, account, amount, false),
         // Withdrawal
-        1 => bank_result = Bank::withdraw(user, account, amount, false),
-        2 => main(user),
+        1 => bank_result = Bank::withdraw(player, account, amount, false),
+        2 => main(player),
         _ => out_of_bounds(),
     }
 
     match bank_result {
         Ok(_) => {
             success();
-            main(user);
+            main(player);
         }
 
         Err(message) => {
             failure(message);
-            main(user);
+            main(player);
         }
     }
 }

@@ -1,11 +1,11 @@
 use crate::{
-    misc::{
+    player::profile::UserProfile,
+    utils::{
         crypt,
         input::{self, prompt_colon},
         messages::{failure, success},
         tui::{page_header, HeaderSubtext},
     },
-    user::profile::UserProfile,
 };
 
 pub fn main() {

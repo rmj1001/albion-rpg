@@ -1,7 +1,7 @@
 use rand::{thread_rng, Rng};
 use serde::{Deserialize, Serialize};
 
-use crate::misc::tui::{pretty_bool, print_table};
+use crate::utils::tui::{pretty_bool, print_table};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Weapon {
@@ -175,4 +175,7 @@ impl WeaponsInventory {
 
         Ok(())
     }
+
+    // TODO: Equipping/Unequipping armor menu
+    pub fn management_menu(&self) {}
 }

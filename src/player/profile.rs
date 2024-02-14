@@ -8,8 +8,7 @@ use super::settings::Settings;
 use super::weapons::*;
 use super::xp::*;
 
-use crate::misc::files;
-use crate::misc::files::file_path;
+use crate::utils::files;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -40,6 +39,7 @@ impl UserProfile {
                 password: String::new(),
                 developer: false,
                 locked: false,
+                hardmode: false,
             },
             health: Health { hp: 100, hunger: 0 },
             xp: XP {
@@ -290,18 +290,18 @@ impl UserProfile {
     }
 
     pub fn retrieve(username: &str) -> Result<UserProfile, String> {
-        let profile_path: String = file_path(username);
+        let profile_path = files::handler::generate_profile_path(username);
         let mut contents: String = String::new();
 
-        let file_result = files::read(profile_path);
+        let file_result = files::handler::read_file(profile_path);
 
         match file_result {
             Ok(data) => contents = data,
             Err(_) => return Err(format!("Profile '{}' does not exist.", username)),
         }
 
-        match crate::misc::config_encoding::deserialize_user(contents) {
-            Ok(user) => Ok(user),
+        match crate::utils::files::encoding::deserialize_user(contents) {
+            Ok(player) => Ok(player),
             Err(message) => {
                 UserProfile::delete_from_username(username);
                 Err(message)
@@ -310,20 +310,162 @@ impl UserProfile {
     }
 
     pub fn save(&self) {
-        let serialize_result =
-            crate::misc::config_encoding::serialize_user(self).expect("Could not convert user to config file format.");
+        let serialize_result = crate::utils::files::encoding::serialize_user(self)
+            .expect("Could not convert Player to config file format.");
 
-        let path = files::file_path(&self.settings.username);
-        files::write(path, serialize_result)
+        let path = files::handler::generate_profile_path(&self.settings.username);
+        files::handler::write_file(path, serialize_result)
     }
 
     pub fn delete_from_username(username: &str) {
-        let profile_path: String = file_path(username);
+        let profile_path = files::handler::generate_profile_path(username);
 
-        files::delete(profile_path);
+        files::handler::delete_file(profile_path);
     }
 
     pub fn delete(&self) {
         UserProfile::delete_from_username(&self.settings.username);
+    }
+
+    pub fn reset_health(&mut self) {
+        self.health.hp = 100;
+        self.health.hunger = 0;
+    }
+
+    pub fn reset_inventory(&mut self) {
+        // Wealth
+        self.bank.wallet = 0;
+
+        // Mundane Inventory
+        self.inventory.bait.quantity = 0;
+        self.inventory.bones.quantity = 0;
+        self.inventory.dragon_hides.quantity = 0;
+        self.inventory.fish.quantity = 0;
+        self.inventory.food.quantity = 0;
+        self.inventory.furs.quantity = 0;
+        self.inventory.ingots.quantity = 0;
+        self.inventory.magic_scrolls.quantity = 0;
+        self.inventory.ore.quantity = 0;
+        self.inventory.potions.quantity = 0;
+        self.inventory.rubies.quantity = 0;
+        self.inventory.runic_tablets.quantity = 0;
+        self.inventory.seeds.quantity = 0;
+        self.inventory.wood.quantity = 0;
+
+        // Armor
+        self.armor = ArmorInventory {
+            leather: Armor {
+                name: "Leather".to_string(),
+                price: 50,
+                owns: false,
+                defense: 10,
+                durability: 100,
+                default_durability: 100,
+                equipped: false,
+            },
+            bronze: Armor {
+                name: "Bronze".to_string(),
+                price: 200,
+                owns: false,
+                defense: 30,
+                durability: 200,
+                default_durability: 200,
+                equipped: false,
+            },
+            iron: Armor {
+                name: "Iron".to_string(),
+                price: 500,
+                owns: false,
+                defense: 50,
+                durability: 300,
+                default_durability: 300,
+                equipped: false,
+            },
+            steel: Armor {
+                name: "Steel".to_string(),
+                price: 750,
+                owns: false,
+                defense: 100,
+                durability: 500,
+                default_durability: 500,
+                equipped: false,
+            },
+            dragonhide: Armor {
+                name: "Dragonhide".to_string(),
+                price: 1000,
+                owns: false,
+                defense: 200,
+                durability: 500,
+                default_durability: 500,
+                equipped: false,
+            },
+            mystic: Armor {
+                name: "Magic".to_string(),
+                price: 10000,
+                owns: false,
+                defense: 1000,
+                durability: 10000,
+                default_durability: 10000,
+                equipped: false,
+            },
+        };
+
+        // Weapons
+        self.weapons = WeaponsInventory {
+            wooden_sword: Weapon {
+                name: "Wooden Sword".to_string(),
+                price: 10,
+                owns: false,
+                damage: 10,
+                durability: 100,
+                default_durability: 100,
+                equipped: false,
+            },
+            bronze_sword: Weapon {
+                name: "Bronze Sword".to_string(),
+                price: 30,
+                owns: false,
+                damage: 20,
+                durability: 150,
+                default_durability: 150,
+                equipped: false,
+            },
+            iron_sword: Weapon {
+                name: "Iron Sword".to_string(),
+                price: 100,
+                owns: false,
+                damage: 50,
+                durability: 200,
+                default_durability: 200,
+                equipped: false,
+            },
+            steel_sword: Weapon {
+                name: "Steel Rapier".to_string(),
+                price: 500,
+                owns: false,
+                damage: 200,
+                durability: 500,
+                default_durability: 500,
+                equipped: false,
+            },
+            mystic_sword: Weapon {
+                name: "Magic Sword".to_string(),
+                price: 5000,
+                owns: false,
+                damage: 500,
+                durability: 1000,
+                default_durability: 1000,
+                equipped: false,
+            },
+            wizard_staff: Weapon {
+                name: "Wizard Staff".to_string(),
+                price: 10000,
+                owns: false,
+                damage: 1000,
+                durability: 2000,
+                default_durability: 2000,
+                equipped: false,
+            },
+        }
     }
 }

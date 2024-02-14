@@ -1,4 +1,4 @@
-use crate::misc::{math::Operation, messages::*, tui::print_table};
+use crate::utils::{math::Operation, messages::*, tui::print_table};
 
 use super::profile::*;
 use serde::{Deserialize, Serialize};
@@ -21,13 +21,13 @@ pub struct Bank {
 }
 
 impl Bank {
-    pub fn balance(user: &UserProfile, account: &BankAccount) -> usize {
+    pub fn balance(player: &UserProfile, account: &BankAccount) -> usize {
         match account {
-            BankAccount::Wallet => user.bank.wallet,
-            BankAccount::Account1 => user.bank.account1,
-            BankAccount::Account2 => user.bank.account2,
-            BankAccount::Account3 => user.bank.account3,
-            BankAccount::Account4 => user.bank.account4,
+            BankAccount::Wallet => player.bank.wallet,
+            BankAccount::Account1 => player.bank.account1,
+            BankAccount::Account2 => player.bank.account2,
+            BankAccount::Account3 => player.bank.account3,
+            BankAccount::Account4 => player.bank.account4,
         }
     }
 
@@ -88,35 +88,35 @@ impl Bank {
     }
 
     pub fn deposit(
-        user: &mut UserProfile,
+        player: &mut UserProfile,
         account_flag: BankAccount,
         amount: usize,
         add_only: bool,
     ) -> Result<(), &str> {
-        if !add_only && user.bank.wallet < amount {
+        if !add_only && player.bank.wallet < amount {
             return Err("You do not have enough gold in your wallet.");
         }
 
         if !add_only {
-            user.bank.wallet -= amount;
+            player.bank.wallet -= amount;
         }
 
-        user.bank.arithmetic(&account_flag, Operation::Add(amount))
+        player.bank.arithmetic(&account_flag, Operation::Add(amount))
     }
 
     pub fn withdraw(
-        user: &mut UserProfile,
+        player: &mut UserProfile,
         account_flag: BankAccount,
         amount: usize,
         subtract_only: bool,
     ) -> Result<(), &str> {
-        let account_balance: usize = Bank::balance(user, &account_flag);
+        let account_balance: usize = Bank::balance(player, &account_flag);
 
         if account_balance >= amount && !subtract_only {
-            user.bank.wallet += amount;
+            player.bank.wallet += amount;
         }
 
-        let withdraw_result = user.bank.arithmetic(&account_flag, Operation::Subtract(amount));
+        let withdraw_result = player.bank.arithmetic(&account_flag, Operation::Subtract(amount));
 
         withdraw_result.to_owned()
     }

@@ -1,14 +1,14 @@
 use crate::{
-    misc::{
+    player::settings::Settings,
+    utils::{
         crypt,
         input::*,
         messages::*,
         tui::{self, page_header},
     },
-    user::settings::Settings,
 };
 
-use crate::user::profile::UserProfile;
+use crate::player::profile::UserProfile;
 
 fn get_password(profile: &UserProfile) -> bool {
     let input_password: String = password(false);
