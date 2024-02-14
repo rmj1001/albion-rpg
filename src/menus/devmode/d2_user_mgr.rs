@@ -100,6 +100,7 @@ fn view_user(player: &mut Player) {
                 Ok(profile) => {
                     let pretty_string_result = crate::utils::files::encoding::serialize_user(player);
                     let mut pretty_string: String = String::new();
+                    let mut paginated_file: Vec<String> = Vec::new();
 
                     match pretty_string_result {
                         Ok(data) => pretty_string = data,
@@ -108,14 +109,25 @@ fn view_user(player: &mut Player) {
                         }
                     }
 
-                    page_header(
-                        format!("Player Profile - {}", profile.settings.username),
-                        HeaderSubtext::None,
-                    );
+                    paginated_file = paginate_string(pretty_string);
+                    let mut page_number: usize = 1;
+                    let total_pages = paginated_file.len();
 
-                    println!("{}\n", pretty_string);
+                    for page in paginated_file {
+                        page_header(
+                            format!(
+                                "Player Profile - {} - Page {}/{}",
+                                profile.settings.username, page_number, total_pages
+                            ),
+                            HeaderSubtext::None,
+                        );
 
-                    press_enter_to_continue();
+                        println!("{}\n", page);
+                        press_enter_to_continue();
+
+                        page_number += 1;
+                    }
+
                     main(player);
                 }
                 Err(message) => {
@@ -128,4 +140,27 @@ fn view_user(player: &mut Player) {
     }
 
     main(player);
+}
+
+fn paginate_string<T>(string: T) -> Vec<String>
+where
+    T: Into<String>,
+{
+    let string: String = string.into();
+    let lines: Vec<String> = string.split('\n').map(|s| format!("{}\n", s)).collect();
+
+    const PAGE_LENGTH: usize = 20;
+
+    let mut pages: Vec<String> = Vec::new();
+
+    for chunk in lines.chunks(PAGE_LENGTH) {
+        let mut page: String = String::new();
+        for line in chunk {
+            page.push_str(line);
+        }
+
+        pages.push(page);
+    }
+
+    pages
 }
