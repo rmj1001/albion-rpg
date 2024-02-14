@@ -3,6 +3,7 @@ use crate::{
     utils::math::{self, random_num},
 };
 
+#[derive(Clone)]
 pub enum EnemyType {
     Animal(AnimalType),
     Human,
@@ -11,6 +12,7 @@ pub enum EnemyType {
     Invalid,
 }
 
+#[derive(Clone)]
 pub enum AnimalType {
     Bear,
     DireWolf,
@@ -21,6 +23,7 @@ pub enum AnimalType {
     Invalid,
 }
 
+#[derive(Clone)]
 pub enum MonsterType {
     Centaur,
     DarkElf,
@@ -33,6 +36,7 @@ pub enum MonsterType {
     Invalid,
 }
 
+#[derive(Clone)]
 pub enum UndeadType {
     Banshee,
     Ghost,
@@ -42,6 +46,7 @@ pub enum UndeadType {
     Invalid,
 }
 
+#[derive(Clone)]
 pub struct Enemy {
     pub kind: EnemyType,
     pub hp: usize,
@@ -102,13 +107,13 @@ impl Enemy {
 }
 
 fn pick_enemy() -> EnemyType {
-    let number = math::random_num(1, 4);
+    let number = math::random_num(0, 3);
 
     match number {
-        1 => EnemyType::Animal(pick_animal()),
-        2 => EnemyType::Human,
-        3 => EnemyType::Monster(pick_monster()),
-        4 => EnemyType::Undead(pick_undead()),
+        0 => EnemyType::Animal(pick_animal()),
+        1 => EnemyType::Human,
+        2 => EnemyType::Monster(pick_monster()),
+        3 => EnemyType::Undead(pick_undead()),
         _ => EnemyType::Invalid,
     }
 }
@@ -177,7 +182,7 @@ fn calculate_damage(player_hp: usize) -> usize {
 
 // Rewards
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Rewards {
     Potions(usize),
     Rubies(usize),

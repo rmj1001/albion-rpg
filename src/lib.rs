@@ -25,10 +25,6 @@ pub mod player {
 }
 
 pub mod menus {
-    pub mod combat {
-        pub mod c1_the_stronghold;
-    }
-
     pub mod devmode {
         pub mod d1_developer_menu;
         pub mod d2_user_mgr;

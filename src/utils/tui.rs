@@ -103,15 +103,13 @@ pub fn header_subtext(instructions: HeaderSubtext) {
     let mut instructions_string = String::new();
 
     match instructions {
-        HeaderSubtext::Keyboard => instructions_string.push_str("Press ↑ or ↓ to navigate, then press ENTER/RETURN."),
-        HeaderSubtext::EnterCode => instructions_string.push_str("Enter a code (ex. p1), then press ENTER/RETURN."),
-        HeaderSubtext::Other(text) => instructions_string.push_str(text),
-        HeaderSubtext::None => {
-            return;
-        }
+        HeaderSubtext::Keyboard => instructions_string.push_str("Press ↑ or ↓ to navigate, then press ENTER/RETURN.\n"),
+        HeaderSubtext::EnterCode => instructions_string.push_str("Enter a code (ex. p1), then press ENTER/RETURN.\n"),
+        HeaderSubtext::Other(text) => instructions_string.push_str(&format!("{}\n", text)),
+        HeaderSubtext::None => {}
     }
 
-    println!("{}\n", instructions_string);
+    println!("{}", instructions_string);
 }
 
 /// Equivalent to DOS "pause" command

@@ -25,7 +25,7 @@ pub fn clearscr() {
 /// Sends an exit code of 0 (no errors)
 pub fn exit() {
     page_header("Thanks!", super::tui::HeaderSubtext::None);
-    println!("\nThanks for playing!");
+    println!("Thanks for playing!");
     press_enter_to_continue();
 
     clearscr();

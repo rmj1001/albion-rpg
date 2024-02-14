@@ -1,9 +1,10 @@
 use crate::{
+    combat::{battle::BattleSettings, enemy::Enemy},
     player::settings::Settings,
     utils::{
-        input::prompt_arrow,
+        input::{confirm, prompt_arrow},
         messages::{self, success, success_msg},
-        tui::{self, page_header, sleep, HeaderSubtext},
+        tui::{self, page_header, press_enter_to_continue, sleep, HeaderSubtext},
     },
 };
 
@@ -47,9 +48,44 @@ pub fn main(player: &mut Player) {
     match &choice[..] {
         // Combat
         "c1" | "wander the realm" => {
-            crate::combat::battle::battle("Wandering the Realm", "You are wandering the realm...", player, false)
+            let mut battle_settings = BattleSettings {
+                header: "Wandering Gielnor",
+                prompt: "You are wandering the realm...",
+                enemy: Enemy::new(player.xp.combat, player.health.hp),
+                player,
+                loops: 0,
+                is_first_battle: true,
+            };
+
+            crate::combat::battle::new_battle(&mut battle_settings);
         }
-        "c2" | "enter the stronghold" => crate::menus::combat::c1_the_stronghold::main(player),
+        "c2" | "enter the stronghold" => {
+            page_header("The Stronghold", HeaderSubtext::None);
+            let confirm_stronghold =
+                confirm("Are you sure you want to enter the stronghold? You must win 50 hard battles.");
+
+            if !confirm_stronghold {
+                main(player);
+            }
+
+            let mut battle_settings = BattleSettings {
+                header: "The Stronghold",
+                prompt: "You delve into the stronghold...",
+                enemy: Enemy::new(player.xp.combat, player.health.hp),
+                player,
+                loops: 50,
+                is_first_battle: true,
+            };
+
+            crate::combat::battle::new_battle(&mut battle_settings);
+
+            page_header("The Stronghold", HeaderSubtext::None);
+            println!("\nYou have successfully completed the stronghold and won the game! Congratulations!");
+            player.achievements.stronghold_defeated = true;
+            player.save();
+
+            press_enter_to_continue();
+        }
 
         // Economy
         "e1" | "work in the guilds" => crate::menus::economy::e1_the_guilds::main(player),
