@@ -8,9 +8,9 @@ use crate::{
     },
 };
 
-use crate::player::profile::UserProfile;
+use crate::player::profile::Player;
 
-pub fn main(player: &mut UserProfile) {
+pub fn main(player: &mut Player) {
     page_header("Profile Settings", HeaderSubtext::Keyboard);
 
     let choice: usize = select_from_str_array(
@@ -36,7 +36,7 @@ pub fn main(player: &mut UserProfile) {
     }
 }
 
-fn change_username(player: &mut UserProfile) {
+fn change_username(player: &mut Player) {
     page_header("Profile Settings", HeaderSubtext::None);
     let new_username = prompt_colon("New Username");
 
@@ -60,7 +60,7 @@ fn change_username(player: &mut UserProfile) {
     main(player);
 }
 
-fn change_password(player: &mut UserProfile) {
+fn change_password(player: &mut Player) {
     page_header("Profile Settings", HeaderSubtext::Other("Enter new password."));
     let new_password = password(false);
     let new_pass_is_old_pass = crypt::verify_hash(new_password.clone(), player.settings.password.clone());
@@ -85,7 +85,7 @@ fn change_password(player: &mut UserProfile) {
     main(player);
 }
 
-fn lock_profile(player: &mut UserProfile) {
+fn lock_profile(player: &mut Player) {
     let confirm_lock = confirm("Are you sure you want to lock your profile?");
 
     if !confirm_lock {
@@ -101,7 +101,7 @@ fn lock_profile(player: &mut UserProfile) {
     crate::menus::accounts::main();
 }
 
-fn delete_profile(player: &mut UserProfile) {
+fn delete_profile(player: &mut Player) {
     let confirm_delete = confirm("Are you sure you want to delete your profile?");
 
     if !confirm_delete {
@@ -117,7 +117,7 @@ fn delete_profile(player: &mut UserProfile) {
     crate::menus::accounts::main();
 }
 
-fn hardmode(player: &mut UserProfile) {
+fn hardmode(player: &mut Player) {
     if !player.settings.hardmode {
         println!("Are you sure you want to enable hardmode?");
         let confirmation = confirm("If you lose a battle, you could have your profile deleted.");

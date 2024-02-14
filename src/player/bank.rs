@@ -21,7 +21,7 @@ pub struct Bank {
 }
 
 impl Bank {
-    pub fn balance(player: &UserProfile, account: &BankAccount) -> usize {
+    pub fn balance(player: &Player, account: &BankAccount) -> usize {
         match account {
             BankAccount::Wallet => player.bank.wallet,
             BankAccount::Account1 => player.bank.account1,
@@ -87,12 +87,7 @@ impl Bank {
         }
     }
 
-    pub fn deposit(
-        player: &mut UserProfile,
-        account_flag: BankAccount,
-        amount: usize,
-        add_only: bool,
-    ) -> Result<(), &str> {
+    pub fn deposit(player: &mut Player, account_flag: BankAccount, amount: usize, add_only: bool) -> Result<(), &str> {
         if !add_only && player.bank.wallet < amount {
             return Err("You do not have enough gold in your wallet.");
         }
@@ -105,7 +100,7 @@ impl Bank {
     }
 
     pub fn withdraw(
-        player: &mut UserProfile,
+        player: &mut Player,
         account_flag: BankAccount,
         amount: usize,
         subtract_only: bool,

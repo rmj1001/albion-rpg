@@ -7,9 +7,9 @@ use crate::{
     },
 };
 
-use crate::player::profile::UserProfile;
+use crate::player::profile::Player;
 
-pub fn main(player: &mut UserProfile) {
+pub fn main(player: &mut Player) {
     page_header("Developer Mode", HeaderSubtext::Keyboard);
 
     let choice = select_from_str_array(
@@ -32,12 +32,15 @@ pub fn main(player: &mut UserProfile) {
         3 => super::d5_bank_mgr::main(player),
         4 => super::d2_user_mgr::main(player),
         5 => disable_developer_mode(player),
-        6 => crate::menus::game_menu::main(player),
+        6 => {
+            player.save();
+            crate::menus::game_menu::main(player);
+        }
         _ => out_of_bounds(),
     }
 }
 
-pub fn disable_developer_mode(player: &mut UserProfile) {
+pub fn disable_developer_mode(player: &mut Player) {
     page_header("Developer Mode", HeaderSubtext::None);
 
     let disable_dev_mode = confirm("Are you sure you want to disable developer mode?");

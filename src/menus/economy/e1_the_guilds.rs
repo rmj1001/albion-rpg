@@ -7,14 +7,14 @@ use crate::utils::{
 use crate::player::{
     guilds::{GuildMemberships, PricedGuilds},
     inventory::{GuildItemNames, Item},
-    profile::UserProfile,
+    profile::Player,
     xp::{XPType, XP},
 };
 use crate::utils::tui::page_header;
 use crate::utils::tui::HeaderSubtext;
 use rand::Rng;
 
-pub fn main(player: &mut UserProfile) {
+pub fn main(player: &mut Player) {
     page_header("The Guilds", HeaderSubtext::Keyboard);
 
     let job_name: String;
@@ -92,7 +92,7 @@ pub fn main(player: &mut UserProfile) {
     }
 }
 
-fn check_membership(player: &mut UserProfile, job: PricedGuilds) {
+fn check_membership(player: &mut Player, job: PricedGuilds) {
     let guild = match job {
         PricedGuilds::Fishing => &player.guild_memberships.fishing,
         PricedGuilds::Cooking => &player.guild_memberships.cooking,
@@ -132,7 +132,7 @@ fn check_membership(player: &mut UserProfile, job: PricedGuilds) {
 }
 
 fn job(
-    player: &mut UserProfile,
+    player: &mut Player,
     job_name: String,
     xp_type: XPType,
     use_gold: bool,
@@ -282,7 +282,7 @@ fn job(
     );
 }
 
-fn too_low_items(player: &mut UserProfile, item_name: &str) {
+fn too_low_items(player: &mut Player, item_name: &str) {
     failure(format!("You do not have enough {} to work with.", item_name));
     main(player);
 }

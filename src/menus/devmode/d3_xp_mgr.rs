@@ -1,5 +1,5 @@
 use crate::{
-    player::{profile::UserProfile, xp::XPType},
+    player::{profile::Player, xp::XPType},
     utils::{
         input::select_from_str_array,
         math::{generic_calculator, Operation},
@@ -8,7 +8,7 @@ use crate::{
     },
 };
 
-pub fn main(player: &mut UserProfile) {
+pub fn main(player: &mut Player) {
     page_header("Developer Mode - XP Manager", HeaderSubtext::Keyboard);
 
     player.xp.print_table();

@@ -1,5 +1,5 @@
 use crate::{
-    player::{armor::ArmorItemFlag, profile::UserProfile},
+    player::{armor::ArmorItemFlag, profile::Player},
     utils::{
         input::{select_from_str_array, select_from_vector},
         messages::*,
@@ -7,7 +7,7 @@ use crate::{
     },
 };
 
-pub fn main(player: &mut UserProfile) {
+pub fn main(player: &mut Player) {
     page_header("Armor Shop", crate::utils::tui::HeaderSubtext::None);
 
     println!("Gold: {}\n", player.bank.wallet);
@@ -25,7 +25,7 @@ pub fn main(player: &mut UserProfile) {
     crate::menus::game_menu::main(player);
 }
 
-pub fn purchase(player: &mut UserProfile) {
+pub fn purchase(player: &mut Player) {
     let item = get_item(player);
 
     let result = player.armor.purchase(&mut player.bank.wallet, item, true);
@@ -42,7 +42,7 @@ pub fn purchase(player: &mut UserProfile) {
     }
 }
 
-pub fn sell(player: &mut UserProfile) {
+pub fn sell(player: &mut Player) {
     let item = get_item(player);
 
     let result = player.armor.sell(&mut player.bank.wallet, item, true);
@@ -59,7 +59,7 @@ pub fn sell(player: &mut UserProfile) {
     }
 }
 
-fn get_item(player: &mut UserProfile) -> ArmorItemFlag {
+fn get_item(player: &mut Player) -> ArmorItemFlag {
     let items: Vec<String> = vec![
         player.armor.leather.name.to_string(),
         player.armor.bronze.name.to_string(),

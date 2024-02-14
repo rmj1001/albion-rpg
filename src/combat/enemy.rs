@@ -1,5 +1,5 @@
 use crate::{
-    player::{profile::UserProfile, xp::XP},
+    player::{profile::Player, xp::XP},
     utils::math::{self, random_num},
 };
 
@@ -191,7 +191,7 @@ pub enum Rewards {
 pub fn linear_xp_gold(player_level: usize) -> usize {
     let mut working_xp: usize = 0;
 
-    if player_level > 1 {
+    if player_level > 0 {
         working_xp += random_num(0, 10);
     }
 
@@ -236,7 +236,7 @@ pub fn generate_rewards(player_level: usize) -> Vec<Rewards> {
     rewards
 }
 
-pub fn add_rewards_to_user(player: &mut UserProfile, rewards: Vec<Rewards>) {
+pub fn add_rewards_to_user(player: &mut Player, rewards: Vec<Rewards>) {
     for reward in rewards {
         match reward {
             Rewards::Potions(quantity) => player.inventory.potions.quantity += quantity,

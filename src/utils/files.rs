@@ -1,8 +1,8 @@
 pub mod encoding {
-    use crate::player::profile::UserProfile;
+    use crate::player::profile::Player;
 
-    pub fn deserialize_user(data: String) -> Result<UserProfile, String> {
-        let user_result: Result<UserProfile, toml::de::Error> = toml::from_str(&data);
+    pub fn deserialize_user(data: String) -> Result<Player, String> {
+        let user_result: Result<Player, toml::de::Error> = toml::from_str(&data);
 
         match user_result {
             Ok(profile) => Ok(profile),
@@ -10,7 +10,7 @@ pub mod encoding {
         }
     }
 
-    pub fn serialize_user(player: &UserProfile) -> Result<String, toml::ser::Error> {
+    pub fn serialize_user(player: &Player) -> Result<String, toml::ser::Error> {
         toml::to_string_pretty(&player)
     }
 }

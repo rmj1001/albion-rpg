@@ -1,5 +1,5 @@
 use crate::{
-    player::profile::UserProfile,
+    player::profile::Player,
     utils::{
         crypt,
         input::{self, prompt_colon},
@@ -13,7 +13,7 @@ pub fn main() {
 
     let username: String = prompt_colon("Username");
 
-    let found_profile = UserProfile::retrieve(&username);
+    let found_profile = Player::retrieve(&username);
 
     if found_profile.is_ok() {
         failure(format!("Profile '{}' already exists.", username));
@@ -30,7 +30,7 @@ pub fn main() {
 
     let password_hash = crypt::generate_hash(password);
 
-    let profile = UserProfile::from(&username, &password_hash);
+    let profile = Player::from(&username, &password_hash);
 
     profile.save();
     success();

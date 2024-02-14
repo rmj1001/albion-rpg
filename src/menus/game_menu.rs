@@ -2,15 +2,15 @@ use crate::{
     player::settings::Settings,
     utils::{
         input::prompt_arrow,
-        messages::{self, success_msg},
+        messages::{self, success, success_msg},
         terminal,
-        tui::{self, page_header, HeaderSubtext},
+        tui::{self, page_header, press_enter_to_continue, sleep, HeaderSubtext},
     },
 };
 
-use crate::player::profile::UserProfile;
+use crate::player::profile::Player;
 
-pub fn main(player: &mut UserProfile) {
+pub fn main(player: &mut Player) {
     page_header(
         format!("Game Menu (Player: {})", player.settings.username),
         tui::HeaderSubtext::EnterCode,
@@ -39,14 +39,15 @@ pub fn main(player: &mut UserProfile) {
     }
 
     println!("n1. Settings");
-    println!("n2. Logout");
-    println!("n3. Exit Game\n");
+    println!("n2. Save Game");
+    println!("n3. Logout");
+    println!("n4. Exit Game\n");
 
     let choice = prompt_arrow("Enter Menu Code").to_lowercase();
 
     match &choice[..] {
         // Combat
-        "c1" => crate::menus::combat::c2_wander_realm::main(player),
+        "c1" => crate::combat::battle::battle("Wandering the Realm", "You are wandering the realm...", player, false),
         "c2" => crate::menus::combat::c1_the_stronghold::main(player),
 
         // Economy
@@ -61,10 +62,21 @@ pub fn main(player: &mut UserProfile) {
         "p2" => crate::menus::profile::p2_hall_of_records::main(player),
         "n1" => crate::menus::profile::n1_settings::main(player),
         "n2" => {
+            page_header("Save Game", HeaderSubtext::None);
+            println!("Saving game...");
+            sleep(1);
+
+            player.save();
+            success();
+            press_enter_to_continue();
+
+            main(player);
+        }
+        "n3" => {
             player.save();
             crate::menus::accounts::main();
         }
-        "n3" => {
+        "n4" => {
             player.save();
             terminal::exit();
         }

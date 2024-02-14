@@ -15,6 +15,7 @@ pub mod player {
     pub mod achievements;
     pub mod armor;
     pub mod bank;
+    pub mod equipment;
     pub mod guilds;
     pub mod inventory;
     pub mod profile;
@@ -26,7 +27,6 @@ pub mod player {
 pub mod menus {
     pub mod combat {
         pub mod c1_the_stronghold;
-        pub mod c2_wander_realm;
     }
 
     pub mod devmode {

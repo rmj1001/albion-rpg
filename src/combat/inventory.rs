@@ -1,5 +1,5 @@
 use crate::{
-    player::profile::UserProfile,
+    player::{equipment::Equipment, profile::Player},
     utils::{
         input::select_from_str_array,
         math::random_num,
@@ -8,27 +8,23 @@ use crate::{
     },
 };
 
-pub fn battle_inventory(player: &mut UserProfile) {
+pub fn battle_inventory(player: &mut Player) {
     page_header("Battle Inventory", HeaderSubtext::Keyboard);
 
-    let choice: usize = select_from_str_array(&["Armor", "Weapons", "Healing", "NAV: Go Back"], None);
+    let choice: usize = select_from_str_array(&["Equipment", "Healing", "NAV: Go Back"], None);
 
     match choice {
         0 => {
-            player.armor.management_menu();
+            Equipment::management_menu(player);
             battle_inventory(player);
         }
-        1 => {
-            player.weapons.management_menu();
-            battle_inventory(player);
-        }
-        2 => healing_inventory(player),
-        3 => {} // just returns to battle menu since the battle menu function is recursive called after this menu
+        1 => healing_inventory(player),
+        2 => {} // just returns to battle menu since the battle menu function is recursive called after this menu
         _ => out_of_bounds(),
     }
 }
 
-pub fn healing_inventory(player: &mut UserProfile) {
+pub fn healing_inventory(player: &mut Player) {
     page_header("Healing Inventory", HeaderSubtext::Keyboard);
 
     let choice: usize = select_from_str_array(&["Use Potion", "Eat Food", "NAV: Go Back"], None);
@@ -47,7 +43,7 @@ pub fn healing_inventory(player: &mut UserProfile) {
     }
 }
 
-pub fn use_potion(player: &mut UserProfile) {
+pub fn use_potion(player: &mut Player) {
     if player.inventory.potions.quantity == 0 {
         println!("You do not have enough potions.");
         press_enter_to_continue();
@@ -62,7 +58,7 @@ pub fn use_potion(player: &mut UserProfile) {
     press_enter_to_continue();
 }
 
-pub fn eat_food(player: &mut UserProfile) {
+pub fn eat_food(player: &mut Player) {
     if player.inventory.food.quantity == 0 {
         println!("You do not have enough food.");
         press_enter_to_continue();

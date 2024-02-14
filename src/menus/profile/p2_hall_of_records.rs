@@ -4,9 +4,9 @@ use crate::utils::{
     tui::{page_header, press_enter_to_continue, HeaderSubtext},
 };
 
-use crate::player::profile::UserProfile;
+use crate::player::profile::Player;
 
-pub fn main(player: &mut UserProfile) {
+pub fn main(player: &mut Player) {
     page_header("Hall of Records", HeaderSubtext::Keyboard);
 
     let menu_option = select_from_str_array(&["1. XP/Levels", "2. Achievements", "NAV: Go Back"], None);
@@ -19,7 +19,7 @@ pub fn main(player: &mut UserProfile) {
     }
 }
 
-pub fn xp(player: &mut UserProfile) {
+pub fn xp(player: &mut Player) {
     page_header("Hall of Records - XP/Levels", HeaderSubtext::None);
 
     player.xp.print_table();
@@ -28,7 +28,7 @@ pub fn xp(player: &mut UserProfile) {
     main(player);
 }
 
-pub fn achievements(player: &mut UserProfile) {
+pub fn achievements(player: &mut Player) {
     // These check to see if new achievements have been earned before
     // printing them
     if !player.achievements.hacked_the_game && player.settings.developer {

@@ -3,12 +3,11 @@ use serde::{Deserialize, Serialize};
 
 use crate::utils::tui::{pretty_bool, print_table};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Weapon {
     pub name: String,
     pub price: usize,
     pub owns: bool,
-    pub equipped: bool,
     pub damage: usize,
     pub durability: usize,
     pub default_durability: usize,
@@ -17,12 +16,18 @@ pub struct Weapon {
 impl Weapon {
     pub fn decrease_durability(&mut self) {
         let random_damage = thread_rng().gen_range(1..5);
-        self.durability -= random_damage;
 
-        if self.durability == 0 {
-            self.owns = false;
-            self.durability = self.default_durability
+        if self.durability < random_damage {
+            self.break_weapon();
+        } else {
+            self.durability -= random_damage;
         }
+    }
+
+    pub fn break_weapon(&mut self) {
+        println!("Your {} broke!", self.name);
+        self.owns = false;
+        self.durability = self.default_durability;
     }
 }
 
@@ -49,52 +54,46 @@ pub struct WeaponsInventory {
 impl WeaponsInventory {
     pub fn print_table(&self) {
         print_table(vec![
-            "Weapon,Purchased,Equipped,Buy Price,Sale Price".to_string(),
+            "Weapon,Purchased,Buy Price,Sale Price".to_string(),
             format!(
-                "{},{},{},{},{}",
+                "{},{},{},{}",
                 self.wooden_sword.name,
                 pretty_bool(self.wooden_sword.owns),
-                pretty_bool(self.wooden_sword.equipped),
                 self.wooden_sword.price,
                 self.wooden_sword.price / 2
             ),
             format!(
-                "{},{},{},{},{}",
+                "{},{},{},{}",
                 self.bronze_sword.name,
                 pretty_bool(self.bronze_sword.owns),
-                pretty_bool(self.bronze_sword.equipped),
                 self.bronze_sword.price,
                 self.bronze_sword.price / 2
             ),
             format!(
-                "{},{},{},{},{}",
+                "{},{},{},{}",
                 self.iron_sword.name,
                 pretty_bool(self.iron_sword.owns),
-                pretty_bool(self.iron_sword.equipped),
                 self.iron_sword.price,
                 self.iron_sword.price / 2
             ),
             format!(
-                "{},{},{},{},{}",
+                "{},{},{},{}",
                 self.steel_sword.name,
                 pretty_bool(self.steel_sword.owns),
-                pretty_bool(self.steel_sword.equipped),
                 self.steel_sword.price,
                 self.steel_sword.price / 2
             ),
             format!(
-                "{},{},{},{},{}",
+                "{},{},{},{}",
                 self.mystic_sword.name,
                 pretty_bool(self.mystic_sword.owns),
-                pretty_bool(self.mystic_sword.equipped),
                 self.mystic_sword.price,
                 self.mystic_sword.price / 2
             ),
             format!(
-                "{},{},{},{},{}",
+                "{},{},{},{}",
                 self.wizard_staff.name,
                 pretty_bool(self.wizard_staff.owns),
-                pretty_bool(self.wizard_staff.equipped),
                 self.wizard_staff.price,
                 self.wizard_staff.price / 2
             ),
@@ -175,7 +174,4 @@ impl WeaponsInventory {
 
         Ok(())
     }
-
-    // TODO: Equipping/Unequipping armor menu
-    pub fn management_menu(&self) {}
 }

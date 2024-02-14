@@ -1,5 +1,5 @@
 use crate::{
-    player::{armor::ArmorItemFlag, inventory::InventoryItemFlag, profile::UserProfile, weapons::WeaponItemFlag},
+    player::{armor::ArmorItemFlag, inventory::InventoryItemFlag, profile::Player, weapons::WeaponItemFlag},
     utils::{
         input::{input_generic, select_from_str_array, select_from_vector},
         messages::*,
@@ -7,7 +7,7 @@ use crate::{
     },
 };
 
-pub fn main(player: &mut UserProfile) {
+pub fn main(player: &mut Player) {
     page_header("Developer Mode - Inventory Manager", HeaderSubtext::None);
 
     let manager_option = select_from_str_array(&["1. Items", "2. Weapons", "3. Armor", "NAV: Go Back"], None);
@@ -21,7 +21,7 @@ pub fn main(player: &mut UserProfile) {
     }
 }
 
-fn items_manager(player: &mut UserProfile) {
+fn items_manager(player: &mut Player) {
     page_header("Developer Mode - Inventory Manager - Items", HeaderSubtext::None);
 
     player.inventory.print_table();
@@ -35,7 +35,7 @@ fn items_manager(player: &mut UserProfile) {
         _ => out_of_bounds(),
     }
 
-    pub fn add_item(player: &mut UserProfile) {
+    pub fn add_item(player: &mut Player) {
         let item_flag = get_item(player);
         let quantity_result = get_quantity();
         let mut quantity: usize = 0;
@@ -64,7 +64,7 @@ fn items_manager(player: &mut UserProfile) {
         }
     }
 
-    pub fn subtract_item(player: &mut UserProfile) {
+    pub fn subtract_item(player: &mut Player) {
         let item_flag = get_item(player);
         let quantity_result = get_quantity();
         let mut quantity: usize = 0;
@@ -93,7 +93,7 @@ fn items_manager(player: &mut UserProfile) {
         }
     }
 
-    fn get_item(player: &mut UserProfile) -> InventoryItemFlag {
+    fn get_item(player: &mut Player) -> InventoryItemFlag {
         let item_names: Vec<String> = vec![
             player.inventory.bait.name.to_string(),
             player.inventory.seeds.name.to_string(),
@@ -142,7 +142,7 @@ fn items_manager(player: &mut UserProfile) {
     }
 }
 
-fn weapons_manager(player: &mut UserProfile) {
+fn weapons_manager(player: &mut Player) {
     page_header("Developer Mode - Inventory Manager - Weapons", HeaderSubtext::None);
 
     player.weapons.print_table();
@@ -156,7 +156,7 @@ fn weapons_manager(player: &mut UserProfile) {
         _ => out_of_bounds(),
     }
 
-    pub fn own_weapon(player: &mut UserProfile) {
+    pub fn own_weapon(player: &mut Player) {
         let item = get_item(player);
 
         let result = player.weapons.purchase(&mut player.bank.wallet, item, false);
@@ -173,7 +173,7 @@ fn weapons_manager(player: &mut UserProfile) {
         }
     }
 
-    pub fn disown_weapon(player: &mut UserProfile) {
+    pub fn disown_weapon(player: &mut Player) {
         let item = get_item(player);
 
         let result = player.weapons.sell(&mut player.bank.wallet, item, false);
@@ -190,7 +190,7 @@ fn weapons_manager(player: &mut UserProfile) {
         }
     }
 
-    fn get_item(player: &mut UserProfile) -> WeaponItemFlag {
+    fn get_item(player: &mut Player) -> WeaponItemFlag {
         let items: Vec<String> = vec![
             player.weapons.wooden_sword.name.to_string(),
             player.weapons.bronze_sword.name.to_string(),
@@ -223,7 +223,7 @@ fn weapons_manager(player: &mut UserProfile) {
     }
 }
 
-fn armor_manager(player: &mut UserProfile) {
+fn armor_manager(player: &mut Player) {
     page_header("Developer Mode - Inventory Manager - Armor", HeaderSubtext::None);
 
     player.armor.print_table();
@@ -237,7 +237,7 @@ fn armor_manager(player: &mut UserProfile) {
         _ => out_of_bounds(),
     }
 
-    pub fn own_armor(player: &mut UserProfile) {
+    pub fn own_armor(player: &mut Player) {
         let item = get_item(player);
 
         let result = player.armor.purchase(&mut player.bank.wallet, item, false);
@@ -254,7 +254,7 @@ fn armor_manager(player: &mut UserProfile) {
         }
     }
 
-    pub fn disown_armor(player: &mut UserProfile) {
+    pub fn disown_armor(player: &mut Player) {
         let item = get_item(player);
 
         let result = player.armor.sell(&mut player.bank.wallet, item, false);
@@ -271,7 +271,7 @@ fn armor_manager(player: &mut UserProfile) {
         }
     }
 
-    fn get_item(player: &mut UserProfile) -> ArmorItemFlag {
+    fn get_item(player: &mut Player) -> ArmorItemFlag {
         let items: Vec<String> = vec![
             player.armor.leather.name.to_string(),
             player.armor.bronze.name.to_string(),

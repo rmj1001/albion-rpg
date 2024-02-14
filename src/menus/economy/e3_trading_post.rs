@@ -1,5 +1,5 @@
 use crate::{
-    player::{inventory::InventoryItemFlag, profile::UserProfile},
+    player::{inventory::InventoryItemFlag, profile::Player},
     utils::{
         input::{input_generic, select_from_str_array, select_from_vector},
         messages::*,
@@ -7,7 +7,7 @@ use crate::{
     },
 };
 
-pub fn main(player: &mut UserProfile) {
+pub fn main(player: &mut Player) {
     page_header("Trading Post", crate::utils::tui::HeaderSubtext::None);
 
     player.inventory.print_table();
@@ -25,7 +25,7 @@ pub fn main(player: &mut UserProfile) {
     crate::menus::game_menu::main(player);
 }
 
-pub fn purchase(player: &mut UserProfile) {
+pub fn purchase(player: &mut Player) {
     let item_flag = get_item(player);
     let quantity_result = get_quantity();
     let mut quantity: usize = 0;
@@ -54,7 +54,7 @@ pub fn purchase(player: &mut UserProfile) {
     }
 }
 
-pub fn sell(player: &mut UserProfile) {
+pub fn sell(player: &mut Player) {
     let item_flag = get_item(player);
     let quantity_result = get_quantity();
     let mut quantity: usize = 0;
@@ -83,7 +83,7 @@ pub fn sell(player: &mut UserProfile) {
     }
 }
 
-fn get_item(player: &mut UserProfile) -> InventoryItemFlag {
+fn get_item(player: &mut Player) -> InventoryItemFlag {
     let item_names: Vec<String> = vec![
         player.inventory.bait.name.to_string(),
         player.inventory.seeds.name.to_string(),

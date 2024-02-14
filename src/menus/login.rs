@@ -8,9 +8,9 @@ use crate::{
     },
 };
 
-use crate::player::profile::UserProfile;
+use crate::player::profile::Player;
 
-fn get_password(profile: &UserProfile) -> bool {
+fn get_password(profile: &Player) -> bool {
     let input_password: String = password(false);
     let verified_password = crypt::verify_hash(input_password.clone(), profile.settings.password.clone());
 
@@ -31,7 +31,7 @@ pub fn main() {
     page_header("Login", tui::HeaderSubtext::None);
 
     let username: String = prompt_colon("Username");
-    let profile_result = UserProfile::retrieve(&username);
+    let profile_result = Player::retrieve(&username);
 
     match profile_result {
         Ok(profile) => {

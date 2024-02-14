@@ -1,5 +1,5 @@
 use crate::{
-    player::{bank::BankAccount, profile::UserProfile},
+    player::{bank::BankAccount, profile::Player},
     utils::{
         input::select_from_str_array,
         math::{generic_calculator, Operation},
@@ -8,7 +8,7 @@ use crate::{
     },
 };
 
-pub fn main(player: &mut UserProfile) {
+pub fn main(player: &mut Player) {
     let mut account: BankAccount = BankAccount::Account1;
 
     page_header("Developer Mode - Bank Managert", HeaderSubtext::Keyboard);

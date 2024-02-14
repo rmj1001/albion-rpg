@@ -1,4 +1,4 @@
-use super::profile::UserProfile;
+use super::profile::Player;
 use crate::utils::{crypt, files};
 use serde::{Deserialize, Serialize};
 use std::{fs, path::Path};
@@ -14,32 +14,32 @@ pub struct Settings {
 
 impl Settings {
     /// Hinders profile login without double password entry
-    pub fn lock(player: &mut UserProfile) {
+    pub fn lock(player: &mut Player) {
         player.settings.locked = true;
         player.save();
     }
 
     /// Allows profile to login un-hindered.
-    pub fn unlock(player: &mut UserProfile) {
+    pub fn unlock(player: &mut Player) {
         player.settings.locked = false;
         player.save();
     }
 
     /// Updates developer status
-    pub fn set_developer(player: &mut UserProfile, flag: bool) {
+    pub fn set_developer(player: &mut Player, flag: bool) {
         player.settings.developer = flag;
         player.save();
     }
 
     /// Updates password field
-    pub fn change_password(player: &mut UserProfile, new_password: String) {
+    pub fn change_password(player: &mut Player, new_password: String) {
         let new_hashed_password = crypt::generate_hash(new_password);
         player.settings.password = new_hashed_password;
         player.save();
     }
 
     /// Updates the username field and profile file name.
-    pub fn change_username(player: &mut UserProfile, new_username: String) {
+    pub fn change_username(player: &mut Player, new_username: String) {
         let old_profile_path = files::handler::generate_profile_path(&player.settings.username);
         let old_file_path: &Path = Path::new(&old_profile_path);
 
@@ -59,7 +59,7 @@ impl Settings {
         player.save();
     }
 
-    pub fn toggle_hardmode(player: &mut UserProfile) {
+    pub fn toggle_hardmode(player: &mut Player) {
         player.settings.hardmode = !player.settings.hardmode;
     }
 }

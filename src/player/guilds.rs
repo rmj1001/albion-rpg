@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use super::profile::UserProfile;
+use super::profile::Player;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct GuildMemberships {
@@ -26,7 +26,7 @@ pub enum PricedGuilds {
 }
 
 impl GuildMemberships {
-    pub fn purchase(player: &mut UserProfile, guild_flag: PricedGuilds) -> Result<(), &'static str> {
+    pub fn purchase(player: &mut Player, guild_flag: PricedGuilds) -> Result<(), &'static str> {
         let guild: &mut Guild = match guild_flag {
             PricedGuilds::Fishing => &mut player.guild_memberships.fishing,
             PricedGuilds::Cooking => &mut player.guild_memberships.cooking,

@@ -4,9 +4,9 @@ use crate::utils::{
     tui::{page_header, HeaderSubtext},
 };
 
-use crate::player::{bank::*, profile::UserProfile};
+use crate::player::{bank::*, profile::Player};
 
-pub fn main(player: &mut UserProfile) {
+pub fn main(player: &mut Player) {
     let mut account: BankAccount = BankAccount::Account1;
 
     page_header("The Bank", HeaderSubtext::Keyboard);
