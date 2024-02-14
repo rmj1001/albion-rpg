@@ -1,9 +1,9 @@
-# Albion TermRPG (in Alpha)
+# Albion Terminal RPG
 
 A text-based RPG for the Terminal, written in Rust.
 
-Note: Not all features are implemented yet, so the list and demo below
-are not comprehensive or up-to-date.
+Update: All features have been implemented! The experience may be a little rough around the edges though,
+but we will be working on the papercuts over time. Have fun playing the game!
 
 ## Features
 
@@ -11,7 +11,6 @@ are not comprehensive or up-to-date.
    1. Guilds (Fishing, Cooking, Woodcutting, Mining, Smithing, Thieving)
    2. Trading post for mundane items
    3. Shops for weapons and armor
-   4. Level-locked shops for magic weapons, armor, and items
 2. Level-based modes of combat
    1. Random encounters via Wander the Realm with XP-based enemies
    2. End-game dungeon (the Stronghold) with rich rewards for completion
@@ -21,4 +20,4 @@ are not comprehensive or up-to-date.
 
 Click on the image below to watch the video.
 
-[![Demo thumbnail](demo/demo_image.jpg)](https://www.youtube.com/watch?v=S93cg6G9JHw "AlbionRPG Demo Video")
+[![Demo thumbnail](demo/DemoImage.png)](https://www.youtube.com/watch?v=S93cg6G9JHw "AlbionRPG Demo Video")
