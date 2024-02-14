@@ -11,7 +11,7 @@ use crate::{
 pub fn battle_inventory(player: &mut Player) {
     page_header("Battle Inventory", HeaderSubtext::Keyboard);
 
-    let choice: usize = select_from_str_array(&["Equipment", "Healing", "NAV: Go Back"], None);
+    let choice: usize = select_from_str_array(&["1. Equipment", "2. Healing", "NAV: Go Back"], None);
 
     match choice {
         0 => {
@@ -27,7 +27,7 @@ pub fn battle_inventory(player: &mut Player) {
 pub fn healing_inventory(player: &mut Player) {
     page_header("Healing Inventory", HeaderSubtext::Keyboard);
 
-    let choice: usize = select_from_str_array(&["Use Potion", "Eat Food", "NAV: Go Back"], None);
+    let choice: usize = select_from_str_array(&["1. Use Potion", "2. Eat Food", "NAV: Go Back"], None);
 
     match choice {
         0 => {

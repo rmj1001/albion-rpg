@@ -124,6 +124,8 @@ fn check_membership(player: &mut Player, job: PricedGuilds) {
             failure(message);
         }
 
+        success_msg("You purchased the membership.");
+
         main(player);
     } else {
         failure("You cannot work in this guild without a membership.");
@@ -197,7 +199,7 @@ fn job(
 
     println!();
 
-    let work_choice = select_from_str_array(&["Work", "Go Back"], None);
+    let work_choice = select_from_str_array(&["Work", "NAV: Go Back"], None);
 
     match work_choice {
         0 => {

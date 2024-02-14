@@ -14,14 +14,20 @@ pub fn main(player: &mut Player) {
     println!();
     player.bank.print_table();
 
-    let option = select_from_str_array(&["Deposit", "Withdraw", "NAV: Go Back"], None);
+    let option = select_from_str_array(&["1. Deposit", "2. Withdraw", "NAV: Go Back"], None);
 
     if option == 2 {
         crate::menus::game_menu::main(player);
     }
 
     let account_choice = select_from_str_array(
-        &["Account 1", "Account 2", "Account 3", "Account 4", "NAV: Cancel"],
+        &[
+            "1. Account 1",
+            "2. Account 2",
+            "3. Account 3",
+            "4. Account 4",
+            "NAV: Cancel",
+        ],
         None,
     );
 

@@ -17,11 +17,11 @@ pub fn main(player: &mut Player) {
 
     let account_choice = select_from_str_array(
         &[
-            "Wallet",
-            "Account 1",
-            "Account 2",
-            "Account 3",
-            "Account 4",
+            "1. Wallet",
+            "2. Account 1",
+            "3. Account 2",
+            "4. Account 3",
+            "5. Account 4",
             "NAV: Go Back",
         ],
         None,
