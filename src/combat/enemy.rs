@@ -48,7 +48,8 @@ pub enum UndeadType {
 
 #[derive(Clone)]
 pub struct Enemy {
-    pub kind: EnemyType,
+    pub kind_type: EnemyType,
+    pub kind: &'static str,
     pub hp: usize,
     pub damage: usize,
     pub xp: usize,
@@ -58,10 +59,13 @@ pub struct Enemy {
 
 impl Enemy {
     pub fn new(user_combat_xp: usize, user_hp: usize) -> Self {
-        let user_level = XP::level(user_combat_xp);
+        let user_level: usize = XP::level(user_combat_xp);
+        let kind_type: EnemyType = pick_enemy();
+        let kind_string: &str = Enemy::kind_string(kind_type.clone());
 
         Self {
-            kind: pick_enemy(),
+            kind_type,
+            kind: kind_string,
             hp: calculate_hp(user_hp),
             damage: calculate_damage(user_hp),
             xp: linear_xp_gold(user_level),
@@ -70,8 +74,8 @@ impl Enemy {
         }
     }
 
-    pub fn type_string(&self) -> &'static str {
-        match &self.kind {
+    pub fn kind_string(kind: EnemyType) -> &'static str {
+        match kind {
             EnemyType::Human => "Human",
             EnemyType::Invalid => "Invalid Enemy",
             EnemyType::Animal(animal) => match animal {
@@ -119,7 +123,7 @@ fn pick_enemy() -> EnemyType {
 }
 
 fn pick_animal() -> AnimalType {
-    let number = math::random_num(0, 5);
+    let number: usize = math::random_num(0, 5);
 
     match number {
         0 => AnimalType::Bear,
@@ -133,7 +137,7 @@ fn pick_animal() -> AnimalType {
 }
 
 fn pick_monster() -> MonsterType {
-    let number = math::random_num(0, 8);
+    let number: usize = math::random_num(0, 8);
 
     match number {
         0 => MonsterType::Centaur,
@@ -149,7 +153,7 @@ fn pick_monster() -> MonsterType {
 }
 
 fn pick_undead() -> UndeadType {
-    let number = math::random_num(0, 4);
+    let number: usize = math::random_num(0, 4);
 
     match number {
         0 => UndeadType::Banshee,
@@ -164,8 +168,8 @@ fn pick_undead() -> UndeadType {
 // Strength
 
 fn calculate_hp(player_hp: usize) -> usize {
-    let deviation = random_num(10, 30);
-    let operation = random_num(0, 1);
+    let deviation: usize = random_num(10, 30);
+    let operation: usize = random_num(0, 1);
 
     match operation {
         0 => player_hp + deviation,
@@ -175,7 +179,7 @@ fn calculate_hp(player_hp: usize) -> usize {
 }
 
 fn calculate_damage(player_hp: usize) -> usize {
-    let deviation = random_num(1, 10);
+    let deviation: usize = random_num(1, 10);
 
     (player_hp / 10) + deviation
 }
