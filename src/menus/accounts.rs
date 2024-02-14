@@ -11,7 +11,7 @@ pub fn main() {
     match chosen_option {
         0 => crate::menus::login::main(),
         1 => crate::menus::register::main(),
-        2 => exit(),
+        2 => exit(None),
         _ => out_of_bounds(),
     }
 }

@@ -133,8 +133,7 @@ pub fn main(player: &mut Player) {
         }
 
         "exit" => {
-            player.save();
-            exit();
+            exit(Some(player));
         }
 
         // Developer Mode

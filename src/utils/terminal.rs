@@ -1,6 +1,9 @@
 use std::process::Command;
 
-use crate::utils::messages::success_msg;
+use crate::{
+    player::profile::Player,
+    utils::{messages::success_msg, tui::sleep},
+};
 
 use super::tui::page_header;
 
@@ -23,8 +26,20 @@ pub fn clearscr() {
 }
 
 /// Sends an exit code of 0 (no errors)
-pub fn exit() {
+pub fn exit(player: Option<&mut Player>) {
     page_header("Thanks!", super::tui::HeaderSubtext::None);
+
+    if let Some(player) = player {
+        println!("Saving game...");
+        player.save();
+        sleep(2);
+
+        success_msg("Game saved! Thanks for playing!");
+
+        clearscr();
+        std::process::exit(0);
+    }
+
     success_msg("Thanks for playing!");
 
     clearscr();
