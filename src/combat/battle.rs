@@ -5,7 +5,7 @@ use crate::{
         input,
         math::random_num,
         messages::out_of_bounds,
-        tui::{self, page_header, press_enter_to_continue, sleep, HeaderSubtext},
+        tui::{page_header, press_enter_to_continue, sleep, HeaderSubtext},
     },
 };
 
@@ -54,14 +54,14 @@ pub fn new_battle(battle: &mut BattleSettings) {
     }
 
     println!();
-    println!("You are now fighting a {}.", battle.enemy.type_string());
-    tui::press_enter_to_continue();
+    println!("You are now fighting a {}.", battle.enemy.kind);
+    sleep(battle.pause_seconds);
     battle_menu(battle);
 }
 
 pub fn battle_menu(battle: &mut BattleSettings) {
     page_header(
-        format!("{} - {}", battle.header, battle.enemy.type_string()),
+        format!("{} - {}", battle.header, battle.enemy.kind),
         HeaderSubtext::Keyboard,
     );
 
@@ -71,10 +71,7 @@ pub fn battle_menu(battle: &mut BattleSettings) {
         if new_health != 0 {
             println!("You gained {} health!", new_health);
             press_enter_to_continue();
-            page_header(
-                format!("Battle - {}", battle.enemy.type_string()),
-                HeaderSubtext::Keyboard,
-            );
+            page_header(format!("Battle - {}", battle.enemy.kind), HeaderSubtext::Keyboard);
         }
     }
 
@@ -84,7 +81,7 @@ pub fn battle_menu(battle: &mut BattleSettings) {
         println!();
     }
 
-    println!("Enemy: {}", battle.enemy.type_string());
+    println!("Enemy: {}", battle.enemy.kind);
     println!("Enemy HP: {}", battle.enemy.hp);
     println!();
 
@@ -94,7 +91,7 @@ pub fn battle_menu(battle: &mut BattleSettings) {
 
     let action = input::select_from_str_array(
         &[
-            &format!("1. Attack the {}", battle.enemy.type_string()),
+            &format!("1. Attack the {}", battle.enemy.kind),
             "2. Inventory",
             "3. Retreat",
         ],
@@ -132,13 +129,11 @@ pub fn attack(battle: &mut BattleSettings) {
 
     println!();
 
-    press_enter_to_continue();
-
     battle_menu(battle);
 }
 
 fn player_attack(battle: &mut BattleSettings) {
-    let enemy_type = battle.enemy.type_string();
+    let enemy_type = battle.enemy.kind;
 
     println!("You attack the {}...", enemy_type);
     sleep(battle.pause_seconds);
@@ -174,7 +169,7 @@ fn player_attack(battle: &mut BattleSettings) {
 }
 
 fn enemy_attack(battle: &mut BattleSettings) {
-    let enemy_type = battle.enemy.type_string();
+    let enemy_type = battle.enemy.kind;
     let mut damage: usize = battle.enemy.damage;
 
     if battle.player.equipment.armor.is_some() {
@@ -229,7 +224,7 @@ fn success_or_fail() -> bool {
 pub fn victory(battle: &mut BattleSettings) {
     page_header(format!("{} - Victory", battle.header), HeaderSubtext::None);
 
-    println!("You successfully defeated the {}!", battle.enemy.type_string());
+    println!("You successfully defeated the {}!", battle.enemy.kind);
     battle.player.reset_health();
     println!();
 
@@ -300,7 +295,7 @@ pub fn hardmode(battle: &mut BattleSettings) {
 
     match user_survives {
         0 => {
-            println!("The {} stole all your gold and inventory.", battle.enemy.type_string());
+            println!("The {} stole all your gold and inventory.", battle.enemy.kind);
             battle.player.reset_inventory();
             battle.player.save();
             sleep(battle.pause_seconds);
