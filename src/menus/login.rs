@@ -12,7 +12,7 @@ use crate::player::profile::Player;
 
 fn get_password(profile: &Player) -> bool {
     let input_password: String = password(false);
-    let verified_password = crypt::verify_hash(input_password.clone(), profile.settings.password.clone());
+    let verified_password = crypt::verify_hash(input_password.clone(), profile.settings.password_hash.clone());
 
     if !verified_password {
         failure("Incorrect password.");

@@ -63,7 +63,7 @@ fn change_username(player: &mut Player) {
 fn change_password(player: &mut Player) {
     page_header("Profile Settings", HeaderSubtext::Other("Enter new password."));
     let new_password = password(false);
-    let new_pass_is_old_pass = crypt::verify_hash(new_password.clone(), player.settings.password.clone());
+    let new_pass_is_old_pass = crypt::verify_hash(new_password.clone(), player.settings.password_hash.clone());
 
     if new_pass_is_old_pass {
         failure("This is your current password.");

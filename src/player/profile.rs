@@ -38,7 +38,7 @@ impl Player {
         let profile: Player = Player {
             settings: Settings {
                 username: String::new(),
-                password: String::new(),
+                password_hash: String::new(),
                 developer: false,
                 locked: false,
                 hardmode: false,
@@ -276,7 +276,7 @@ impl Player {
         let mut profile: Player = Player::new();
 
         profile.settings.username = username.to_string();
-        profile.settings.password = password.to_string();
+        profile.settings.password_hash = password.to_string();
 
         profile.save();
 

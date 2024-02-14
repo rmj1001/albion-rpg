@@ -6,7 +6,7 @@ use std::{fs, path::Path};
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct Settings {
     pub username: String,
-    pub password: String,
+    pub password_hash: String,
     pub developer: bool,
     pub locked: bool,
     pub hardmode: bool,
@@ -34,7 +34,7 @@ impl Settings {
     /// Updates password field
     pub fn change_password(player: &mut Player, new_password: String) {
         let new_hashed_password = crypt::generate_hash(new_password);
-        player.settings.password = new_hashed_password;
+        player.settings.password_hash = new_hashed_password;
         player.save();
     }
 
