@@ -75,5 +75,7 @@ pub fn isize_calculator() -> Operation<isize> {
 }
 
 pub fn random_num(min: usize, max: usize) -> usize {
-    rand::thread_rng().gen_range(min..max)
+    let result: usize = rand::thread_rng().gen_range(min..=max);
+
+    result
 }
