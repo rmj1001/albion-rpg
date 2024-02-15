@@ -24,6 +24,10 @@ impl Equipment {
         }
     }
 
+    pub fn reset(&mut self) {
+        *self = Self::new();
+    }
+
     pub fn table(&self) {
         let mut weapon_string: String = String::new();
         let mut armor_string: String = String::new();

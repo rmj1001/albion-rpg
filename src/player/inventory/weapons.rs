@@ -76,6 +76,10 @@ impl WeaponsInventory {
         }
     }
 
+    pub fn reset(&mut self) {
+        *self = Self::new();
+    }
+
     pub fn table(&self) {
         fn entry(weapon: &Weapon) -> String {
             format!(

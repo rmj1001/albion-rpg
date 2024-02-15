@@ -1,5 +1,6 @@
 use super::achievements::*;
 use super::guilds::GuildMemberships;
+use super::health::Health;
 use super::settings::Settings;
 use super::xp::*;
 
@@ -9,18 +10,6 @@ use crate::utils::files;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct Health {
-    pub hp: usize,
-    pub hunger: usize,
-}
-
-impl Health {
-    pub fn new() -> Self {
-        Self { hp: 100, hunger: 0 }
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Player {
     pub health: Health,
     pub xp: XP,
@@ -28,7 +17,7 @@ pub struct Player {
     pub bank: Bank,
     pub guild_memberships: GuildMemberships,
     pub equipment: Equipment,
-    pub inventory: MundaneInventory,
+    pub items: MundaneInventory,
     pub armor: ArmorInventory,
     pub weapons: WeaponsInventory,
     pub settings: Settings,
@@ -45,7 +34,7 @@ impl Player {
             bank: Bank::new(),
             guild_memberships: GuildMemberships::new(),
             equipment: Equipment::new(),
-            inventory: MundaneInventory::new(),
+            items: MundaneInventory::new(),
             armor: ArmorInventory::new(),
             weapons: WeaponsInventory::new(),
         };
@@ -53,6 +42,30 @@ impl Player {
         profile.save();
 
         profile
+    }
+
+    pub fn reset(&mut self) {
+        let new_profile = Self::new(&self.settings.username, &self.settings.password_hash);
+        *self = new_profile;
+    }
+
+    /// Reset all progress and inventory (not settings) without deleting the profile
+    pub fn die(&mut self) {
+        // Wealth
+        self.bank.wallet = 0;
+
+        // Equipment
+        self.equipment.reset();
+        self.armor.reset();
+        self.weapons.reset();
+        self.items.reset();
+
+        // Statistics
+        self.xp.reset();
+        self.achievements.reset();
+        self.health.reset();
+
+        self.save();
     }
 
     pub fn save(&self) {
@@ -65,24 +78,6 @@ impl Player {
 
     pub fn delete(&self) {
         Player::delete_from_username(&self.settings.username);
-    }
-
-    pub fn reset_health(&mut self) {
-        self.health.hp = 100;
-        self.health.hunger = 0;
-    }
-
-    pub fn reset_inventory(&mut self) {
-        // Wealth
-        self.bank.wallet = 0;
-
-        // Equipment
-        self.equipment = Equipment::new();
-        self.armor = ArmorInventory::new();
-        self.weapons = WeaponsInventory::new();
-
-        // Mundane Inventory
-        self.inventory = MundaneInventory::new();
     }
 
     pub fn delete_from_username(username: &str) {

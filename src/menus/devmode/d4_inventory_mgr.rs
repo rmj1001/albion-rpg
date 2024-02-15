@@ -25,7 +25,7 @@ pub fn main(player: &mut Player) {
 fn items_manager(player: &mut Player) {
     page_header("Developer Mode - Inventory Manager - Items", HeaderSubtext::None);
 
-    player.inventory.table();
+    player.items.table();
 
     let buysell = select_from_str_array(&["1. Add", "2. Subtract", "NAV: Go Back"], None);
 
@@ -50,7 +50,7 @@ fn items_manager(player: &mut Player) {
         }
 
         let result = player
-            .inventory
+            .items
             .purchase(&mut player.bank.wallet, &item_flag, quantity, false);
 
         match result {
@@ -78,9 +78,7 @@ fn items_manager(player: &mut Player) {
             }
         }
 
-        let result = player
-            .inventory
-            .sell(&mut player.bank.wallet, &item_flag, quantity, false);
+        let result = player.items.sell(&mut player.bank.wallet, &item_flag, quantity, false);
 
         match result {
             Ok(_) => {
@@ -96,19 +94,19 @@ fn items_manager(player: &mut Player) {
 
     fn get_item(player: &mut Player) -> InventoryItemFlag {
         let item_names: Vec<String> = vec![
-            player.inventory.bait.name.to_string(),
-            player.inventory.seeds.name.to_string(),
-            player.inventory.furs.name.to_string(),
-            player.inventory.fish.name.to_string(),
-            player.inventory.wood.name.to_string(),
-            player.inventory.ore.name.to_string(),
-            player.inventory.ingots.name.to_string(),
-            player.inventory.potions.name.to_string(),
-            player.inventory.rubies.name.to_string(),
-            player.inventory.magic_scrolls.name.to_string(),
-            player.inventory.bones.name.to_string(),
-            player.inventory.dragon_hides.name.to_string(),
-            player.inventory.runic_tablets.name.to_string(),
+            player.items.bait.name.to_string(),
+            player.items.seeds.name.to_string(),
+            player.items.furs.name.to_string(),
+            player.items.fish.name.to_string(),
+            player.items.wood.name.to_string(),
+            player.items.ore.name.to_string(),
+            player.items.ingots.name.to_string(),
+            player.items.potions.name.to_string(),
+            player.items.rubies.name.to_string(),
+            player.items.magic_scrolls.name.to_string(),
+            player.items.bones.name.to_string(),
+            player.items.dragon_hides.name.to_string(),
+            player.items.runic_tablets.name.to_string(),
             String::from("NAV: Cancel"),
         ];
 

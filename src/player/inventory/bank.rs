@@ -31,6 +31,10 @@ impl Bank {
         }
     }
 
+    pub fn reset(&mut self) {
+        *self = Self::new();
+    }
+
     pub fn balance(player: &Player, account: &BankAccount) -> usize {
         match account {
             BankAccount::Wallet => player.bank.wallet,

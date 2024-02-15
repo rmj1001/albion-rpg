@@ -65,16 +65,6 @@ pub fn battle_menu(battle: &mut BattleSettings) {
         HeaderSubtext::Keyboard,
     );
 
-    if battle.player.health.hp < 100 && battle.player.health.hunger == 0 {
-        let new_health: usize = random_num(0, 1);
-
-        if new_health != 0 {
-            println!("You gained {} health!", new_health);
-            press_enter_to_continue();
-            page_header(format!("Battle - {}", battle.enemy.kind), HeaderSubtext::Keyboard);
-        }
-    }
-
     if battle.is_looped {
         println!("Floor: {}", battle.floor);
         println!("Floors Left: {}", battle.loops);
@@ -128,6 +118,12 @@ pub fn attack(battle: &mut BattleSettings) {
     enemy_attack(battle);
 
     println!();
+
+    battle.player.health.heal();
+
+    println!();
+
+    press_enter_to_continue();
 
     battle_menu(battle);
 }
@@ -225,7 +221,7 @@ pub fn victory(battle: &mut BattleSettings) {
     page_header(format!("{} - Victory", battle.header), HeaderSubtext::None);
 
     println!("You successfully defeated the {}!", battle.enemy.kind);
-    battle.player.reset_health();
+    battle.player.health.reset();
     println!();
 
     let rewards: Vec<Rewards> = generate_rewards(XP::level(battle.player.xp.profile()));
@@ -283,7 +279,7 @@ pub fn defeat(battle: &mut BattleSettings) {
 
 pub fn revived(battle: &mut BattleSettings) {
     println!("You were successfully revived with 100 hp.");
-    battle.player.reset_health();
+    battle.player.health.reset();
 
     battle.player.save();
     press_enter_to_continue();
@@ -295,9 +291,11 @@ pub fn hardmode(battle: &mut BattleSettings) {
 
     match user_survives {
         0 => {
-            println!("The {} stole all your gold and inventory.", battle.enemy.kind);
-            battle.player.reset_inventory();
-            battle.player.save();
+            println!(
+                "The {} stole all your gold and inventory, and you lost all your progress.",
+                battle.enemy.kind
+            );
+            battle.player.die();
             sleep(battle.pause_seconds);
 
             revived(battle);

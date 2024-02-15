@@ -44,12 +44,12 @@ pub fn healing_inventory(player: &mut Player) {
 }
 
 pub fn use_potion(player: &mut Player) {
-    if player.inventory.potions.quantity == 0 {
+    if player.items.potions.quantity == 0 {
         println!("You do not have enough potions.");
         press_enter_to_continue();
     }
 
-    player.inventory.potions.quantity -= 1;
+    player.items.potions.quantity -= 1;
 
     let health = random_num(1, 5);
     player.health.hp += health;
@@ -59,12 +59,12 @@ pub fn use_potion(player: &mut Player) {
 }
 
 pub fn eat_food(player: &mut Player) {
-    if player.inventory.food.quantity == 0 {
+    if player.items.food.quantity == 0 {
         println!("You do not have enough food.");
         press_enter_to_continue();
     }
 
-    player.inventory.food.quantity -= 1;
+    player.items.food.quantity -= 1;
 
     let hunger = random_num(1, 5);
     player.health.hunger -= hunger;

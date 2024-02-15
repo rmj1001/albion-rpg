@@ -38,6 +38,10 @@ impl XP {
         }
     }
 
+    pub fn reset(&mut self) {
+        *self = Self::new();
+    }
+
     pub fn table(&self) {
         fn entry(name: &str, xp: usize) -> String {
             format!("{},{},{}", name, xp, self::XP::level(xp))

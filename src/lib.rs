@@ -21,6 +21,7 @@ pub mod player {
     }
     pub mod achievements;
     pub mod guilds;
+    pub mod health;
     pub mod profile;
     pub mod settings;
     pub mod xp;

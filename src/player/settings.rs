@@ -23,6 +23,10 @@ impl Settings {
         }
     }
 
+    pub fn reset(&mut self) {
+        *self = Self::new(&self.username, &self.password_hash);
+    }
+
     /// Hinders profile login without double password entry
     pub fn toggle_lock(player: &mut Player) {
         player.settings.locked = !player.settings.locked;

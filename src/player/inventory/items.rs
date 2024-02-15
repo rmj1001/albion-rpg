@@ -83,6 +83,10 @@ impl MundaneInventory {
         }
     }
 
+    pub fn reset(&mut self) {
+        *self = Self::new();
+    }
+
     pub fn table(&self) {
         let inv = &self;
 

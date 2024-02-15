@@ -25,6 +25,10 @@ impl Achievements {
         }
     }
 
+    pub fn reset(&mut self) {
+        *self = Self::new();
+    }
+
     pub fn table(&self) {
         table_from_csv(vec![
             "Achievement,Data".to_string(),

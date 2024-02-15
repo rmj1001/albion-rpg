@@ -248,12 +248,12 @@ pub fn generate_rewards(player_level: usize) -> Vec<Rewards> {
 pub fn add_rewards_to_user(player: &mut Player, rewards: Vec<Rewards>) {
     for reward in rewards {
         match reward {
-            Rewards::Potions(quantity) => player.inventory.potions.quantity += quantity,
-            Rewards::Bones(quantity) => player.inventory.bones.quantity += quantity,
-            Rewards::Rubies(quantity) => player.inventory.rubies.quantity += quantity,
-            Rewards::DragonHides(quantity) => player.inventory.dragon_hides.quantity += quantity,
-            Rewards::MagicScrolls(quantity) => player.inventory.magic_scrolls.quantity += quantity,
-            Rewards::RunicTablets(quantity) => player.inventory.runic_tablets.quantity += quantity,
+            Rewards::Potions(quantity) => player.items.potions.quantity += quantity,
+            Rewards::Bones(quantity) => player.items.bones.quantity += quantity,
+            Rewards::Rubies(quantity) => player.items.rubies.quantity += quantity,
+            Rewards::DragonHides(quantity) => player.items.dragon_hides.quantity += quantity,
+            Rewards::MagicScrolls(quantity) => player.items.magic_scrolls.quantity += quantity,
+            Rewards::RunicTablets(quantity) => player.items.runic_tablets.quantity += quantity,
             Rewards::Invalid => {}
         }
     }
