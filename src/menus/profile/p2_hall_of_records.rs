@@ -38,7 +38,7 @@ pub fn achievements(player: &mut Player) {
         player.achievements.hacked_the_game = true;
     }
 
-    if !player.achievements.level_100_reached && XP::level(player.xp.profile()) >= 100 {
+    if !player.achievements.level_100_reached && XP::get_level(player.xp.total()) >= 100 {
         player.achievements.level_100_reached = true;
     }
 

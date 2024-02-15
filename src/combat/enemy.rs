@@ -59,7 +59,7 @@ pub struct Enemy {
 
 impl Enemy {
     pub fn new(user_combat_xp: usize, user_hp: usize) -> Self {
-        let user_level: usize = XP::level(user_combat_xp);
+        let user_level: usize = XP::get_level(user_combat_xp);
         let kind_type: EnemyType = pick_enemy();
         let kind_string: &str = Enemy::kind_string(kind_type.clone());
 

@@ -44,7 +44,7 @@ impl XP {
 
     pub fn table(&self) {
         fn entry(name: &str, xp: usize) -> String {
-            format!("{},{},{}", name, xp, self::XP::level(xp))
+            format!("{},{},{}", name, xp, self::XP::get_level(xp))
         }
 
         table_from_csv(vec![
@@ -55,15 +55,15 @@ impl XP {
             entry("Mining", self.mining),
             entry("Smithing", self.smithing),
             entry("Thieving", self.thieving),
-            entry("Player Total", self.profile()),
+            entry("Player Total", self.total()),
         ])
     }
 
-    pub fn level(xp: usize) -> usize {
+    pub fn get_level(xp: usize) -> usize {
         (xp / 100) + 1
     }
 
-    pub fn profile(&self) -> usize {
+    pub fn total(&self) -> usize {
         self.combat + self.fishing + self.cooking + self.woodcutting + self.mining + self.smithing + self.thieving
     }
 

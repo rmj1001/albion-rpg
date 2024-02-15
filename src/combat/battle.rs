@@ -224,7 +224,7 @@ pub fn victory(battle: &mut BattleSettings) {
     battle.player.health.reset();
     println!();
 
-    let rewards: Vec<Rewards> = generate_rewards(XP::level(battle.player.xp.profile()));
+    let rewards: Vec<Rewards> = generate_rewards(XP::get_level(battle.player.xp.total()));
 
     println!("Items Looted:");
 

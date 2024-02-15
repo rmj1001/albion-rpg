@@ -146,7 +146,7 @@ fn job(
     let xp = player.xp.get(xp_type);
 
     println!("XP: {}", xp);
-    println!("Level: {}", XP::level(xp));
+    println!("Level: {}", XP::get_level(xp));
 
     if use_gold {
         println!();
