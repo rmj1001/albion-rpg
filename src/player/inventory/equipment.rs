@@ -51,35 +51,60 @@ impl Equipment {
 
         player.equipment.print_table();
 
-        let choice = select_from_str_array(
-            &[
-                "Weapon: Equip",
-                "Weapon: Un-Equip",
-                "Armor:  Equip",
-                "Armor:  Un-Equip",
-                "NAV: Go Back",
-            ],
-            None,
-        );
+        let choice = select_from_str_array(&["1. Weapons", "2. Armor", "NAV: Go Back"], None);
 
         match choice {
             0 => {
-                Self::equip_weapon(player);
+                Self::weapon_menu(player);
                 Self::menu(player);
             }
             1 => {
-                Self::unequip_weapon(player);
+                Self::armor_menu(player);
                 Self::menu(player);
             }
-            2 => {
+            2 => player.save(), // goes back to whatever menu called it due to recursion
+            _ => out_of_bounds(),
+        }
+    }
+
+    pub fn armor_menu(player: &mut Player) {
+        page_header("Equipment Manager - Armor", HeaderSubtext::Keyboard);
+
+        player.armor.print_table();
+
+        let choices: usize = select_from_str_array(&["1. Equip Armor", "2. Un-Equip Armor", "NAV: Go Back"], None);
+
+        match choices {
+            0 => {
                 Self::equip_armor(player);
-                Self::menu(player);
+                Self::armor_menu(player);
             }
-            3 => {
+            1 => {
                 Self::unequip_armor(player);
-                Self::menu(player);
+                Self::armor_menu(player);
             }
-            4 => player.save(), // goes back to whatever menu called it due to recursion
+            2 => {}
+            _ => out_of_bounds(),
+        }
+    }
+
+    pub fn weapon_menu(player: &mut Player) {
+        page_header("Equipment Manager - Weapons", HeaderSubtext::Keyboard);
+
+        player.weapons.print_table();
+
+        let choices: usize = select_from_str_array(&["1. Equip Weapon", "2. Un-Equip Weapon", "NAV: Go Back"], None);
+
+        match choices {
+            0 => {
+                Self::equip_weapon(player);
+                Self::weapon_menu(player);
+            }
+            1 => {
+                Self::unequip_weapon(player);
+                Self::weapon_menu(player);
+            }
+            2 => {}
             _ => out_of_bounds(),
         }
     }
@@ -113,7 +138,7 @@ impl Equipment {
         let weapon = weapon_option.unwrap();
 
         if !weapon.owns {
-            println!("You do not own this weapon.");
+            println!("You do not own this.");
             press_enter_to_continue();
         } else {
             player.equipment.weapon = Some(weapon.clone());
@@ -182,11 +207,11 @@ impl Equipment {
         let armor: &Armor = option.unwrap();
 
         if !armor.owns {
-            println!("You do not own this weapon.");
+            println!("You do not own this.");
             press_enter_to_continue();
         } else {
             player.equipment.armor = Some(armor.clone());
-            println!("Equipped the {}", armor.name);
+            println!("Equipped {}", armor.name);
             press_enter_to_continue();
         }
     }
