@@ -11,10 +11,28 @@ pub struct GuildMemberships {
     pub smithing: Guild,
 }
 
+impl GuildMemberships {
+    pub fn new() -> Self {
+        Self {
+            fishing: Guild::new(100),
+            cooking: Guild::new(150),
+            woodcutting: Guild::new(300),
+            mining: Guild::new(500),
+            smithing: Guild::new(1_000),
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Guild {
     pub member: bool,
-    pub member_price: usize,
+    pub price: usize,
+}
+
+impl Guild {
+    pub fn new(price: usize) -> Self {
+        Self { member: false, price }
+    }
 }
 
 pub enum PricedGuilds {
@@ -35,11 +53,11 @@ impl GuildMemberships {
             PricedGuilds::Smithing => &mut player.guild_memberships.smithing,
         };
 
-        if player.bank.wallet < guild.member_price {
+        if player.bank.wallet < guild.price {
             return Err("You do not have enough gold.");
         }
 
-        player.bank.wallet -= guild.member_price;
+        player.bank.wallet -= guild.price;
         guild.member = true;
         Ok(())
     }

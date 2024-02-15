@@ -1,12 +1,22 @@
 use serde::{Deserialize, Serialize};
 
-use crate::utils::{math::Operation, messages::*, tui::print_table};
+use crate::utils::{math::Operation, messages::*, tui::table_from_csv};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Item {
     pub name: String,
     pub price: usize,
     pub quantity: usize,
+}
+
+impl Item {
+    pub fn new(name: &str, price: usize) -> Self {
+        Self {
+            name: name.to_string(),
+            price,
+            quantity: 0,
+        }
+    }
 }
 
 pub enum GuildItemNames {
@@ -54,109 +64,48 @@ pub struct MundaneInventory {
 }
 
 impl MundaneInventory {
-    pub fn print_table(&self) {
+    pub fn new() -> MundaneInventory {
+        MundaneInventory {
+            bait: Item::new("Bait", 1),
+            seeds: Item::new("Seeds", 1),
+            furs: Item::new("Fur", 5),
+            fish: Item::new("Fish", 10),
+            food: Item::new("Food", 25),
+            wood: Item::new("Wood", 20),
+            ore: Item::new("Ore", 30),
+            ingots: Item::new("Ingot", 50),
+            potions: Item::new("Potion", 20),
+            rubies: Item::new("Ruby", 200),
+            magic_scrolls: Item::new("Magic Scroll", 50),
+            bones: Item::new("Bone", 50),
+            dragon_hides: Item::new("Dragon Hide", 200),
+            runic_tablets: Item::new("Runic Tablet", 1000),
+        }
+    }
+
+    pub fn table(&self) {
         let inv = &self;
 
-        print_table(vec![
+        fn entry(item: &Item) -> String {
+            format!("{},{},{},{}", item.name, item.quantity, item.price, item.price / 2)
+        }
+
+        table_from_csv(vec![
             "Item,Quantity,Buy Price,Sale Price".to_string(),
-            format!(
-                "{},{},{},{}",
-                inv.bait.name,
-                inv.bait.quantity,
-                inv.bait.price,
-                inv.bait.price / 2
-            ),
-            format!(
-                "{},{},{},{}",
-                inv.seeds.name,
-                inv.seeds.quantity,
-                inv.seeds.price,
-                inv.seeds.price / 2
-            ),
-            format!(
-                "{},{},{},{}",
-                inv.furs.name,
-                inv.furs.quantity,
-                inv.furs.price,
-                inv.furs.price / 2
-            ),
-            format!(
-                "{},{},{},{}",
-                inv.fish.name,
-                inv.fish.quantity,
-                inv.fish.price,
-                inv.fish.price / 2
-            ),
-            format!(
-                "{},{},{},{}",
-                inv.food.name,
-                inv.food.quantity,
-                inv.food.price,
-                inv.food.price / 2
-            ),
-            format!(
-                "{},{},{},{}",
-                inv.wood.name,
-                inv.wood.quantity,
-                inv.wood.price,
-                inv.wood.price / 2
-            ),
-            format!(
-                "{},{},{},{}",
-                inv.ore.name,
-                inv.ore.quantity,
-                inv.ore.price,
-                inv.ore.price / 2
-            ),
-            format!(
-                "{},{},{},{}",
-                inv.ingots.name,
-                inv.ingots.quantity,
-                inv.ingots.price,
-                inv.ingots.price / 2
-            ),
-            format!(
-                "{},{},{},{}",
-                inv.potions.name,
-                inv.potions.quantity,
-                inv.potions.price,
-                inv.potions.price / 2
-            ),
-            format!(
-                "{},{},{},{}",
-                inv.rubies.name,
-                inv.rubies.quantity,
-                inv.rubies.price,
-                inv.rubies.price / 2
-            ),
-            format!(
-                "{},{},{},{}",
-                inv.magic_scrolls.name,
-                inv.magic_scrolls.quantity,
-                inv.magic_scrolls.price,
-                inv.magic_scrolls.price / 2
-            ),
-            format!(
-                "{},{},{},{}",
-                inv.bones.name,
-                inv.bones.quantity,
-                inv.bones.price,
-                inv.bones.price / 2
-            ),
-            format!(
-                "{},{},{},{}",
-                inv.dragon_hides.name,
-                inv.dragon_hides.quantity,
-                inv.dragon_hides.price,
-                inv.dragon_hides.price / 2
-            ),
-            format!(
-                "{},{},{},{}",
-                inv.runic_tablets.name,
-                inv.runic_tablets.quantity,
-                inv.runic_tablets.price,
-                inv.runic_tablets.price / 2
-            ),
+            entry(&inv.bait),
+            entry(&inv.seeds),
+            entry(&inv.furs),
+            entry(&inv.fish),
+            entry(&inv.food),
+            entry(&inv.wood),
+            entry(&inv.ore),
+            entry(&inv.ingots),
+            entry(&inv.potions),
+            entry(&inv.rubies),
+            entry(&inv.magic_scrolls),
+            entry(&inv.bones),
+            entry(&inv.dragon_hides),
+            entry(&inv.runic_tablets),
         ])
     }
 

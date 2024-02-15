@@ -1,4 +1,4 @@
-use crate::utils::{math::Operation, messages::*, tui::print_table};
+use crate::utils::{math::Operation, messages::*, tui::table_from_csv};
 
 use crate::player::profile::*;
 use serde::{Deserialize, Serialize};
@@ -21,6 +21,16 @@ pub struct Bank {
 }
 
 impl Bank {
+    pub fn new() -> Self {
+        Self {
+            wallet: 0,
+            account1: 0,
+            account2: 0,
+            account3: 0,
+            account4: 0,
+        }
+    }
+
     pub fn balance(player: &Player, account: &BankAccount) -> usize {
         match account {
             BankAccount::Wallet => player.bank.wallet,
@@ -32,8 +42,8 @@ impl Bank {
     }
 
     /// Prints Bank information as a table using CSV formatting.
-    pub fn print_table(&self) {
-        print_table(vec![
+    pub fn table(&self) {
+        table_from_csv(vec![
             "Account,Balance".to_string(),
             format!("Wallet,{}", self.wallet),
             format!("Account 1,{}", self.account1),

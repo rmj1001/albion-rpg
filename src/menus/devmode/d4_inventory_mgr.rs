@@ -25,7 +25,7 @@ pub fn main(player: &mut Player) {
 fn items_manager(player: &mut Player) {
     page_header("Developer Mode - Inventory Manager - Items", HeaderSubtext::None);
 
-    player.inventory.print_table();
+    player.inventory.table();
 
     let buysell = select_from_str_array(&["1. Add", "2. Subtract", "NAV: Go Back"], None);
 
@@ -146,7 +146,7 @@ fn items_manager(player: &mut Player) {
 fn weapons_manager(player: &mut Player) {
     page_header("Developer Mode - Inventory Manager - Weapons", HeaderSubtext::None);
 
-    player.weapons.print_table();
+    player.weapons.table();
 
     let buysell = select_from_str_array(&["1. Own Weapon", "2. Disown Weapon", "NAV: Go Back"], None);
 
@@ -227,7 +227,7 @@ fn weapons_manager(player: &mut Player) {
 fn armor_manager(player: &mut Player) {
     page_header("Developer Mode - Inventory Manager - Armor", HeaderSubtext::None);
 
-    player.armor.print_table();
+    player.armor.table();
 
     let buysell = select_from_str_array(&["1. Own Armor", "2. Disown Armor", "NAV: Go Back"], None);
 

@@ -1,7 +1,7 @@
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 
-use crate::utils::{math::Operation, messages::*, tui::print_table};
+use crate::utils::{math::Operation, messages::*, tui::table_from_csv};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct XP {
@@ -26,17 +26,32 @@ pub enum XPType {
 }
 
 impl XP {
-    pub fn print_table(&self) {
-        print_table(vec![
-            "Category,XP,Level".to_string(),
-            format!("Combat,{},{}", self.combat, self::XP::level(self.combat)),
-            format!("Fishing,{},{}", self.fishing, self::XP::level(self.fishing)),
-            format!("Cooking,{},{}", self.cooking, self::XP::level(self.cooking)),
-            format!("Woodcutting,{},{}", self.woodcutting, self::XP::level(self.woodcutting)),
-            format!("Mining,{},{}", self.mining, self::XP::level(self.mining)),
-            format!("Smithing,{},{}", self.smithing, self::XP::level(self.smithing)),
-            format!("Thieving,{},{}", self.thieving, self::XP::level(self.thieving)),
-            format!("Profile Total,{},{}", self.profile(), self.profile_level()),
+    pub fn new() -> Self {
+        Self {
+            combat: 0,
+            fishing: 0,
+            cooking: 0,
+            woodcutting: 0,
+            mining: 0,
+            smithing: 0,
+            thieving: 0,
+        }
+    }
+
+    pub fn table(&self) {
+        fn entry(name: &str, xp: usize) -> String {
+            format!("{},{},{}", name, xp, self::XP::level(xp))
+        }
+
+        table_from_csv(vec![
+            entry("Combat", self.combat),
+            entry("Fishing", self.fishing),
+            entry("Cooking", self.cooking),
+            entry("Woodcutting", self.woodcutting),
+            entry("Mining", self.mining),
+            entry("Smithing", self.smithing),
+            entry("Thieving", self.thieving),
+            entry("Player Total", self.profile()),
         ])
     }
 
@@ -46,10 +61,6 @@ impl XP {
 
     pub fn profile(&self) -> usize {
         self.combat + self.fishing + self.cooking + self.woodcutting + self.mining + self.smithing + self.thieving
-    }
-
-    pub fn profile_level(&self) -> usize {
-        XP::level(self.profile())
     }
 
     pub fn arithmetic(&mut self, flag: XPType, operation: Operation<usize>) -> Result<(), &str> {

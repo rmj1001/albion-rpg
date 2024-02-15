@@ -1,7 +1,10 @@
-use crate::utils::{
-    input::select_from_str_array,
-    messages::*,
-    tui::{page_header, press_enter_to_continue, HeaderSubtext},
+use crate::{
+    player::xp::XP,
+    utils::{
+        input::select_from_str_array,
+        messages::*,
+        tui::{page_header, press_enter_to_continue, HeaderSubtext},
+    },
 };
 
 use crate::player::profile::Player;
@@ -22,7 +25,7 @@ pub fn main(player: &mut Player) {
 pub fn xp(player: &mut Player) {
     page_header("Hall of Records - XP/Levels", HeaderSubtext::None);
 
-    player.xp.print_table();
+    player.xp.table();
 
     press_enter_to_continue();
     main(player);
@@ -35,7 +38,7 @@ pub fn achievements(player: &mut Player) {
         player.achievements.hacked_the_game = true;
     }
 
-    if !player.achievements.level_100_reached && player.xp.profile_level() >= 100 {
+    if !player.achievements.level_100_reached && XP::level(player.xp.profile()) >= 100 {
         player.achievements.level_100_reached = true;
     }
 
@@ -49,7 +52,7 @@ pub fn achievements(player: &mut Player) {
     // Print out all achievements
     page_header("Hall of Records - Achievements", HeaderSubtext::None);
 
-    player.achievements.print_table();
+    player.achievements.table();
 
     press_enter_to_continue();
     main(player);

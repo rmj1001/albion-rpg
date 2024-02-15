@@ -13,6 +13,16 @@ pub struct Settings {
 }
 
 impl Settings {
+    pub fn new(username: &str, password_hash: &str) -> Self {
+        Self {
+            username: username.to_string(),
+            password_hash: password_hash.to_string(),
+            developer: false,
+            locked: false,
+            hardmode: false,
+        }
+    }
+
     /// Hinders profile login without double password entry
     pub fn toggle_lock(player: &mut Player) {
         player.settings.locked = !player.settings.locked;

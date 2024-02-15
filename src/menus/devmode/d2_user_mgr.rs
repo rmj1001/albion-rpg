@@ -94,7 +94,7 @@ fn view_user(player: &mut Player) {
 
     match profile_choice {
         Some(profile_string) => {
-            let profile_result = Player::retrieve(profile_string);
+            let profile_result = Player::get_from_username(profile_string);
 
             match profile_result {
                 Ok(profile) => {

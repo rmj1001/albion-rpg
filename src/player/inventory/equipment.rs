@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::utils::{
     input::select_from_str_array,
     messages::out_of_bounds,
-    tui::{page_header, press_enter_to_continue, print_table, HeaderSubtext},
+    tui::{page_header, press_enter_to_continue, table_from_csv, HeaderSubtext},
 };
 
 use crate::player::profile::Player;
@@ -17,7 +17,14 @@ pub struct Equipment {
 }
 
 impl Equipment {
-    pub fn print_table(&self) {
+    pub fn new() -> Self {
+        Self {
+            armor: None,
+            weapon: None,
+        }
+    }
+
+    pub fn table(&self) {
         let mut weapon_string: String = String::new();
         let mut armor_string: String = String::new();
 
@@ -43,13 +50,13 @@ impl Equipment {
             )
         }
 
-        print_table(vec![weapon_string, armor_string])
+        table_from_csv(vec![weapon_string, armor_string])
     }
 
     pub fn menu(player: &mut Player) {
         page_header("Equipment Manager", HeaderSubtext::Keyboard);
 
-        player.equipment.print_table();
+        player.equipment.table();
 
         let choice = select_from_str_array(&["1. Weapons", "2. Armor", "NAV: Go Back"], None);
 
@@ -70,7 +77,7 @@ impl Equipment {
     pub fn armor_menu(player: &mut Player) {
         page_header("Equipment Manager - Armor", HeaderSubtext::Keyboard);
 
-        player.armor.print_table();
+        player.armor.table();
 
         let choices: usize = select_from_str_array(&["1. Equip Armor", "2. Un-Equip Armor", "NAV: Go Back"], None);
 
@@ -91,7 +98,7 @@ impl Equipment {
     pub fn weapon_menu(player: &mut Player) {
         page_header("Equipment Manager - Weapons", HeaderSubtext::Keyboard);
 
-        player.weapons.print_table();
+        player.weapons.table();
 
         let choices: usize = select_from_str_array(&["1. Equip Weapon", "2. Un-Equip Weapon", "NAV: Go Back"], None);
 
@@ -121,13 +128,13 @@ impl Equipment {
 
         let choice: usize = select_from_str_array(&choices, None);
 
-        let weapon_option: Option<&Weapon> = match choice {
-            0 => Some(&player.weapons.wooden_sword),
-            1 => Some(&player.weapons.bronze_sword),
-            2 => Some(&player.weapons.iron_sword),
-            3 => Some(&player.weapons.steel_sword),
-            4 => Some(&player.weapons.mystic_sword),
-            5 => Some(&player.weapons.wizard_staff),
+        let weapon_option: Option<&mut Weapon> = match choice {
+            0 => Some(&mut player.weapons.wooden_sword),
+            1 => Some(&mut player.weapons.bronze_sword),
+            2 => Some(&mut player.weapons.iron_sword),
+            3 => Some(&mut player.weapons.steel_sword),
+            4 => Some(&mut player.weapons.mystic_sword),
+            5 => Some(&mut player.weapons.wizard_staff),
             _ => None,
         };
 
@@ -141,7 +148,9 @@ impl Equipment {
             println!("You do not own this.");
             press_enter_to_continue();
         } else {
+            weapon.equipped = true;
             player.equipment.weapon = Some(weapon.clone());
+
             println!("Equipped the {}", weapon.name);
             press_enter_to_continue();
         }
@@ -153,6 +162,10 @@ impl Equipment {
             press_enter_to_continue();
             return;
         }
+
+        let mut equipped_weapon = player.equipment.weapon.clone().unwrap();
+
+        equipped_weapon.equipped = false;
 
         Self::overwrite_inventory_weapon(player.equipment.weapon.clone().unwrap(), player);
 
@@ -191,12 +204,12 @@ impl Equipment {
 
         let choice: usize = select_from_str_array(&choices, None);
 
-        let option: Option<&Armor> = match choice {
-            0 => Some(&player.armor.leather),
-            1 => Some(&player.armor.bronze),
-            2 => Some(&player.armor.iron),
-            3 => Some(&player.armor.dragonhide),
-            4 => Some(&player.armor.mystic),
+        let option: Option<&mut Armor> = match choice {
+            0 => Some(&mut player.armor.leather),
+            1 => Some(&mut player.armor.bronze),
+            2 => Some(&mut player.armor.iron),
+            3 => Some(&mut player.armor.dragonhide),
+            4 => Some(&mut player.armor.mystic),
             _ => None,
         };
 
@@ -204,13 +217,15 @@ impl Equipment {
             out_of_bounds();
         }
 
-        let armor: &Armor = option.unwrap();
+        let armor: &mut Armor = option.unwrap();
 
         if !armor.owns {
             println!("You do not own this.");
             press_enter_to_continue();
         } else {
+            armor.equipped = true;
             player.equipment.armor = Some(armor.clone());
+
             println!("Equipped {}", armor.name);
             press_enter_to_continue();
         }
@@ -223,7 +238,11 @@ impl Equipment {
             return;
         }
 
-        Self::overwrite_inventory_armor(player.equipment.armor.clone().unwrap(), player);
+        let mut equipped_armor = player.equipment.armor.clone().unwrap();
+
+        equipped_armor.equipped = false;
+
+        Self::overwrite_inventory_armor(equipped_armor, player);
 
         player.equipment.armor = None;
         println!("Armor successfully unequipped.");

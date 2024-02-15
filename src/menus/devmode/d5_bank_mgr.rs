@@ -12,7 +12,7 @@ pub fn main(player: &mut Player) {
 
     page_header("Developer Mode - Bank Managert", HeaderSubtext::Keyboard);
 
-    player.bank.print_table();
+    player.bank.table();
 
     let account_choice = select_from_str_array(
         &[

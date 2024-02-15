@@ -31,7 +31,7 @@ pub fn main() {
     page_header("Login", tui::HeaderSubtext::None);
 
     let username: String = prompt_colon("Username");
-    let profile_result = Player::retrieve(&username);
+    let profile_result = Player::get_from_username(&username);
 
     match profile_result {
         Ok(player) => {

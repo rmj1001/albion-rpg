@@ -41,7 +41,7 @@ pub fn main(player: &mut Player) {
 pub fn mundane_inventory(player: &mut Player) {
     page_header("Items Inventory", HeaderSubtext::None);
 
-    player.inventory.print_table();
+    player.inventory.table();
 
     press_enter_to_continue();
     main(player);
@@ -50,7 +50,7 @@ pub fn mundane_inventory(player: &mut Player) {
 pub fn weapons_inventory(player: &mut Player) {
     page_header("Weapons Inventory", HeaderSubtext::None);
 
-    player.weapons.print_table();
+    player.weapons.table();
 
     press_enter_to_continue();
     main(player);
@@ -59,7 +59,7 @@ pub fn weapons_inventory(player: &mut Player) {
 pub fn armor_inventory(player: &mut Player) {
     page_header("Armor Inventory", HeaderSubtext::None);
 
-    player.armor.print_table();
+    player.armor.table();
 
     press_enter_to_continue();
     main(player);
@@ -68,7 +68,7 @@ pub fn armor_inventory(player: &mut Player) {
 pub fn finances(player: &mut Player) {
     page_header("Finances", HeaderSubtext::None);
 
-    player.bank.print_table();
+    player.bank.table();
 
     press_enter_to_continue();
     main(player);

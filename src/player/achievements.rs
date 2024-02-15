@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::utils::tui::{pretty_bool, print_table};
+use crate::utils::tui::{pretty_bool, table_from_csv};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Achievements {
@@ -15,8 +15,18 @@ pub struct Achievements {
 }
 
 impl Achievements {
-    pub fn print_table(&self) {
-        print_table(vec![
+    pub fn new() -> Self {
+        Self {
+            monsters_killed: 0,
+            earned_million_gold: false,
+            level_100_reached: false,
+            stronghold_defeated: false,
+            hacked_the_game: false,
+        }
+    }
+
+    pub fn table(&self) {
+        table_from_csv(vec![
             "Achievement,Data".to_string(),
             format!("Monsters Killed,{}", self.monsters_killed),
             format!("Stronghold Defeated?,{}", pretty_bool(self.stronghold_defeated)),

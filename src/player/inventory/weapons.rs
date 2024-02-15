@@ -1,19 +1,32 @@
 use rand::{thread_rng, Rng};
 use serde::{Deserialize, Serialize};
 
-use crate::utils::tui::{pretty_bool, print_table};
+use crate::utils::tui::{checkmark, price, table_from_csv};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Weapon {
     pub name: String,
     pub price: usize,
     pub owns: bool,
+    pub equipped: bool,
     pub damage: usize,
     pub durability: usize,
     pub default_durability: usize,
 }
 
 impl Weapon {
+    pub fn new(name: &str, price: usize, damage: usize, durability: usize) -> Self {
+        Self {
+            name: name.to_string(),
+            price,
+            owns: false,
+            equipped: false,
+            damage,
+            durability,
+            default_durability: durability,
+        }
+    }
+
     pub fn decrease_durability(&mut self) {
         let random_damage = thread_rng().gen_range(1..5);
 
@@ -52,51 +65,38 @@ pub struct WeaponsInventory {
 }
 
 impl WeaponsInventory {
-    pub fn print_table(&self) {
-        print_table(vec![
-            "Weapon,Purchased,Buy Price,Sale Price".to_string(),
+    pub fn new() -> WeaponsInventory {
+        WeaponsInventory {
+            wooden_sword: Weapon::new("Wooden Sword", 10, 10, 100),
+            bronze_sword: Weapon::new("Bronze Sword", 30, 20, 150),
+            iron_sword: Weapon::new("Iron Sword", 100, 50, 200),
+            steel_sword: Weapon::new("Steel Rapier", 500, 200, 500),
+            mystic_sword: Weapon::new("Mystic Sword", 5_000, 500, 1_000),
+            wizard_staff: Weapon::new("Wizard Staff", 10_000, 1_000, 2_000),
+        }
+    }
+
+    pub fn table(&self) {
+        fn entry(weapon: &Weapon) -> String {
             format!(
-                "{},{},{},{}",
-                self.wooden_sword.name,
-                pretty_bool(self.wooden_sword.owns),
-                self.wooden_sword.price,
-                self.wooden_sword.price / 2
-            ),
-            format!(
-                "{},{},{},{}",
-                self.bronze_sword.name,
-                pretty_bool(self.bronze_sword.owns),
-                self.bronze_sword.price,
-                self.bronze_sword.price / 2
-            ),
-            format!(
-                "{},{},{},{}",
-                self.iron_sword.name,
-                pretty_bool(self.iron_sword.owns),
-                self.iron_sword.price,
-                self.iron_sword.price / 2
-            ),
-            format!(
-                "{},{},{},{}",
-                self.steel_sword.name,
-                pretty_bool(self.steel_sword.owns),
-                self.steel_sword.price,
-                self.steel_sword.price / 2
-            ),
-            format!(
-                "{},{},{},{}",
-                self.mystic_sword.name,
-                pretty_bool(self.mystic_sword.owns),
-                self.mystic_sword.price,
-                self.mystic_sword.price / 2
-            ),
-            format!(
-                "{},{},{},{}",
-                self.wizard_staff.name,
-                pretty_bool(self.wizard_staff.owns),
-                self.wizard_staff.price,
-                self.wizard_staff.price / 2
-            ),
+                "{},{},{},{},{},{},{}",
+                weapon.name,
+                checkmark(weapon.owns),
+                checkmark(weapon.equipped),
+                weapon.damage,
+                weapon.durability,
+                price(weapon.price),
+                price(weapon.price / 2)
+            )
+        }
+        table_from_csv(vec![
+            "Weapon,Owned,Equipped,Damage,Durability,Buy Price,Sale Price".to_string(),
+            entry(&self.wooden_sword),
+            entry(&self.bronze_sword),
+            entry(&self.iron_sword),
+            entry(&self.steel_sword),
+            entry(&self.mystic_sword),
+            entry(&self.wizard_staff),
         ])
     }
 
@@ -113,14 +113,16 @@ impl WeaponsInventory {
     }
 
     /// For use in developer mode only
-    pub fn own_item(&mut self, item_flag: WeaponItemFlag, flag: bool) {
+    pub fn toggle_own(&mut self, item_flag: WeaponItemFlag) {
         let item_result = self.retrieve_item(item_flag);
 
         if item_result.is_none() {
             return;
         }
 
-        item_result.unwrap().owns = flag;
+        if let Some(item) = item_result {
+            item.owns = !item.owns;
+        }
     }
 
     pub fn purchase(

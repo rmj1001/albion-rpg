@@ -105,10 +105,10 @@ fn check_membership(player: &mut Player, job: PricedGuilds) {
         return;
     }
 
-    if player.bank.wallet < guild.member_price {
+    if player.bank.wallet < guild.price {
         failure(format!(
             "This guild requires a membership, which you are too poor to purchase. (Cost: {} gold)",
-            guild.member_price
+            guild.price
         ));
 
         return main(player);
@@ -116,7 +116,7 @@ fn check_membership(player: &mut Player, job: PricedGuilds) {
 
     let permission_to_purchase = confirm(&format!(
         "This guild requires a membership (Cost: {} gold). Purchase?",
-        guild.member_price
+        guild.price
     ));
 
     if permission_to_purchase {

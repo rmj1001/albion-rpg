@@ -1,7 +1,7 @@
 use rand::{thread_rng, Rng};
 use serde::{Deserialize, Serialize};
 
-use crate::utils::tui::{pretty_bool, print_table};
+use crate::utils::tui::{checkmark, price, table_from_csv};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Armor {
@@ -11,9 +11,22 @@ pub struct Armor {
     pub defense: usize,
     pub durability: usize,
     pub default_durability: usize,
+    pub equipped: bool,
 }
 
 impl Armor {
+    pub fn new(name: &str, price: usize, defense: usize, durability: usize) -> Self {
+        Self {
+            name: format!("{} Armor", name),
+            price,
+            owns: false,
+            equipped: false,
+            defense,
+            durability,
+            default_durability: durability,
+        }
+    }
+
     pub fn decrease_durability(&mut self) {
         let random_damage = thread_rng().gen_range(1..5);
 
@@ -52,51 +65,39 @@ pub enum ArmorItemFlag {
 }
 
 impl ArmorInventory {
-    pub fn print_table(&self) {
-        print_table(vec![
-            "Armor,Purchased,Buy Price,Sale Price".to_string(),
+    pub fn new() -> ArmorInventory {
+        ArmorInventory {
+            leather: Armor::new("Leather", 50, 10, 100),
+            bronze: Armor::new("Bronze", 200, 30, 200),
+            iron: Armor::new("Iron", 500, 50, 300),
+            steel: Armor::new("Steel", 750, 100, 500),
+            dragonhide: Armor::new("Dragonhide", 1_000, 200, 500),
+            mystic: Armor::new("Mystic", 10_000, 1_000, 10_000),
+        }
+    }
+
+    pub fn table(&self) {
+        fn entry(armor: &Armor) -> String {
             format!(
-                "{},{},{},{}",
-                self.leather.name,
-                pretty_bool(self.leather.owns),
-                self.leather.price,
-                self.leather.price / 2
-            ),
-            format!(
-                "{},{},{},{}",
-                self.bronze.name,
-                pretty_bool(self.bronze.owns),
-                self.bronze.price,
-                self.bronze.price / 2
-            ),
-            format!(
-                "{},{},{},{}",
-                self.iron.name,
-                pretty_bool(self.iron.owns),
-                self.iron.price,
-                self.iron.price / 2
-            ),
-            format!(
-                "{},{},{},{}",
-                self.steel.name,
-                pretty_bool(self.steel.owns),
-                self.steel.price,
-                self.steel.price / 2
-            ),
-            format!(
-                "{},{},{},{}",
-                self.dragonhide.name,
-                pretty_bool(self.dragonhide.owns),
-                self.dragonhide.price,
-                self.dragonhide.price / 2
-            ),
-            format!(
-                "{},{},{},{}",
-                self.mystic.name,
-                pretty_bool(self.mystic.owns),
-                self.mystic.price,
-                self.mystic.price / 2
-            ),
+                "{},{},{},{},{},{},{}",
+                armor.name,
+                checkmark(armor.owns),
+                checkmark(armor.equipped),
+                armor.defense,
+                armor.durability,
+                price(armor.price),
+                price(armor.price / 2)
+            )
+        }
+
+        table_from_csv(vec![
+            "Armor,Owned,Equipped,Defense,Durability,Purchase,Sell".to_string(),
+            entry(&self.leather),
+            entry(&self.bronze),
+            entry(&self.iron),
+            entry(&self.steel),
+            entry(&self.dragonhide),
+            entry(&self.mystic),
         ])
     }
 
@@ -113,14 +114,16 @@ impl ArmorInventory {
     }
 
     /// For use in developer mode only
-    pub fn own_item(&mut self, item_flag: ArmorItemFlag, flag: bool) {
+    pub fn toggle_own(&mut self, item_flag: ArmorItemFlag) {
         let item = self.retrieve_item(item_flag);
 
         if item.is_none() {
             return;
         }
 
-        item.unwrap().owns = flag;
+        if let Some(item) = item {
+            item.owns = !item.owns;
+        }
     }
 
     pub fn purchase(

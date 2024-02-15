@@ -119,7 +119,7 @@ pub fn press_enter_to_continue() {
     let _ = std::io::stdin().read_line(&mut garbage);
 }
 
-pub fn print_table(strings: Vec<String>) {
+pub fn table_from_csv(strings: Vec<String>) {
     let table_string = strings.join("\n");
     let table = csv_to_table::iter::from_reader(table_string.as_bytes()).to_string();
 
@@ -131,6 +131,17 @@ pub fn pretty_bool(flag: bool) -> &'static str {
         true => "Yes",
         false => "No",
     }
+}
+
+pub fn checkmark(flag: bool) -> &'static str {
+    match flag {
+        true => "✓",
+        false => "",
+    }
+}
+
+pub fn price(number: usize) -> String {
+    format!("{} gold", number)
 }
 
 pub fn sleep(seconds: u64) {

@@ -13,7 +13,7 @@ pub fn main(player: &mut Player) {
     page_header("Armor Shop", crate::utils::tui::HeaderSubtext::None);
 
     println!("Gold: {}\n", player.bank.wallet);
-    player.armor.print_table();
+    player.armor.table();
 
     let buysell = select_from_str_array(&["1. Purchase", "2. Sell", "NAV: Go Back"], None);
 

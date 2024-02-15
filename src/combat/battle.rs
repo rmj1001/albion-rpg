@@ -1,6 +1,6 @@
 use crate::{
     combat::enemy::{add_rewards_to_user, generate_rewards, Enemy, Rewards},
-    player::{inventory::equipment::Equipment, profile::Player},
+    player::{inventory::equipment::Equipment, profile::Player, xp::XP},
     utils::{
         input,
         math::random_num,
@@ -228,7 +228,7 @@ pub fn victory(battle: &mut BattleSettings) {
     battle.player.reset_health();
     println!();
 
-    let rewards: Vec<Rewards> = generate_rewards(battle.player.xp.profile_level());
+    let rewards: Vec<Rewards> = generate_rewards(XP::level(battle.player.xp.profile()));
 
     println!("Items Looted:");
 

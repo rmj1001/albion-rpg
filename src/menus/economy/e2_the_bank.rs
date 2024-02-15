@@ -12,7 +12,7 @@ pub fn main(player: &mut Player) {
     page_header("The Bank", HeaderSubtext::Keyboard);
 
     println!();
-    player.bank.print_table();
+    player.bank.table();
 
     let option = select_from_str_array(&["1. Deposit", "2. Withdraw", "NAV: Go Back"], None);
 
