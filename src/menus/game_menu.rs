@@ -1,6 +1,6 @@
 use crate::{
     combat::{battle::BattleSettings, enemy::Enemy},
-    player::settings::Settings,
+    data::settings::Settings,
     utils::{
         input::{confirm, prompt_arrow},
         messages::{self, success},
@@ -9,7 +9,7 @@ use crate::{
     },
 };
 
-use crate::player::profile::Player;
+use crate::data::player::Player;
 
 pub fn main(player: &mut Player) {
     page_header(

@@ -1,5 +1,5 @@
 use crate::{
-    player::{profile::Player, xp::XPType},
+    data::{player::Player, xp::XPType},
     utils::{
         input::select_from_str_array,
         math::{generic_calculator, Operation},

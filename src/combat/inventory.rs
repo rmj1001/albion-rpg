@@ -1,5 +1,5 @@
 use crate::{
-    player::{inventory::equipment::Equipment, profile::Player},
+    data::{inventory::equipment::Equipment, player::Player},
     utils::{
         input::select_from_str_array,
         math::random_num,

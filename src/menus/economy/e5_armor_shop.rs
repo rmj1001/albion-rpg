@@ -1,5 +1,5 @@
 use crate::{
-    player::inventory::armor::ArmorItemFlag,
+    data::inventory::armor::ArmorItemFlag,
     utils::{
         input::{select_from_str_array, select_from_vector},
         messages::*,
@@ -7,7 +7,7 @@ use crate::{
     },
 };
 
-use crate::player::profile::Player;
+use crate::data::player::Player;
 
 pub fn main(player: &mut Player) {
     page_header("Armor Shop", crate::utils::tui::HeaderSubtext::None);

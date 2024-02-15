@@ -1,5 +1,5 @@
 use crate::{
-    player::profile::Player,
+    data::player::Player,
     utils::{
         crypt,
         input::{self, prompt_colon},

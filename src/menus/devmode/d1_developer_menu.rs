@@ -1,5 +1,5 @@
 use crate::{
-    player::settings::Settings,
+    data::settings::Settings,
     utils::{
         input::{confirm, select_from_str_array},
         messages::*,
@@ -7,7 +7,7 @@ use crate::{
     },
 };
 
-use crate::player::profile::Player;
+use crate::data::player::Player;
 
 pub fn main(player: &mut Player) {
     page_header("Developer Mode", HeaderSubtext::Keyboard);

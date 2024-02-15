@@ -1,6 +1,6 @@
 use crate::{
     combat::enemy::{add_rewards_to_user, generate_rewards, Enemy, Rewards},
-    player::{inventory::equipment::Equipment, profile::Player, xp::XP},
+    data::{inventory::equipment::Equipment, player::Player, xp::XP},
     utils::{
         input,
         math::random_num,

@@ -1,5 +1,5 @@
 use crate::{
-    player::settings::Settings,
+    data::settings::Settings,
     utils::{
         crypt,
         input::*,
@@ -8,7 +8,7 @@ use crate::{
     },
 };
 
-use crate::player::profile::Player;
+use crate::data::player::Player;
 
 fn get_password(profile: &Player) -> bool {
     let input_password: String = password(false);

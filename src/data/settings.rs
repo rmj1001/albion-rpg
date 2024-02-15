@@ -1,4 +1,4 @@
-use super::profile::Player;
+use super::player::Player;
 use crate::utils::{crypt, files, messages::success_msg};
 use serde::{Deserialize, Serialize};
 use std::{fs, path::Path};

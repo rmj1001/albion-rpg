@@ -6,7 +6,7 @@ use crate::utils::{
     tui::{page_header, press_enter_to_continue, table_from_csv, HeaderSubtext},
 };
 
-use crate::player::profile::Player;
+use crate::data::player::Player;
 
 use super::{armor::Armor, weapons::Weapon};
 

@@ -1,5 +1,5 @@
-use crate::player::inventory::bank::BankAccount;
-use crate::player::profile::Player;
+use crate::data::inventory::bank::BankAccount;
+use crate::data::player::Player;
 use crate::utils::{
     input::select_from_str_array,
     math::{generic_calculator, Operation},

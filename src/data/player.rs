@@ -4,7 +4,7 @@ use super::health::Health;
 use super::settings::Settings;
 use super::xp::*;
 
-use crate::player::inventory::{armor::*, bank::*, equipment::Equipment, items::*, weapons::*};
+use crate::data::inventory::{armor::*, bank::*, equipment::Equipment, items::*, weapons::*};
 
 use crate::utils::files;
 use serde::{Deserialize, Serialize};

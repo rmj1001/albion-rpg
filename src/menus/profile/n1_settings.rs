@@ -1,5 +1,5 @@
 use crate::{
-    player::settings::Settings,
+    data::settings::Settings,
     utils::{
         crypt,
         input::{confirm, password, prompt_colon, select_from_str_array},
@@ -8,7 +8,7 @@ use crate::{
     },
 };
 
-use crate::player::profile::Player;
+use crate::data::player::Player;
 
 pub fn main(player: &mut Player) {
     page_header("Profile Settings", HeaderSubtext::Keyboard);

@@ -1,5 +1,5 @@
 use crate::{
-    player::profile::Player,
+    data::player::Player,
     utils::{
         files,
         input::{confirm, select_from_str_array, select_from_vector},

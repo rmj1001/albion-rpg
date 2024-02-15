@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use super::profile::Player;
+use super::player::Player;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct GuildMemberships {

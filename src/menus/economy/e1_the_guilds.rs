@@ -4,10 +4,10 @@ use crate::utils::{
     messages::*,
 };
 
-use crate::player::{
+use crate::data::{
     guilds::{GuildMemberships, PricedGuilds},
     inventory::items::{GuildItemNames, Item},
-    profile::Player,
+    player::Player,
     xp::{XPType, XP},
 };
 use crate::utils::tui::page_header;

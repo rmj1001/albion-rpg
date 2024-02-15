@@ -11,7 +11,7 @@ pub mod utils {
     pub mod tui;
 }
 
-pub mod player {
+pub mod data {
     pub mod inventory {
         pub mod armor;
         pub mod bank;
@@ -22,7 +22,7 @@ pub mod player {
     pub mod achievements;
     pub mod guilds;
     pub mod health;
-    pub mod profile;
+    pub mod player;
     pub mod settings;
     pub mod xp;
 }

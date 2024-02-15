@@ -1,6 +1,6 @@
 use crate::utils::{math::Operation, messages::*, tui::table_from_csv};
 
-use crate::player::profile::*;
+use crate::data::player::*;
 use serde::{Deserialize, Serialize};
 
 pub enum BankAccount {

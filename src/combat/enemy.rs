@@ -1,5 +1,5 @@
 use crate::{
-    player::{profile::Player, xp::XP},
+    data::{player::Player, xp::XP},
     utils::math::{self, random_num},
 };
 

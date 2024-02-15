@@ -1,7 +1,7 @@
 use std::process::Command;
 
 use crate::{
-    player::profile::Player,
+    data::player::Player,
     utils::{messages::success_msg, tui::sleep},
 };
 

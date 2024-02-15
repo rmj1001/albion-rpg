@@ -1,5 +1,5 @@
 pub mod encoding {
-    use crate::player::profile::Player;
+    use crate::data::player::Player;
 
     pub fn deserialize_user(data: String) -> Result<Player, String> {
         let user_result: Result<Player, toml::de::Error> = toml::from_str(&data);
