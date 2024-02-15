@@ -1,5 +1,5 @@
 use crate::{
-    player::{inventory::InventoryItemFlag, profile::Player},
+    player::{inventory::items::InventoryItemFlag, profile::Player},
     utils::{
         input::{input_generic, select_from_str_array, select_from_vector},
         messages::*,

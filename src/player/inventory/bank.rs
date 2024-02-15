@@ -1,6 +1,6 @@
 use crate::utils::{math::Operation, messages::*, tui::print_table};
 
-use super::profile::*;
+use crate::player::profile::*;
 use serde::{Deserialize, Serialize};
 
 pub enum BankAccount {

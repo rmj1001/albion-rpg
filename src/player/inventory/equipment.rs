@@ -6,7 +6,9 @@ use crate::utils::{
     tui::{page_header, press_enter_to_continue, print_table, HeaderSubtext},
 };
 
-use super::{armor::Armor, profile::Player, weapons::Weapon};
+use crate::player::profile::Player;
+
+use super::{armor::Armor, weapons::Weapon};
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct Equipment {
@@ -44,7 +46,7 @@ impl Equipment {
         print_table(vec![weapon_string, armor_string])
     }
 
-    pub fn management_menu(player: &mut Player) {
+    pub fn menu(player: &mut Player) {
         page_header("Equipment Manager", HeaderSubtext::Keyboard);
 
         player.equipment.print_table();
@@ -63,19 +65,19 @@ impl Equipment {
         match choice {
             0 => {
                 Self::equip_weapon(player);
-                Self::management_menu(player);
+                Self::menu(player);
             }
             1 => {
                 Self::unequip_weapon(player);
-                Self::management_menu(player);
+                Self::menu(player);
             }
             2 => {
                 Self::equip_armor(player);
-                Self::management_menu(player);
+                Self::menu(player);
             }
             3 => {
                 Self::unequip_armor(player);
-                Self::management_menu(player);
+                Self::menu(player);
             }
             4 => player.save(), // goes back to whatever menu called it due to recursion
             _ => out_of_bounds(),
@@ -218,19 +220,5 @@ impl Equipment {
         } else if name == armor.mystic.name {
             armor.mystic = equipped;
         }
-
-        // if name == armor.wooden_sword.name {
-        //     armor.wooden_sword = equipped;
-        // } else if name == armor.bronze_sword.name {
-        //     armor.bronze_sword = equipped;
-        // } else if name == armor.iron_sword.name {
-        //     armor.iron_sword = equipped;
-        // } else if name == armor.steel_sword.name {
-        //     armor.steel_sword = equipped;
-        // } else if name == armor.mystic_sword.name {
-        //     armor.mystic_sword = equipped;
-        // } else if name == armor.wizard_staff.name {
-        //     armor.wizard_staff = equipped;
-        // }
     }
 }

@@ -1,13 +1,10 @@
 use super::achievements::*;
-use super::armor::*;
-use super::bank::*;
-use super::equipment::Equipment;
 use super::guilds::Guild;
 use super::guilds::GuildMemberships;
-use super::inventory::*;
 use super::settings::Settings;
-use super::weapons::*;
 use super::xp::*;
+
+use crate::player::inventory::{armor::*, bank::*, equipment::Equipment, items::*, weapons::*};
 
 use crate::utils::files;
 use serde::{Deserialize, Serialize};

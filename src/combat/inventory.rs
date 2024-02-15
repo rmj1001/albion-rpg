@@ -1,5 +1,5 @@
 use crate::{
-    player::{equipment::Equipment, profile::Player},
+    player::{inventory::equipment::Equipment, profile::Player},
     utils::{
         input::select_from_str_array,
         math::random_num,
@@ -15,7 +15,7 @@ pub fn battle_inventory(player: &mut Player) {
 
     match choice {
         0 => {
-            Equipment::management_menu(player);
+            Equipment::menu(player);
             battle_inventory(player);
         }
         1 => healing_inventory(player),

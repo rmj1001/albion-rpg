@@ -1,5 +1,5 @@
 use crate::{
-    player::equipment::Equipment,
+    player::inventory::equipment::Equipment,
     utils::{
         input::select_from_str_array,
         messages::*,
@@ -29,7 +29,7 @@ pub fn main(player: &mut Player) {
         1 => weapons_inventory(player),
         2 => armor_inventory(player),
         3 => {
-            Equipment::management_menu(player);
+            Equipment::menu(player);
             main(player);
         }
         4 => finances(player),

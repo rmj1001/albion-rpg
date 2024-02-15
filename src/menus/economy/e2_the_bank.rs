@@ -4,7 +4,7 @@ use crate::utils::{
     tui::{page_header, HeaderSubtext},
 };
 
-use crate::player::{bank::*, profile::Player};
+use crate::player::{inventory::bank::*, profile::Player};
 
 pub fn main(player: &mut Player) {
     let mut account: BankAccount = BankAccount::Account1;

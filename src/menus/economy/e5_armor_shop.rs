@@ -1,11 +1,13 @@
 use crate::{
-    player::{armor::ArmorItemFlag, profile::Player},
+    player::inventory::armor::ArmorItemFlag,
     utils::{
         input::{select_from_str_array, select_from_vector},
         messages::*,
         tui::page_header,
     },
 };
+
+use crate::player::profile::Player;
 
 pub fn main(player: &mut Player) {
     page_header("Armor Shop", crate::utils::tui::HeaderSubtext::None);

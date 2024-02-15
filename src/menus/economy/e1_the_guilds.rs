@@ -6,7 +6,7 @@ use crate::utils::{
 
 use crate::player::{
     guilds::{GuildMemberships, PricedGuilds},
-    inventory::{GuildItemNames, Item},
+    inventory::items::{GuildItemNames, Item},
     profile::Player,
     xp::{XPType, XP},
 };

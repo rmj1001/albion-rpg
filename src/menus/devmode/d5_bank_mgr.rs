@@ -1,11 +1,10 @@
-use crate::{
-    player::{bank::BankAccount, profile::Player},
-    utils::{
-        input::select_from_str_array,
-        math::{generic_calculator, Operation},
-        messages::*,
-        tui::{page_header, press_enter_to_continue, HeaderSubtext},
-    },
+use crate::player::inventory::bank::BankAccount;
+use crate::player::profile::Player;
+use crate::utils::{
+    input::select_from_str_array,
+    math::{generic_calculator, Operation},
+    messages::*,
+    tui::{page_header, press_enter_to_continue, HeaderSubtext},
 };
 
 pub fn main(player: &mut Player) {

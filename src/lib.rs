@@ -12,15 +12,17 @@ pub mod utils {
 }
 
 pub mod player {
+    pub mod inventory {
+        pub mod armor;
+        pub mod bank;
+        pub mod equipment;
+        pub mod items;
+        pub mod weapons;
+    }
     pub mod achievements;
-    pub mod armor;
-    pub mod bank;
-    pub mod equipment;
     pub mod guilds;
-    pub mod inventory;
     pub mod profile;
     pub mod settings;
-    pub mod weapons;
     pub mod xp;
 }
 
