@@ -1,9 +1,9 @@
 [health]
-hp = 100
+hp = 82
 hunger = 0
 
 [xp]
-combat = 11
+combat = 0
 fishing = 0
 cooking = 0
 woodcutting = 0
@@ -16,10 +16,10 @@ monsters_killed = 0
 stronghold_defeated = false
 earned_million_gold = false
 level_100_reached = false
-hacked_the_game = true
+hacked_the_game = false
 
 [bank]
-wallet = 10
+wallet = 0
 account1 = 0
 account2 = 0
 account3 = 0
@@ -27,39 +27,25 @@ account4 = 0
 
 [guild_memberships.fishing]
 member = false
-member_price = 100
+price = 100
 
 [guild_memberships.cooking]
 member = false
-member_price = 150
+price = 150
 
 [guild_memberships.woodcutting]
 member = false
-member_price = 300
+price = 300
 
 [guild_memberships.mining]
 member = false
-member_price = 500
+price = 500
 
 [guild_memberships.smithing]
 member = false
-member_price = 1000
+price = 1000
 
-[equipment.armor]
-name = "Bronze"
-price = 200
-owns = true
-defense = 30
-durability = 127
-default_durability = 200
-
-[equipment.weapon]
-name = "Bronze Sword"
-price = 30
-owns = true
-damage = 20
-durability = 64
-default_durability = 150
+[equipment]
 
 [inventory.bait]
 name = "Bait"
@@ -104,7 +90,7 @@ quantity = 0
 [inventory.potions]
 name = "Potion"
 price = 20
-quantity = 12
+quantity = 0
 
 [inventory.rubies]
 name = "Ruby"
@@ -119,7 +105,7 @@ quantity = 0
 [inventory.bones]
 name = "Bone"
 price = 50
-quantity = 9
+quantity = 0
 
 [inventory.dragon_hides]
 name = "Dragon Hide"
@@ -132,57 +118,64 @@ price = 1000
 quantity = 0
 
 [armor.leather]
-name = "Leather"
+name = "Leather Armor"
 price = 50
 owns = false
 defense = 10
 durability = 100
 default_durability = 100
+equipped = false
 
 [armor.bronze]
-name = "Bronze"
+name = "Bronze Armor"
 price = 200
-owns = true
+owns = false
 defense = 30
-durability = 127
+durability = 200
 default_durability = 200
+equipped = false
 
 [armor.iron]
-name = "Iron"
+name = "Iron Armor"
 price = 500
 owns = false
 defense = 50
 durability = 300
 default_durability = 300
+equipped = false
 
 [armor.steel]
-name = "Steel"
+name = "Steel Armor"
 price = 750
 owns = false
 defense = 100
 durability = 500
 default_durability = 500
+equipped = false
 
 [armor.dragonhide]
-name = "Dragonhide"
+name = "Dragonhide Armor"
 price = 1000
 owns = false
 defense = 200
 durability = 500
 default_durability = 500
+equipped = false
 
 [armor.mystic]
-name = "Magic"
+name = "Mystic Armor"
 price = 10000
 owns = false
 defense = 1000
 durability = 10000
 default_durability = 10000
+equipped = false
 
 [weapons.wooden_sword]
 name = "Wooden Sword"
 price = 10
 owns = false
+equipped = false
 damage = 10
 durability = 100
 default_durability = 100
@@ -190,15 +183,17 @@ default_durability = 100
 [weapons.bronze_sword]
 name = "Bronze Sword"
 price = 30
-owns = true
+owns = false
+equipped = false
 damage = 20
-durability = 64
+durability = 150
 default_durability = 150
 
 [weapons.iron_sword]
 name = "Iron Sword"
 price = 100
 owns = false
+equipped = false
 damage = 50
 durability = 200
 default_durability = 200
@@ -207,14 +202,16 @@ default_durability = 200
 name = "Steel Rapier"
 price = 500
 owns = false
+equipped = false
 damage = 200
 durability = 500
 default_durability = 500
 
 [weapons.mystic_sword]
-name = "Magic Sword"
+name = "Mystic Sword"
 price = 5000
 owns = false
+equipped = false
 damage = 500
 durability = 1000
 default_durability = 1000
@@ -223,13 +220,14 @@ default_durability = 1000
 name = "Wizard Staff"
 price = 10000
 owns = false
+equipped = false
 damage = 1000
 durability = 2000
 default_durability = 2000
 
 [settings]
-username = "admin"
-password_hash = "password"
+username = "user"
+password_hash = "mk;o9k;o km[fr-p[90"
 developer = false
 locked = false
 hardmode = false
