@@ -4,7 +4,7 @@ use dialoguer::Confirm;
 
 use crate::utils::messages::*;
 
-/// Pass in a raw array of string slices to dialoguer's Select. (i.e. &["test"])
+/// Pass in a raw array of string slices to dialoguer's Select. (i.e. &\["test"\])
 pub fn select_from_str_array(options: &[&str], optional_prompt: Option<&str>) -> usize {
     if let Some(prompt_text) = optional_prompt {
         println!("{prompt_text}");
