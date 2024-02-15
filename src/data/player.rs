@@ -69,8 +69,8 @@ impl Player {
     }
 
     pub fn save(&self) {
-        let serialize_result = crate::utils::files::encoding::serialize_user(self)
-            .expect("Could not convert Player to config file format.");
+        let serialize_result =
+            crate::utils::files::encoding::to_toml(self).expect("Could not convert Player to config file format.");
 
         let path = files::handler::generate_profile_path(&self.settings.username);
         files::handler::write_file(path, serialize_result)
@@ -97,7 +97,7 @@ impl Player {
             Err(_) => return Err(format!("Profile '{}' does not exist.", username)),
         }
 
-        match crate::utils::files::encoding::deserialize_user(contents) {
+        match crate::utils::files::encoding::from_toml(contents) {
             Ok(player) => Ok(player),
             Err(message) => {
                 Player::delete_from_username(username);

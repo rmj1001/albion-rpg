@@ -91,6 +91,7 @@ where
     header_subtext(instructions);
 }
 
+/// These will determine which prompt to display under a header
 pub enum HeaderSubtext {
     EnterCode,
     Keyboard,
@@ -119,6 +120,7 @@ pub fn press_enter_to_continue() {
     let _ = std::io::stdin().read_line(&mut garbage);
 }
 
+/// Print out a table based on a vector of strings with comma separators
 pub fn table_from_csv(strings: Vec<String>) {
     let table_string = strings.join("\n");
     let table = csv_to_table::iter::from_reader(table_string.as_bytes()).to_string();
@@ -126,6 +128,7 @@ pub fn table_from_csv(strings: Vec<String>) {
     println!("{}\n", table);
 }
 
+/// Convert a boolean to "Yes" or "No"
 pub fn pretty_bool(flag: bool) -> &'static str {
     match flag {
         true => "Yes",
@@ -133,6 +136,7 @@ pub fn pretty_bool(flag: bool) -> &'static str {
     }
 }
 
+/// Prints a check mark if the boolean is true
 pub fn checkmark(flag: bool) -> &'static str {
     match flag {
         true => "✓",
@@ -140,14 +144,17 @@ pub fn checkmark(flag: bool) -> &'static str {
     }
 }
 
+/// Adds "gold" to the end of a number string
 pub fn price(number: usize) -> String {
     format!("{} gold", number)
 }
 
+/// Pause terminal output for a number of seconds
 pub fn sleep(seconds: u64) {
     std::thread::sleep(std::time::Duration::from_secs(seconds))
 }
 
+/// Convert a long string with newlines into pages
 pub fn paginate_string<T>(string: T, lines_per_page: usize) -> Vec<String>
 where
     T: Into<String>,

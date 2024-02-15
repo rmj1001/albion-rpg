@@ -1,7 +1,8 @@
 pub mod encoding {
     use crate::data::player::Player;
 
-    pub fn deserialize_user(data: String) -> Result<Player, String> {
+    /// Convert TOML to player data
+    pub fn from_toml(data: String) -> Result<Player, String> {
         let user_result: Result<Player, toml::de::Error> = toml::from_str(&data);
 
         match user_result {
@@ -10,7 +11,8 @@ pub mod encoding {
         }
     }
 
-    pub fn serialize_user(player: &Player) -> Result<String, toml::ser::Error> {
+    /// Convert player data to TOML
+    pub fn to_toml(player: &Player) -> Result<String, toml::ser::Error> {
         toml::to_string_pretty(&player)
     }
 }
@@ -102,6 +104,7 @@ pub mod handler {
         }
     }
 
+    /// Read the contents of a file to a string
     pub fn read_file(file_path: String) -> Result<String, String> {
         match fs::read_to_string(file_path.clone()) {
             Ok(contents) => Ok(contents),
@@ -109,6 +112,7 @@ pub mod handler {
         }
     }
 
+    /// Delete a file or panic
     pub fn delete_file(file_path: String) {
         match fs::remove_file(file_path) {
             Ok(_) => {}

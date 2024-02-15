@@ -10,6 +10,7 @@ pub enum MessageLevel {
 }
 
 impl MessageLevel {
+    /// Success is Green, Failure is Red, Warnings/Cancelling is Yellow, Notes are Blue.
     pub fn get_color(&self) -> Color {
         match self {
             Self::Success => Color::Green,
@@ -20,6 +21,8 @@ impl MessageLevel {
         }
     }
 }
+
+/// The allowed colors are Green, Red, Yellow, and Blue.
 pub enum Color {
     Green,
     Red,
@@ -47,6 +50,7 @@ impl Color {
     }
 }
 
+/// Create a painted response string with a press_enter_to_continue
 pub fn build_response<T>(
     flag: MessageLevel,
     pause: bool,
@@ -88,6 +92,7 @@ pub fn build_response<T>(
     }
 }
 
+/// Use this only if accepting typed input
 pub fn invalid_input(input: Option<&str>, expected: Option<&str>, pause: bool) {
     let mut description = String::new();
 
@@ -108,6 +113,7 @@ pub fn invalid_input(input: Option<&str>, expected: Option<&str>, pause: bool) {
     );
 }
 
+/// Yellow text. "Warning: " prefix
 pub fn warning<T>(subtext: Option<T>)
 where
     T: Into<String>,
@@ -115,10 +121,12 @@ where
     build_response(MessageLevel::Warning, true, subtext, None, false);
 }
 
+/// Yellow text. "Cancelling." prefix.
 pub fn cancelling() {
     build_response::<String>(MessageLevel::Cancelling, true, None, None, false);
 }
 
+/// Yellow text. "Cancelling." prefix. Custom Suffix.
 pub fn cancel_msg<T>(subtext: T)
 where
     T: Into<String>,
@@ -126,10 +134,12 @@ where
     build_response(MessageLevel::Cancelling, true, Some(subtext), None, false);
 }
 
+/// Green text. "Success!" prefix.
 pub fn success() {
     build_response::<String>(MessageLevel::Success, true, None, None, false);
 }
 
+/// Green text. "Success!" prefix. Custom Suffix.
 pub fn success_msg<T>(subtext: T)
 where
     T: Into<String>,
@@ -137,6 +147,7 @@ where
     build_response(MessageLevel::Success, true, Some(subtext), None, false);
 }
 
+/// Red text. "Failure!" prefix. Custom Suffix.
 pub fn failure<T>(subtext: T)
 where
     T: Into<String>,
@@ -144,18 +155,20 @@ where
     build_response(MessageLevel::Failure, true, Some(subtext), None, false);
 }
 
-pub fn note<T>(description: T, pause: bool)
+/// Blue text. "Note:" prefix. Custom Suffix.
+pub fn note<T>(subtext: T, pause: bool)
 where
     T: Into<String>,
 {
-    build_response(MessageLevel::Note, pause, Some(description), None, false);
+    build_response(MessageLevel::Note, pause, Some(subtext), None, false);
 }
 
-pub fn plain_respond<T>(description: T, pause: bool)
+/// Plain-colored text. press_enter_to_continue.
+pub fn plain_respond<T>(subtext: T, pause: bool)
 where
     T: Into<String>,
 {
-    build_response(MessageLevel::Plain, pause, Some(description), None, false);
+    build_response(MessageLevel::Plain, pause, Some(subtext), None, false);
 }
 
 /// Standard panic message for dialogue selector

@@ -2,8 +2,9 @@ use std::{io::Write, str::FromStr};
 
 use dialoguer::Confirm;
 
-use crate::utils::{messages::*, tui::press_enter_to_continue};
+use crate::utils::messages::*;
 
+/// Pass in a raw array of string slices to dialoguer's Select. (i.e. &["test"])
 pub fn select_from_str_array(options: &[&str], optional_prompt: Option<&str>) -> usize {
     if let Some(prompt_text) = optional_prompt {
         println!("{prompt_text}");
@@ -16,6 +17,7 @@ pub fn select_from_str_array(options: &[&str], optional_prompt: Option<&str>) ->
         .unwrap_or(0)
 }
 
+/// Pass in a vector of Strings to dialoguer's Select (only use for dynamic data)
 pub fn select_from_vector(options: Vec<String>, optional_prompt: Option<&str>) -> usize {
     if let Some(prompt_text) = optional_prompt {
         println!("{prompt_text}");
@@ -104,6 +106,7 @@ pub fn password(confirm: bool) -> String {
     }
 }
 
+/// Use TAB to complete your input
 pub fn prompt_input_completion(prompt: &str, completion_strings: Vec<String>) -> String {
     struct Completion {
         options: Vec<String>,
@@ -136,22 +139,4 @@ pub fn prompt_input_completion(prompt: &str, completion_strings: Vec<String>) ->
         .expect("Input failed.");
 
     input_string
-}
-
-pub fn get_item_and_quantity(items: Vec<String>) -> Result<(String, usize), &'static str> {
-    let item = prompt_input_completion("Type the name of the item you wish to purchase", items.clone());
-
-    if !items.contains(&item.to_lowercase()) {
-        invalid_input(Some(&item), None, true);
-        return Err("Item does not exist.");
-    }
-
-    let quantity: Result<usize, &str> = input_generic::<usize>("Quantity:");
-
-    if quantity.is_err() {
-        press_enter_to_continue();
-        return Err("Invalid input.");
-    }
-
-    Ok((item, quantity.unwrap()))
 }

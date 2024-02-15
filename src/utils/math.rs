@@ -4,6 +4,7 @@ use rand::Rng;
 
 use super::{input::prompt_arrow, messages};
 
+/// Valid operations in math string
 pub enum Operation<T> {
     Add(T),
     Subtract(T),
@@ -13,8 +14,9 @@ pub enum Operation<T> {
     Cancel,
 }
 
-/// Allowed input:
-/// +num, -num, *num, /num
+/// Parse a string for mathematical operations.
+///
+/// Allowed input: +num, -num, *num, /num
 pub fn generic_calculator<T>() -> Operation<T>
 where
     T: FromStr<Err = std::num::ParseIntError>,
@@ -66,14 +68,17 @@ where
     operation
 }
 
+/// Calculate to an unsigned integer
 pub fn usize_calculator() -> Operation<usize> {
     generic_calculator::<usize>()
 }
 
+/// Calculate to a signed integer
 pub fn isize_calculator() -> Operation<isize> {
     generic_calculator::<isize>()
 }
 
+/// Generate a random number in a range, inclusive of the ceiling.
 pub fn random_num(min: usize, max: usize) -> usize {
     let result: usize = rand::thread_rng().gen_range(min..=max);
 

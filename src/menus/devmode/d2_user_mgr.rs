@@ -98,7 +98,7 @@ fn view_user(player: &mut Player) {
 
             match profile_result {
                 Ok(profile) => {
-                    let pretty_string_result = crate::utils::files::encoding::serialize_user(player);
+                    let pretty_string_result = crate::utils::files::encoding::to_toml(player);
                     let mut pretty_string: String = String::new();
                     let mut paginated_file: Vec<String> = Vec::new();
 
