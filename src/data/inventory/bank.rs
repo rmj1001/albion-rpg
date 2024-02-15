@@ -35,16 +35,6 @@ impl Bank {
         *self = Self::new();
     }
 
-    pub fn balance(player: &Player, account: &BankAccount) -> usize {
-        match account {
-            BankAccount::Wallet => player.bank.wallet,
-            BankAccount::Account1 => player.bank.account1,
-            BankAccount::Account2 => player.bank.account2,
-            BankAccount::Account3 => player.bank.account3,
-            BankAccount::Account4 => player.bank.account4,
-        }
-    }
-
     /// Prints Bank information as a table using CSV formatting.
     pub fn table(&self) {
         table_from_csv(vec![
@@ -55,6 +45,16 @@ impl Bank {
             format!("Account 3,{}", self.account3),
             format!("Account 4,{}", self.account4),
         ])
+    }
+
+    pub fn balance(player: &Player, account: &BankAccount) -> usize {
+        match account {
+            BankAccount::Wallet => player.bank.wallet,
+            BankAccount::Account1 => player.bank.account1,
+            BankAccount::Account2 => player.bank.account2,
+            BankAccount::Account3 => player.bank.account3,
+            BankAccount::Account4 => player.bank.account4,
+        }
     }
 
     pub fn arithmetic(&mut self, account_flag: &BankAccount, operation: Operation<usize>) -> Result<(), &str> {
