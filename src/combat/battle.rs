@@ -222,6 +222,7 @@ pub fn victory(battle: &mut BattleSettings) {
 
     println!("You successfully defeated the {}!", battle.enemy.kind);
     battle.player.health.reset();
+    battle.player.achievements.monsters_killed += 1;
     println!();
 
     let rewards: Vec<Rewards> = generate_rewards(XP::get_level(battle.player.xp.total()));
