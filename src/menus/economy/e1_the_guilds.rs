@@ -4,7 +4,7 @@ use crate::utils::{
     messages::*,
 };
 
-use crate::economy::items::{GuildItemNames, Item};
+use crate::economy::{guilds::GuildItems, items::Item};
 
 use crate::data::{
     guilds::{GuildMemberships, PricedGuilds},
@@ -52,7 +52,7 @@ pub fn main(player: &mut Player) {
             "Fishing".to_string(),
             XPType::Fishing,
             false,
-            &Some(GuildItemNames::Fish),
+            &Some(GuildItems::Fish),
             &None,
         ),
         1 => job(
@@ -60,15 +60,15 @@ pub fn main(player: &mut Player) {
             "Cooking".to_string(),
             XPType::Cooking,
             false,
-            &Some(GuildItemNames::CookedFish),
-            &Some(GuildItemNames::Fish),
+            &Some(GuildItems::CookedFish),
+            &Some(GuildItems::Fish),
         ),
         2 => job(
             player,
             "Woodcutting".to_string(),
             XPType::Woodcutting,
             false,
-            &Some(GuildItemNames::Wood),
+            &Some(GuildItems::Wood),
             &None,
         ),
         3 => job(
@@ -76,7 +76,7 @@ pub fn main(player: &mut Player) {
             "Mining".to_string(),
             XPType::Mining,
             false,
-            &Some(GuildItemNames::Ore),
+            &Some(GuildItems::Ore),
             &None,
         ),
         4 => job(
@@ -84,8 +84,8 @@ pub fn main(player: &mut Player) {
             "Smithing".to_string(),
             XPType::Smithing,
             false,
-            &Some(GuildItemNames::Ingots),
-            &Some(GuildItemNames::Ore),
+            &Some(GuildItems::Ingots),
+            &Some(GuildItems::Ore),
         ),
         5 => job(player, "Thieving".to_string(), XPType::Thieving, true, &None, &None),
         6 => crate::menus::game_menu::main(player),
@@ -139,8 +139,8 @@ fn job(
     job_name: String,
     xp_type: XPType,
     use_gold: bool,
-    increase_item: &Option<GuildItemNames>,
-    decrease_item: &Option<GuildItemNames>,
+    increase_item: &Option<GuildItems>,
+    decrease_item: &Option<GuildItems>,
 ) {
     page_header(format!("Job: {}", job_name), HeaderSubtext::Keyboard);
 
@@ -158,19 +158,19 @@ fn job(
 
     match increase_item {
         Some(item) => match item {
-            GuildItemNames::CookedFish => {
+            GuildItems::CookedFish => {
                 println!("Cooked Fish: {}", player.items.food)
             }
-            GuildItemNames::Fish => {
+            GuildItems::Fish => {
                 println!("Fish: {}", player.items.fish)
             }
-            GuildItemNames::Wood => {
+            GuildItems::Wood => {
                 println!("Wood: {}", player.items.wood)
             }
-            GuildItemNames::Ingots => {
+            GuildItems::Ingots => {
                 println!("Ingots: {}", player.items.ingots)
             }
-            GuildItemNames::Ore => {
+            GuildItems::Ore => {
                 println!("Ores: {}", player.items.ore)
             }
         },
@@ -179,19 +179,19 @@ fn job(
 
     match decrease_item {
         Some(item) => match item {
-            GuildItemNames::CookedFish => {
+            GuildItems::CookedFish => {
                 println!("Cooked Fish: {}", player.items.food)
             }
-            GuildItemNames::Fish => {
+            GuildItems::Fish => {
                 println!("Fish: {}", player.items.fish)
             }
-            GuildItemNames::Wood => {
+            GuildItems::Wood => {
                 println!("Wood: {}", player.items.wood)
             }
-            GuildItemNames::Ingots => {
+            GuildItems::Ingots => {
                 println!("Ingots: {}", player.items.ingots)
             }
-            GuildItemNames::Ore => {
+            GuildItems::Ore => {
                 println!("Ores: {}", player.items.ore)
             }
         },
@@ -221,46 +221,46 @@ fn job(
 
             match increase_item {
                 Some(item) => match item {
-                    GuildItemNames::CookedFish => player.items.food += 1,
-                    GuildItemNames::Fish => player.items.fish += 1,
-                    GuildItemNames::Wood => player.items.wood += 1,
-                    GuildItemNames::Ingots => player.items.ingots += 1,
-                    GuildItemNames::Ore => player.items.ore += 1,
+                    GuildItems::CookedFish => player.items.food += 1,
+                    GuildItems::Fish => player.items.fish += 1,
+                    GuildItems::Wood => player.items.wood += 1,
+                    GuildItems::Ingots => player.items.ingots += 1,
+                    GuildItems::Ore => player.items.ore += 1,
                 },
                 None => {}
             }
 
             match decrease_item {
                 Some(item) => match item {
-                    GuildItemNames::CookedFish => {
+                    GuildItems::CookedFish => {
                         if player.items.food == 0 {
                             too_low_items(player, "cooked fish");
                         }
 
                         player.items.food -= 1;
                     }
-                    GuildItemNames::Fish => {
+                    GuildItems::Fish => {
                         if player.items.fish == 0 {
                             too_low_items(player, "fish");
                         }
 
                         player.items.fish -= 1;
                     }
-                    GuildItemNames::Wood => {
+                    GuildItems::Wood => {
                         if player.items.wood == 0 {
                             too_low_items(player, "wood");
                         }
 
                         player.items.wood -= 1;
                     }
-                    GuildItemNames::Ingots => {
+                    GuildItems::Ingots => {
                         if player.items.ingots == 0 {
                             too_low_items(player, "ingots");
                         }
 
                         player.items.ingots -= 1;
                     }
-                    GuildItemNames::Ore => {
+                    GuildItems::Ore => {
                         if player.items.ore == 0 {
                             too_low_items(player, "ores");
                         }
