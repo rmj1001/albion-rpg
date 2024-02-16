@@ -1,10 +1,6 @@
 use crate::{
-    data::inventory::armor::ArmorItem,
-    utils::{
-        input::{select_from_str_array, select_from_vector},
-        messages::*,
-        tui::page_header,
-    },
+    economy::armor::shop,
+    utils::{input::select_from_str_array, messages::*, tui::page_header},
 };
 
 use crate::data::player::Player;
@@ -12,8 +8,9 @@ use crate::data::player::Player;
 pub fn main(player: &mut Player) {
     page_header("Armor Shop", crate::utils::tui::HeaderSubtext::None);
 
+    shop::table(player);
+
     println!("Gold: {}\n", player.bank.wallet);
-    player.armor.table();
 
     let buysell = select_from_str_array(&["1. Purchase", "2. Sell", "NAV: Go Back"], None);
 
@@ -28,9 +25,8 @@ pub fn main(player: &mut Player) {
 }
 
 pub fn purchase(player: &mut Player) {
-    let item = get_item(player);
-
-    let result = player.armor.purchase(&mut player.bank.wallet, item, true);
+    let flag = shop::build_transaction();
+    let result = shop::purchase(player, flag, true);
 
     match result {
         Ok(_) => {
@@ -45,9 +41,8 @@ pub fn purchase(player: &mut Player) {
 }
 
 pub fn sell(player: &mut Player) {
-    let item = get_item(player);
-
-    let result = player.armor.sell(&mut player.bank.wallet, item, true);
+    let flag = shop::build_transaction();
+    let result = shop::sell(player, flag, true);
 
     match result {
         Ok(_) => {
@@ -58,37 +53,5 @@ pub fn sell(player: &mut Player) {
             failure(message);
             main(player);
         }
-    }
-}
-
-fn get_item(player: &mut Player) -> ArmorItem {
-    let items: Vec<String> = vec![
-        player.armor.leather.name.to_string(),
-        player.armor.bronze.name.to_string(),
-        player.armor.iron.name.to_string(),
-        player.armor.steel.name.to_string(),
-        player.armor.dragonhide.name.to_string(),
-        player.armor.mystic.name.to_string(),
-        "NAV: Cancel".to_string(),
-    ];
-
-    let length = items.len();
-
-    let select = select_from_vector(items, None);
-
-    if select == length - 1 {
-        cancelling();
-        main(player);
-        return ArmorItem::InvalidItem;
-    }
-
-    match select {
-        0 => ArmorItem::Leather,
-        1 => ArmorItem::Bronze,
-        2 => ArmorItem::Iron,
-        3 => ArmorItem::Steel,
-        4 => ArmorItem::DragonHide,
-        5 => ArmorItem::Mystic,
-        _ => ArmorItem::InvalidItem,
     }
 }

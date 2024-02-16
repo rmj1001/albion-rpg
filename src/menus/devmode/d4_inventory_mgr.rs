@@ -1,9 +1,9 @@
 use crate::{
-    data::{
-        inventory::{armor::ArmorItem, weapons::WeaponItemFlag},
-        player::Player,
+    data::{inventory::weapons::WeaponItemFlag, player::Player},
+    economy::{
+        armor::{self, shop::build_transaction},
+        items,
     },
-    economy::items,
     utils::{
         input::{select_from_str_array, select_from_vector},
         messages::*,
@@ -78,7 +78,7 @@ fn weapons_manager(player: &mut Player) {
 
     player.weapons.table();
 
-    let buysell = select_from_str_array(&["1. Own Weapon", "2. Disown Weapon", "NAV: Go Back"], None);
+    let buysell: usize = select_from_str_array(&["1. Own Weapon", "2. Disown Weapon", "NAV: Go Back"], None);
 
     match buysell {
         0 => own_weapon(player),
@@ -90,7 +90,7 @@ fn weapons_manager(player: &mut Player) {
     pub fn own_weapon(player: &mut Player) {
         let item = get_item(player);
 
-        let result = player.weapons.purchase(&mut player.bank.wallet, item, false);
+        let result: Result<(), String> = player.weapons.purchase(&mut player.bank.wallet, item, false);
 
         match result {
             Ok(_) => {
@@ -157,7 +157,7 @@ fn weapons_manager(player: &mut Player) {
 fn armor_manager(player: &mut Player) {
     page_header("Developer Mode - Inventory Manager - Armor", HeaderSubtext::None);
 
-    player.armor.table();
+    armor::shop::table(player);
 
     let buysell = select_from_str_array(&["1. Own Armor", "2. Disown Armor", "NAV: Go Back"], None);
 
@@ -169,9 +169,8 @@ fn armor_manager(player: &mut Player) {
     }
 
     pub fn own_armor(player: &mut Player) {
-        let item = get_item(player);
-
-        let result = player.armor.purchase(&mut player.bank.wallet, item, false);
+        let item = build_transaction();
+        let result = armor::shop::purchase(player, item, false);
 
         match result {
             Ok(_) => {
@@ -186,9 +185,8 @@ fn armor_manager(player: &mut Player) {
     }
 
     pub fn disown_armor(player: &mut Player) {
-        let item = get_item(player);
-
-        let result = player.armor.sell(&mut player.bank.wallet, item, false);
+        let item = build_transaction();
+        let result = armor::shop::purchase(player, item, false);
 
         match result {
             Ok(_) => {
@@ -199,38 +197,6 @@ fn armor_manager(player: &mut Player) {
                 failure(message);
                 armor_manager(player);
             }
-        }
-    }
-
-    fn get_item(player: &mut Player) -> ArmorItem {
-        let items: Vec<String> = vec![
-            player.armor.leather.name.to_string(),
-            player.armor.bronze.name.to_string(),
-            player.armor.iron.name.to_string(),
-            player.armor.steel.name.to_string(),
-            player.armor.dragonhide.name.to_string(),
-            player.armor.mystic.name.to_string(),
-            "NAV: Cancel".to_string(),
-        ];
-
-        let length = items.len();
-
-        let select = select_from_vector(items, None);
-
-        if select == length - 1 {
-            cancelling();
-            armor_manager(player);
-            return ArmorItem::InvalidItem;
-        }
-
-        match select {
-            0 => ArmorItem::Leather,
-            1 => ArmorItem::Bronze,
-            2 => ArmorItem::Iron,
-            3 => ArmorItem::Steel,
-            4 => ArmorItem::DragonHide,
-            5 => ArmorItem::Mystic,
-            _ => ArmorItem::InvalidItem,
         }
     }
 }
