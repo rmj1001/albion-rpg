@@ -11,6 +11,7 @@ dependencies = [
  "crossterm",
  "csv_to_table",
  "dialoguer",
+ "easy_switch",
  "rand",
  "serde",
  "toml",
@@ -189,6 +190,12 @@ dependencies = [
  "thiserror",
  "zeroize",
 ]
+
+[[package]]
+name = "easy_switch"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2e97ff39d5e5223db301a0ebf17c8b0961b2f9194822a12a36935836b75817f8"
 
 [[package]]
 name = "encode_unicode"

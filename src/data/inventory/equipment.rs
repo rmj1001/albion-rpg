@@ -182,19 +182,16 @@ impl Equipment {
         let name = equipped.name.clone();
         let weapons = &mut player.weapons;
 
-        if name == weapons.wooden_sword.name {
-            weapons.wooden_sword = equipped;
-        } else if name == weapons.bronze_sword.name {
-            weapons.bronze_sword = equipped;
-        } else if name == weapons.iron_sword.name {
-            weapons.iron_sword = equipped;
-        } else if name == weapons.steel_sword.name {
-            weapons.steel_sword = equipped;
-        } else if name == weapons.mystic_sword.name {
-            weapons.mystic_sword = equipped;
-        } else if name == weapons.wizard_staff.name {
-            weapons.wizard_staff = equipped;
-        }
+        use easy_switch::switch;
+
+        switch! {name;
+            weapons.wooden_sword.name => weapons.wooden_sword = equipped,
+            weapons.bronze_sword.name => weapons.bronze_sword = equipped,
+            weapons.iron_sword.name => weapons.iron_sword = equipped,
+            weapons.steel_sword.name => weapons.steel_sword = equipped,
+            weapons.mystic_sword.name => weapons.mystic_sword = equipped,
+            weapons.wizard_staff.name => weapons.wizard_staff = equipped,
+        };
     }
 
     fn equip_armor(player: &mut Player) {
@@ -257,16 +254,14 @@ impl Equipment {
         let name = equipped.name.clone();
         let armor = &mut player.armor;
 
-        if name == armor.leather.name {
-            armor.leather = equipped;
-        } else if name == armor.bronze.name {
-            armor.bronze = equipped
-        } else if name == armor.iron.name {
-            armor.iron = equipped;
-        } else if name == armor.dragonhide.name {
-            armor.dragonhide = equipped;
-        } else if name == armor.mystic.name {
-            armor.mystic = equipped;
-        }
+        use easy_switch::switch;
+
+        switch! {name;
+            armor.leather.name => armor.leather = equipped,
+            armor.bronze.name => armor.bronze = equipped,
+            armor.iron.name => armor.iron = equipped,
+            armor.dragonhide.name => armor.dragonhide = equipped,
+            armor.mystic.name => armor.mystic = equipped,
+        };
     }
 }
