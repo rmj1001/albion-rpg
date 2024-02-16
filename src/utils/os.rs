@@ -12,9 +12,9 @@ pub fn deter_unsupported_os() {
         "android" => {
             panic!("This program does not support Android.");
         }
-        "windows" => {
-            panic!("This program does not support Windows.");
-        }
+        // "windows" => {
+        //     panic!("This program does not support Windows.");
+        // }
         _ => {}
     }
 }
