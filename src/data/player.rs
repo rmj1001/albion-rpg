@@ -25,7 +25,7 @@ pub struct Player {
 
 impl Player {
     /// Creates new instance with empty username/password fields
-    pub fn new(username: &str, password_hash: &str) -> Self {
+    pub fn new(username: &str, password_hash: &str, save: bool) -> Self {
         let profile: Player = Player {
             settings: Settings::new(username, password_hash),
             health: Health::new(),
@@ -39,13 +39,15 @@ impl Player {
             weapons: WeaponsInventory::new(),
         };
 
-        profile.save();
+        if save {
+            profile.save();
+        }
 
         profile
     }
 
     pub fn reset(&mut self) {
-        let new_profile = Self::new(&self.settings.username, &self.settings.password_hash);
+        let new_profile = Self::new(&self.settings.username, &self.settings.password_hash, true);
         *self = new_profile;
     }
 

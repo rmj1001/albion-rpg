@@ -30,7 +30,7 @@ pub fn main() {
 
     let password_hash = crypt::generate_hash(password);
 
-    let profile = Player::new(&username, &password_hash);
+    let profile = Player::new(&username, &password_hash, true);
 
     profile.save();
     success();
