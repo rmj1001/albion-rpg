@@ -51,5 +51,7 @@ impl Achievements {
         if XP::get_level(player.xp.total()) >= 100 {
             player.achievements.level_100_reached = true;
         }
+
+        player.save();
     }
 }

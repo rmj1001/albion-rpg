@@ -1,6 +1,6 @@
 use crate::{
     combat::{battle::BattleSettings, enemy::Enemy},
-    data::settings::Settings,
+    data::{achievements::Achievements, settings::Settings},
     utils::{
         input::{confirm, prompt_arrow},
         messages::{self, success},
@@ -12,6 +12,9 @@ use crate::{
 use crate::data::player::Player;
 
 pub fn main(player: &mut Player) {
+    // Check for achievements at login to keep the player file up to date
+    Achievements::check(player);
+
     page_header(
         format!("Game Menu (Player: {})", player.settings.username),
         tui::HeaderSubtext::EnterCode,
