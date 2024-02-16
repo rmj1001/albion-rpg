@@ -1,6 +1,7 @@
 use rand::{thread_rng, Rng};
 use serde::{Deserialize, Serialize};
 
+use crate::economy::armor::ArmorFlag;
 use crate::utils::tui::{checkmark, price, table_from_csv};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -42,16 +43,6 @@ impl Armor {
         self.owns = false;
         self.durability = self.default_durability;
     }
-}
-
-pub enum ArmorItem {
-    Leather,
-    Bronze,
-    Iron,
-    Steel,
-    DragonHide,
-    Mystic,
-    InvalidItem,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -105,20 +96,20 @@ impl ArmorInventory {
         ])
     }
 
-    pub fn retrieve_item(&mut self, item_flag: ArmorItem) -> Option<&mut Armor> {
+    pub fn retrieve_item(&mut self, item_flag: ArmorFlag) -> Option<&mut Armor> {
         match item_flag {
-            ArmorItem::Bronze => Some(&mut self.bronze),
-            ArmorItem::DragonHide => Some(&mut self.dragonhide),
-            ArmorItem::Iron => Some(&mut self.iron),
-            ArmorItem::Leather => Some(&mut self.leather),
-            ArmorItem::Mystic => Some(&mut self.mystic),
-            ArmorItem::Steel => Some(&mut self.steel),
-            ArmorItem::InvalidItem => None,
+            ArmorFlag::Bronze => Some(&mut self.bronze),
+            ArmorFlag::DragonHide => Some(&mut self.dragonhide),
+            ArmorFlag::Iron => Some(&mut self.iron),
+            ArmorFlag::Leather => Some(&mut self.leather),
+            ArmorFlag::Mystic => Some(&mut self.mystic),
+            ArmorFlag::Steel => Some(&mut self.steel),
+            ArmorFlag::InvalidItem => None,
         }
     }
 
     /// For use in developer mode only
-    pub fn toggle_own(&mut self, item_flag: ArmorItem) {
+    pub fn toggle_own(&mut self, item_flag: ArmorFlag) {
         let item = self.retrieve_item(item_flag);
 
         if item.is_none() {
@@ -130,7 +121,7 @@ impl ArmorInventory {
         }
     }
 
-    pub fn purchase(&mut self, wallet: &mut usize, item_flag: ArmorItem, deduct_wallet: bool) -> Result<(), String> {
+    pub fn purchase(&mut self, wallet: &mut usize, item_flag: ArmorFlag, deduct_wallet: bool) -> Result<(), String> {
         let item_option = self.retrieve_item(item_flag);
 
         if item_option.is_none() {
@@ -156,7 +147,7 @@ impl ArmorInventory {
         Ok(())
     }
 
-    pub fn sell(&mut self, wallet: &mut usize, item_flag: ArmorItem, add_to_wallet: bool) -> Result<(), &str> {
+    pub fn sell(&mut self, wallet: &mut usize, item_flag: ArmorFlag, add_to_wallet: bool) -> Result<(), &str> {
         let item_option = self.retrieve_item(item_flag);
 
         if item_option.is_none() {
