@@ -47,6 +47,7 @@ pub fn use_potion(player: &mut Player) {
     if player.items.potions.quantity == 0 {
         println!("You do not have enough potions.");
         press_enter_to_continue();
+        return;
     }
 
     player.items.potions.quantity -= 1;
@@ -62,6 +63,7 @@ pub fn eat_food(player: &mut Player) {
     if player.items.food.quantity == 0 {
         println!("You do not have enough food.");
         press_enter_to_continue();
+        return;
     }
 
     player.items.food.quantity -= 1;
