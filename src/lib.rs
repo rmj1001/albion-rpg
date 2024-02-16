@@ -11,6 +11,13 @@ pub mod utils {
     pub mod tui;
 }
 
+pub mod economy {
+    pub mod armor;
+    pub mod guilds;
+    pub mod items;
+    pub mod weapons;
+}
+
 pub mod data {
     pub mod inventory {
         pub mod armor;

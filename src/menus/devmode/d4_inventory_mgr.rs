@@ -1,8 +1,11 @@
 use crate::{
-    data::inventory::{armor::ArmorItemFlag, items::InventoryItemFlag, weapons::WeaponItemFlag},
-    data::player::Player,
+    data::{
+        inventory::{armor::ArmorItemFlag, weapons::WeaponItemFlag},
+        player::Player,
+    },
+    economy::items,
     utils::{
-        input::{input_generic, select_from_str_array, select_from_vector},
+        input::{select_from_str_array, select_from_vector},
         messages::*,
         tui::{page_header, HeaderSubtext},
     },
@@ -25,7 +28,7 @@ pub fn main(player: &mut Player) {
 fn items_manager(player: &mut Player) {
     page_header("Developer Mode - Inventory Manager - Items", HeaderSubtext::None);
 
-    player.items.table();
+    items::shop::table(player);
 
     let buysell = select_from_str_array(&["1. Add", "2. Subtract", "NAV: Go Back"], None);
 
@@ -37,21 +40,8 @@ fn items_manager(player: &mut Player) {
     }
 
     pub fn add_item(player: &mut Player) {
-        let item_flag = get_item(player);
-        let quantity_result = get_quantity();
-        let mut quantity: usize = 0;
-
-        match quantity_result {
-            Ok(number) => quantity = number,
-            Err(_) => {
-                invalid_input(None, Some("number"), true);
-                items_manager(player);
-            }
-        }
-
-        let result = player
-            .items
-            .purchase(&mut player.bank.wallet, &item_flag, quantity, false);
+        let (flag, quantity) = items::shop::build_transaction();
+        let result = items::shop::purchase(player, flag, quantity, false);
 
         match result {
             Ok(_) => {
@@ -66,19 +56,9 @@ fn items_manager(player: &mut Player) {
     }
 
     pub fn subtract_item(player: &mut Player) {
-        let item_flag = get_item(player);
-        let quantity_result = get_quantity();
-        let mut quantity: usize = 0;
+        let (flag, quantity) = items::shop::build_transaction();
 
-        match quantity_result {
-            Ok(number) => quantity = number,
-            Err(_) => {
-                invalid_input(None, Some("number"), true);
-                items_manager(player);
-            }
-        }
-
-        let result = player.items.sell(&mut player.bank.wallet, &item_flag, quantity, false);
+        let result = items::shop::sell(player, flag, quantity, false);
 
         match result {
             Ok(_) => {
@@ -90,54 +70,6 @@ fn items_manager(player: &mut Player) {
                 items_manager(player);
             }
         }
-    }
-
-    fn get_item(player: &mut Player) -> InventoryItemFlag {
-        let item_names: Vec<String> = vec![
-            player.items.bait.name.to_string(),
-            player.items.seeds.name.to_string(),
-            player.items.furs.name.to_string(),
-            player.items.fish.name.to_string(),
-            player.items.wood.name.to_string(),
-            player.items.ore.name.to_string(),
-            player.items.ingots.name.to_string(),
-            player.items.potions.name.to_string(),
-            player.items.rubies.name.to_string(),
-            player.items.magic_scrolls.name.to_string(),
-            player.items.bones.name.to_string(),
-            player.items.dragon_hides.name.to_string(),
-            player.items.runic_tablets.name.to_string(),
-            String::from("NAV: Cancel"),
-        ];
-
-        let select = select_from_vector(item_names, None);
-
-        if select == 13 {
-            cancelling();
-            items_manager(player);
-            return InventoryItemFlag::InvalidItem;
-        }
-
-        match select {
-            0 => InventoryItemFlag::Bait,
-            1 => InventoryItemFlag::Seeds,
-            2 => InventoryItemFlag::Furs,
-            3 => InventoryItemFlag::Fish,
-            4 => InventoryItemFlag::Wood,
-            5 => InventoryItemFlag::Ore,
-            6 => InventoryItemFlag::Ingots,
-            7 => InventoryItemFlag::Potions,
-            8 => InventoryItemFlag::Rubies,
-            9 => InventoryItemFlag::MagicScrolls,
-            10 => InventoryItemFlag::Bones,
-            11 => InventoryItemFlag::DragonHides,
-            12 => InventoryItemFlag::RunicTablets,
-            _ => InventoryItemFlag::InvalidItem,
-        }
-    }
-
-    fn get_quantity() -> Result<usize, &'static str> {
-        input_generic::<usize>("Quantity:")
     }
 }
 

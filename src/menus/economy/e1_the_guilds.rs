@@ -4,9 +4,10 @@ use crate::utils::{
     messages::*,
 };
 
+use crate::economy::items::{GuildItemNames, Item};
+
 use crate::data::{
     guilds::{GuildMemberships, PricedGuilds},
-    inventory::items::{GuildItemNames, Item},
     player::Player,
     xp::{XPType, XP},
 };
@@ -158,19 +159,19 @@ fn job(
     match increase_item {
         Some(item) => match item {
             GuildItemNames::CookedFish => {
-                println!("Cooked Fish: {}", player.items.food.quantity)
+                println!("Cooked Fish: {}", player.items.food)
             }
             GuildItemNames::Fish => {
-                println!("Fish: {}", player.items.fish.quantity)
+                println!("Fish: {}", player.items.fish)
             }
             GuildItemNames::Wood => {
-                println!("Wood: {}", player.items.wood.quantity)
+                println!("Wood: {}", player.items.wood)
             }
             GuildItemNames::Ingots => {
-                println!("Ingots: {}", player.items.ingots.quantity)
+                println!("Ingots: {}", player.items.ingots)
             }
             GuildItemNames::Ore => {
-                println!("Ores: {}", player.items.ore.quantity)
+                println!("Ores: {}", player.items.ore)
             }
         },
         None => {}
@@ -179,19 +180,19 @@ fn job(
     match decrease_item {
         Some(item) => match item {
             GuildItemNames::CookedFish => {
-                println!("Cooked Fish: {}", player.items.food.quantity)
+                println!("Cooked Fish: {}", player.items.food)
             }
             GuildItemNames::Fish => {
-                println!("Fish: {}", player.items.fish.quantity)
+                println!("Fish: {}", player.items.fish)
             }
             GuildItemNames::Wood => {
-                println!("Wood: {}", player.items.wood.quantity)
+                println!("Wood: {}", player.items.wood)
             }
             GuildItemNames::Ingots => {
-                println!("Ingots: {}", player.items.ingots.quantity)
+                println!("Ingots: {}", player.items.ingots)
             }
             GuildItemNames::Ore => {
-                println!("Ores: {}", player.items.ore.quantity)
+                println!("Ores: {}", player.items.ore)
             }
         },
         None => {}
@@ -220,11 +221,11 @@ fn job(
 
             match increase_item {
                 Some(item) => match item {
-                    GuildItemNames::CookedFish => player.items.food.quantity += 1,
-                    GuildItemNames::Fish => player.items.fish.quantity += 1,
-                    GuildItemNames::Wood => player.items.wood.quantity += 1,
-                    GuildItemNames::Ingots => player.items.ingots.quantity += 1,
-                    GuildItemNames::Ore => player.items.ore.quantity += 1,
+                    GuildItemNames::CookedFish => player.items.food += 1,
+                    GuildItemNames::Fish => player.items.fish += 1,
+                    GuildItemNames::Wood => player.items.wood += 1,
+                    GuildItemNames::Ingots => player.items.ingots += 1,
+                    GuildItemNames::Ore => player.items.ore += 1,
                 },
                 None => {}
             }
@@ -232,39 +233,39 @@ fn job(
             match decrease_item {
                 Some(item) => match item {
                     GuildItemNames::CookedFish => {
-                        if player.items.food.quantity == 0 {
+                        if player.items.food == 0 {
                             too_low_items(player, "cooked fish");
                         }
 
-                        player.items.food.quantity -= 1;
+                        player.items.food -= 1;
                     }
                     GuildItemNames::Fish => {
-                        if player.items.fish.quantity == 0 {
+                        if player.items.fish == 0 {
                             too_low_items(player, "fish");
                         }
 
-                        player.items.fish.quantity -= 1;
+                        player.items.fish -= 1;
                     }
                     GuildItemNames::Wood => {
-                        if player.items.wood.quantity == 0 {
+                        if player.items.wood == 0 {
                             too_low_items(player, "wood");
                         }
 
-                        player.items.wood.quantity -= 1;
+                        player.items.wood -= 1;
                     }
                     GuildItemNames::Ingots => {
-                        if player.items.ingots.quantity == 0 {
+                        if player.items.ingots == 0 {
                             too_low_items(player, "ingots");
                         }
 
-                        player.items.ingots.quantity -= 1;
+                        player.items.ingots -= 1;
                     }
                     GuildItemNames::Ore => {
-                        if player.items.ore.quantity == 0 {
+                        if player.items.ore == 0 {
                             too_low_items(player, "ores");
                         }
 
-                        player.items.ore.quantity -= 1;
+                        player.items.ore -= 1;
                     }
                 },
                 None => {}
