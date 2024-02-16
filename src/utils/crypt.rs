@@ -5,9 +5,12 @@ use bcrypt::{hash, DEFAULT_COST};
 /// # Examples
 ///
 /// ```
+/// use albion_terminal_rpg::utils::crypt::generate_hash;
+///
 /// let password: String = String::from("test");
 ///
-/// generate_hash(password)
+/// let hashed: String = generate_hash(password);
+/// ```
 ///
 pub fn generate_hash(text: String) -> String {
     let hashed_result = hash(text, DEFAULT_COST);
@@ -29,10 +32,10 @@ pub fn verify_hash(text: String, hash: String) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use crate::utils::crypt::{generate_hash, verify_hash};
-
     #[test]
     fn check_hashing() {
+        use super::{generate_hash, verify_hash};
+
         const PASSWORD: &str = "1234";
         let hashed = generate_hash(PASSWORD.to_string());
 
