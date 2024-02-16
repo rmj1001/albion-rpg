@@ -129,4 +129,8 @@ impl Bank {
 
         withdraw_result.to_owned()
     }
+
+    pub fn net_worth(&self) -> usize {
+        self.account1 + self.account2 + self.account3 + self.account4 + self.wallet
+    }
 }
