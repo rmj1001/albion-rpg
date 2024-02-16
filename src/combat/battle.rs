@@ -221,7 +221,7 @@ pub fn victory(battle: &mut BattleSettings) {
     page_header(format!("{} - Victory", battle.header), HeaderSubtext::None);
 
     println!("You successfully defeated the {}!", battle.enemy.kind);
-    battle.player.health.reset();
+    battle.player.health.restore();
     battle.player.achievements.monsters_killed += 1;
     println!();
 
