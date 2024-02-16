@@ -16,6 +16,10 @@ but we will be working on the papercuts over time. Have fun playing the game!
    2. End-game dungeon (the Stronghold) with rich rewards for completion
 3. Achievements system with rewards
 
+## Supported Platforms
+
+- MacOS
+
 ## Demo Video
 
 Click on the image below to watch the video.

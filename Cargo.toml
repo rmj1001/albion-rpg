@@ -1,5 +1,5 @@
 [package]
-name = "albion_rpg"
+name = "albion_terminal_rpg"
 version = "0.1.0"
 edition = "2021"
 readme = "./README.md"

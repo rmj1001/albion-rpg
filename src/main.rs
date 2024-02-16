@@ -1,4 +1,4 @@
 fn main() {
-    albion_rpg::utils::os::deter_unsupported_os();
-    albion_rpg::menus::accounts::main();
+    albion_terminal_rpg::utils::os::deter_unsupported_os();
+    albion_terminal_rpg::menus::accounts::main();
 }

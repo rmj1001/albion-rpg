@@ -1,5 +1,14 @@
 use bcrypt::{hash, DEFAULT_COST};
 
+/// Generate a Hash.
+///
+/// # Examples
+///
+/// ```
+/// let password: String = String::from("test");
+///
+/// generate_hash(password)
+///
 pub fn generate_hash(text: String) -> String {
     let hashed_result = hash(text, DEFAULT_COST);
 
