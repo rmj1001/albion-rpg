@@ -1,6 +1,6 @@
 use crate::{
     data::{
-        inventory::{armor::ArmorItemFlag, weapons::WeaponItemFlag},
+        inventory::{armor::ArmorItem, weapons::WeaponItemFlag},
         player::Player,
     },
     economy::items,
@@ -202,7 +202,7 @@ fn armor_manager(player: &mut Player) {
         }
     }
 
-    fn get_item(player: &mut Player) -> ArmorItemFlag {
+    fn get_item(player: &mut Player) -> ArmorItem {
         let items: Vec<String> = vec![
             player.armor.leather.name.to_string(),
             player.armor.bronze.name.to_string(),
@@ -220,17 +220,17 @@ fn armor_manager(player: &mut Player) {
         if select == length - 1 {
             cancelling();
             armor_manager(player);
-            return ArmorItemFlag::InvalidItem;
+            return ArmorItem::InvalidItem;
         }
 
         match select {
-            0 => ArmorItemFlag::Leather,
-            1 => ArmorItemFlag::Bronze,
-            2 => ArmorItemFlag::Iron,
-            3 => ArmorItemFlag::Steel,
-            4 => ArmorItemFlag::DragonHide,
-            5 => ArmorItemFlag::Mystic,
-            _ => ArmorItemFlag::InvalidItem,
+            0 => ArmorItem::Leather,
+            1 => ArmorItem::Bronze,
+            2 => ArmorItem::Iron,
+            3 => ArmorItem::Steel,
+            4 => ArmorItem::DragonHide,
+            5 => ArmorItem::Mystic,
+            _ => ArmorItem::InvalidItem,
         }
     }
 }
