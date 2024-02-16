@@ -3,7 +3,7 @@ use crate::{
     utils::math::{self, random_num},
 };
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum EnemyType {
     Animal(AnimalType),
     Human,
@@ -12,7 +12,7 @@ pub enum EnemyType {
     Invalid,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum AnimalType {
     Bear,
     DireWolf,
@@ -23,7 +23,7 @@ pub enum AnimalType {
     Invalid,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum MonsterType {
     Centaur,
     DarkElf,
@@ -36,7 +36,7 @@ pub enum MonsterType {
     Invalid,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum UndeadType {
     Banshee,
     Ghost,
@@ -137,17 +137,17 @@ fn pick_animal() -> AnimalType {
 }
 
 fn pick_monster() -> MonsterType {
-    let number: usize = math::random_num(0, 8);
+    let number: usize = math::random_num(0, 7);
 
     match number {
         0 => MonsterType::Centaur,
         1 => MonsterType::DarkElf,
         2 => MonsterType::Dragon,
-        4 => MonsterType::Giant,
-        5 => MonsterType::Goblin,
-        6 => MonsterType::Orc,
-        7 => MonsterType::Troll,
-        8 => MonsterType::Werewolf,
+        3 => MonsterType::Giant,
+        4 => MonsterType::Goblin,
+        5 => MonsterType::Orc,
+        6 => MonsterType::Troll,
+        7 => MonsterType::Werewolf,
         _ => MonsterType::Invalid,
     }
 }
@@ -255,6 +255,53 @@ pub fn add_rewards_to_user(player: &mut Player, rewards: Vec<Rewards>) {
             Rewards::MagicScrolls(quantity) => player.items.magic_scrolls.quantity += quantity,
             Rewards::RunicTablets(quantity) => player.items.runic_tablets.quantity += quantity,
             Rewards::Invalid => {}
+        }
+    }
+}
+
+pub mod tests {
+    #[test]
+    pub fn invalid_enemies() {
+        use crate::combat::enemy::{AnimalType, Enemy, EnemyType, MonsterType, UndeadType};
+        use crate::data::player::Player;
+        use crate::utils::crypt;
+
+        let test_player = Player::new("test", &crypt::generate_hash("test".to_string()), false);
+
+        let num_enemies: usize = 500;
+        let mut enemies: Vec<Enemy> = vec![];
+
+        let mut index: usize = 0;
+
+        while index < num_enemies {
+            enemies.push(Enemy::new(test_player.xp.combat, test_player.health.hp));
+            index += 1
+        }
+
+        let invalid_enemy_filter = |enemy: &&Enemy| {
+            matches!(
+                enemy.kind_type,
+                EnemyType::Invalid
+                    | EnemyType::Animal(AnimalType::Invalid)
+                    | EnemyType::Monster(MonsterType::Invalid)
+                    | EnemyType::Undead(UndeadType::Invalid)
+            )
+        };
+
+        let invalids: Vec<Enemy> = enemies.iter().filter(invalid_enemy_filter).cloned().collect();
+        let mut types: Vec<EnemyType> = vec![];
+
+        invalids
+            .iter()
+            .for_each(|enemy: &Enemy| types.push(enemy.kind_type.clone()));
+
+        if !invalids.is_empty() {
+            panic!(
+                "{} Invalid enemies generated from sample size of {}.\nTypes generated: {:?}",
+                invalids.len(),
+                num_enemies,
+                types
+            );
         }
     }
 }
