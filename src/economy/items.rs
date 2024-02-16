@@ -15,16 +15,8 @@ impl Item {
     }
 }
 
-pub enum GuildItemNames {
-    Fish,
-    CookedFish,
-    Wood,
-    Ore,
-    Ingots,
-}
-
 #[derive(Hash, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
-pub enum ItemFlag {
+pub enum Items {
     Bait,
     Seeds,
     Furs,
@@ -43,7 +35,7 @@ pub enum ItemFlag {
 }
 
 pub mod shop {
-    use super::{Item, ItemFlag};
+    use super::{Item, Items};
     use std::collections::BTreeMap;
 
     use crate::{
@@ -54,22 +46,22 @@ pub mod shop {
         },
     };
 
-    pub fn shop_list() -> BTreeMap<ItemFlag, Item> {
+    pub fn shop_list() -> BTreeMap<Items, Item> {
         BTreeMap::from([
-            (ItemFlag::Bait, Item::new("Bait", 1)),
-            (ItemFlag::Seeds, Item::new("Seeds", 1)),
-            (ItemFlag::Furs, Item::new("Fur", 50)),
-            (ItemFlag::Fish, Item::new("Fish", 5)),
-            (ItemFlag::Food, Item::new("Food", 10)),
-            (ItemFlag::Wood, Item::new("Wood", 10)),
-            (ItemFlag::Ore, Item::new("Ore", 15)),
-            (ItemFlag::Ingots, Item::new("Ingot", 30)),
-            (ItemFlag::Potions, Item::new("Potion", 20)),
-            (ItemFlag::Rubies, Item::new("Ruby", 100)),
-            (ItemFlag::MagicScrolls, Item::new("Magic Scroll", 200)),
-            (ItemFlag::Bones, Item::new("Bone", 10)),
-            (ItemFlag::DragonHides, Item::new("Dragon Hide", 50)),
-            (ItemFlag::RunicTablets, Item::new("Runic Tablet", 300)),
+            (Items::Bait, Item::new("Bait", 1)),
+            (Items::Seeds, Item::new("Seeds", 1)),
+            (Items::Furs, Item::new("Fur", 50)),
+            (Items::Fish, Item::new("Fish", 5)),
+            (Items::Food, Item::new("Food", 10)),
+            (Items::Wood, Item::new("Wood", 10)),
+            (Items::Ore, Item::new("Ore", 15)),
+            (Items::Ingots, Item::new("Ingot", 30)),
+            (Items::Potions, Item::new("Potion", 20)),
+            (Items::Rubies, Item::new("Ruby", 100)),
+            (Items::MagicScrolls, Item::new("Magic Scroll", 200)),
+            (Items::Bones, Item::new("Bone", 10)),
+            (Items::DragonHides, Item::new("Dragon Hide", 50)),
+            (Items::RunicTablets, Item::new("Runic Tablet", 300)),
         ])
     }
 
@@ -95,7 +87,7 @@ pub mod shop {
         table_from_csv(strings);
     }
 
-    pub fn build_transaction() -> (ItemFlag, usize) {
+    pub fn build_transaction() -> (Items, usize) {
         let shop = shop_list();
         let items = shop.values();
         let item_names: Vec<String> = items.map(|item| item.name.to_string()).collect();
@@ -117,7 +109,7 @@ pub mod shop {
         (item, quantity)
     }
 
-    pub fn get_item() -> ItemFlag {
+    pub fn get_item() -> Items {
         let shop = shop_list();
         let items = shop.values();
         let item_names: Vec<String> = items.map(|item| item.name.to_string()).collect();
@@ -135,31 +127,31 @@ pub mod shop {
             .expect("Should return an Item Flag")
     }
 
-    pub fn shop_quantity(player: &mut Player, flag: ItemFlag) -> Option<&mut usize> {
+    pub fn shop_quantity(player: &mut Player, flag: Items) -> Option<&mut usize> {
         let items: &mut MundaneInventory = &mut player.items;
 
         let item: Option<&mut usize> = match flag {
-            ItemFlag::Bait => Some(&mut items.bait),
-            ItemFlag::Bones => Some(&mut items.bones),
-            ItemFlag::DragonHides => Some(&mut items.dragon_hides),
-            ItemFlag::Fish => Some(&mut items.fish),
-            ItemFlag::Food => Some(&mut items.food),
-            ItemFlag::Furs => Some(&mut items.furs),
-            ItemFlag::Ingots => Some(&mut items.ingots),
-            ItemFlag::InvalidItem => None,
-            ItemFlag::MagicScrolls => Some(&mut items.magic_scrolls),
-            ItemFlag::Ore => Some(&mut items.ore),
-            ItemFlag::Potions => Some(&mut items.potions),
-            ItemFlag::Rubies => Some(&mut items.rubies),
-            ItemFlag::RunicTablets => Some(&mut items.runic_tablets),
-            ItemFlag::Seeds => Some(&mut items.seeds),
-            ItemFlag::Wood => Some(&mut items.wood),
+            Items::Bait => Some(&mut items.bait),
+            Items::Bones => Some(&mut items.bones),
+            Items::DragonHides => Some(&mut items.dragon_hides),
+            Items::Fish => Some(&mut items.fish),
+            Items::Food => Some(&mut items.food),
+            Items::Furs => Some(&mut items.furs),
+            Items::Ingots => Some(&mut items.ingots),
+            Items::InvalidItem => None,
+            Items::MagicScrolls => Some(&mut items.magic_scrolls),
+            Items::Ore => Some(&mut items.ore),
+            Items::Potions => Some(&mut items.potions),
+            Items::Rubies => Some(&mut items.rubies),
+            Items::RunicTablets => Some(&mut items.runic_tablets),
+            Items::Seeds => Some(&mut items.seeds),
+            Items::Wood => Some(&mut items.wood),
         };
 
         item
     }
 
-    pub fn purchase(player: &mut Player, flag: ItemFlag, quantity: usize, use_wallet: bool) -> Result<(), &str> {
+    pub fn purchase(player: &mut Player, flag: Items, quantity: usize, use_wallet: bool) -> Result<(), &str> {
         let shop = shop_list();
         let item: &Item = shop.get(&flag).expect("Item not found in hashmap.");
 
@@ -182,8 +174,8 @@ pub mod shop {
         Ok(())
     }
 
-    pub fn sell(player: &mut Player, flag: ItemFlag, quantity: usize, use_wallet: bool) -> Result<(), String> {
-        let shop: BTreeMap<ItemFlag, Item> = shop_list();
+    pub fn sell(player: &mut Player, flag: Items, quantity: usize, use_wallet: bool) -> Result<(), String> {
+        let shop: BTreeMap<Items, Item> = shop_list();
         let shop_item: &Item = shop.get(&flag).expect("Item not found in hashmap.");
         let item: &mut usize =
             shop_quantity(player, flag).expect("Don't use the InvalidItem variant in the shop hash map.");
