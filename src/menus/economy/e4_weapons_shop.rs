@@ -1,17 +1,14 @@
 use crate::{
-    data::{inventory::weapons::WeaponItemFlag, player::Player},
-    utils::{
-        input::{select_from_str_array, select_from_vector},
-        messages::*,
-        tui::page_header,
-    },
+    data::player::Player,
+    economy::weapons,
+    utils::{input::select_from_str_array, messages::*, tui::page_header},
 };
 
 pub fn main(player: &mut Player) {
     page_header("Weapons Shop", crate::utils::tui::HeaderSubtext::None);
 
     println!("Gold: {}\n", player.bank.wallet);
-    player.weapons.table();
+    weapons::shop::table(player);
 
     let buysell = select_from_str_array(&["1. Purchase", "2. Sell", "NAV: Go Back"], None);
 
@@ -26,9 +23,8 @@ pub fn main(player: &mut Player) {
 }
 
 pub fn purchase(player: &mut Player) {
-    let item = get_item(player);
-
-    let result = player.weapons.purchase(&mut player.bank.wallet, item, true);
+    let flag = weapons::shop::build_transaction();
+    let result = weapons::shop::purchase(player, flag, true);
 
     match result {
         Ok(_) => {
@@ -43,9 +39,8 @@ pub fn purchase(player: &mut Player) {
 }
 
 pub fn sell(player: &mut Player) {
-    let item = get_item(player);
-
-    let result = player.weapons.sell(&mut player.bank.wallet, item, true);
+    let flag = weapons::shop::build_transaction();
+    let result = weapons::shop::sell(player, flag, true);
 
     match result {
         Ok(_) => {
@@ -56,37 +51,5 @@ pub fn sell(player: &mut Player) {
             failure(message);
             main(player);
         }
-    }
-}
-
-fn get_item(player: &mut Player) -> WeaponItemFlag {
-    let items: Vec<String> = vec![
-        player.weapons.wooden_sword.name.to_string(),
-        player.weapons.bronze_sword.name.to_string(),
-        player.weapons.iron_sword.name.to_string(),
-        player.weapons.steel_sword.name.to_string(),
-        player.weapons.mystic_sword.name.to_string(),
-        player.weapons.wizard_staff.name.to_string(),
-        "NAV: Cancel".to_string(),
-    ];
-
-    let length = items.len();
-
-    let select = select_from_vector(items, None);
-
-    if select == length - 1 {
-        cancelling();
-        main(player);
-        return WeaponItemFlag::InvalidItem;
-    }
-
-    match select {
-        0 => WeaponItemFlag::WoodenSword,
-        1 => WeaponItemFlag::BronzeSword,
-        2 => WeaponItemFlag::IronSword,
-        3 => WeaponItemFlag::SteelSword,
-        4 => WeaponItemFlag::MysticSword,
-        5 => WeaponItemFlag::WizardStaff,
-        _ => WeaponItemFlag::InvalidItem,
     }
 }

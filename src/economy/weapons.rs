@@ -33,8 +33,8 @@ pub mod shop {
     use crate::{
         data::player::Player,
         utils::{
-            input::{input_generic, select_from_vector},
-            tui::table_from_csv,
+            input::select_from_vector,
+            tui::{checkmark, table_from_csv},
         },
     };
 
@@ -50,12 +50,12 @@ pub mod shop {
     }
 
     pub fn table(player: &mut Player) {
-        let mut strings: Vec<String> = vec!["Item,Price".to_string()];
+        let mut strings: Vec<String> = vec!["Item,Price,Owned".to_string()];
 
         for (flag, item) in shop_list() {
-            let quantity = owns(player, flag);
+            let owned = owns(player, flag);
 
-            if quantity.is_none() {
+            if owned.is_none() {
                 panic!("Don't use the InvalidItem variant in the shop hash map.");
             }
 
@@ -63,7 +63,7 @@ pub mod shop {
                 "{},{},{}",
                 item.name,
                 item.price,
-                quantity.expect("Should be a mutable usize ref")
+                checkmark(*owned.expect("Should be a mutable usize ref"))
             );
             strings.push(string)
         }
@@ -71,7 +71,7 @@ pub mod shop {
         table_from_csv(strings);
     }
 
-    pub fn build_transaction() -> (Weapon, usize) {
+    pub fn build_transaction() -> Weapon {
         let shop = shop_list();
         let items = shop.values();
         let item_names: Vec<String> = items.map(|item| item.name.to_string()).collect();
@@ -88,9 +88,7 @@ pub mod shop {
             .map(|item| item.0)
             .expect("Should return an Item Flag");
 
-        let quantity = input_generic::<usize>("Quantity:").expect("Did not get valid usize");
-
-        (item, quantity)
+        item
     }
 
     pub fn get_item() -> Weapon {
@@ -125,14 +123,14 @@ pub mod shop {
         item
     }
 
-    pub fn purchase(player: &mut Player, flag: Weapon, quantity: usize, use_wallet: bool) -> Result<(), &str> {
+    pub fn purchase(player: &mut Player, flag: Weapon, use_wallet: bool) -> Result<(), &str> {
         let shop = shop_list();
         let item: &Item = shop.get(&flag).expect("Item not found in hashmap.");
 
         if use_wallet {
             let gold: usize = player.bank.wallet;
             let wallet: &mut usize = &mut player.bank.wallet;
-            let price = quantity * item.price;
+            let price = item.price;
 
             if gold < price {
                 return Err("Not enough gold.");
@@ -151,7 +149,7 @@ pub mod shop {
         Ok(())
     }
 
-    pub fn sell(player: &mut Player, flag: Weapon, quantity: usize, use_wallet: bool) -> Result<(), String> {
+    pub fn sell(player: &mut Player, flag: Weapon, use_wallet: bool) -> Result<(), String> {
         let shop: BTreeMap<Weapon, Item> = shop_list();
         let shop_item: &Item = shop.get(&flag).expect("Item not found in hashmap.");
         let owns_item: &mut bool = owns(player, flag).expect("Don't use the InvalidItem variant in the shop hash map.");
@@ -164,7 +162,7 @@ pub mod shop {
 
         if use_wallet {
             let wallet: &mut usize = &mut player.bank.wallet;
-            let price: usize = quantity * (shop_item.price / 2);
+            let price: usize = shop_item.price / 2;
 
             *wallet += price;
         }

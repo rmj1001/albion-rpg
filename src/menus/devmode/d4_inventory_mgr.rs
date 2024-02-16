@@ -1,11 +1,11 @@
 use crate::{
-    data::{inventory::weapons::WeaponItemFlag, player::Player},
+    data::player::Player,
     economy::{
         armor::{self, shop::build_transaction},
-        items,
+        items, weapons,
     },
     utils::{
-        input::{select_from_str_array, select_from_vector},
+        input::select_from_str_array,
         messages::*,
         tui::{page_header, HeaderSubtext},
     },
@@ -76,7 +76,7 @@ fn items_manager(player: &mut Player) {
 fn weapons_manager(player: &mut Player) {
     page_header("Developer Mode - Inventory Manager - Weapons", HeaderSubtext::None);
 
-    player.weapons.table();
+    weapons::shop::table(player);
 
     let buysell: usize = select_from_str_array(&["1. Own Weapon", "2. Disown Weapon", "NAV: Go Back"], None);
 
@@ -88,9 +88,8 @@ fn weapons_manager(player: &mut Player) {
     }
 
     pub fn own_weapon(player: &mut Player) {
-        let item = get_item(player);
-
-        let result: Result<(), String> = player.weapons.purchase(&mut player.bank.wallet, item, false);
+        let flag = weapons::shop::build_transaction();
+        let result = weapons::shop::purchase(player, flag, false);
 
         match result {
             Ok(_) => {
@@ -105,9 +104,8 @@ fn weapons_manager(player: &mut Player) {
     }
 
     pub fn disown_weapon(player: &mut Player) {
-        let item = get_item(player);
-
-        let result = player.weapons.sell(&mut player.bank.wallet, item, false);
+        let flag = weapons::shop::build_transaction();
+        let result = weapons::shop::sell(player, flag, false);
 
         match result {
             Ok(_) => {
@@ -118,38 +116,6 @@ fn weapons_manager(player: &mut Player) {
                 failure(message);
                 weapons_manager(player);
             }
-        }
-    }
-
-    fn get_item(player: &mut Player) -> WeaponItemFlag {
-        let items: Vec<String> = vec![
-            player.weapons.wooden_sword.name.to_string(),
-            player.weapons.bronze_sword.name.to_string(),
-            player.weapons.iron_sword.name.to_string(),
-            player.weapons.steel_sword.name.to_string(),
-            player.weapons.mystic_sword.name.to_string(),
-            player.weapons.wizard_staff.name.to_string(),
-            "NAV: Cancel".to_string(),
-        ];
-
-        let length = items.len();
-
-        let select = select_from_vector(items, None);
-
-        if select == length - 1 {
-            cancelling();
-            weapons_manager(player);
-            return WeaponItemFlag::InvalidItem;
-        }
-
-        match select {
-            0 => WeaponItemFlag::WoodenSword,
-            1 => WeaponItemFlag::BronzeSword,
-            2 => WeaponItemFlag::IronSword,
-            3 => WeaponItemFlag::SteelSword,
-            4 => WeaponItemFlag::MysticSword,
-            5 => WeaponItemFlag::WizardStaff,
-            _ => WeaponItemFlag::InvalidItem,
         }
     }
 }
