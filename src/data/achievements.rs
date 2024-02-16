@@ -2,6 +2,8 @@ use serde::{Deserialize, Serialize};
 
 use crate::utils::tui::{checkmark, table_from_csv};
 
+use super::{player::Player, xp::XP};
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Achievements {
     // Determined in combat
@@ -38,5 +40,16 @@ impl Achievements {
             format!("Passed level 100?,{}", checkmark(self.level_100_reached)),
             format!("Hacked the Game?,{}", checkmark(self.hacked_the_game)),
         ])
+    }
+
+    /// Detects earned achievements, namely 1Mil gold and level 100
+    pub fn check(player: &mut Player) {
+        if player.bank.net_worth() >= 1_000_000 {
+            player.achievements.earned_million_gold = true;
+        }
+
+        if XP::get_level(player.xp.total()) >= 100 {
+            player.achievements.level_100_reached = true;
+        }
     }
 }

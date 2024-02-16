@@ -148,8 +148,6 @@ pub fn main(player: &mut Player) {
 
         "3.141592" => {
             Settings::toggle_developer(player);
-            player.achievements.hacked_the_game = true;
-
             main(player);
         }
 

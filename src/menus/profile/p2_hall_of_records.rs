@@ -1,5 +1,5 @@
 use crate::{
-    data::xp::XP,
+    data::achievements::Achievements,
     utils::{
         input::select_from_str_array,
         messages::*,
@@ -34,17 +34,7 @@ pub fn xp(player: &mut Player) {
 pub fn achievements(player: &mut Player) {
     // These check to see if new achievements have been earned before
     // printing them
-    if !player.achievements.hacked_the_game && player.settings.developer {
-        player.achievements.hacked_the_game = true;
-    }
-
-    if !player.achievements.level_100_reached && XP::get_level(player.xp.total()) >= 100 {
-        player.achievements.level_100_reached = true;
-    }
-
-    if !player.achievements.earned_million_gold && player.bank.wallet >= 1_000_000 {
-        player.achievements.earned_million_gold = true;
-    }
+    Achievements::check(player);
 
     // Save the profile so new achievements are written to disk
     player.save();

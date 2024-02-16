@@ -57,6 +57,7 @@ impl Settings {
         player.save();
 
         if player.settings.developer {
+            player.achievements.hacked_the_game = true;
             success_msg("Developer mode enabled.");
         } else {
             success_msg("Developer mode disabled.");
