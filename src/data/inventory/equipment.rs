@@ -91,7 +91,7 @@ impl Equipment {
                 Self::armor_menu(player);
             }
             1 => {
-                Self::unequip_armor(player);
+                Self::unequip_armor(player, true);
                 Self::armor_menu(player);
             }
             2 => {}
@@ -112,7 +112,7 @@ impl Equipment {
                 Self::weapon_menu(player);
             }
             1 => {
-                Self::unequip_weapon(player);
+                Self::unequip_weapon(player, true);
                 Self::weapon_menu(player);
             }
             2 => {}
@@ -121,6 +121,8 @@ impl Equipment {
     }
 
     pub fn equip_weapon(player: &mut Player) {
+        Self::unequip_weapon(player, false);
+
         let choices = [
             &player.weapons.wooden_sword.name[..],
             &player.weapons.bronze_sword.name[..],
@@ -160,10 +162,12 @@ impl Equipment {
         }
     }
 
-    pub fn unequip_weapon(player: &mut Player) {
-        if player.equipment.weapon.is_none() {
+    pub fn unequip_weapon(player: &mut Player, menu_facing: bool) {
+        if player.equipment.weapon.is_none() && menu_facing {
             println!("You do not have a weapon equipped.");
             press_enter_to_continue();
+            return;
+        } else if player.equipment.weapon.is_none() {
             return;
         }
 
@@ -174,8 +178,11 @@ impl Equipment {
         Self::overwrite_inventory_weapon(equipped_weapon, player);
 
         player.equipment.weapon = None;
-        println!("Weapon successfully unequipped.");
-        press_enter_to_continue();
+
+        if menu_facing {
+            println!("Weapon successfully unequipped.");
+            press_enter_to_continue();
+        }
     }
 
     pub fn overwrite_inventory_weapon(equipped: Weapon, player: &mut Player) {
@@ -195,6 +202,8 @@ impl Equipment {
     }
 
     fn equip_armor(player: &mut Player) {
+        Self::unequip_armor(player, false);
+
         let choices = [
             &player.armor.leather.name[..],
             &player.armor.bronze.name[..],
@@ -232,10 +241,12 @@ impl Equipment {
         }
     }
 
-    fn unequip_armor(player: &mut Player) {
-        if player.equipment.armor.is_none() {
+    fn unequip_armor(player: &mut Player, menu_facing: bool) {
+        if player.equipment.armor.is_none() && menu_facing {
             println!("You do not have armor equipped.");
             press_enter_to_continue();
+            return;
+        } else if player.equipment.armor.is_none() {
             return;
         }
 
@@ -246,8 +257,11 @@ impl Equipment {
         Self::overwrite_inventory_armor(equipped_armor, player);
 
         player.equipment.armor = None;
-        println!("Armor successfully unequipped.");
-        press_enter_to_continue();
+
+        if menu_facing {
+            println!("Armor successfully unequipped.");
+            press_enter_to_continue();
+        }
     }
 
     pub fn overwrite_inventory_armor(equipped: Armor, player: &mut Player) {
