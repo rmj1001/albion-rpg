@@ -1,12 +1,11 @@
 use rand::{thread_rng, Rng};
 use serde::{Deserialize, Serialize};
 
-use crate::utils::tui::{checkmark, price, table_from_csv};
+use crate::utils::tui::{checkmark, table_from_csv};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Weapon {
     pub name: String,
-    pub price: usize,
     pub owns: bool,
     pub equipped: bool,
     pub damage: usize,
@@ -15,10 +14,9 @@ pub struct Weapon {
 }
 
 impl Weapon {
-    pub fn new(name: &str, price: usize, damage: usize, durability: usize) -> Self {
+    pub fn new(name: &str, damage: usize, durability: usize) -> Self {
         Self {
             name: name.to_string(),
-            price,
             owns: false,
             equipped: false,
             damage,
@@ -67,12 +65,12 @@ pub struct WeaponsInventory {
 impl WeaponsInventory {
     pub fn new() -> WeaponsInventory {
         WeaponsInventory {
-            wooden_sword: Weapon::new("Wooden Sword", 10, 10, 100),
-            bronze_sword: Weapon::new("Bronze Sword", 30, 20, 150),
-            iron_sword: Weapon::new("Iron Sword", 100, 50, 200),
-            steel_sword: Weapon::new("Steel Rapier", 500, 200, 500),
-            mystic_sword: Weapon::new("Mystic Sword", 5_000, 500, 1_000),
-            wizard_staff: Weapon::new("Wizard Staff", 10_000, 1_000, 2_000),
+            wooden_sword: Weapon::new("Wooden Sword", 10, 100),
+            bronze_sword: Weapon::new("Bronze Sword", 20, 150),
+            iron_sword: Weapon::new("Iron Sword", 50, 200),
+            steel_sword: Weapon::new("Steel Rapier", 200, 500),
+            mystic_sword: Weapon::new("Mystic Sword", 500, 1_000),
+            wizard_staff: Weapon::new("Wizard Staff", 1_000, 2_000),
         }
     }
 
@@ -83,14 +81,12 @@ impl WeaponsInventory {
     pub fn table(&self) {
         fn entry(weapon: &Weapon) -> String {
             format!(
-                "{},{},{},{},{},{},{}",
+                "{},{},{},{},{}",
                 weapon.name,
                 checkmark(weapon.owns),
                 checkmark(weapon.equipped),
                 weapon.damage,
                 weapon.durability,
-                price(weapon.price),
-                price(weapon.price / 2)
             )
         }
         table_from_csv(vec![
@@ -127,57 +123,5 @@ impl WeaponsInventory {
         if let Some(item) = item_result {
             item.owns = !item.owns;
         }
-    }
-
-    pub fn purchase(
-        &mut self,
-        wallet: &mut usize,
-        item_flag: WeaponItemFlag,
-        deduct_wallet: bool,
-    ) -> Result<(), String> {
-        let item_option = self.retrieve_item(item_flag);
-
-        if item_option.is_none() {
-            return Err("The item was invalid.".to_string());
-        }
-
-        let item = item_option.unwrap();
-
-        if item.owns {
-            return Err(format!("You already own {}.", item.name));
-        }
-
-        if deduct_wallet && item.price > *wallet {
-            return Err(format!("You do not have enough gold to purchase {}.", item.name));
-        }
-
-        if deduct_wallet {
-            *wallet -= item.price;
-        }
-
-        item.owns = true;
-        Ok(())
-    }
-
-    pub fn sell(&mut self, wallet: &mut usize, item_flag: WeaponItemFlag, add_to_wallet: bool) -> Result<(), &str> {
-        let item_option = self.retrieve_item(item_flag);
-
-        if item_option.is_none() {
-            return Err("The item was invalid.");
-        }
-
-        let item = item_option.unwrap();
-
-        if !item.owns {
-            return Err("You do not own this item.");
-        }
-
-        item.owns = false;
-
-        if add_to_wallet {
-            *wallet += item.price / 2;
-        }
-
-        Ok(())
     }
 }
