@@ -171,7 +171,7 @@ impl Equipment {
 
         equipped_weapon.equipped = false;
 
-        Self::overwrite_inventory_weapon(player.equipment.weapon.clone().unwrap(), player);
+        Self::overwrite_inventory_weapon(equipped_weapon, player);
 
         player.equipment.weapon = None;
         println!("Weapon successfully unequipped.");
