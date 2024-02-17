@@ -64,8 +64,8 @@ pub fn get_membership(player: &mut Player, guild: Membership) -> &mut bool {
         Membership::Cooking => &mut player.guilds.cooking,
         Membership::Fishing => &mut player.guilds.fishing,
         Membership::Mining => &mut player.guilds.mining,
-        Membership::Smithing => &mut player.guilds.fishing,
-        Membership::Woodcutting => &mut player.guilds.fishing,
+        Membership::Smithing => &mut player.guilds.smithing,
+        Membership::Woodcutting => &mut player.guilds.woodcutting,
     }
 }
 
@@ -75,8 +75,8 @@ pub fn check_membership(player: &mut Player, guild: Membership) -> bool {
         Membership::Cooking => player.guilds.cooking,
         Membership::Fishing => player.guilds.fishing,
         Membership::Mining => player.guilds.mining,
-        Membership::Smithing => player.guilds.fishing,
-        Membership::Woodcutting => player.guilds.fishing,
+        Membership::Smithing => player.guilds.smithing,
+        Membership::Woodcutting => player.guilds.woodcutting,
     }
 }
 
