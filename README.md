@@ -24,4 +24,4 @@ but we will be working on the papercuts over time. Have fun playing the game!
 
 Click on the image below to watch the video.
 
-[![Demo thumbnail](demo/DemoImage.png)](https://www.youtube.com/watch?v=S93cg6G9JHw "AlbionRPG Demo Video")
+[![Demo thumbnail](demo/GameMenu.png)](https://www.youtube.com/watch?v=S93cg6G9JHw "AlbionRPG Demo Video")
