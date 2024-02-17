@@ -20,12 +20,12 @@ pub fn main(player: &mut Player) {
         tui::HeaderSubtext::EnterCode,
     );
 
-    tui::small_header("Combat", HeaderSubtext::None);
+    println!("#------- Combat ------#");
     println!("1. Wander the Realm");
     println!("2. Enter the Stronghold");
     println!();
 
-    tui::small_header("Economy", HeaderSubtext::None);
+    println!("#------- Economy -----#");
     println!("3. The Guilds");
     println!("4. The Bank");
     println!("5. Trading Post");
@@ -33,11 +33,12 @@ pub fn main(player: &mut Player) {
     println!("7. Armor Shop");
     println!();
 
-    tui::small_header("Profile", HeaderSubtext::None);
+    println!("#------ Profile ------#");
     println!("8. Inventory");
     println!("9. Hall of Records");
     println!();
 
+    println!("#----- Settings ------#");
     if player.settings.developer {
         println!("96. Developer Menu");
     }
@@ -118,6 +119,7 @@ pub fn main(player: &mut Player) {
         "9" | "hall of records" => crate::menus::profile::p2_hall_of_records::main(player),
         "97" | "settings" => crate::menus::profile::n1_settings::main(player),
         "98" | "save game" | "save" => {
+            page_header("Saving Game", HeaderSubtext::None);
             println!("\nSaving game...");
             sleep(2);
 
@@ -129,6 +131,7 @@ pub fn main(player: &mut Player) {
         "99" | "logout" => {
             player.save();
 
+            page_header("Accounts Menu", HeaderSubtext::None);
             println!("\nLogging out...");
             sleep(2);
 
@@ -140,6 +143,7 @@ pub fn main(player: &mut Player) {
         }
 
         "3.141592" => {
+            page_header("Developer Mode", HeaderSubtext::None);
             Settings::toggle_developer(player);
             main(player);
         }
