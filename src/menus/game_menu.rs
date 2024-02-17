@@ -21,37 +21,37 @@ pub fn main(player: &mut Player) {
     );
 
     tui::small_header("Combat", HeaderSubtext::None);
-    println!("c1. Wander the Realm");
-    println!("c2. Enter the Stronghold");
+    println!("1. Wander the Realm");
+    println!("2. Enter the Stronghold");
     println!();
 
     tui::small_header("Economy", HeaderSubtext::None);
-    println!("e1. The Guilds");
-    println!("e2. The Bank");
-    println!("e3. Trading Post");
-    println!("e4. Weapons Shop");
-    println!("e5. Armor Shop");
+    println!("3. The Guilds");
+    println!("4. The Bank");
+    println!("5. Trading Post");
+    println!("6. Weapons Shop");
+    println!("7. Armor Shop");
     println!();
 
     tui::small_header("Profile", HeaderSubtext::None);
-    println!("p1. Inventory");
-    println!("p2. Hall of Records");
+    println!("8. Inventory");
+    println!("9. Hall of Records");
     println!();
 
     if player.settings.developer {
-        println!("d1. Developer Menu");
+        println!("96. Developer Menu");
     }
 
-    println!("n1. Settings");
-    println!("n2. Save Game");
-    println!("n3. Logout");
+    println!("97. Settings");
+    println!("98. Save Game");
+    println!("99. Logout");
     println!();
 
     let choice = prompt_arrow("Enter Menu Code").to_lowercase();
 
     match &choice[..] {
         // Combat
-        "c1" | "wander the realm" => {
+        "1" | "wander the realm" => {
             let mut battle_settings = BattleSettings {
                 header: "Wandering Gielnor",
                 prompt: "You are wandering the realm...",
@@ -67,7 +67,7 @@ pub fn main(player: &mut Player) {
 
             crate::combat::battle::new_battle(&mut battle_settings);
         }
-        "c2" | "enter the stronghold" => {
+        "2" | "enter the stronghold" => {
             page_header("The Stronghold", HeaderSubtext::None);
 
             fn exit_stronghold(player: &mut Player) {
@@ -107,17 +107,17 @@ pub fn main(player: &mut Player) {
         }
 
         // Economy
-        "e1" | "the guilds" => crate::menus::economy::e1_the_guilds::main(player),
-        "e2" | "the bank" => crate::menus::economy::e2_the_bank::main(player),
-        "e3" | "trading post" => crate::menus::economy::e3_trading_post::main(player),
-        "e4" | "weapons shop" => crate::menus::economy::e4_weapons_shop::main(player),
-        "e5" | "armor shop" => crate::menus::economy::e5_armor_shop::main(player),
+        "3" | "the guilds" => crate::menus::economy::e1_the_guilds::main(player),
+        "4" | "the bank" => crate::menus::economy::e2_the_bank::main(player),
+        "5" | "trading post" => crate::menus::economy::e3_trading_post::main(player),
+        "6" | "weapons shop" => crate::menus::economy::e4_weapons_shop::main(player),
+        "7" | "armor shop" => crate::menus::economy::e5_armor_shop::main(player),
 
         // Profile
-        "p1" | "inventory" => crate::menus::profile::p1_inventory::main(player),
-        "p2" | "hall of records" => crate::menus::profile::p2_hall_of_records::main(player),
-        "n1" | "settings" => crate::menus::profile::n1_settings::main(player),
-        "n2" | "save game" | "save" => {
+        "8" | "inventory" => crate::menus::profile::p1_inventory::main(player),
+        "9" | "hall of records" => crate::menus::profile::p2_hall_of_records::main(player),
+        "97" | "settings" => crate::menus::profile::n1_settings::main(player),
+        "98" | "save game" | "save" => {
             println!("\nSaving game...");
             sleep(2);
 
@@ -126,7 +126,7 @@ pub fn main(player: &mut Player) {
 
             main(player);
         }
-        "n3" | "logout" => {
+        "99" | "logout" => {
             player.save();
 
             println!("\nLogging out...");
@@ -139,24 +139,24 @@ pub fn main(player: &mut Player) {
             exit(Some(player));
         }
 
-        // Developer Mode
-        "d1" | "developer menu" => {
-            if player.settings.developer {
-                crate::menus::devmode::d1_developer_menu::main(player);
-            } else {
-                messages::invalid_input(None, None, true);
-                main(player);
-            }
-        }
-
         "3.141592" => {
             Settings::toggle_developer(player);
             main(player);
         }
 
-        wrong_input => {
-            messages::invalid_input(Some(wrong_input), None, true);
-            main(player);
-        }
+        misc => match misc {
+            "96" | "developer" => {
+                if player.settings.developer {
+                    crate::menus::devmode::d1_developer_menu::main(player);
+                } else {
+                    messages::invalid_input(Some(misc), None, true);
+                    main(player);
+                }
+            }
+            _ => {
+                messages::invalid_input(Some(misc), None, true);
+                main(player);
+            }
+        },
     }
 }
