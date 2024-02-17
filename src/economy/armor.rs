@@ -1,19 +1,5 @@
+use crate::economy::shop::Item;
 use std::hash::Hash;
-
-#[derive(Hash, PartialEq, Eq, PartialOrd, Ord, Clone)]
-pub struct Item {
-    name: String,
-    price: usize,
-}
-
-impl Item {
-    pub fn new(name: &str, price: usize) -> Self {
-        Self {
-            name: name.to_string(),
-            price,
-        }
-    }
-}
 
 #[derive(Hash, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
 pub enum ArmorFlag {

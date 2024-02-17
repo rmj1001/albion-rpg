@@ -26,7 +26,7 @@ pub fn main(player: &mut Player) {
     println!();
 
     tui::small_header("Economy", HeaderSubtext::None);
-    println!("e1. Work in the Guilds");
+    println!("e1. The Guilds");
     println!("e2. The Bank");
     println!("e3. Trading Post");
     println!("e4. Weapons Shop");
@@ -107,7 +107,7 @@ pub fn main(player: &mut Player) {
         }
 
         // Economy
-        "e1" | "work in the guilds" => crate::menus::economy::e1_the_guilds::main(player),
+        "e1" | "the guilds" => crate::menus::economy::e1_the_guilds::main(player),
         "e2" | "the bank" => crate::menus::economy::e2_the_bank::main(player),
         "e3" | "trading post" => crate::menus::economy::e3_trading_post::main(player),
         "e4" | "weapons shop" => crate::menus::economy::e4_weapons_shop::main(player),

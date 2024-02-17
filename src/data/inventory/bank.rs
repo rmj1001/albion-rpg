@@ -23,7 +23,7 @@ pub struct Bank {
 impl Bank {
     pub fn new() -> Self {
         Self {
-            wallet: 0,
+            wallet: 10,
             account1: 0,
             account2: 0,
             account3: 0,

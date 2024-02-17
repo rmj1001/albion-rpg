@@ -1,5 +1,5 @@
 use super::achievements::*;
-use super::guilds::GuildMemberships;
+use super::guilds::Memberships;
 use super::health::Health;
 use super::settings::Settings;
 use super::xp::*;
@@ -15,7 +15,7 @@ pub struct Player {
     pub xp: XP,
     pub achievements: Achievements,
     pub bank: Bank,
-    pub guild_memberships: GuildMemberships,
+    pub guilds: Memberships,
     pub equipment: Equipment,
     pub items: MundaneInventory,
     pub armor: ArmorInventory,
@@ -32,7 +32,7 @@ impl Player {
             xp: XP::new(),
             achievements: Achievements::new(),
             bank: Bank::new(),
-            guild_memberships: GuildMemberships::new(),
+            guilds: Memberships::new(),
             equipment: Equipment::new(),
             items: MundaneInventory::new(),
             armor: ArmorInventory::new(),
