@@ -56,6 +56,7 @@ pub fn table(player: &mut Player) {
     }
 
     table_from_csv(strings);
+    println!("Gold: {}\n", player.bank.wallet);
 }
 
 pub fn get_membership(player: &mut Player, guild: Membership) -> &mut bool {

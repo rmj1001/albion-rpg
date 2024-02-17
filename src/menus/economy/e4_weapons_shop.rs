@@ -7,7 +7,6 @@ use crate::{
 pub fn main(player: &mut Player) {
     page_header("Weapons Shop", crate::utils::tui::HeaderSubtext::None);
 
-    println!("Gold: {}\n", player.bank.wallet);
     weapons::shop::table(player);
 
     let buysell = select_from_str_array(&["1. Purchase", "2. Sell", "NAV: Go Back"], None);

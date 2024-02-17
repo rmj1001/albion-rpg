@@ -190,7 +190,6 @@ fn guild_membership_shop(player: &mut Player) {
     page_header("Guild Memberships Office", HeaderSubtext::Keyboard);
 
     guilds::table(player);
-    println!("Gold: {}\n", player.bank.wallet);
 
     let choices = select_from_str_array(&["1. Join Guild", "2. Leave Guild", "3. Go Back"], None);
 

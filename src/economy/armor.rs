@@ -55,6 +55,7 @@ pub mod shop {
         }
 
         table_from_csv(strings);
+        println!("Gold: {}\n", player.bank.wallet);
     }
 
     pub fn build_transaction() -> ArmorFlag {

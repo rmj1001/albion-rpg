@@ -10,8 +10,6 @@ pub fn main(player: &mut Player) {
 
     shop::table(player);
 
-    println!("Gold: {}\n", player.bank.wallet);
-
     let buysell = select_from_str_array(&["1. Purchase", "2. Sell", "NAV: Go Back"], None);
 
     match buysell {
