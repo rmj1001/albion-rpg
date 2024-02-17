@@ -20,8 +20,9 @@ but we will be working on the papercuts over time. Have fun playing the game!
 
 - MacOS
 
-## Demo Video
+## Demos
 
-Click on the image below to watch the video.
+[Click Here](https://www.youtube.com/watch?v=S93cg6G9JHw) for the demo video.
+[Click Here](./examples/profile.toml) for an example save file.
 
-[![Demo thumbnail](demo/GameMenu.png)](https://www.youtube.com/watch?v=S93cg6G9JHw "AlbionRPG Demo Video")
+[![Demo thumbnail](demo/GameMenu.png)]
