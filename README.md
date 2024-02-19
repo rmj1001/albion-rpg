@@ -19,6 +19,8 @@ but we will be working on the papercuts over time. Have fun playing the game!
 ## Supported Platforms
 
 - MacOS
+- Linux
+- Windows
 
 ## Demos
 
