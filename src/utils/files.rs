@@ -1,8 +1,9 @@
 pub mod encoding {
     use crate::data::player::Player;
+    use toml as encoder;
 
     /// Convert TOML to player data
-    pub fn from_toml(data: String) -> Result<Player, String> {
+    pub fn decode(data: String) -> Result<Player, String> {
         let user_result: Result<Player, toml::de::Error> = toml::from_str(&data);
 
         match user_result {
@@ -12,8 +13,8 @@ pub mod encoding {
     }
 
     /// Convert player data to TOML
-    pub fn to_toml(player: &Player) -> Result<String, toml::ser::Error> {
-        toml::to_string_pretty(&player)
+    pub fn encode(player: &Player) -> Result<String, toml::ser::Error> {
+        encoder::to_string_pretty(&player)
     }
 }
 
@@ -51,7 +52,9 @@ pub mod handler {
 
     /// Generates the full path string for profiles depending on platform.
     pub fn generate_profile_path(username: &str) -> String {
-        let string: String = format!("{}/{}.toml", profile_directory(), username);
+        const EXTENSION: &str = "toml";
+
+        let string: String = format!("{}/{}.{}", profile_directory(), username, EXTENSION);
         Path::new(&string)
             .to_str()
             .expect("Path could not be converted to string")
