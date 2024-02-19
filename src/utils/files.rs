@@ -1,10 +1,11 @@
 pub mod encoding {
     use crate::data::player::Player;
-    use toml as encoder;
+    use serde_yaml as encoder;
+    use serde_yaml::Error as SerdeError;
 
     /// Convert TOML to player data
     pub fn decode(data: String) -> Result<Player, String> {
-        let user_result: Result<Player, toml::de::Error> = toml::from_str(&data);
+        let user_result: Result<Player, SerdeError> = encoder::from_str(&data);
 
         match user_result {
             Ok(profile) => Ok(profile),
@@ -13,13 +14,17 @@ pub mod encoding {
     }
 
     /// Convert player data to TOML
-    pub fn encode(player: &Player) -> Result<String, toml::ser::Error> {
-        encoder::to_string_pretty(&player)
+    pub fn encode(player: &Player) -> Result<String, SerdeError> {
+        encoder::to_string(&player)
     }
 }
 
 pub mod handler {
     use std::{fs, path::Path};
+
+    pub fn extension() -> &'static str {
+        ".albion"
+    }
 
     /// Generates the profile directory path for multiple platforms
     pub fn profile_directory() -> String {
@@ -52,9 +57,7 @@ pub mod handler {
 
     /// Generates the full path string for profiles depending on platform.
     pub fn generate_profile_path(username: &str) -> String {
-        const EXTENSION: &str = "toml";
-
-        let string: String = format!("{}/{}.{}", profile_directory(), username, EXTENSION);
+        let string: String = format!("{}/{}{}", profile_directory(), username, extension());
         Path::new(&string)
             .to_str()
             .expect("Path could not be converted to string")
@@ -77,7 +80,7 @@ pub mod handler {
                         .to_str()
                         .unwrap_or("")
                         .to_string()
-                        .contains(".toml")
+                        .contains(extension())
                 })
                 .map(|file| {
                     file.expect("Failed to list files.")
@@ -85,7 +88,7 @@ pub mod handler {
                         .to_str()
                         .unwrap_or("")
                         .to_string()
-                        .replace(".toml", "")
+                        .replace(extension(), "")
                 })
                 .collect(),
             Err(error) => panic!("Could not read the directory: {}", error),
@@ -117,9 +120,8 @@ pub mod handler {
 
     /// Delete a file or panic
     pub fn delete_file(file_path: String) {
-        match fs::remove_file(file_path) {
-            Ok(_) => {}
-            Err(error) => panic!("Could not delete profile file: {}", error),
+        if let Err(error) = fs::remove_file(file_path) {
+            panic!("Could not delete profile file: {}", error)
         }
     }
 }
