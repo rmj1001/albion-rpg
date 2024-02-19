@@ -46,6 +46,7 @@ impl Player {
         profile
     }
 
+    /// Reset all player settings, except for username and password hash
     pub fn reset(&mut self) {
         let new_profile = Self::new(&self.settings.username, &self.settings.password_hash, true);
         *self = new_profile;
@@ -70,6 +71,7 @@ impl Player {
         self.save();
     }
 
+    /// Save player data to disk.
     pub fn save(&self) {
         let serialize_result =
             crate::utils::files::encoding::encode(self).expect("Could not convert Player to config file format.");
@@ -78,16 +80,20 @@ impl Player {
         files::handler::write_file(path, serialize_result)
     }
 
-    pub fn delete(&self) {
+    /// Delete the player file on disk
+    pub fn delete(&mut self) {
         Player::delete_from_username(&self.settings.username);
+        self.reset();
     }
 
+    /// Delete the player file on disk
     pub fn delete_from_username(username: &str) {
         let profile_path = files::handler::generate_profile_path(username);
 
         files::handler::delete_file(profile_path);
     }
 
+    /// Retrieve player data from disk using the username as the search string
     pub fn get_from_username(username: &str) -> Result<Player, String> {
         let profile_path = files::handler::generate_profile_path(username);
         let mut contents: String = String::new();
