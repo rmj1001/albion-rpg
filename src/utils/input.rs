@@ -2,7 +2,7 @@ use std::{io::Write, str::FromStr};
 
 use dialoguer::Confirm;
 
-use crate::utils::messages::*;
+use crate::{utils::messages::*, MiscError};
 
 /// Pass in a raw array of string slices to dialoguer's Select. (i.e. &\["test"\])
 pub fn select_from_str_array(options: &[&str], optional_prompt: Option<&str>) -> usize {
@@ -56,7 +56,7 @@ pub fn prompt_arrow(text: &str) -> String {
 }
 
 /// Attempts to cast the string to a generic type
-pub fn input_generic<T>(text: &str) -> Result<T, &str>
+pub fn input_generic<T>(text: &str) -> crate::Result<T>
 where
     T: FromStr,
 {
@@ -67,7 +67,7 @@ where
         Ok(out) => Ok(out),
         Err(_) => {
             invalid_input(Some(&input_string), None, false);
-            Err("")
+            Err(MiscError::InvalidInput(input_string).boxed())
         }
     }
 }

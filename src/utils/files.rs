@@ -1,26 +1,32 @@
 pub mod encoding {
     use crate::data::player::Player;
+    use crate::{DataError, ProfileError};
     use serde_yaml as encoder;
     use serde_yaml::Error as SerdeError;
 
     /// Convert TOML to player data
-    pub fn decode(data: String) -> Result<Player, String> {
+    pub fn decode(data: String) -> Result<Player, ProfileError> {
         let user_result: Result<Player, SerdeError> = encoder::from_str(&data);
 
         match user_result {
             Ok(profile) => Ok(profile),
-            Err(message) => Err(format!("This profile is corrupted and will be deleted: {}", message)),
+            Err(_) => Err(crate::ProfileError::Corrupted),
         }
     }
 
     /// Convert player data to TOML
-    pub fn encode(player: &Player) -> Result<String, SerdeError> {
-        encoder::to_string(&player)
+    pub fn encode(player: &Player) -> Result<String, DataError> {
+        match encoder::to_string(&player) {
+            Ok(string) => Ok(string),
+            Err(_) => Err(DataError::Encode),
+        }
     }
 }
 
 pub mod handler {
     use std::{fs, path::Path};
+
+    use crate::ProfileError;
 
     pub fn extension() -> &'static str {
         ".albion"
@@ -111,10 +117,10 @@ pub mod handler {
     }
 
     /// Read the contents of a file to a string
-    pub fn read_file(file_path: String) -> Result<String, String> {
+    pub fn read_file(file_path: String) -> Result<String, ProfileError> {
         match fs::read_to_string(file_path.clone()) {
             Ok(contents) => Ok(contents),
-            Err(_) => Err(format!("File '{}' does not exist.", file_path)),
+            Err(_) => Err(crate::ProfileError::DoesNotExist),
         }
     }
 

@@ -6,6 +6,7 @@ use crate::utils::{
     messages::*,
     tui::{page_header, press_enter_to_continue, HeaderSubtext},
 };
+use crate::MiscError;
 
 pub fn main(player: &mut Player) {
     let mut account: BankAccount = BankAccount::Account1;
@@ -45,13 +46,13 @@ pub fn main(player: &mut Player) {
         main(player);
     }
 
-    let result: Result<(), &str> = match calculation {
+    let result: crate::Result<()> = match calculation {
         Operation::Add(_) => player.bank.arithmetic(&account, calculation),
         Operation::Subtract(_) => player.bank.arithmetic(&account, calculation),
         Operation::Multiply(_) => player.bank.arithmetic(&account, calculation),
         Operation::Divide(_) => player.bank.arithmetic(&account, calculation),
         Operation::Cancel => Ok(()),
-        Operation::Invalid => Err(""),
+        Operation::Invalid => Err(MiscError::InvalidOperator.boxed()),
     };
 
     match result {

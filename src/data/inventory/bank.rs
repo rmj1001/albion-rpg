@@ -1,6 +1,7 @@
 use crate::utils::{math::Operation, messages::*, tui::table_from_csv};
 
 use crate::data::player::*;
+use crate::{InventoryError, MiscError};
 use serde::{Deserialize, Serialize};
 
 pub enum BankAccount {
@@ -57,7 +58,7 @@ impl Bank {
         }
     }
 
-    pub fn arithmetic(&mut self, account_flag: &BankAccount, operation: Operation<usize>) -> Result<(), &str> {
+    pub fn arithmetic(&mut self, account_flag: &BankAccount, operation: Operation<usize>) -> crate::Result<()> {
         let account = match account_flag {
             BankAccount::Account1 => &mut self.account1,
             BankAccount::Account2 => &mut self.account2,
@@ -74,7 +75,7 @@ impl Bank {
 
             Operation::Subtract(amount) => {
                 if amount > *account {
-                    Err("The amount is greater than the account balance.")
+                    Err(InventoryError::NotEnoughGold.boxed())
                 } else {
                     *account -= amount;
                     Ok(())
@@ -96,14 +97,14 @@ impl Bank {
             }
             Operation::Invalid => {
                 failure("Invalid Operator.");
-                Err("")
+                Err(MiscError::InvalidOperator.boxed())
             }
         }
     }
 
-    pub fn deposit(player: &mut Player, account_flag: BankAccount, amount: usize, add_only: bool) -> Result<(), &str> {
+    pub fn deposit(player: &mut Player, account_flag: BankAccount, amount: usize, add_only: bool) -> crate::Result<()> {
         if !add_only && player.bank.wallet < amount {
-            return Err("You do not have enough gold in your wallet.");
+            return Err(InventoryError::NotEnoughGold.boxed());
         }
 
         if !add_only {
@@ -118,16 +119,14 @@ impl Bank {
         account_flag: BankAccount,
         amount: usize,
         subtract_only: bool,
-    ) -> Result<(), &str> {
+    ) -> crate::Result<()> {
         let account_balance: usize = Bank::balance(player, &account_flag);
 
         if account_balance >= amount && !subtract_only {
             player.bank.wallet += amount;
         }
 
-        let withdraw_result = player.bank.arithmetic(&account_flag, Operation::Subtract(amount));
-
-        withdraw_result.to_owned()
+        player.bank.arithmetic(&account_flag, Operation::Subtract(amount))
     }
 
     pub fn net_worth(&self) -> usize {

@@ -5,6 +5,7 @@ use crate::{
         input::select_from_vector,
         tui::{checkmark, table_from_csv},
     },
+    InventoryError, MiscError,
 };
 use std::collections::BTreeMap;
 
@@ -115,7 +116,7 @@ pub fn build_transaction() -> Membership {
 }
 
 // Bug: Broken?
-pub fn purchase(player: &mut Player, flag: Membership, use_wallet: bool) -> Result<(), &str> {
+pub fn purchase(player: &mut Player, flag: Membership, use_wallet: bool) -> crate::Result<()> {
     let shop: BTreeMap<Membership, Item> = shop_list();
     let item: &Item = shop.get(&flag).expect("Item not found in hashmap.");
 
@@ -125,14 +126,14 @@ pub fn purchase(player: &mut Player, flag: Membership, use_wallet: bool) -> Resu
         let price = item.price;
 
         if gold < price {
-            return Err("Not enough gold.");
+            return Err(InventoryError::NotEnoughGold.boxed());
         }
 
         *wallet -= price;
     }
 
     if check_membership(player, flag) {
-        return Err("You are already a member of this guild.");
+        return Err(MiscError::Custom("You are already a guild member.").boxed());
     }
 
     toggle_membership(player, flag);
@@ -140,7 +141,7 @@ pub fn purchase(player: &mut Player, flag: Membership, use_wallet: bool) -> Resu
     Ok(())
 }
 
-pub fn sell(player: &mut Player, flag: Membership, use_wallet: bool) -> Result<(), String> {
+pub fn sell(player: &mut Player, flag: Membership, use_wallet: bool) -> crate::Result<()> {
     let shop: BTreeMap<Membership, Item> = shop_list();
     let shop_item: &Item = shop.get(&flag).expect("Item not found in hashmap.");
 
@@ -152,7 +153,7 @@ pub fn sell(player: &mut Player, flag: Membership, use_wallet: bool) -> Result<(
     }
 
     if !check_membership(player, flag) {
-        return Err("You are not a member of this guild.".to_string());
+        return Err(MiscError::Custom("You not a member of this guild.").boxed());
     }
 
     toggle_membership(player, flag);

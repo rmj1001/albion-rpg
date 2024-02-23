@@ -30,6 +30,7 @@ pub mod shop {
             input::{input_generic, select_from_vector},
             tui::table_from_csv,
         },
+        InventoryError,
     };
 
     pub fn shop_list() -> BTreeMap<Items, Item> {
@@ -90,9 +91,12 @@ pub mod shop {
             .map(|item| item.0)
             .expect("Should return an Item Flag");
 
-        let quantity = input_generic::<usize>("Quantity:").expect("Did not get valid usize");
+        let quantity_result = input_generic::<usize>("Quantity:");
 
-        (item, quantity)
+        match quantity_result {
+            Ok(quantity) => (item, quantity),
+            Err(error) => panic!("{}", error),
+        }
     }
 
     pub fn get_item() -> Items {
@@ -137,7 +141,7 @@ pub mod shop {
         item
     }
 
-    pub fn purchase(player: &mut Player, flag: Items, quantity: usize, use_wallet: bool) -> Result<(), &str> {
+    pub fn purchase(player: &mut Player, flag: Items, quantity: usize, use_wallet: bool) -> crate::Result<()> {
         let shop = shop_list();
         let item: &Item = shop.get(&flag).expect("Item not found in hashmap.");
 
@@ -147,7 +151,7 @@ pub mod shop {
             let price = quantity * item.price;
 
             if gold < price {
-                return Err("Not enough gold.");
+                return Err(InventoryError::NotEnoughGold.boxed());
             }
 
             *wallet -= price;
@@ -160,15 +164,14 @@ pub mod shop {
         Ok(())
     }
 
-    pub fn sell(player: &mut Player, flag: Items, quantity: usize, use_wallet: bool) -> Result<(), String> {
+    pub fn sell(player: &mut Player, flag: Items, quantity: usize, use_wallet: bool) -> crate::Result<()> {
         let shop: BTreeMap<Items, Item> = shop_list();
         let shop_item: &Item = shop.get(&flag).expect("Item not found in hashmap.");
         let item: &mut usize =
             shop_quantity(player, flag).expect("Don't use the InvalidItem variant in the shop hash map.");
 
         if *item == 0 || *item < quantity {
-            let error = format!("Not enough {}.", shop_item.name);
-            return Err(error);
+            return Err(InventoryError::NotEnoughItem(shop_item.name.clone()).boxed());
         }
 
         *item -= quantity;

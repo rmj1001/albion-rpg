@@ -6,6 +6,7 @@ use crate::{
         messages::*,
         tui::{page_header, HeaderSubtext},
     },
+    MiscError,
 };
 
 pub fn main(player: &mut Player) {
@@ -49,13 +50,13 @@ pub fn main(player: &mut Player) {
     }
 
     // Return early if the operation was cancelled.
-    let result: Result<(), &str> = match calculation {
+    let result: crate::Result<()> = match calculation {
         Operation::Add(_) => player.xp.arithmetic(xp_type, calculation),
         Operation::Subtract(_) => player.xp.arithmetic(xp_type, calculation),
         Operation::Multiply(_) => player.xp.arithmetic(xp_type, calculation),
         Operation::Divide(_) => player.xp.arithmetic(xp_type, calculation),
         Operation::Cancel => Ok(()),
-        Operation::Invalid => Err(""),
+        Operation::Invalid => Err(MiscError::InvalidOperator.boxed()),
     };
 
     match result {

@@ -1,7 +1,10 @@
-use crate::utils::{
-    input::{prompt_arrow, select_from_str_array},
-    messages::{self, *},
-    tui::{page_header, HeaderSubtext},
+use crate::{
+    utils::{
+        input::{prompt_arrow, select_from_str_array},
+        messages::{self, *},
+        tui::{page_header, HeaderSubtext},
+    },
+    MiscError,
 };
 
 use crate::data::{inventory::bank::*, player::Player};
@@ -51,7 +54,7 @@ pub fn main(player: &mut Player) {
         }
     }
 
-    let mut bank_result: Result<(), &str> = Err("Unitialized");
+    let mut bank_result: crate::Result<()> = Err(MiscError::Custom("Uninitialized").boxed());
 
     match option {
         // Deposit
@@ -69,7 +72,7 @@ pub fn main(player: &mut Player) {
         }
 
         Err(message) => {
-            failure(message);
+            message.failure();
             main(player);
         }
     }

@@ -33,7 +33,7 @@ pub fn purchase(player: &mut Player) {
             main(player);
         }
         Err(message) => {
-            failure(message);
+            message.failure();
             main(player);
         }
     }
@@ -50,7 +50,7 @@ pub fn sell(player: &mut Player) {
             main(player);
         }
         Err(message) => {
-            failure(message);
+            message.failure();
             main(player);
         }
     }

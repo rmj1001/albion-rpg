@@ -22,6 +22,7 @@ pub mod shop {
             input::select_from_vector,
             tui::{checkmark, table_from_csv},
         },
+        InventoryError,
     };
 
     pub fn shop_list() -> BTreeMap<ArmorFlag, Item> {
@@ -110,7 +111,7 @@ pub mod shop {
         item
     }
 
-    pub fn purchase(player: &mut Player, flag: ArmorFlag, use_wallet: bool) -> Result<(), &str> {
+    pub fn purchase(player: &mut Player, flag: ArmorFlag, use_wallet: bool) -> crate::Result<()> {
         let shop = shop_list();
         let item: &Item = shop.get(&flag).expect("Item not found in hashmap.");
 
@@ -120,7 +121,7 @@ pub mod shop {
             let price = item.price;
 
             if gold < price {
-                return Err("Not enough gold.");
+                return Err(InventoryError::NotEnoughGold.boxed());
             }
 
             *wallet -= price;
@@ -129,20 +130,20 @@ pub mod shop {
         let owns_item = owns(player, flag).expect("Don't use the InvalidItem variant in the shop hash map.");
 
         if *owns_item {
-            return Err("You already own this item.");
+            return Err(InventoryError::ItemOwned.boxed());
         }
 
         *owns_item = true;
         Ok(())
     }
 
-    pub fn sell(player: &mut Player, flag: ArmorFlag, use_wallet: bool) -> Result<(), String> {
+    pub fn sell(player: &mut Player, flag: ArmorFlag, use_wallet: bool) -> crate::Result<()> {
         let shop: BTreeMap<ArmorFlag, Item> = shop_list();
         let shop_item: &Item = shop.get(&flag).expect("Item not found in hashmap.");
         let owns_item: &mut bool = owns(player, flag).expect("Don't use the InvalidItem variant in the shop hash map.");
 
         if !*owns_item {
-            return Err("You do not own this item.".to_string());
+            return Err(InventoryError::ItemNotOwned.boxed());
         }
 
         *owns_item = false;

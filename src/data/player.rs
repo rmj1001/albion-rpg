@@ -7,6 +7,7 @@ use super::xp::*;
 use crate::data::inventory::{armor::*, bank::*, equipment::Equipment, items::*, weapons::*};
 
 use crate::utils::files;
+use crate::{DataError, ProfileError};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -94,7 +95,7 @@ impl Player {
     }
 
     /// Retrieve player data from disk using the username as the search string
-    pub fn get_from_username(username: &str) -> Result<Player, String> {
+    pub fn get_from_username(username: &str) -> crate::Result<Player> {
         let profile_path = files::handler::generate_profile_path(username);
         let mut contents: String = String::new();
 
@@ -102,14 +103,14 @@ impl Player {
 
         match file_result {
             Ok(data) => contents = data,
-            Err(_) => return Err(format!("Profile '{}' does not exist.", username)),
+            Err(_) => return Err(ProfileError::DoesNotExist.boxed()),
         }
 
         match crate::utils::files::encoding::decode(contents) {
             Ok(player) => Ok(player),
-            Err(message) => {
+            Err(_) => {
                 Player::delete_from_username(username);
-                Err(message)
+                Err(DataError::Decode.boxed())
             }
         }
     }

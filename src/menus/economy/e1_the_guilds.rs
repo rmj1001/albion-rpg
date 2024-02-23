@@ -3,11 +3,13 @@ use crate::{
     data::xp::{XPType, XP},
     economy::guilds::{self, check_membership, GuildItems, Membership},
     utils::{
+        error::CustomError,
         input::select_from_str_array,
         math::random_num,
         messages::{failure, out_of_bounds, success},
         tui::{page_header, HeaderSubtext},
     },
+    InventoryError,
 };
 
 use crate::data::player::Player;
@@ -84,7 +86,7 @@ fn guild_menu(
     match work_choice {
         0 => {
             if let Some(item) = decrease_item {
-                let result: Result<(), String> = match item {
+                let result: Result<(), InventoryError> = match item {
                     GuildItems::Gold => {
                         let rand = random_num(1, 3);
 
@@ -104,7 +106,7 @@ fn guild_menu(
                 };
 
                 if let Err(error) = result {
-                    failure(error);
+                    error.failure();
                     guild_menu(player, guild, xp_type, increase_item, decrease_item);
                 }
             }
@@ -177,9 +179,9 @@ fn print_item(player: &mut Player, item: &Option<GuildItems>) {
     }
 }
 
-fn try_subtract(item: &mut usize, item_name: &str) -> Result<(), String> {
+fn try_subtract(item: &mut usize, item_name: &str) -> Result<(), InventoryError> {
     if *item == 0 {
-        return Err(format!("You do not have enough {} to work with.", item_name));
+        return Err(InventoryError::NotEnoughItem(item_name.to_string()));
     }
 
     *item -= 1;
@@ -215,7 +217,7 @@ fn join_guild(player: &mut Player) {
             guild_membership_shop(player);
         }
         Err(message) => {
-            failure(message);
+            message.failure();
             guild_membership_shop(player);
         }
     }
@@ -229,7 +231,7 @@ fn leave_guild(player: &mut Player) {
             guild_membership_shop(player);
         }
         Err(message) => {
-            failure(message);
+            message.failure();
             guild_membership_shop(player);
         }
     }

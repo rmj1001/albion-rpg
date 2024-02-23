@@ -62,7 +62,7 @@ pub fn main() {
         }
 
         Err(message) => {
-            failure(message);
+            message.failure();
             crate::menus::accounts::main();
         }
     }

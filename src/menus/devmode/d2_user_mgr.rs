@@ -1,9 +1,10 @@
 use crate::{
     data::player::Player,
     utils::{
+        error::CustomError,
         files,
         input::{confirm, select_from_str_array, select_from_vector},
-        messages::{self, *},
+        messages::*,
         tui::{self, page_header, paginate_string, press_enter_to_continue, HeaderSubtext},
     },
 };
@@ -104,9 +105,7 @@ fn view_user(player: &mut Player) {
 
                     match pretty_string_result {
                         Ok(data) => pretty_string = data,
-                        Err(message) => {
-                            messages::failure(format!("{}", message));
-                        }
+                        Err(message) => message.failure(),
                     }
 
                     paginated_file = paginate_string(pretty_string, 20);
@@ -131,7 +130,7 @@ fn view_user(player: &mut Player) {
                     main(player);
                 }
                 Err(message) => {
-                    failure(message);
+                    message.failure();
                     main(player);
                 }
             }
