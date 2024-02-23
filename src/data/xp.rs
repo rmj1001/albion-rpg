@@ -1,7 +1,10 @@
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 
-use crate::utils::{math::Operation, messages::*, tui::table_from_csv};
+use crate::{
+    utils::{math::Operation, messages::*, tui::table_from_csv},
+    MiscError,
+};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct XP {
@@ -48,6 +51,7 @@ impl XP {
         }
 
         table_from_csv(vec![
+            format!("Category,XP,Level"),
             entry("Combat", self.combat),
             entry("Fishing", self.fishing),
             entry("Cooking", self.cooking),
@@ -67,7 +71,7 @@ impl XP {
         self.combat + self.fishing + self.cooking + self.woodcutting + self.mining + self.smithing + self.thieving
     }
 
-    pub fn arithmetic(&mut self, flag: XPType, operation: Operation<usize>) -> Result<(), &str> {
+    pub fn arithmetic(&mut self, flag: XPType, operation: Operation<usize>) -> crate::Result<()> {
         let xp = match flag {
             XPType::Combat => &mut self.combat,
             XPType::Fishing => &mut self.fishing,
@@ -85,7 +89,7 @@ impl XP {
             }
             Operation::Subtract(amount) => {
                 if amount > *xp {
-                    Err("The amount is greater than the total XP.")
+                    Err(MiscError::Custom("The amount is greater than the total XP.").boxed())
                 } else {
                     *xp -= amount;
                     Ok(())
@@ -105,7 +109,7 @@ impl XP {
             }
             Operation::Invalid => {
                 failure("Invalid Operator");
-                Err("")
+                Err(MiscError::InvalidOperator.boxed())
             }
         }
     }
