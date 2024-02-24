@@ -1,6 +1,6 @@
 use crate::{
     data::inventory::equipment::Equipment,
-    economy::{armor, items, weapons},
+    economy::items,
     utils::{
         input::select_from_str_array,
         messages::*,
@@ -13,28 +13,16 @@ use crate::data::player::Player;
 pub fn main(player: &mut Player) {
     page_header("Inventory Viewer", HeaderSubtext::None);
 
-    let menu_option = select_from_str_array(
-        &[
-            "1. Items",
-            "2. Weapons",
-            "3. Armor",
-            "4. Equipment",
-            "5. Finances",
-            "NAV: Go Back",
-        ],
-        None,
-    );
+    let menu_option = select_from_str_array(&["1. Items", "2. Equipment", "3. Finances", "NAV: Go Back"], None);
 
     match menu_option {
         0 => mundane_inventory(player),
-        1 => weapons_inventory(player),
-        2 => armor_inventory(player),
-        3 => {
+        1 => {
             Equipment::menu(player);
             main(player);
         }
-        4 => finances(player),
-        5 => crate::menus::game_menu::main(player),
+        2 => finances(player),
+        3 => crate::menus::game_menu::main(player),
         _ => out_of_bounds(),
     }
 }
@@ -43,24 +31,6 @@ pub fn mundane_inventory(player: &mut Player) {
     page_header("Items Inventory", HeaderSubtext::None);
 
     items::shop::table(player);
-
-    press_enter_to_continue();
-    main(player);
-}
-
-pub fn weapons_inventory(player: &mut Player) {
-    page_header("Weapons Inventory", HeaderSubtext::None);
-
-    weapons::shop::table(player);
-
-    press_enter_to_continue();
-    main(player);
-}
-
-pub fn armor_inventory(player: &mut Player) {
-    page_header("Armor Inventory", HeaderSubtext::None);
-
-    armor::shop::table(player);
 
     press_enter_to_continue();
     main(player);

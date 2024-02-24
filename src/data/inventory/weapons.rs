@@ -90,7 +90,7 @@ impl WeaponsInventory {
             )
         }
         table_from_csv(vec![
-            "Weapon,Owned,Equipped,Damage,Durability,Buy Price,Sale Price".to_string(),
+            "Weapon,Owned,Equipped,Damage,Durability".to_string(),
             entry(&self.wooden_sword),
             entry(&self.bronze_sword),
             entry(&self.iron_sword),

@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::utils::{
     input::select_from_str_array,
     messages::out_of_bounds,
-    tui::{page_header, press_enter_to_continue, table_from_csv, HeaderSubtext},
+    tui::{page_header, press_enter_to_continue, HeaderSubtext},
 };
 
 use crate::data::player::Player;
@@ -28,39 +28,8 @@ impl Equipment {
         *self = Self::new();
     }
 
-    pub fn table(&self) {
-        let mut weapon_string: String = String::new();
-        let mut armor_string: String = String::new();
-
-        if self.weapon.is_none() {
-            weapon_string = String::from("Weapon: None,Damage: N/A,Durability: N/A");
-        } else {
-            let weapon = self.weapon.clone().unwrap();
-
-            weapon_string = format!(
-                "Weapon: {},Damage: {},Durability: {}",
-                weapon.name, weapon.damage, weapon.durability
-            );
-        }
-
-        if self.armor.is_none() {
-            armor_string = String::from("Armor: None,Defense: N/A,Durability: N/A");
-        } else {
-            let armor = self.armor.clone().unwrap();
-
-            armor_string = format!(
-                "Armor: {},Defense: {},Durability: {}",
-                armor.name, armor.defense, armor.durability
-            )
-        }
-
-        table_from_csv(vec![weapon_string, armor_string])
-    }
-
     pub fn menu(player: &mut Player) {
         page_header("Equipment Manager", HeaderSubtext::Keyboard);
-
-        player.equipment.table();
 
         let choice = select_from_str_array(&["1. Weapons", "2. Armor", "NAV: Go Back"], None);
 

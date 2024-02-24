@@ -27,4 +27,4 @@ but we will be working on the papercuts over time. Have fun playing the game!
 [Click Here](https://www.youtube.com/watch?v=S93cg6G9JHw) for the demo video.
 [Click Here](./examples/profile.toml) for an example save file.
 
-[![Demo thumbnail](demo/GameMenu.png)]
+![Demo thumbnail](demo/GameMenu.png)

@@ -82,7 +82,7 @@ impl ArmorInventory {
         }
 
         table_from_csv(vec![
-            "Armor,Owned,Equipped,Defense,Durability,Purchase,Sell".to_string(),
+            "Armor,Owned,Equipped,Defense,Durability".to_string(),
             entry(&self.leather),
             entry(&self.bronze),
             entry(&self.iron),

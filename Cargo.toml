@@ -1,6 +1,6 @@
 [package]
 name = "albion_terminal_rpg"
-version = "1.3.0"
+version = "1.3.1"
 edition = "2021"
 description = "Text-based terminal RPG."
 readme = "./README.md"
@@ -10,8 +10,8 @@ license = "BSD-3-Clause"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [[bin]]
-name="albionrpg"
-path="./src/main.rs"
+name = "albionrpg"
+path = "./src/main.rs"
 
 [dependencies]
 dialoguer = { version = "0.11.0", features = ["completion"] }
