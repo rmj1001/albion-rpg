@@ -1,12 +1,11 @@
 pub mod encoding {
     use crate::data::player::Player;
     use crate::{DataError, ProfileError};
-    use serde_yaml as encoder;
-    use serde_yaml::Error as SerdeError;
+    use toml as encoder;
 
     /// Convert TOML to player data
     pub fn decode(data: String) -> Result<Player, ProfileError> {
-        let user_result: Result<Player, SerdeError> = encoder::from_str(&data);
+        let user_result = encoder::from_str(&data);
 
         match user_result {
             Ok(profile) => Ok(profile),
