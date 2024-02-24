@@ -28,8 +28,12 @@ pub mod handler {
 
     use crate::ProfileError;
 
+    pub fn folder_name() -> &'static str {
+        "albion_term_rpg"
+    }
+
     pub fn extension() -> &'static str {
-        ".albion"
+        "albion"
     }
 
     /// Generates the profile directory path for multiple platforms
@@ -38,20 +42,21 @@ pub mod handler {
 
         match os {
             "linux" | "freebsd" | "dragonfly" | "netbsd" | "openbsd" => {
-                Path::new(&format!("/home/{}/.anglandia/profiles", whoami::username()))
+                Path::new(&format!("/home/{}/{}/profiles", whoami::username(), folder_name()))
                     .to_str()
                     .expect("Path could not be converted to string")
                     .to_string()
             }
 
-            "macos" => Path::new(&format!("/Users/{}/.anglandia/profiles", whoami::username()))
+            "macos" => Path::new(&format!("/Users/{}/{}/profiles", whoami::username(), folder_name()))
                 .to_str()
                 .expect("Path could not be converted to string")
                 .to_string(),
 
             "windows" => Path::new(&format!(
-                r"C:\Users\{}\Documents\anglandia\profiles",
-                whoami::username()
+                r"C:\Users\{}\Documents\{}\profiles",
+                whoami::username(),
+                folder_name()
             ))
             .to_str()
             .expect("Path could not be converted to string")
@@ -63,7 +68,7 @@ pub mod handler {
 
     /// Generates the full path string for profiles depending on platform.
     pub fn generate_profile_path(username: &str) -> String {
-        let string: String = format!("{}/{}{}", profile_directory(), username, extension());
+        let string: String = format!("{}/{}.{}", profile_directory(), username, extension());
         Path::new(&string)
             .to_str()
             .expect("Path could not be converted to string")
@@ -108,11 +113,11 @@ pub mod handler {
         let directory = profile_directory();
 
         if let Err(message) = fs::create_dir_all(directory) {
-            panic!("Could not write to disk: {}", message);
+            panic!("Could create directory on disk for player save data:\n{}", message);
         };
 
-        if let Err(message) = fs::write(file_path, data) {
-            panic!("Could not write to disk: {}", message);
+        if let Err(message) = fs::write(&file_path, data) {
+            panic!("Could not write to '{}':\n{}", file_path, message);
         }
     }
 
@@ -127,7 +132,7 @@ pub mod handler {
     /// Delete a file or panic
     pub fn delete_file(file_path: String) {
         if let Err(error) = fs::remove_file(file_path) {
-            panic!("Could not delete profile file: {}", error)
+            panic!("Could not delete profile file:\n{}", error)
         }
     }
 }
