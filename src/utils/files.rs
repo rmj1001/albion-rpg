@@ -98,7 +98,7 @@ pub mod handler {
                         .to_str()
                         .unwrap_or("")
                         .to_string()
-                        .replace(extension(), "")
+                        .replace(&format!(".{}", extension()), "")
                 })
                 .collect(),
             Err(error) => panic!("Could not read the directory: {}", error),
