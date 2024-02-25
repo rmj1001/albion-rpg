@@ -2,6 +2,18 @@
 
 A text-based RPG for the Terminal, written in Rust.
 
+## Instructions
+
+```sh
+# Install
+cargo install --locked albion_terminal_rpg
+```
+
+```sh
+# Run
+albionrpg
+```
+
 ## 🕹️ Features
 
 1. ⚔️ Elegant Combat System
