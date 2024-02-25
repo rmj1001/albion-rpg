@@ -1,26 +1,38 @@
-# Albion Terminal RPG
+# ⚔️ Albion 🖥️ Terminal 🖥️ RPG ⚔️
 
 A text-based RPG for the Terminal, written in Rust.
 
-Update: All features have been implemented! The experience may be a little rough around the edges though,
-but we will be working on the papercuts over time. Have fun playing the game!
+## 🕹️ Features
 
-## Features
+1. ⚔️ Elegant Combat System
+    - 🗺️ Random Encounters ("Wander the Realm")
+    - 💀 Endgame 50-battle Gauntlet ("The Stronghold")
+    - 💊 Potions & Food for healing
+2. 📈 Rich Economy
+    - 🛍️ Elaborate Shops
+        - ⚔️ Weapons
+        - 🪖 Armor
+        - 🐟 Mundane Items
+    - 💰 Guilds for Income (Memberships Required)
+        - 🐟 Fishing
+        - 🍝 Cooking
+        - 🪵 Woodcutting
+        - ⛏️ Mining
+        - 🔨 Smithing
+        - 🚓 Thieving
+3. ✅ XP & Achievements System
+    - 💀 Monsters Killed
+    - 💰 Earned 1,000,000 Gold
+    - 💯 Level 100 (Player Total)
+    - ⚔️ Stronghold Defeated
+    - 💻 Hacked the Game
 
-1. Rich economy system
-   1. Guilds (Fishing, Cooking, Woodcutting, Mining, Smithing, Thieving)
-   2. Trading post for mundane items
-   3. Shops for weapons and armor
-2. Level-based modes of combat
-   1. Random encounters (Wander the Realm) with XP-based enemies
-   2. End-game dungeon (the Stronghold) with rich rewards for completion
-3. Achievements system
+## 🖥️ Supported Platforms
 
-## Supported Platforms
-
-- MacOS
-- Linux
-- Windows
+- 🍎 MacOS
+- 🪟 Windows
+- 🐧 Linux
+- 😈 BSD
 
 ## Demos
 
