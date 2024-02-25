@@ -2,19 +2,10 @@
 pub fn deter_unsupported_os() {
     let os = std::env::consts::OS;
 
-    match os {
-        "solaris" => {
-            panic!("This program does not support Solaris.");
-        }
-        "ios" => {
-            panic!("This program does not support iOS.");
-        }
-        "android" => {
-            panic!("This program does not support Android.");
-        }
-        // "windows" => {
-        //     panic!("This program does not support Windows.");
-        // }
-        _ => {}
+    let supported_operating_systems: Vec<&str> =
+        vec!["linux", "macos", "freebsd", "dragonfly", "netbsd", "openbsd", "windows"];
+
+    if !supported_operating_systems.contains(&os) {
+        panic!("This program does not support {}.", os);
     }
 }
