@@ -177,6 +177,7 @@ impl Equipment {
             &player.armor.leather.name[..],
             &player.armor.bronze.name[..],
             &player.armor.iron.name[..],
+            &player.armor.steel.name[..],
             &player.armor.dragonhide.name[..],
             &player.armor.mystic.name[..],
         ];
@@ -187,8 +188,9 @@ impl Equipment {
             0 => Some(&mut player.armor.leather),
             1 => Some(&mut player.armor.bronze),
             2 => Some(&mut player.armor.iron),
-            3 => Some(&mut player.armor.dragonhide),
-            4 => Some(&mut player.armor.mystic),
+            3 => Some(&mut player.armor.steel),
+            4 => Some(&mut player.armor.dragonhide),
+            5 => Some(&mut player.armor.mystic),
             _ => None,
         };
 
@@ -215,7 +217,9 @@ impl Equipment {
             println!("You do not have armor equipped.");
             press_enter_to_continue();
             return;
-        } else if player.equipment.armor.is_none() {
+        }
+
+        if player.equipment.armor.is_none() {
             return;
         }
 
@@ -243,6 +247,7 @@ impl Equipment {
             armor.leather.name => armor.leather = equipped,
             armor.bronze.name => armor.bronze = equipped,
             armor.iron.name => armor.iron = equipped,
+            armor.steel.name => armor.steel = equipped,
             armor.dragonhide.name => armor.dragonhide = equipped,
             armor.mystic.name => armor.mystic = equipped,
         };
