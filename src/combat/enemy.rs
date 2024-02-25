@@ -227,19 +227,19 @@ pub fn generate_rewards(player_level: usize) -> Vec<Rewards> {
     let mut rewards: Vec<Rewards> = vec![Rewards::Potions(random_num(1, 3)), Rewards::Bones(random_num(1, 3))];
 
     if player_level > 10 {
-        rewards.push(Rewards::MagicScrolls(random_num(0, 3)));
+        rewards.push(Rewards::MagicScrolls(random_num(1, 3)));
     }
 
     if player_level > 25 {
-        rewards.push(Rewards::DragonHides(random_num(0, 3)));
+        rewards.push(Rewards::DragonHides(random_num(1, 3)));
     }
 
     if player_level > 50 {
-        rewards.push(Rewards::Rubies(random_num(0, 3)));
+        rewards.push(Rewards::Rubies(random_num(1, 3)));
     }
 
     if player_level > 100 {
-        rewards.push(Rewards::RunicTablets(random_num(0, 3)));
+        rewards.push(Rewards::RunicTablets(random_num(1, 3)));
     }
 
     rewards
