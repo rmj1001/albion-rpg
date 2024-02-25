@@ -120,6 +120,10 @@ pub fn purchase(player: &mut Player, flag: Membership, use_wallet: bool) -> crat
     let shop: BTreeMap<Membership, Item> = shop_list();
     let item: &Item = shop.get(&flag).expect("Item not found in hashmap.");
 
+    if check_membership(player, flag) {
+        return Err(MiscError::Custom("You are already a guild member.").boxed());
+    }
+
     if use_wallet {
         let gold: usize = player.bank.wallet;
         let wallet: &mut usize = &mut player.bank.wallet;
@@ -132,10 +136,6 @@ pub fn purchase(player: &mut Player, flag: Membership, use_wallet: bool) -> crat
         *wallet -= price;
     }
 
-    if check_membership(player, flag) {
-        return Err(MiscError::Custom("You are already a guild member.").boxed());
-    }
-
     toggle_membership(player, flag);
 
     Ok(())
@@ -145,15 +145,15 @@ pub fn sell(player: &mut Player, flag: Membership, use_wallet: bool) -> crate::R
     let shop: BTreeMap<Membership, Item> = shop_list();
     let shop_item: &Item = shop.get(&flag).expect("Item not found in hashmap.");
 
+    if !check_membership(player, flag) {
+        return Err(MiscError::Custom("You not a member of this guild.").boxed());
+    }
+
     if use_wallet {
         let wallet: &mut usize = &mut player.bank.wallet;
         let price: usize = shop_item.price / 2;
 
         *wallet += price;
-    }
-
-    if !check_membership(player, flag) {
-        return Err(MiscError::Custom("You not a member of this guild.").boxed());
     }
 
     toggle_membership(player, flag);

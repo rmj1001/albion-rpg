@@ -1,6 +1,6 @@
 [package]
 name = "albion_terminal_rpg"
-version = "1.4.1"
+version = "1.4.2"
 edition = "2021"
 description = "Text-based terminal RPG."
 readme = "./README.md"
