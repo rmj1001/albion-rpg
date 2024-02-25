@@ -27,6 +27,10 @@ pub fn battle_inventory(player: &mut Player) {
 pub fn healing_inventory(player: &mut Player) {
     page_header("Healing Inventory", HeaderSubtext::Keyboard);
 
+    println!("Potions: {}", player.items.potions);
+    println!("Food: {}", player.items.food);
+    println!();
+
     let choice: usize = select_from_str_array(&["1. Use Potion", "2. Eat Food", "NAV: Go Back"], None);
 
     match choice {
