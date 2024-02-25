@@ -230,7 +230,29 @@ pub fn victory(battle: &mut BattleSettings) {
     println!("Items Looted:");
 
     for reward in &rewards {
-        println!("- {:?}", reward)
+        let name: &str = match reward {
+            Rewards::Bones(_) => "Bone",
+            Rewards::DragonHides(_) => "Dragon Hide",
+            Rewards::MagicScrolls(_) => "Magic Scroll",
+            Rewards::Potions(_) => "Potion",
+            Rewards::Rubies(_) => "Ruby",
+            Rewards::RunicTablets(_) => "Runic Tablet",
+            Rewards::Invalid => panic!("Invalid reward generated"),
+        };
+
+        let quantity: &usize = match reward {
+            Rewards::Bones(n) => n,
+            Rewards::DragonHides(n) => n,
+            Rewards::MagicScrolls(n) => n,
+            Rewards::Potions(n) => n,
+            Rewards::Rubies(n) => n,
+            Rewards::RunicTablets(n) => n,
+            Rewards::Invalid => panic!("Invalid reward generated"),
+        };
+
+        let reward_string = format!("- {}x {}", quantity, name);
+
+        println!("{}", reward_string);
     }
 
     add_rewards_to_user(battle.player, rewards);
