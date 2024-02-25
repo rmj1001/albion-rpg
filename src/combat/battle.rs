@@ -287,10 +287,10 @@ pub fn victory(battle: &mut BattleSettings) {
 pub fn defeat(battle: &mut BattleSettings) {
     page_header(format!("{} - Defeat", battle.header), HeaderSubtext::None);
 
-    println!("You have been defeated in battle.");
+    println!("You have been defeated in battle.\n");
     sleep(battle.pause_seconds);
 
-    println!("You have been rushed to the local physician.");
+    println!("You have been rushed to the local physician.\n");
     sleep(battle.pause_seconds);
 
     if battle.player.settings.hardmode {
@@ -301,7 +301,7 @@ pub fn defeat(battle: &mut BattleSettings) {
 }
 
 pub fn revived(battle: &mut BattleSettings) {
-    println!("You were successfully revived with 100 hp.");
+    println!("You were successfully revived with 100 hp.\n");
     battle.player.health.reset();
 
     battle.player.save();
@@ -315,7 +315,7 @@ pub fn hardmode(battle: &mut BattleSettings) {
     match user_survives {
         0 => {
             println!(
-                "The {} stole all your gold and inventory, and you lost all your progress.",
+                "The {} stole all your gold and inventory, and you lost all your progress.\n",
                 battle.enemy.kind
             );
             battle.player.die();
@@ -324,7 +324,7 @@ pub fn hardmode(battle: &mut BattleSettings) {
             revived(battle);
         }
         1 => {
-            println!("You didn't survive. This profile will be deleted.");
+            println!("You didn't survive. This profile will be deleted.\n");
             press_enter_to_continue();
 
             battle.player.delete();
