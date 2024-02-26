@@ -1,11 +1,10 @@
 use crate::{
     data::player::Player,
     utils::{
-        error::CustomError,
         files,
         input::{confirm, select_from_str_array, select_from_vector},
         messages::*,
-        tui::{self, page_header, press_enter_to_continue, HeaderSubtext},
+        tui::{self, page_header, HeaderSubtext},
     },
 };
 
@@ -99,33 +98,7 @@ fn view_user(player: &mut Player) {
 
             match profile_result {
                 Ok(profile) => {
-                    let pretty_string_result = crate::utils::files::encoding::encode(player);
-                    let mut pretty_string: String = String::new();
-
-                    match pretty_string_result {
-                        Ok(data) => pretty_string = data,
-                        Err(message) => message.failure(),
-                    }
-
-                    let paginated_file = pretty_string.split("\n\n");
-                    let mut page_number: usize = 1;
-                    let total_pages = paginated_file.clone().count();
-
-                    for page in paginated_file {
-                        page_header(
-                            format!(
-                                "Player Profile - {} - Page {}/{}",
-                                profile.settings.username, page_number, total_pages
-                            ),
-                            HeaderSubtext::None,
-                        );
-
-                        println!("{}\n", page);
-                        press_enter_to_continue();
-
-                        page_number += 1;
-                    }
-
+                    Player::viewer(&profile);
                     main(player);
                 }
                 Err(message) => {

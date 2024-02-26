@@ -1,27 +1,3 @@
-pub mod encoding {
-    use crate::data::player::Player;
-    use crate::{DataError, ProfileError};
-    use toml as encoder;
-
-    /// Convert TOML to player data
-    pub fn decode(data: String) -> Result<Player, ProfileError> {
-        let user_result = encoder::from_str(&data);
-
-        match user_result {
-            Ok(profile) => Ok(profile),
-            Err(_) => Err(crate::ProfileError::Corrupted),
-        }
-    }
-
-    /// Convert player data to TOML
-    pub fn encode(player: &Player) -> Result<String, DataError> {
-        match encoder::to_string(&player) {
-            Ok(string) => Ok(string),
-            Err(_) => Err(DataError::Encode),
-        }
-    }
-}
-
 pub mod handler {
     use std::{fs, path::Path};
 

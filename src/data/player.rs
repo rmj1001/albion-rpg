@@ -9,6 +9,7 @@ use crate::data::inventory::{armor::*, bank::*, equipment::Equipment, items::*, 
 use crate::utils::files;
 use crate::{DataError, ProfileError};
 use serde::{Deserialize, Serialize};
+use toml as encoder;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Player {
@@ -74,8 +75,9 @@ impl Player {
 
     /// Save player data to disk.
     pub fn save(&self) {
-        let serialize_result =
-            crate::utils::files::encoding::encode(self).expect("Could not convert Player to config file format.");
+        let serialize_result = self
+            .to_string()
+            .expect("Could not convert Player to config file format.");
 
         let path = files::handler::generate_profile_path(&self.settings.username);
         files::handler::write_file(path, serialize_result)
@@ -106,12 +108,62 @@ impl Player {
             Err(_) => return Err(ProfileError::DoesNotExist.boxed()),
         }
 
-        match crate::utils::files::encoding::decode(contents) {
+        match Self::from_string(contents) {
             Ok(player) => Ok(player),
             Err(_) => {
                 Player::delete_from_username(username);
                 Err(DataError::Decode.boxed())
             }
         }
+    }
+}
+
+/// Serialization/Deserialization/Viewing
+impl Player {
+    /// Convert TOML to player data
+    pub fn from_string(data: String) -> Result<Player, ProfileError> {
+        let user_result = encoder::from_str(&data);
+
+        match user_result {
+            Ok(profile) => Ok(profile),
+            Err(_) => Err(crate::ProfileError::Corrupted),
+        }
+    }
+
+    /// Convert player data to TOML
+    pub fn to_string(&self) -> Result<String, DataError> {
+        match encoder::to_string(&self) {
+            Ok(string) => Ok(string),
+            Err(_) => Err(DataError::Encode),
+        }
+    }
+
+    pub fn viewer(player: &Player) {
+        use crate::utils::tui::{page_header, press_enter_to_continue, HeaderSubtext};
+
+        let string = player.to_string().expect("Should be able to deserialize with SERDE.");
+
+        let pages = string.split("\n\n");
+        let mut page_number: usize = 1;
+        let total_pages = pages.clone().count();
+
+        for page in pages {
+            page_header(
+                format!(
+                    "Player Profile - {} - Page {}/{}",
+                    player.settings.username, page_number, total_pages
+                ),
+                HeaderSubtext::None,
+            );
+
+            println!("{}\n", page);
+            press_enter_to_continue();
+
+            page_number += 1;
+        }
+    }
+
+    pub fn view(&self) {
+        Self::viewer(self);
     }
 }

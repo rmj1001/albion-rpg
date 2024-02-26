@@ -20,6 +20,7 @@ pub fn main(player: &mut Player) {
             "3. Lock Profile",
             "4. Delete Profile",
             "5. Toggle Hard Mode",
+            "6. View Player Data",
             "NAV: Go Back",
         ],
         None,
@@ -31,7 +32,11 @@ pub fn main(player: &mut Player) {
         2 => lock_profile(player),
         3 => delete_profile(player),
         4 => hardmode(player),
-        5 => crate::menus::game_menu::main(player),
+        5 => {
+            player.view();
+            main(player)
+        }
+        6 => crate::menus::game_menu::main(player),
         _ => out_of_bounds(),
     }
 }
