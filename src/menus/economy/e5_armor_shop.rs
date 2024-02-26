@@ -23,8 +23,8 @@ pub fn main(player: &mut Player) {
 }
 
 pub fn purchase(player: &mut Player) {
-    let flag = shop::build_transaction();
-    let result = shop::purchase(player, flag, true);
+    let flag = shop::picker();
+    let result = shop::buy(player, &flag, true);
 
     match result {
         Ok(_) => {
@@ -39,8 +39,8 @@ pub fn purchase(player: &mut Player) {
 }
 
 pub fn sell(player: &mut Player) {
-    let flag = shop::build_transaction();
-    let result = shop::sell(player, flag, true);
+    let flag = shop::picker();
+    let result = shop::sell(player, &flag, true);
 
     match result {
         Ok(_) => {

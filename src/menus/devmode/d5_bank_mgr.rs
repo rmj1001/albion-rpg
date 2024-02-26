@@ -1,67 +1,7 @@
-use crate::data::inventory::bank::BankAccount;
+use crate::data::inventory::bank::Bank;
 use crate::data::player::Player;
-use crate::utils::{
-    input::select_from_str_array,
-    math::{generic_calculator, Operation},
-    messages::*,
-    tui::{page_header, press_enter_to_continue, HeaderSubtext},
-};
-use crate::MiscError;
 
 pub fn main(player: &mut Player) {
-    let mut account: BankAccount = BankAccount::Account1;
-
-    page_header("Developer Mode - Bank Managert", HeaderSubtext::Keyboard);
-
-    player.bank.table();
-
-    let account_choice = select_from_str_array(
-        &[
-            "1. Wallet",
-            "2. Account 1",
-            "3. Account 2",
-            "4. Account 3",
-            "5. Account 4",
-            "NAV: Go Back",
-        ],
-        None,
-    );
-
-    match account_choice {
-        0 => account = BankAccount::Wallet,
-        1 => account = BankAccount::Account1,
-        2 => account = BankAccount::Account2,
-        3 => account = BankAccount::Account3,
-        4 => account = BankAccount::Account4,
-        5 => super::d1_developer_menu::main(player),
-        _ => out_of_bounds(),
-    }
-
-    let calculation = generic_calculator::<usize>();
-
-    // Return early if the operation was cancelled.
-    if let Operation::Cancel = calculation {
-        cancelling();
-        press_enter_to_continue();
-        main(player);
-    }
-
-    let result: crate::Result<()> = match calculation {
-        Operation::Add(_) => player.bank.arithmetic(&account, calculation),
-        Operation::Subtract(_) => player.bank.arithmetic(&account, calculation),
-        Operation::Multiply(_) => player.bank.arithmetic(&account, calculation),
-        Operation::Divide(_) => player.bank.arithmetic(&account, calculation),
-        Operation::Cancel => Ok(()),
-        Operation::Invalid => Err(MiscError::InvalidOperator.boxed()),
-    };
-
-    match result {
-        Ok(_) => {
-            success();
-            main(player);
-        }
-        Err(_) => {
-            main(player);
-        }
-    }
+    Bank::menu(player, true);
+    crate::menus::game_menu::main(player);
 }

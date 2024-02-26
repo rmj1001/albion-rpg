@@ -12,7 +12,7 @@ use std::collections::BTreeMap;
 use super::items::Items;
 
 #[derive(Clone, Copy, Debug)]
-pub enum GuildItems {
+pub enum GuildItem {
     Bait,
     Fish,
     CookedFish,
@@ -20,6 +20,20 @@ pub enum GuildItems {
     Ore,
     Ingots,
     Gold,
+}
+
+impl GuildItem {
+    pub fn to_mundane_item(&self) -> Option<Items> {
+        match self {
+            GuildItem::Ore => Some(Items::Ore),
+            GuildItem::Bait => Some(Items::Bait),
+            GuildItem::Fish => Some(Items::Fish),
+            GuildItem::CookedFish => Some(Items::Food),
+            GuildItem::Ingots => Some(Items::Ingots),
+            GuildItem::Wood => Some(Items::Wood),
+            GuildItem::Gold => None,
+        }
+    }
 }
 
 #[derive(PartialEq, PartialOrd, Eq, Ord, Clone, Copy, Debug)]
@@ -32,7 +46,7 @@ pub enum Membership {
     Thieving,
 }
 
-pub fn shop_list() -> BTreeMap<Membership, Item> {
+pub fn list() -> BTreeMap<Membership, Item> {
     BTreeMap::from([
         (Membership::Thieving, Item::new("Thieving", 10)),
         (Membership::Fishing, Item::new("Fishing", 100)),
@@ -46,13 +60,8 @@ pub fn shop_list() -> BTreeMap<Membership, Item> {
 pub fn table(player: &mut Player) {
     let mut strings: Vec<String> = vec!["Guild,Price,Member".to_string()];
 
-    for (flag, item) in shop_list().iter() {
-        let string = format!(
-            "{},{},{}",
-            item.name,
-            item.price,
-            checkmark(check_membership(player, *flag))
-        );
+    for (flag, item) in list().iter() {
+        let string = format!("{},{},{}", item.name, item.price, checkmark(is_member(player, *flag)));
         strings.push(string)
     }
 
@@ -71,7 +80,7 @@ pub fn get_membership(player: &mut Player, guild: Membership) -> &mut bool {
     }
 }
 
-pub fn check_membership(player: &mut Player, guild: Membership) -> bool {
+pub fn is_member(player: &mut Player, guild: Membership) -> bool {
     match guild {
         Membership::Thieving => player.guilds.thieving,
         Membership::Cooking => player.guilds.cooking,
@@ -95,8 +104,8 @@ pub fn toggle_membership(player: &mut Player, guild: Membership) {
     }
 }
 
-pub fn build_transaction() -> Membership {
-    let shop: BTreeMap<Membership, Item> = shop_list();
+pub fn picker() -> Membership {
+    let shop: BTreeMap<Membership, Item> = list();
     let guilds = shop.values();
     let guild_names: Vec<String> = guilds.map(|guild| guild.name.to_string()).collect();
 
@@ -106,7 +115,7 @@ pub fn build_transaction() -> Membership {
         .expect("This shouldn't select a vector item out of bounds.")
         .to_string();
 
-    let item: Membership = *shop_list()
+    let item: Membership = *list()
         .iter()
         .find(|guild| guild.1.name == selected_guild)
         .map(|guild| guild.0)
@@ -115,16 +124,15 @@ pub fn build_transaction() -> Membership {
     item
 }
 
-// Bug: Broken?
-pub fn purchase(player: &mut Player, flag: Membership, use_wallet: bool) -> crate::Result<()> {
-    let shop: BTreeMap<Membership, Item> = shop_list();
-    let item: &Item = shop.get(&flag).expect("Item not found in hashmap.");
+pub fn buy(player: &mut Player, guild: Membership, payment: bool) -> crate::Result<()> {
+    let shop: BTreeMap<Membership, Item> = list();
+    let item: &Item = shop.get(&guild).expect("Item not found in hashmap.");
 
-    if check_membership(player, flag) {
+    if is_member(player, guild) {
         return Err(MiscError::Custom("You are already a guild member.").boxed());
     }
 
-    if use_wallet {
+    if payment {
         let gold: usize = player.bank.wallet;
         let wallet: &mut usize = &mut player.bank.wallet;
         let price = item.price;
@@ -136,39 +144,27 @@ pub fn purchase(player: &mut Player, flag: Membership, use_wallet: bool) -> crat
         *wallet -= price;
     }
 
-    toggle_membership(player, flag);
+    toggle_membership(player, guild);
 
     Ok(())
 }
 
-pub fn sell(player: &mut Player, flag: Membership, use_wallet: bool) -> crate::Result<()> {
-    let shop: BTreeMap<Membership, Item> = shop_list();
-    let shop_item: &Item = shop.get(&flag).expect("Item not found in hashmap.");
+pub fn sell(player: &mut Player, guild: Membership, payment: bool) -> crate::Result<()> {
+    let shop: BTreeMap<Membership, Item> = list();
+    let shop_item: &Item = shop.get(&guild).expect("Item not found in hashmap.");
 
-    if !check_membership(player, flag) {
+    if !is_member(player, guild) {
         return Err(MiscError::Custom("You not a member of this guild.").boxed());
     }
 
-    if use_wallet {
+    if payment {
         let wallet: &mut usize = &mut player.bank.wallet;
         let price: usize = shop_item.price / 2;
 
         *wallet += price;
     }
 
-    toggle_membership(player, flag);
+    toggle_membership(player, guild);
 
     Ok(())
-}
-
-pub fn guild_item_to_item(flag: GuildItems) -> Option<Items> {
-    match flag {
-        GuildItems::Ore => Some(Items::Ore),
-        GuildItems::Bait => Some(Items::Bait),
-        GuildItems::Fish => Some(Items::Fish),
-        GuildItems::CookedFish => Some(Items::Food),
-        GuildItems::Ingots => Some(Items::Ingots),
-        GuildItems::Wood => Some(Items::Wood),
-        GuildItems::Gold => None,
-    }
 }

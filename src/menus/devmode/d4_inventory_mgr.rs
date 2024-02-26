@@ -1,7 +1,7 @@
 use crate::{
     data::player::Player,
     economy::{
-        armor::{self, shop::build_transaction},
+        armor::{self},
         items, weapons,
     },
     utils::{
@@ -88,8 +88,8 @@ fn weapons_manager(player: &mut Player) {
     }
 
     pub fn own_weapon(player: &mut Player) {
-        let flag = weapons::shop::build_transaction();
-        let result = weapons::shop::purchase(player, flag, false);
+        let flag = weapons::shop::picker();
+        let result = weapons::shop::buy(player, flag, false);
 
         match result {
             Ok(_) => {
@@ -104,7 +104,7 @@ fn weapons_manager(player: &mut Player) {
     }
 
     pub fn disown_weapon(player: &mut Player) {
-        let flag = weapons::shop::build_transaction();
+        let flag = weapons::shop::picker();
         let result = weapons::shop::sell(player, flag, false);
 
         match result {
@@ -135,8 +135,8 @@ fn armor_manager(player: &mut Player) {
     }
 
     pub fn own_armor(player: &mut Player) {
-        let item = build_transaction();
-        let result = armor::shop::purchase(player, item, false);
+        let item = armor::shop::picker();
+        let result = armor::shop::buy(player, &item, false);
 
         match result {
             Ok(_) => {
@@ -151,8 +151,8 @@ fn armor_manager(player: &mut Player) {
     }
 
     pub fn disown_armor(player: &mut Player) {
-        let item = build_transaction();
-        let result = armor::shop::purchase(player, item, false);
+        let item = armor::shop::picker();
+        let result = armor::shop::buy(player, &item, false);
 
         match result {
             Ok(_) => {

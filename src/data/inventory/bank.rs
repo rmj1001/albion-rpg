@@ -1,4 +1,4 @@
-use crate::utils::{math::Operation, messages::*, tui::table_from_csv};
+use crate::utils::{messages::*, tui::table_from_csv};
 
 use crate::data::player::*;
 use crate::{InventoryError, MiscError};
@@ -58,78 +58,160 @@ impl Bank {
         }
     }
 
-    pub fn arithmetic(&mut self, account_flag: &BankAccount, operation: Operation<usize>) -> crate::Result<()> {
-        let account = match account_flag {
-            BankAccount::Account1 => &mut self.account1,
-            BankAccount::Account2 => &mut self.account2,
-            BankAccount::Account3 => &mut self.account3,
-            BankAccount::Account4 => &mut self.account4,
-            BankAccount::Wallet => &mut self.wallet,
-        };
-
-        match operation {
-            Operation::Add(amount) => {
-                *account += amount;
-                Ok(())
-            }
-
-            Operation::Subtract(amount) => {
-                if amount > *account {
-                    Err(InventoryError::NotEnoughGold.boxed())
-                } else {
-                    *account -= amount;
-                    Ok(())
-                }
-            }
-
-            Operation::Multiply(amount) => {
-                *account *= amount;
-                Ok(())
-            }
-
-            Operation::Divide(amount) => {
-                *account /= amount;
-                Ok(())
-            }
-            Operation::Cancel => {
-                cancelling();
-                Ok(())
-            }
-            Operation::Invalid => {
-                failure("Invalid Operator.");
-                Err(MiscError::InvalidOperator.boxed())
-            }
+    pub fn account<'a>(player: &'a mut Player, account: &BankAccount) -> &'a mut usize {
+        match account {
+            BankAccount::Account1 => &mut player.bank.account1,
+            BankAccount::Account2 => &mut player.bank.account2,
+            BankAccount::Account3 => &mut player.bank.account3,
+            BankAccount::Account4 => &mut player.bank.account4,
+            BankAccount::Wallet => &mut player.bank.wallet,
         }
     }
 
-    pub fn deposit(player: &mut Player, account_flag: BankAccount, amount: usize, add_only: bool) -> crate::Result<()> {
-        if !add_only && player.bank.wallet < amount {
+    pub fn deposit(
+        player: &mut Player,
+        account_flag: BankAccount,
+        amount: usize,
+        use_wallet: bool,
+    ) -> crate::Result<()> {
+        let wallet_balance: usize = Self::balance(player, &BankAccount::Wallet);
+
+        if use_wallet && wallet_balance < amount {
             return Err(InventoryError::NotEnoughGold.boxed());
         }
 
-        if !add_only {
+        if use_wallet {
             player.bank.wallet -= amount;
         }
 
-        player.bank.arithmetic(&account_flag, Operation::Add(amount))
+        *Self::account(player, &account_flag) += amount;
+        Ok(())
     }
 
     pub fn withdraw(
         player: &mut Player,
         account_flag: BankAccount,
         amount: usize,
-        subtract_only: bool,
+        use_wallet: bool,
     ) -> crate::Result<()> {
-        let account_balance: usize = Bank::balance(player, &account_flag);
+        let account_balance: usize = Self::balance(player, &account_flag);
 
-        if account_balance >= amount && !subtract_only {
+        if account_balance < amount {
+            return Err(InventoryError::NotEnoughGold.boxed());
+        }
+
+        if use_wallet {
             player.bank.wallet += amount;
         }
 
-        player.bank.arithmetic(&account_flag, Operation::Subtract(amount))
+        *Self::account(player, &account_flag) -= amount;
+        Ok(())
     }
 
     pub fn net_worth(&self) -> usize {
         self.account1 + self.account2 + self.account3 + self.account4 + self.wallet
+    }
+
+    pub fn menu(player: &mut Player, developer_mode: bool) {
+        use crate::utils::{
+            input::{prompt_arrow, select_from_str_array},
+            tui::{page_header, HeaderSubtext},
+        };
+
+        page_header("The Bank", HeaderSubtext::Keyboard);
+
+        println!();
+        player.bank.table();
+
+        let option = select_from_str_array(&["1. Deposit", "2. Withdraw", "NAV: Go Back"], None);
+
+        // Go back to previous menu, otherwise this menu recurses.
+        if option == 2 {
+            return;
+        }
+
+        let account_choice = match developer_mode {
+            true => select_from_str_array(
+                &[
+                    "1. Account 1",
+                    "2. Account 2",
+                    "3. Account 3",
+                    "4. Account 4",
+                    "NAV: Cancel",
+                ],
+                None,
+            ),
+            false => select_from_str_array(
+                &[
+                    "1. Account 1",
+                    "2. Account 2",
+                    "3. Account 3",
+                    "4. Account 4",
+                    "NAV: Cancel",
+                ],
+                None,
+            ),
+        };
+
+        let mut account: BankAccount = BankAccount::Account1;
+
+        match developer_mode {
+            true => match account_choice {
+                0 => account = BankAccount::Wallet,
+                1 => account = BankAccount::Account1,
+                2 => account = BankAccount::Account2,
+                3 => account = BankAccount::Account3,
+                4 => account = BankAccount::Account4,
+                5 => Self::menu(player, developer_mode),
+                _ => out_of_bounds(),
+            },
+            false => match account_choice {
+                0 => account = BankAccount::Account1,
+                1 => account = BankAccount::Account2,
+                2 => account = BankAccount::Account3,
+                3 => account = BankAccount::Account4,
+                4 => Self::menu(player, developer_mode),
+                _ => out_of_bounds(),
+            },
+        }
+
+        let amount_result = prompt_arrow("Amount").parse::<usize>();
+        let mut amount: usize = 0;
+
+        match amount_result {
+            Ok(number) => amount = number,
+            Err(_) => {
+                invalid_input(None, None, true);
+                Self::menu(player, developer_mode);
+            }
+        }
+
+        let mut bank_result: crate::Result<()> = Err(MiscError::Custom("Uninitialized").boxed());
+
+        // If developer mode is on then don't use the wallet, and vice versa.
+        let use_wallet: bool = !developer_mode;
+
+        match option {
+            // Deposit
+            0 => bank_result = Self::deposit(player, account, amount, use_wallet),
+
+            // Withdrawal
+            1 => bank_result = Self::withdraw(player, account, amount, use_wallet),
+
+            // The "Go Back" option was already handled.
+            _ => out_of_bounds(),
+        }
+
+        match bank_result {
+            Ok(_) => {
+                success();
+            }
+
+            Err(message) => {
+                message.failure();
+            }
+        }
+
+        Self::menu(player, developer_mode);
     }
 }

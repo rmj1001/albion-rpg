@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::utils::tui::{checkmark, table_from_csv};
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, PartialOrd, Eq, Ord)]
 pub enum Armor {
     Leather,
     Bronze,

@@ -1,19 +1,8 @@
+use crate::data::inventory::armor::Armor;
 use crate::economy::shop::Item;
-use std::hash::Hash;
-
-#[derive(Hash, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
-pub enum ArmorFlag {
-    Leather,
-    Bronze,
-    Iron,
-    Steel,
-    DragonHide,
-    Mystic,
-    InvalidItem,
-}
 
 pub mod shop {
-    use super::{ArmorFlag, Item};
+    use super::{Armor, Item};
     use std::collections::BTreeMap;
 
     use crate::{
@@ -25,33 +14,24 @@ pub mod shop {
         InventoryError,
     };
 
-    pub fn shop_list() -> BTreeMap<ArmorFlag, Item> {
+    pub fn list() -> BTreeMap<Armor, Item> {
         BTreeMap::from([
-            (ArmorFlag::Leather, Item::new("Leather", 100)),
-            (ArmorFlag::Bronze, Item::new("Bronze", 300)),
-            (ArmorFlag::Iron, Item::new("Iron", 1_000)),
-            (ArmorFlag::Steel, Item::new("Steel", 5_000)),
-            (ArmorFlag::DragonHide, Item::new("Dragon Hide", 10_000)),
-            (ArmorFlag::Mystic, Item::new("Mystic", 20_000)),
+            (Armor::Leather, Item::new("Leather", 100)),
+            (Armor::Bronze, Item::new("Bronze", 300)),
+            (Armor::Iron, Item::new("Iron", 1_000)),
+            (Armor::Steel, Item::new("Steel", 5_000)),
+            (Armor::Dragonhide, Item::new("Dragon Hide", 10_000)),
+            (Armor::Mystic, Item::new("Mystic", 20_000)),
         ])
     }
 
     pub fn table(player: &mut Player) {
         let mut strings: Vec<String> = vec!["Item,Price,Owns".to_string()];
 
-        for (flag, item) in shop_list() {
-            let owned = owns(player, flag);
+        for (flag, item) in list() {
+            let owned = owns(player, &flag);
 
-            if owned.is_none() {
-                panic!("Don't use the InvalidItem variant in the shop hash map.");
-            }
-
-            let string = format!(
-                "{},{},{}",
-                item.name,
-                item.price,
-                checkmark(*owned.expect("Should be a mutable usize ref"))
-            );
+            let string = format!("{},{},{}", item.name, item.price, checkmark(*owned));
             strings.push(string)
         }
 
@@ -59,8 +39,8 @@ pub mod shop {
         println!("Gold: {}\n", player.bank.wallet);
     }
 
-    pub fn build_transaction() -> ArmorFlag {
-        let shop = shop_list();
+    pub fn picker<'a>() -> Armor {
+        let shop = list();
         let items = shop.values();
         let item_names: Vec<String> = items.map(|item| item.name.to_string()).collect();
 
@@ -70,52 +50,30 @@ pub mod shop {
             .expect("This shouldn't select a vector item out of bounds.")
             .to_string();
 
-        let item = *shop_list()
-            .iter()
-            .find(|item| item.1.name == selected_item)
-            .map(|item| item.0)
-            .expect("Should return an Item Flag");
-
-        item
-    }
-
-    pub fn get_item() -> ArmorFlag {
-        let shop = shop_list();
-        let items = shop.values();
-        let item_names: Vec<String> = items.map(|item| item.name.to_string()).collect();
-
-        let selector = select_from_vector(item_names.clone(), None);
-        let selected_item = item_names
-            .get(selector)
-            .expect("This shouldn't select a vector item out of bounds.")
-            .to_string();
-
-        *shop_list()
+        list()
             .iter()
             .find(|item| item.1.name == selected_item)
             .map(|item| item.0)
             .expect("Should return an Item Flag")
+            .clone()
     }
 
-    pub fn owns(player: &mut Player, flag: ArmorFlag) -> Option<&mut bool> {
-        let item: Option<&mut bool> = match flag {
-            ArmorFlag::Bronze => Some(&mut player.armor.bronze.owns),
-            ArmorFlag::DragonHide => Some(&mut player.armor.dragonhide.owns),
-            ArmorFlag::InvalidItem => None,
-            ArmorFlag::Iron => Some(&mut player.armor.iron.owns),
-            ArmorFlag::Leather => Some(&mut player.armor.leather.owns),
-            ArmorFlag::Mystic => Some(&mut player.armor.mystic.owns),
-            ArmorFlag::Steel => Some(&mut player.armor.steel.owns),
-        };
-
-        item
+    pub fn owns<'a>(player: &'a mut Player, armor: &Armor) -> &'a mut bool {
+        match armor {
+            Armor::Bronze => &mut player.armor.bronze.owns,
+            Armor::Dragonhide => &mut player.armor.dragonhide.owns,
+            Armor::Iron => &mut player.armor.iron.owns,
+            Armor::Leather => &mut player.armor.leather.owns,
+            Armor::Mystic => &mut player.armor.mystic.owns,
+            Armor::Steel => &mut player.armor.steel.owns,
+        }
     }
 
-    pub fn purchase(player: &mut Player, flag: ArmorFlag, use_wallet: bool) -> crate::Result<()> {
-        let shop = shop_list();
-        let item: &Item = shop.get(&flag).expect("Item not found in hashmap.");
+    pub fn buy(player: &mut Player, armor: &Armor, payment: bool) -> crate::Result<()> {
+        let shop = list();
+        let item: &Item = shop.get(&armor).expect("Item not found in hashmap.");
 
-        if use_wallet {
+        if payment {
             let gold: usize = player.bank.wallet;
             let wallet: &mut usize = &mut player.bank.wallet;
             let price = item.price;
@@ -127,7 +85,7 @@ pub mod shop {
             *wallet -= price;
         }
 
-        let owns_item = owns(player, flag).expect("Don't use the InvalidItem variant in the shop hash map.");
+        let owns_item = owns(player, armor);
 
         if *owns_item {
             return Err(InventoryError::ItemOwned.boxed());
@@ -137,10 +95,10 @@ pub mod shop {
         Ok(())
     }
 
-    pub fn sell(player: &mut Player, flag: ArmorFlag, use_wallet: bool) -> crate::Result<()> {
-        let shop: BTreeMap<ArmorFlag, Item> = shop_list();
-        let shop_item: &Item = shop.get(&flag).expect("Item not found in hashmap.");
-        let owns_item: &mut bool = owns(player, flag).expect("Don't use the InvalidItem variant in the shop hash map.");
+    pub fn sell(player: &mut Player, armor: &Armor, payment: bool) -> crate::Result<()> {
+        let shop: BTreeMap<Armor, Item> = list();
+        let shop_item: &Item = shop.get(&armor).expect("Item not found in hashmap.");
+        let owns_item: &mut bool = owns(player, armor);
 
         if !*owns_item {
             return Err(InventoryError::ItemNotOwned.boxed());
@@ -148,7 +106,7 @@ pub mod shop {
 
         *owns_item = false;
 
-        if use_wallet {
+        if payment {
             let wallet: &mut usize = &mut player.bank.wallet;
             let price: usize = shop_item.price / 2;
 
