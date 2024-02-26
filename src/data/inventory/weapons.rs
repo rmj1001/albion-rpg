@@ -3,8 +3,18 @@ use serde::{Deserialize, Serialize};
 
 use crate::utils::tui::{checkmark, table_from_csv};
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct Weapon {
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub enum Weapon {
+    WoodenSword,
+    BronzeSword,
+    IronSword,
+    SteelSword,
+    MysticSword,
+    WizardStaff,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct WeaponData {
     pub name: String,
     pub owns: bool,
     pub equipped: bool,
@@ -13,7 +23,7 @@ pub struct Weapon {
     pub default_durability: usize,
 }
 
-impl Weapon {
+impl WeaponData {
     pub fn new(name: &str, damage: usize, durability: usize) -> Self {
         Self {
             name: name.to_string(),
@@ -42,35 +52,25 @@ impl Weapon {
     }
 }
 
-pub enum WeaponItemFlag {
-    WoodenSword,
-    BronzeSword,
-    IronSword,
-    SteelSword,
-    MysticSword,
-    WizardStaff,
-    InvalidItem,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct WeaponsInventory {
-    pub wooden_sword: Weapon,
-    pub bronze_sword: Weapon,
-    pub iron_sword: Weapon,
-    pub steel_sword: Weapon,
-    pub mystic_sword: Weapon,
-    pub wizard_staff: Weapon,
+    pub wooden_sword: WeaponData,
+    pub bronze_sword: WeaponData,
+    pub iron_sword: WeaponData,
+    pub steel_sword: WeaponData,
+    pub mystic_sword: WeaponData,
+    pub wizard_staff: WeaponData,
 }
 
 impl WeaponsInventory {
     pub fn new() -> WeaponsInventory {
         WeaponsInventory {
-            wooden_sword: Weapon::new("Wooden Sword", 10, 100),
-            bronze_sword: Weapon::new("Bronze Sword", 20, 150),
-            iron_sword: Weapon::new("Iron Sword", 50, 200),
-            steel_sword: Weapon::new("Steel Rapier", 200, 500),
-            mystic_sword: Weapon::new("Mystic Sword", 500, 1_000),
-            wizard_staff: Weapon::new("Wizard Staff", 1_000, 2_000),
+            wooden_sword: WeaponData::new("Wooden Sword", 10, 100),
+            bronze_sword: WeaponData::new("Bronze Sword", 20, 150),
+            iron_sword: WeaponData::new("Iron Sword", 50, 200),
+            steel_sword: WeaponData::new("Steel Rapier", 200, 500),
+            mystic_sword: WeaponData::new("Mystic Sword", 500, 1_000),
+            wizard_staff: WeaponData::new("Wizard Staff", 1_000, 2_000),
         }
     }
 
@@ -79,7 +79,7 @@ impl WeaponsInventory {
     }
 
     pub fn table(&self) {
-        fn entry(weapon: &Weapon) -> String {
+        fn entry(weapon: &WeaponData) -> String {
             format!(
                 "{},{},{},{},{}",
                 weapon.name,
@@ -100,28 +100,21 @@ impl WeaponsInventory {
         ])
     }
 
-    pub fn retrieve_item(&mut self, item_flag: WeaponItemFlag) -> Option<&mut Weapon> {
+    pub fn get(&mut self, item_flag: &Weapon) -> &mut WeaponData {
         match item_flag {
-            WeaponItemFlag::BronzeSword => Some(&mut self.bronze_sword),
-            WeaponItemFlag::IronSword => Some(&mut self.iron_sword),
-            WeaponItemFlag::MysticSword => Some(&mut self.mystic_sword),
-            WeaponItemFlag::SteelSword => Some(&mut self.steel_sword),
-            WeaponItemFlag::WizardStaff => Some(&mut self.wizard_staff),
-            WeaponItemFlag::WoodenSword => Some(&mut self.wooden_sword),
-            WeaponItemFlag::InvalidItem => None,
+            Weapon::BronzeSword => &mut self.bronze_sword,
+            Weapon::IronSword => &mut self.iron_sword,
+            Weapon::MysticSword => &mut self.mystic_sword,
+            Weapon::SteelSword => &mut self.steel_sword,
+            Weapon::WizardStaff => &mut self.wizard_staff,
+            Weapon::WoodenSword => &mut self.wooden_sword,
         }
     }
 
     /// For use in developer mode only
-    pub fn toggle_own(&mut self, item_flag: WeaponItemFlag) {
-        let item_result = self.retrieve_item(item_flag);
+    pub fn toggle_own(&mut self, item_flag: &Weapon) {
+        let item = self.get(item_flag);
 
-        if item_result.is_none() {
-            return;
-        }
-
-        if let Some(item) = item_result {
-            item.owns = !item.owns;
-        }
+        item.owns = !item.owns;
     }
 }

@@ -1,6 +1,6 @@
 use crate::{
     combat::{battle::BattleSettings, enemy::Enemy},
-    data::{achievements::Achievements, settings::Settings},
+    data::{achievements::Achievements, inventory::equipment::Equipment, settings::Settings},
     utils::{
         input::{confirm, prompt_arrow},
         messages::{self, success},
@@ -14,6 +14,9 @@ use crate::data::player::Player;
 pub fn main(player: &mut Player) {
     // Check for achievements at login to keep the player file up to date
     Achievements::check(player);
+
+    // Update armor equipment status
+    Equipment::check_equipment_ownership(player);
 
     page_header(
         format!("Game Menu (Player: {})", player.settings.username),

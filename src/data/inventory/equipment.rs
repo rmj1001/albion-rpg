@@ -10,15 +10,15 @@ use crate::data::player::Player;
 
 use super::{armor::Armor, weapons::Weapon};
 
-#[derive(Deserialize, Serialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct Equipment {
     pub armor: Option<Armor>,
     pub weapon: Option<Weapon>,
 }
 
 impl Equipment {
-    pub fn new() -> Self {
-        Self {
+    pub fn new() -> Equipment {
+        Equipment {
             armor: None,
             weapon: None,
         }
@@ -90,7 +90,7 @@ impl Equipment {
     }
 
     pub fn equip_weapon(player: &mut Player) {
-        Self::unequip_weapon(player, false);
+        use Weapon as W;
 
         let choices = [
             &player.weapons.wooden_sword.name[..],
@@ -103,32 +103,32 @@ impl Equipment {
 
         let choice: usize = select_from_str_array(&choices, None);
 
-        let weapon_option: Option<&mut Weapon> = match choice {
-            0 => Some(&mut player.weapons.wooden_sword),
-            1 => Some(&mut player.weapons.bronze_sword),
-            2 => Some(&mut player.weapons.iron_sword),
-            3 => Some(&mut player.weapons.steel_sword),
-            4 => Some(&mut player.weapons.mystic_sword),
-            5 => Some(&mut player.weapons.wizard_staff),
-            _ => None,
+        let flag = match choice {
+            0 => W::WoodenSword,
+            1 => W::BronzeSword,
+            2 => W::IronSword,
+            3 => W::SteelSword,
+            4 => W::MysticSword,
+            5 => W::WizardStaff,
+            _ => panic!("Out of bounds"),
         };
 
-        if weapon_option.is_none() {
-            out_of_bounds();
-        }
-
-        let weapon = weapon_option.unwrap();
+        let weapon = player.weapons.get(&flag);
 
         if !weapon.owns {
             println!("You do not own this.");
             press_enter_to_continue();
-        } else {
-            weapon.equipped = true;
-            player.equipment.weapon = Some(weapon.clone());
-
-            println!("Equipped the {}", weapon.name);
-            press_enter_to_continue();
+            return;
         }
+
+        weapon.equipped = true;
+
+        println!("Equipped the {}", weapon.name);
+
+        Self::unequip_weapon(player, false);
+        player.equipment.weapon = Some(flag);
+
+        press_enter_to_continue();
     }
 
     pub fn unequip_weapon(player: &mut Player, menu_facing: bool) {
@@ -136,15 +136,16 @@ impl Equipment {
             println!("You do not have a weapon equipped.");
             press_enter_to_continue();
             return;
-        } else if player.equipment.weapon.is_none() {
+        }
+
+        if player.equipment.weapon.is_none() {
             return;
         }
 
-        let mut equipped_weapon = player.equipment.weapon.clone().unwrap();
+        let flag = player.equipment.weapon.as_ref().unwrap().clone();
+        let equipped_weapon = player.weapons.get(&flag);
 
         equipped_weapon.equipped = false;
-
-        Self::overwrite_inventory_weapon(equipped_weapon, player);
 
         player.equipment.weapon = None;
 
@@ -154,24 +155,8 @@ impl Equipment {
         }
     }
 
-    pub fn overwrite_inventory_weapon(equipped: Weapon, player: &mut Player) {
-        let name = equipped.name.clone();
-        let weapons = &mut player.weapons;
-
-        use easy_switch::switch;
-
-        switch! {name;
-            weapons.wooden_sword.name => weapons.wooden_sword = equipped,
-            weapons.bronze_sword.name => weapons.bronze_sword = equipped,
-            weapons.iron_sword.name => weapons.iron_sword = equipped,
-            weapons.steel_sword.name => weapons.steel_sword = equipped,
-            weapons.mystic_sword.name => weapons.mystic_sword = equipped,
-            weapons.wizard_staff.name => weapons.wizard_staff = equipped,
-        };
-    }
-
-    fn equip_armor(player: &mut Player) {
-        Self::unequip_armor(player, false);
+    pub fn equip_armor(player: &mut Player) {
+        use Armor as A;
 
         let choices = [
             &player.armor.leather.name[..],
@@ -184,35 +169,34 @@ impl Equipment {
 
         let choice: usize = select_from_str_array(&choices, None);
 
-        let option: Option<&mut Armor> = match choice {
-            0 => Some(&mut player.armor.leather),
-            1 => Some(&mut player.armor.bronze),
-            2 => Some(&mut player.armor.iron),
-            3 => Some(&mut player.armor.steel),
-            4 => Some(&mut player.armor.dragonhide),
-            5 => Some(&mut player.armor.mystic),
-            _ => None,
+        let flag = match choice {
+            0 => A::Leather,
+            1 => A::Bronze,
+            2 => A::Iron,
+            3 => A::Steel,
+            4 => A::Dragonhide,
+            5 => A::Mystic,
+            _ => panic!("Out of bounds"),
         };
 
-        if option.is_none() {
-            out_of_bounds();
-        }
-
-        let armor: &mut Armor = option.unwrap();
+        let armor = player.armor.get(&flag);
 
         if !armor.owns {
             println!("You do not own this.");
             press_enter_to_continue();
-        } else {
-            armor.equipped = true;
-            player.equipment.armor = Some(armor.clone());
-
-            println!("Equipped {}", armor.name);
-            press_enter_to_continue();
+            return;
         }
+
+        armor.equipped = true;
+
+        println!("Equipped the {}", armor.name);
+        player.equipment.armor = Some(flag);
+        Self::unequip_armor(player, false);
+
+        press_enter_to_continue();
     }
 
-    fn unequip_armor(player: &mut Player, menu_facing: bool) {
+    pub fn unequip_armor(player: &mut Player, menu_facing: bool) {
         if player.equipment.armor.is_none() && menu_facing {
             println!("You do not have armor equipped.");
             press_enter_to_continue();
@@ -223,11 +207,10 @@ impl Equipment {
             return;
         }
 
-        let mut equipped_armor = player.equipment.armor.clone().unwrap();
+        let flag = player.equipment.armor.as_ref().unwrap().clone();
+        let equipped_armor = player.armor.get(&flag);
 
         equipped_armor.equipped = false;
-
-        Self::overwrite_inventory_armor(equipped_armor, player);
 
         player.equipment.armor = None;
 
@@ -237,19 +220,21 @@ impl Equipment {
         }
     }
 
-    pub fn overwrite_inventory_armor(equipped: Armor, player: &mut Player) {
-        let name = equipped.name.clone();
-        let armor = &mut player.armor;
+    pub fn check_equipment_ownership(player: &mut Player) {
+        if let Some(weapon_flag) = player.equipment.weapon.clone() {
+            let weapon = player.weapons.get(&weapon_flag);
 
-        use easy_switch::switch;
+            if !weapon.owns {
+                Self::unequip_weapon(player, false);
+            }
+        }
 
-        switch! {name;
-            armor.leather.name => armor.leather = equipped,
-            armor.bronze.name => armor.bronze = equipped,
-            armor.iron.name => armor.iron = equipped,
-            armor.steel.name => armor.steel = equipped,
-            armor.dragonhide.name => armor.dragonhide = equipped,
-            armor.mystic.name => armor.mystic = equipped,
-        };
+        if let Some(armor_flag) = player.equipment.armor.clone() {
+            let armor = player.armor.get(&armor_flag);
+
+            if !armor.owns {
+                Self::unequip_armor(player, false);
+            }
+        }
     }
 }

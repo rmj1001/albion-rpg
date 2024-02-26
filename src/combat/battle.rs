@@ -27,6 +27,7 @@ use super::inventory::battle_inventory;
 pub fn new_battle(battle: &mut BattleSettings) {
     // Prelude
     page_header(battle.header, HeaderSubtext::None);
+    Equipment::check_equipment_ownership(battle.player);
 
     if battle.player.equipment.armor.is_none() || battle.player.equipment.weapon.is_none() {
         let confirm = input::confirm("Are you sure you want to fight without equipment? You'll die.");
@@ -137,7 +138,8 @@ fn player_attack(battle: &mut BattleSettings) {
     let hit = success_or_fail();
 
     if hit && battle.player.equipment.weapon.is_some() {
-        let mut weapon = battle.player.equipment.weapon.clone().unwrap();
+        let flag = battle.player.equipment.weapon.as_ref().unwrap().clone();
+        let weapon = battle.player.weapons.get(&flag);
         let damage = weapon.damage;
 
         println!("You hit the {} for {} damage!", enemy_type, damage);
@@ -145,12 +147,8 @@ fn player_attack(battle: &mut BattleSettings) {
         weapon.decrease_durability();
 
         if !weapon.owns {
-            battle.player.equipment.weapon = None;
-        } else {
-            battle.player.equipment.weapon = Some(weapon.clone());
+            Equipment::unequip_weapon(battle.player, false);
         }
-
-        Equipment::overwrite_inventory_weapon(weapon, battle.player);
 
         if battle.enemy.hp < damage {
             victory(battle);
@@ -169,7 +167,8 @@ fn enemy_attack(battle: &mut BattleSettings) {
     let mut damage: usize = battle.enemy.damage;
 
     if battle.player.equipment.armor.is_some() {
-        let armor = battle.player.equipment.armor.clone().unwrap();
+        let flag = battle.player.equipment.armor.as_ref().unwrap().clone();
+        let armor = battle.player.armor.get(&flag);
 
         if damage > armor.defense {
             damage -= armor.defense;
@@ -177,16 +176,11 @@ fn enemy_attack(battle: &mut BattleSettings) {
             damage = 0
         }
 
-        let mut new_armor = battle.player.equipment.armor.clone().unwrap();
-        new_armor.decrease_durability();
+        armor.decrease_durability();
 
-        if !new_armor.owns {
-            battle.player.equipment.armor = None;
-        } else {
-            battle.player.equipment.armor = Some(new_armor.clone());
+        if !armor.owns {
+            Equipment::unequip_armor(battle.player, false);
         }
-
-        Equipment::overwrite_inventory_armor(new_armor, battle.player);
     }
 
     println!("The {} attacks you...", enemy_type);

@@ -1,11 +1,20 @@
 use rand::{thread_rng, Rng};
 use serde::{Deserialize, Serialize};
 
-use crate::economy::armor::ArmorFlag;
 use crate::utils::tui::{checkmark, table_from_csv};
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct Armor {
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub enum Armor {
+    Leather,
+    Bronze,
+    Iron,
+    Steel,
+    Dragonhide,
+    Mystic,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct ArmorData {
     pub name: String,
     pub owns: bool,
     pub defense: usize,
@@ -14,7 +23,7 @@ pub struct Armor {
     pub equipped: bool,
 }
 
-impl Armor {
+impl ArmorData {
     pub fn new(name: &str, defense: usize, durability: usize) -> Self {
         Self {
             name: format!("{} Armor", name),
@@ -43,25 +52,25 @@ impl Armor {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ArmorInventory {
-    pub leather: Armor,
-    pub bronze: Armor,
-    pub iron: Armor,
-    pub steel: Armor,
-    pub dragonhide: Armor,
-    pub mystic: Armor,
+    pub leather: ArmorData,
+    pub bronze: ArmorData,
+    pub iron: ArmorData,
+    pub steel: ArmorData,
+    pub dragonhide: ArmorData,
+    pub mystic: ArmorData,
 }
 
 impl ArmorInventory {
     pub fn new() -> ArmorInventory {
         ArmorInventory {
-            leather: Armor::new("Leather", 10, 100),
-            bronze: Armor::new("Bronze", 30, 200),
-            iron: Armor::new("Iron", 50, 300),
-            steel: Armor::new("Steel", 100, 500),
-            dragonhide: Armor::new("Dragonhide", 200, 500),
-            mystic: Armor::new("Mystic", 1_000, 10_000),
+            leather: ArmorData::new("Leather", 10, 100),
+            bronze: ArmorData::new("Bronze", 30, 200),
+            iron: ArmorData::new("Iron", 50, 300),
+            steel: ArmorData::new("Steel", 100, 500),
+            dragonhide: ArmorData::new("Dragonhide", 200, 500),
+            mystic: ArmorData::new("Mystic", 1_000, 10_000),
         }
     }
 
@@ -70,7 +79,7 @@ impl ArmorInventory {
     }
 
     pub fn table(&self) {
-        fn entry(armor: &Armor) -> String {
+        fn entry(armor: &ArmorData) -> String {
             format!(
                 "{},{},{},{},{}",
                 armor.name,
@@ -92,28 +101,20 @@ impl ArmorInventory {
         ])
     }
 
-    pub fn retrieve_item(&mut self, item_flag: ArmorFlag) -> Option<&mut Armor> {
+    pub fn get(&mut self, item_flag: &Armor) -> &mut ArmorData {
         match item_flag {
-            ArmorFlag::Bronze => Some(&mut self.bronze),
-            ArmorFlag::DragonHide => Some(&mut self.dragonhide),
-            ArmorFlag::Iron => Some(&mut self.iron),
-            ArmorFlag::Leather => Some(&mut self.leather),
-            ArmorFlag::Mystic => Some(&mut self.mystic),
-            ArmorFlag::Steel => Some(&mut self.steel),
-            ArmorFlag::InvalidItem => None,
+            Armor::Bronze => &mut self.bronze,
+            Armor::Dragonhide => &mut self.dragonhide,
+            Armor::Iron => &mut self.iron,
+            Armor::Leather => &mut self.leather,
+            Armor::Mystic => &mut self.mystic,
+            Armor::Steel => &mut self.steel,
         }
     }
 
     /// For use in developer mode only
-    pub fn toggle_own(&mut self, item_flag: ArmorFlag) {
-        let item = self.retrieve_item(item_flag);
-
-        if item.is_none() {
-            return;
-        }
-
-        if let Some(item) = item {
-            item.owns = !item.owns;
-        }
+    pub fn toggle_own(&mut self, item_flag: &Armor) {
+        let item = self.get(item_flag);
+        item.owns = !item.owns;
     }
 }
