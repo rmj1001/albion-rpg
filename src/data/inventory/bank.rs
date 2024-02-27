@@ -113,10 +113,8 @@ impl Bank {
     }
 
     pub fn menu(player: &mut Player, developer_mode: bool) {
-        use crate::utils::{
-            input::{prompt_arrow, select_from_str_array},
-            tui::{page_header, HeaderSubtext},
-        };
+        use crate::utils::input::{prompt_arrow, select_from_str_array};
+        use crate::utils::tui::{page_header, HeaderSubtext};
 
         page_header("The Bank", HeaderSubtext::Keyboard);
 
@@ -125,18 +123,22 @@ impl Bank {
 
         let option = select_from_str_array(&["1. Deposit", "2. Withdraw", "NAV: Go Back"], None);
 
-        // Go back to previous menu, otherwise this menu recurses.
+        // Go to the main game menu
         if option == 2 {
-            return;
+            match developer_mode {
+                true => crate::menus::devmode::d1_developer_menu::main(player),
+                false => crate::menus::game_menu::main(player),
+            }
         }
 
         let account_choice = match developer_mode {
             true => select_from_str_array(
                 &[
-                    "1. Account 1",
-                    "2. Account 2",
-                    "3. Account 3",
-                    "4. Account 4",
+                    "1. Wallet",
+                    "2. Account 1",
+                    "3. Account 2",
+                    "4. Account 3",
+                    "5. Account 4",
                     "NAV: Cancel",
                 ],
                 None,
@@ -203,13 +205,8 @@ impl Bank {
         }
 
         match bank_result {
-            Ok(_) => {
-                success();
-            }
-
-            Err(message) => {
-                message.failure();
-            }
+            Ok(_) => success(),
+            Err(message) => message.failure(),
         }
 
         Self::menu(player, developer_mode);

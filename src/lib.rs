@@ -18,7 +18,6 @@ pub mod economy {
     pub mod armor;
     pub mod guilds;
     pub mod items;
-    pub mod shop;
     pub mod weapons;
 }
 
