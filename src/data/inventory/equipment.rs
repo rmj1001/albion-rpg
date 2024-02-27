@@ -93,12 +93,12 @@ impl Equipment {
         use Weapon as W;
 
         let choices = [
-            &player.weapons.wooden_sword.name[..],
-            &player.weapons.bronze_sword.name[..],
-            &player.weapons.iron_sword.name[..],
-            &player.weapons.steel_sword.name[..],
-            &player.weapons.mystic_sword.name[..],
-            &player.weapons.wizard_staff.name[..],
+            player.weapons.wooden_sword.flag.name(),
+            player.weapons.bronze_sword.flag.name(),
+            player.weapons.iron_sword.flag.name(),
+            player.weapons.steel_sword.flag.name(),
+            player.weapons.mystic_sword.flag.name(),
+            player.weapons.wizard_staff.flag.name(),
         ];
 
         let choice: usize = select_from_str_array(&choices, None);
@@ -123,7 +123,7 @@ impl Equipment {
 
         weapon.equipped = true;
 
-        println!("Equipped the {}", weapon.name);
+        println!("Equipped the {}", weapon.flag.name());
 
         Self::unequip_weapon(player, false);
         player.equipment.weapon = Some(flag);
@@ -159,12 +159,12 @@ impl Equipment {
         use Armor as A;
 
         let choices = [
-            &player.armor.leather.name[..],
-            &player.armor.bronze.name[..],
-            &player.armor.iron.name[..],
-            &player.armor.steel.name[..],
-            &player.armor.dragonhide.name[..],
-            &player.armor.mystic.name[..],
+            player.armor.leather.flag.name(),
+            player.armor.bronze.flag.name(),
+            player.armor.iron.flag.name(),
+            player.armor.steel.flag.name(),
+            player.armor.dragonhide.flag.name(),
+            player.armor.mystic.flag.name(),
         ];
 
         let choice: usize = select_from_str_array(&choices, None);
@@ -189,7 +189,7 @@ impl Equipment {
 
         armor.equipped = true;
 
-        println!("Equipped the {}", armor.name);
+        println!("Equipped the {}", armor.flag.name());
         player.equipment.armor = Some(flag);
         Self::unequip_armor(player, false);
 
