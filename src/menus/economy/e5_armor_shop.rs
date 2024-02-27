@@ -1,14 +1,12 @@
-use crate::{
-    economy::armor::shop,
-    utils::{input::select_from_str_array, messages::*, tui::page_header},
-};
+use crate::data::inventory::armor::ArmorInventory;
+use crate::utils::{input::select_from_str_array, messages::*, tui::page_header};
 
 use crate::data::player::Player;
 
 pub fn main(player: &mut Player) {
     page_header("Armor Shop", crate::utils::tui::HeaderSubtext::None);
 
-    shop::table(player);
+    ArmorInventory::print_shop(player);
 
     let buysell = select_from_str_array(&["1. Purchase", "2. Sell", "NAV: Go Back"], None);
 
@@ -23,8 +21,8 @@ pub fn main(player: &mut Player) {
 }
 
 pub fn purchase(player: &mut Player) {
-    let flag = shop::picker();
-    let result = shop::buy(player, &flag, true);
+    let flag = ArmorInventory::picker();
+    let result = ArmorInventory::buy(player, &flag, true);
 
     match result {
         Ok(_) => {
@@ -39,8 +37,8 @@ pub fn purchase(player: &mut Player) {
 }
 
 pub fn sell(player: &mut Player) {
-    let flag = shop::picker();
-    let result = shop::sell(player, &flag, true);
+    let flag = ArmorInventory::picker();
+    let result = ArmorInventory::sell(player, &flag, true);
 
     match result {
         Ok(_) => {

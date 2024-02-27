@@ -1,8 +1,7 @@
 use crate::{
-    data::player::Player,
-    economy::{
-        armor::{self},
-        items, weapons,
+    data::{
+        inventory::{armor::ArmorInventory, items::ItemInventory, weapons::WeaponsInventory},
+        player::Player,
     },
     utils::{
         input::select_from_str_array,
@@ -28,7 +27,7 @@ pub fn main(player: &mut Player) {
 fn items_manager(player: &mut Player) {
     page_header("Developer Mode - Inventory Manager - Items", HeaderSubtext::None);
 
-    items::shop::table(player);
+    ItemInventory::print_shop(player);
 
     let buysell = select_from_str_array(&["1. Add", "2. Subtract", "NAV: Go Back"], None);
 
@@ -40,8 +39,8 @@ fn items_manager(player: &mut Player) {
     }
 
     pub fn add_item(player: &mut Player) {
-        if let Ok((flag, quantity)) = items::shop::build_transaction() {
-            let result = items::shop::buy(player, flag, quantity, false);
+        if let Ok((flag, quantity)) = ItemInventory::build_transaction() {
+            let result = ItemInventory::buy(player, flag, quantity, false);
 
             match result {
                 Ok(_) => {
@@ -59,8 +58,8 @@ fn items_manager(player: &mut Player) {
     }
 
     pub fn subtract_item(player: &mut Player) {
-        if let Ok((flag, quantity)) = items::shop::build_transaction() {
-            let sell_result = items::shop::sell(player, flag, quantity, false);
+        if let Ok((flag, quantity)) = ItemInventory::build_transaction() {
+            let sell_result = ItemInventory::sell(player, flag, quantity, false);
 
             match sell_result {
                 Ok(_) => {
@@ -81,7 +80,7 @@ fn items_manager(player: &mut Player) {
 fn weapons_manager(player: &mut Player) {
     page_header("Developer Mode - Inventory Manager - Weapons", HeaderSubtext::None);
 
-    weapons::shop::table(player);
+    WeaponsInventory::print_shop(player);
 
     let buysell: usize = select_from_str_array(&["1. Own Weapon", "2. Disown Weapon", "NAV: Go Back"], None);
 
@@ -93,8 +92,8 @@ fn weapons_manager(player: &mut Player) {
     }
 
     pub fn own_weapon(player: &mut Player) {
-        let flag = weapons::shop::picker();
-        let result = weapons::shop::buy(player, flag, false);
+        let flag = WeaponsInventory::picker();
+        let result = WeaponsInventory::buy(player, flag, false);
 
         match result {
             Ok(_) => {
@@ -109,8 +108,8 @@ fn weapons_manager(player: &mut Player) {
     }
 
     pub fn disown_weapon(player: &mut Player) {
-        let flag = weapons::shop::picker();
-        let result = weapons::shop::sell(player, flag, false);
+        let flag = WeaponsInventory::picker();
+        let result = WeaponsInventory::sell(player, flag, false);
 
         match result {
             Ok(_) => {
@@ -128,7 +127,7 @@ fn weapons_manager(player: &mut Player) {
 fn armor_manager(player: &mut Player) {
     page_header("Developer Mode - Inventory Manager - Armor", HeaderSubtext::None);
 
-    armor::shop::table(player);
+    player.armor.table();
 
     let buysell = select_from_str_array(&["1. Own Armor", "2. Disown Armor", "NAV: Go Back"], None);
 
@@ -140,8 +139,8 @@ fn armor_manager(player: &mut Player) {
     }
 
     pub fn own_armor(player: &mut Player) {
-        let item = armor::shop::picker();
-        let result = armor::shop::buy(player, &item, false);
+        let item = ArmorInventory::picker();
+        let result = ArmorInventory::buy(player, &item, false);
 
         match result {
             Ok(_) => {
@@ -156,8 +155,8 @@ fn armor_manager(player: &mut Player) {
     }
 
     pub fn disown_armor(player: &mut Player) {
-        let item = armor::shop::picker();
-        let result = armor::shop::buy(player, &item, false);
+        let item = ArmorInventory::picker();
+        let result = ArmorInventory::buy(player, &item, false);
 
         match result {
             Ok(_) => {

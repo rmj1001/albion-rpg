@@ -1,13 +1,12 @@
 use crate::{
-    data::player::Player,
-    economy::weapons,
+    data::{inventory::weapons::WeaponsInventory, player::Player},
     utils::{input::select_from_str_array, messages::*, tui::page_header},
 };
 
 pub fn main(player: &mut Player) {
     page_header("Weapons Shop", crate::utils::tui::HeaderSubtext::None);
 
-    weapons::shop::table(player);
+    WeaponsInventory::print_shop(player);
 
     let buysell = select_from_str_array(&["1. Purchase", "2. Sell", "NAV: Go Back"], None);
 
@@ -22,8 +21,8 @@ pub fn main(player: &mut Player) {
 }
 
 pub fn purchase(player: &mut Player) {
-    let flag = weapons::shop::picker();
-    let result = weapons::shop::buy(player, flag, true);
+    let flag = WeaponsInventory::picker();
+    let result = WeaponsInventory::buy(player, flag, true);
 
     match result {
         Ok(_) => {
@@ -38,8 +37,8 @@ pub fn purchase(player: &mut Player) {
 }
 
 pub fn sell(player: &mut Player) {
-    let flag = weapons::shop::picker();
-    let result = weapons::shop::sell(player, flag, true);
+    let flag = WeaponsInventory::picker();
+    let result = WeaponsInventory::sell(player, flag, true);
 
     match result {
         Ok(_) => {

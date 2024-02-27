@@ -1,6 +1,5 @@
 use crate::{
-    data::player::Player,
-    economy::items::shop,
+    data::{inventory::items::ItemInventory, player::Player},
     utils::{
         input::select_from_str_array,
         messages::{out_of_bounds, success},
@@ -11,7 +10,7 @@ use crate::{
 pub fn main(player: &mut Player) {
     page_header("Trading Post", crate::utils::tui::HeaderSubtext::None);
 
-    shop::table(player);
+    ItemInventory::print_shop(player);
     println!("Gold: {}\n", player.bank.wallet);
 
     let buysell = select_from_str_array(&["1. Purchase", "2. Sell", "NAV: Go Back"], None);
@@ -27,9 +26,9 @@ pub fn main(player: &mut Player) {
 }
 
 pub fn purchase(player: &mut Player) {
-    match shop::build_transaction() {
+    match ItemInventory::build_transaction() {
         Ok((item_flag, quantity)) => {
-            let bought = shop::buy(player, item_flag, quantity, true);
+            let bought = ItemInventory::buy(player, item_flag, quantity, true);
 
             match bought {
                 Ok(_) => {
@@ -50,9 +49,9 @@ pub fn purchase(player: &mut Player) {
 }
 
 pub fn sell(player: &mut Player) {
-    match shop::build_transaction() {
+    match ItemInventory::build_transaction() {
         Ok((item_flag, quantity)) => {
-            let sold = shop::sell(player, item_flag, quantity, true);
+            let sold = ItemInventory::sell(player, item_flag, quantity, true);
 
             match sold {
                 Ok(_) => {

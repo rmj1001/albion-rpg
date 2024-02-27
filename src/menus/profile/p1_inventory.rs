@@ -1,6 +1,5 @@
 use crate::{
-    data::inventory::equipment::Equipment,
-    economy::items,
+    data::inventory::{equipment::Equipment, items::ItemInventory},
     utils::{
         input::select_from_str_array,
         messages::*,
@@ -30,7 +29,7 @@ pub fn main(player: &mut Player) {
 pub fn mundane_inventory(player: &mut Player) {
     page_header("Items Inventory", HeaderSubtext::None);
 
-    items::shop::table(player);
+    ItemInventory::print_shop(player);
 
     press_enter_to_continue();
     main(player);

@@ -1,11 +1,10 @@
 #![allow(unused_assignments, unused_variables, unused_mut)]
 use crate::{
     data::{
-        guilds::Membership,
+        guilds::{Guild, Guilds},
         inventory::items::GuildItem,
         xp::{XPType, XP},
     },
-    economy::guilds::{self},
     utils::{
         error::CustomError,
         input::select_from_str_array,
@@ -36,12 +35,12 @@ pub fn main(player: &mut Player) {
     );
 
     match guild_choice {
-        0 => deter_non_members(player, Membership::Fishing),
-        1 => deter_non_members(player, Membership::Cooking),
-        2 => deter_non_members(player, Membership::Woodcutting),
-        3 => deter_non_members(player, Membership::Mining),
-        4 => deter_non_members(player, Membership::Smithing),
-        5 => deter_non_members(player, Membership::Thieving),
+        0 => deter_non_members(player, Guild::Fishing),
+        1 => deter_non_members(player, Guild::Cooking),
+        2 => deter_non_members(player, Guild::Woodcutting),
+        3 => deter_non_members(player, Guild::Mining),
+        4 => deter_non_members(player, Guild::Smithing),
+        5 => deter_non_members(player, Guild::Thieving),
         _ => {}
     }
 
@@ -70,7 +69,7 @@ pub fn main(player: &mut Player) {
     }
 }
 
-fn deter_non_members(player: &mut Player, guild: Membership) {
+fn deter_non_members(player: &mut Player, guild: Guild) {
     if !player.guilds.check(guild) {
         failure("This guild requires a membership.\nPlease purchase one from the Memberships Office.\n");
         main(player);
@@ -195,7 +194,7 @@ fn try_subtract(item: &mut usize, item_name: &str) -> Result<(), InventoryError>
 fn guild_membership_shop(player: &mut Player) {
     page_header("Guild Memberships Office", HeaderSubtext::Keyboard);
 
-    guilds::table(player);
+    Guilds::print_shop(player);
 
     let choices = select_from_str_array(&["1. Join Guild", "2. Leave Guild", "3. Go Back"], None);
 
@@ -214,8 +213,8 @@ fn guild_membership_shop(player: &mut Player) {
 }
 
 fn join_guild(player: &mut Player) {
-    let flag = guilds::picker();
-    match guilds::buy(player, flag, true) {
+    let flag = Guilds::picker();
+    match Guilds::buy(player, flag, true) {
         Ok(_) => {
             success();
             guild_membership_shop(player);
@@ -228,8 +227,8 @@ fn join_guild(player: &mut Player) {
 }
 
 fn leave_guild(player: &mut Player) {
-    let flag = guilds::picker();
-    match guilds::sell(player, flag, true) {
+    let flag = Guilds::picker();
+    match Guilds::sell(player, flag, true) {
         Ok(_) => {
             success();
             guild_membership_shop(player);
