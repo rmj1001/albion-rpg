@@ -38,7 +38,7 @@ pub fn mundane_inventory(player: &mut Player) {
 pub fn finances(player: &mut Player) {
     page_header("Finances", HeaderSubtext::None);
 
-    player.bank.print_inventory();
+    player.bank.table();
 
     press_enter_to_continue();
     main(player);

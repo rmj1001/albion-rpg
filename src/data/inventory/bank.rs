@@ -37,7 +37,7 @@ impl Bank {
     }
 
     /// Prints Bank information as a table using CSV formatting.
-    pub fn print_inventory(&self) {
+    pub fn table(&self) {
         table_from_csv(vec![
             "Account,Balance".to_string(),
             format!("Wallet,{}", self.wallet),
@@ -119,7 +119,7 @@ impl Bank {
         page_header("The Bank", HeaderSubtext::Keyboard);
 
         println!();
-        player.bank.print_inventory();
+        player.bank.table();
 
         let option = select_from_str_array(&["1. Deposit", "2. Withdraw", "NAV: Go Back"], None);
 

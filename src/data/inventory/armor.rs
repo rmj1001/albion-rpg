@@ -95,7 +95,7 @@ impl ArmorInventory {
         *self = Self::new();
     }
 
-    pub fn print_inventory(&self) {
+    pub fn table(&self) {
         fn entry(armor: &ArmorData) -> String {
             format!(
                 "{},{},{},{},{}",

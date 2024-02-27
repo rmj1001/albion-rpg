@@ -93,7 +93,7 @@ impl WeaponsInventory {
         *self = Self::new();
     }
 
-    pub fn print_inventory(&self) {
+    pub fn table(&self) {
         fn entry(weapon: &WeaponData) -> String {
             format!(
                 "{},{},{},{},{}",

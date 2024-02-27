@@ -127,7 +127,7 @@ fn weapons_manager(player: &mut Player) {
 fn armor_manager(player: &mut Player) {
     page_header("Developer Mode - Inventory Manager - Armor", HeaderSubtext::None);
 
-    player.armor.print_inventory();
+    player.armor.table();
 
     let buysell = select_from_str_array(&["1. Own Armor", "2. Disown Armor", "NAV: Go Back"], None);
 
