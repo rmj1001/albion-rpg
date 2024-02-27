@@ -13,25 +13,38 @@ pub enum Armor {
     Mystic,
 }
 
+impl Armor {
+    pub fn name(&self) -> &'static str {
+        match self {
+            Armor::Leather => "Leather Armor",
+            Armor::Bronze => "Bronze Armor",
+            Armor::Iron => "Iron Armor",
+            Armor::Steel => "Steel Armor",
+            Armor::Dragonhide => "Dragonhide Armor",
+            Armor::Mystic => "Mystic Armor",
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ArmorData {
-    pub name: String,
     pub owns: bool,
     pub defense: usize,
     pub durability: usize,
     pub default_durability: usize,
     pub equipped: bool,
+    pub flag: Armor,
 }
 
 impl ArmorData {
-    pub fn new(name: &str, defense: usize, durability: usize) -> Self {
+    pub fn new(defense: usize, durability: usize, flag: Armor) -> Self {
         Self {
-            name: format!("{} Armor", name),
             owns: false,
             equipped: false,
             defense,
             durability,
             default_durability: durability,
+            flag,
         }
     }
 
@@ -46,7 +59,7 @@ impl ArmorData {
     }
 
     pub fn break_armor(&mut self) {
-        println!("Your {} broke!", self.name);
+        println!("Your {} broke!", self.flag.name());
         self.owns = false;
         self.durability = self.default_durability;
     }
@@ -65,12 +78,12 @@ pub struct ArmorInventory {
 impl ArmorInventory {
     pub fn new() -> ArmorInventory {
         ArmorInventory {
-            leather: ArmorData::new("Leather", 10, 100),
-            bronze: ArmorData::new("Bronze", 30, 200),
-            iron: ArmorData::new("Iron", 50, 300),
-            steel: ArmorData::new("Steel", 100, 500),
-            dragonhide: ArmorData::new("Dragonhide", 200, 500),
-            mystic: ArmorData::new("Mystic", 1_000, 10_000),
+            leather: ArmorData::new(10, 100, Armor::Leather),
+            bronze: ArmorData::new(30, 200, Armor::Bronze),
+            iron: ArmorData::new(50, 300, Armor::Iron),
+            steel: ArmorData::new(100, 500, Armor::Steel),
+            dragonhide: ArmorData::new(200, 500, Armor::Dragonhide),
+            mystic: ArmorData::new(1_000, 10_000, Armor::Mystic),
         }
     }
 
@@ -82,7 +95,7 @@ impl ArmorInventory {
         fn entry(armor: &ArmorData) -> String {
             format!(
                 "{},{},{},{},{}",
-                armor.name,
+                armor.flag.name(),
                 checkmark(armor.owns),
                 checkmark(armor.equipped),
                 armor.defense,
