@@ -29,7 +29,7 @@ pub fn main(player: &mut Player) {
 pub fn mundane_inventory(player: &mut Player) {
     page_header("Items Inventory", HeaderSubtext::None);
 
-    ItemInventory::print_shop(player);
+    ItemInventory::shop_table(player);
 
     press_enter_to_continue();
     main(player);

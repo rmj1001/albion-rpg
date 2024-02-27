@@ -10,7 +10,7 @@ use crate::{
 pub fn main(player: &mut Player) {
     page_header("Trading Post", crate::utils::tui::HeaderSubtext::None);
 
-    ItemInventory::print_shop(player);
+    ItemInventory::shop_table(player);
     println!("Gold: {}\n", player.bank.wallet);
 
     let buysell = select_from_str_array(&["1. Purchase", "2. Sell", "NAV: Go Back"], None);

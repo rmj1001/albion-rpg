@@ -137,7 +137,7 @@ impl WeaponsInventory {
 // -------------------------------------------------- Economy -------------------------------------------------- //
 
 impl WeaponsInventory {
-    pub fn shop() -> BTreeMap<Weapon, usize> {
+    fn shop() -> BTreeMap<Weapon, usize> {
         BTreeMap::from([
             (Weapon::WoodenSword, 10),
             (Weapon::BronzeSword, 50),
@@ -148,7 +148,7 @@ impl WeaponsInventory {
         ])
     }
 
-    pub fn print_shop(player: &mut Player) {
+    pub fn shop_table(player: &mut Player) {
         let mut strings: Vec<String> = vec!["Item,Price,Owned".to_string()];
 
         for (flag, price) in Self::shop() {

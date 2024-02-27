@@ -27,7 +27,7 @@ pub fn main(player: &mut Player) {
 fn items_manager(player: &mut Player) {
     page_header("Developer Mode - Inventory Manager - Items", HeaderSubtext::None);
 
-    ItemInventory::print_shop(player);
+    ItemInventory::shop_table(player);
 
     let buysell = select_from_str_array(&["1. Add", "2. Subtract", "NAV: Go Back"], None);
 
@@ -80,7 +80,7 @@ fn items_manager(player: &mut Player) {
 fn weapons_manager(player: &mut Player) {
     page_header("Developer Mode - Inventory Manager - Weapons", HeaderSubtext::None);
 
-    WeaponsInventory::print_shop(player);
+    WeaponsInventory::shop_table(player);
 
     let buysell: usize = select_from_str_array(&["1. Own Weapon", "2. Disown Weapon", "NAV: Go Back"], None);
 

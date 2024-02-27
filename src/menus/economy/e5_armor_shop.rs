@@ -6,7 +6,7 @@ use crate::data::player::Player;
 pub fn main(player: &mut Player) {
     page_header("Armor Shop", crate::utils::tui::HeaderSubtext::None);
 
-    ArmorInventory::print_shop(player);
+    ArmorInventory::shop_table(player);
 
     let buysell = select_from_str_array(&["1. Purchase", "2. Sell", "NAV: Go Back"], None);
 

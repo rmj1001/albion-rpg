@@ -85,7 +85,7 @@ impl Guilds {
 // -------------------------------------------------- Economy -------------------------------------------------- //
 
 impl Guilds {
-    pub fn shop() -> BTreeMap<Guild, usize> {
+    fn shop() -> BTreeMap<Guild, usize> {
         BTreeMap::from([
             (Guild::Thieving, 10),
             (Guild::Fishing, 100),
@@ -96,7 +96,7 @@ impl Guilds {
         ])
     }
 
-    pub fn print_shop(player: &mut Player) {
+    pub fn shop_table(player: &mut Player) {
         let mut strings: Vec<String> = vec!["Guild,Price,Member".to_string()];
 
         for (flag, price) in Self::shop().iter() {

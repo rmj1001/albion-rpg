@@ -194,7 +194,7 @@ fn try_subtract(item: &mut usize, item_name: &str) -> Result<(), InventoryError>
 fn guild_membership_shop(player: &mut Player) {
     page_header("Guild Memberships Office", HeaderSubtext::Keyboard);
 
-    Guilds::print_shop(player);
+    Guilds::shop_table(player);
 
     let choices = select_from_str_array(&["1. Join Guild", "2. Leave Guild", "3. Go Back"], None);
 

@@ -139,7 +139,7 @@ impl ArmorInventory {
 // -------------------------------------------------- Economy -------------------------------------------------- //
 
 impl ArmorInventory {
-    pub fn shop() -> BTreeMap<Armor, usize> {
+    fn shop() -> BTreeMap<Armor, usize> {
         BTreeMap::from([
             (Armor::Leather, 100),
             (Armor::Bronze, 300),
@@ -150,7 +150,7 @@ impl ArmorInventory {
         ])
     }
 
-    pub fn print_shop(player: &mut Player) {
+    pub fn shop_table(player: &mut Player) {
         let mut strings: Vec<String> = vec!["Item,Price,Owns".to_string()];
 
         for (flag, price) in Self::shop() {

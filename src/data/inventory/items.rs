@@ -140,7 +140,7 @@ impl ItemInventory {
 // -------------------------------------------------- Economy -------------------------------------------------- //
 
 impl ItemInventory {
-    pub fn shop() -> BTreeMap<Item, usize> {
+    fn shop() -> BTreeMap<Item, usize> {
         BTreeMap::from([
             (Item::Bait, 1),
             (Item::Seeds, 1),
@@ -159,7 +159,7 @@ impl ItemInventory {
         ])
     }
 
-    pub fn print_shop(player: &mut Player) {
+    pub fn shop_table(player: &mut Player) {
         let mut strings: Vec<String> = vec!["Item,usize,Quantity,,Item,usize,Quantity".to_string()];
 
         type ShopItem = (Item, usize, usize);
