@@ -13,25 +13,38 @@ pub enum Weapon {
     WizardStaff,
 }
 
+impl Weapon {
+    pub fn name(&self) -> &'static str {
+        match self {
+            Weapon::WoodenSword => "Wooden Sword",
+            Weapon::BronzeSword => "Bronze Sword",
+            Weapon::IronSword => "Iron Sword",
+            Weapon::SteelSword => "Steel Sword",
+            Weapon::MysticSword => "Mystic Sword",
+            Weapon::WizardStaff => "Wizard Staff",
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct WeaponData {
-    pub name: String,
     pub owns: bool,
     pub equipped: bool,
     pub damage: usize,
     pub durability: usize,
     pub default_durability: usize,
+    pub flag: Weapon,
 }
 
 impl WeaponData {
-    pub fn new(name: &str, damage: usize, durability: usize) -> Self {
+    pub fn new(damage: usize, durability: usize, flag: Weapon) -> Self {
         Self {
-            name: name.to_string(),
             owns: false,
             equipped: false,
             damage,
             durability,
             default_durability: durability,
+            flag,
         }
     }
 
@@ -46,7 +59,7 @@ impl WeaponData {
     }
 
     pub fn break_weapon(&mut self) {
-        println!("Your {} broke!", self.name);
+        println!("Your {} broke!", self.flag.name());
         self.owns = false;
         self.durability = self.default_durability;
     }
@@ -65,12 +78,12 @@ pub struct WeaponsInventory {
 impl WeaponsInventory {
     pub fn new() -> WeaponsInventory {
         WeaponsInventory {
-            wooden_sword: WeaponData::new("Wooden Sword", 10, 100),
-            bronze_sword: WeaponData::new("Bronze Sword", 20, 150),
-            iron_sword: WeaponData::new("Iron Sword", 50, 200),
-            steel_sword: WeaponData::new("Steel Rapier", 200, 500),
-            mystic_sword: WeaponData::new("Mystic Sword", 500, 1_000),
-            wizard_staff: WeaponData::new("Wizard Staff", 1_000, 2_000),
+            wooden_sword: WeaponData::new(10, 100, Weapon::WoodenSword),
+            bronze_sword: WeaponData::new(20, 150, Weapon::BronzeSword),
+            iron_sword: WeaponData::new(50, 200, Weapon::IronSword),
+            steel_sword: WeaponData::new(200, 500, Weapon::SteelSword),
+            mystic_sword: WeaponData::new(500, 1_000, Weapon::MysticSword),
+            wizard_staff: WeaponData::new(1_000, 2_000, Weapon::WizardStaff),
         }
     }
 
@@ -82,7 +95,7 @@ impl WeaponsInventory {
         fn entry(weapon: &WeaponData) -> String {
             format!(
                 "{},{},{},{},{}",
-                weapon.name,
+                weapon.flag.name(),
                 checkmark(weapon.owns),
                 checkmark(weapon.equipped),
                 weapon.damage,
