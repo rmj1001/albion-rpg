@@ -1,7 +1,11 @@
 #![allow(unused_assignments, unused_variables, unused_mut)]
 use crate::{
-    data::xp::{XPType, XP},
-    economy::guilds::{self, is_member, GuildItem, Membership},
+    data::{
+        guilds::Membership,
+        inventory::items::GuildItem,
+        xp::{XPType, XP},
+    },
+    economy::guilds::{self},
     utils::{
         error::CustomError,
         input::select_from_str_array,
@@ -32,12 +36,12 @@ pub fn main(player: &mut Player) {
     );
 
     match guild_choice {
-        0 => deter_outsiders(player, Membership::Fishing),
-        1 => deter_outsiders(player, Membership::Cooking),
-        2 => deter_outsiders(player, Membership::Woodcutting),
-        3 => deter_outsiders(player, Membership::Mining),
-        4 => deter_outsiders(player, Membership::Smithing),
-        5 => deter_outsiders(player, Membership::Thieving),
+        0 => deter_non_members(player, Membership::Fishing),
+        1 => deter_non_members(player, Membership::Cooking),
+        2 => deter_non_members(player, Membership::Woodcutting),
+        3 => deter_non_members(player, Membership::Mining),
+        4 => deter_non_members(player, Membership::Smithing),
+        5 => deter_non_members(player, Membership::Thieving),
         _ => {}
     }
 
@@ -47,7 +51,7 @@ pub fn main(player: &mut Player) {
             player,
             "Cooking",
             XPType::Cooking,
-            GuildItem::CookedFish,
+            GuildItem::Food,
             Some(GuildItem::Fish),
         ),
         2 => guild_menu(player, "Woodcutting", XPType::Woodcutting, GuildItem::Wood, None),
@@ -66,8 +70,8 @@ pub fn main(player: &mut Player) {
     }
 }
 
-fn deter_outsiders(player: &mut Player, guild: Membership) {
-    if !is_member(player, guild) {
+fn deter_non_members(player: &mut Player, guild: Membership) {
+    if !player.guilds.check(guild) {
         failure("This guild requires a membership.\nPlease purchase one from the Memberships Office.\n");
         main(player);
     }
@@ -98,7 +102,7 @@ fn guild_menu(
                         Ok(())
                     }
                     GuildItem::Bait => try_subtract(&mut player.items.bait, "Bait"),
-                    GuildItem::CookedFish => try_subtract(&mut player.items.food, "Cooked Fish"),
+                    GuildItem::Food => try_subtract(&mut player.items.food, "Cooked Fish"),
                     GuildItem::Fish => try_subtract(&mut player.items.fish, "Fish"),
                     GuildItem::Wood => try_subtract(&mut player.items.wood, "Wood"),
                     GuildItem::Ingots => try_subtract(&mut player.items.ingots, "Ingots"),
@@ -114,7 +118,7 @@ fn guild_menu(
             match increase_item {
                 GuildItem::Gold => player.bank.wallet += random_num(0, 2),
                 GuildItem::Bait => player.items.bait += 1,
-                GuildItem::CookedFish => player.items.food += 1,
+                GuildItem::Food => player.items.food += 1,
                 GuildItem::Fish => player.items.fish += 1,
                 GuildItem::Wood => player.items.wood += 1,
                 GuildItem::Ingots => player.items.ingots += 1,
@@ -159,7 +163,7 @@ fn print_item(player: &mut Player, item: &Option<GuildItem>) {
             GuildItem::Bait => {
                 println!("Bait: {}", player.items.bait)
             }
-            GuildItem::CookedFish => {
+            GuildItem::Food => {
                 println!("Cooked Fish: {}", player.items.food)
             }
             GuildItem::Fish => {
