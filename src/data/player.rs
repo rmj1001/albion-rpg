@@ -19,7 +19,7 @@ pub struct Player {
     pub bank: Bank,
     pub guilds: Memberships,
     pub equipment: Equipment,
-    pub items: MundaneInventory,
+    pub items: ItemInventory,
     pub armor: ArmorInventory,
     pub weapons: WeaponsInventory,
     pub settings: Settings,
@@ -36,7 +36,7 @@ impl Player {
             bank: Bank::new(),
             guilds: Memberships::new(),
             equipment: Equipment::new(),
-            items: MundaneInventory::new(),
+            items: ItemInventory::new(),
             armor: ArmorInventory::new(),
             weapons: WeaponsInventory::new(),
         };

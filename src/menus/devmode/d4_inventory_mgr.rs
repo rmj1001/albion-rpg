@@ -40,35 +40,40 @@ fn items_manager(player: &mut Player) {
     }
 
     pub fn add_item(player: &mut Player) {
-        let (flag, quantity) = items::shop::build_transaction();
-        let result = items::shop::purchase(player, flag, quantity, false);
+        if let Ok((flag, quantity)) = items::shop::build_transaction() {
+            let result = items::shop::buy(player, flag, quantity, false);
 
-        match result {
-            Ok(_) => {
-                success();
-                items_manager(player);
+            match result {
+                Ok(_) => {
+                    success();
+                    items_manager(player);
+                }
+                Err(message) => {
+                    message.failure();
+                    items_manager(player);
+                }
             }
-            Err(message) => {
-                message.failure();
-                items_manager(player);
-            }
+        } else {
+            items_manager(player);
         }
     }
 
     pub fn subtract_item(player: &mut Player) {
-        let (flag, quantity) = items::shop::build_transaction();
+        if let Ok((flag, quantity)) = items::shop::build_transaction() {
+            let sell_result = items::shop::sell(player, flag, quantity, false);
 
-        let result = items::shop::sell(player, flag, quantity, false);
-
-        match result {
-            Ok(_) => {
-                success();
-                items_manager(player);
+            match sell_result {
+                Ok(_) => {
+                    success();
+                    items_manager(player);
+                }
+                Err(message) => {
+                    message.failure();
+                    items_manager(player);
+                }
             }
-            Err(message) => {
-                message.failure();
-                items_manager(player);
-            }
+        } else {
+            items_manager(player);
         }
     }
 }

@@ -1,7 +1,11 @@
 use crate::{
     data::player::Player,
     economy::items::shop,
-    utils::{input::select_from_str_array, messages::*, tui::page_header},
+    utils::{
+        input::select_from_str_array,
+        messages::{out_of_bounds, success},
+        tui::page_header,
+    },
 };
 
 pub fn main(player: &mut Player) {
@@ -23,14 +27,20 @@ pub fn main(player: &mut Player) {
 }
 
 pub fn purchase(player: &mut Player) {
-    let (item_flag, quantity) = shop::build_transaction();
+    match shop::build_transaction() {
+        Ok((item_flag, quantity)) => {
+            let bought = shop::buy(player, item_flag, quantity, true);
 
-    let result = shop::purchase(player, item_flag, quantity, true);
-
-    match result {
-        Ok(_) => {
-            success();
-            main(player);
+            match bought {
+                Ok(_) => {
+                    success();
+                    main(player);
+                }
+                Err(message) => {
+                    message.failure();
+                    main(player);
+                }
+            }
         }
         Err(message) => {
             message.failure();
@@ -40,14 +50,20 @@ pub fn purchase(player: &mut Player) {
 }
 
 pub fn sell(player: &mut Player) {
-    let (item_flag, quantity) = shop::build_transaction();
+    match shop::build_transaction() {
+        Ok((item_flag, quantity)) => {
+            let sold = shop::sell(player, item_flag, quantity, true);
 
-    let result = shop::sell(player, item_flag, quantity, true);
-
-    match result {
-        Ok(_) => {
-            success();
-            main(player);
+            match sold {
+                Ok(_) => {
+                    success();
+                    main(player);
+                }
+                Err(message) => {
+                    message.failure();
+                    main(player);
+                }
+            }
         }
         Err(message) => {
             message.failure();
