@@ -92,7 +92,7 @@ fn weapons_manager(player: &mut Player) {
     }
 
     pub fn own_weapon(player: &mut Player) {
-        let flag = WeaponsInventory::picker();
+        let flag = WeaponsInventory::select();
         let result = WeaponsInventory::buy(player, flag, false);
 
         match result {
@@ -108,7 +108,7 @@ fn weapons_manager(player: &mut Player) {
     }
 
     pub fn disown_weapon(player: &mut Player) {
-        let flag = WeaponsInventory::picker();
+        let flag = WeaponsInventory::select();
         let result = WeaponsInventory::sell(player, flag, false);
 
         match result {
@@ -127,7 +127,7 @@ fn weapons_manager(player: &mut Player) {
 fn armor_manager(player: &mut Player) {
     page_header("Developer Mode - Inventory Manager - Armor", HeaderSubtext::None);
 
-    player.armor.table();
+    player.armor.print_inventory();
 
     let buysell = select_from_str_array(&["1. Own Armor", "2. Disown Armor", "NAV: Go Back"], None);
 
@@ -139,7 +139,7 @@ fn armor_manager(player: &mut Player) {
     }
 
     pub fn own_armor(player: &mut Player) {
-        let item = ArmorInventory::picker();
+        let item = ArmorInventory::select();
         let result = ArmorInventory::buy(player, &item, false);
 
         match result {
@@ -155,7 +155,7 @@ fn armor_manager(player: &mut Player) {
     }
 
     pub fn disown_armor(player: &mut Player) {
-        let item = ArmorInventory::picker();
+        let item = ArmorInventory::select();
         let result = ArmorInventory::buy(player, &item, false);
 
         match result {

@@ -50,7 +50,7 @@ impl Equipment {
     pub fn armor_menu(player: &mut Player) {
         page_header("Equipment Manager - Armor", HeaderSubtext::Keyboard);
 
-        player.armor.table();
+        player.armor.print_inventory();
 
         let choices: usize = select_from_str_array(&["1. Equip Armor", "2. Un-Equip Armor", "NAV: Go Back"], None);
 
@@ -71,7 +71,7 @@ impl Equipment {
     pub fn weapon_menu(player: &mut Player) {
         page_header("Equipment Manager - Weapons", HeaderSubtext::Keyboard);
 
-        player.weapons.table();
+        player.weapons.print_inventory();
 
         let choices: usize = select_from_str_array(&["1. Equip Weapon", "2. Un-Equip Weapon", "NAV: Go Back"], None);
 

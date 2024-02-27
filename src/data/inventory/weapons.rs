@@ -93,7 +93,7 @@ impl WeaponsInventory {
         *self = Self::new();
     }
 
-    pub fn table(&self) {
+    pub fn print_inventory(&self) {
         fn entry(weapon: &WeaponData) -> String {
             format!(
                 "{},{},{},{},{}",
@@ -134,6 +134,8 @@ impl WeaponsInventory {
     }
 }
 
+// -------------------------------------------------- Economy -------------------------------------------------- //
+
 impl WeaponsInventory {
     pub fn shop() -> BTreeMap<Weapon, usize> {
         BTreeMap::from([
@@ -160,7 +162,7 @@ impl WeaponsInventory {
         println!("Gold: {}\n", player.bank.wallet);
     }
 
-    pub fn picker() -> Weapon {
+    pub fn select() -> Weapon {
         let shop = Self::shop();
         let items: Vec<String> = shop.keys().map(|flag| flag.name().to_string()).collect();
 

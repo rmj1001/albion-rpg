@@ -21,7 +21,7 @@ pub fn main(player: &mut Player) {
 }
 
 pub fn purchase(player: &mut Player) {
-    let flag = WeaponsInventory::picker();
+    let flag = WeaponsInventory::select();
     let result = WeaponsInventory::buy(player, flag, true);
 
     match result {
@@ -37,7 +37,7 @@ pub fn purchase(player: &mut Player) {
 }
 
 pub fn sell(player: &mut Player) {
-    let flag = WeaponsInventory::picker();
+    let flag = WeaponsInventory::select();
     let result = WeaponsInventory::sell(player, flag, true);
 
     match result {

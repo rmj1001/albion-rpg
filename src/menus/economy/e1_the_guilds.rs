@@ -213,8 +213,8 @@ fn guild_membership_shop(player: &mut Player) {
 }
 
 fn join_guild(player: &mut Player) {
-    let flag = Guilds::picker();
-    match Guilds::buy(player, flag, true) {
+    let flag = Guilds::select();
+    match Guilds::join(player, flag, true) {
         Ok(_) => {
             success();
             guild_membership_shop(player);
@@ -227,8 +227,8 @@ fn join_guild(player: &mut Player) {
 }
 
 fn leave_guild(player: &mut Player) {
-    let flag = Guilds::picker();
-    match Guilds::sell(player, flag, true) {
+    let flag = Guilds::select();
+    match Guilds::leave(player, flag, true) {
         Ok(_) => {
             success();
             guild_membership_shop(player);

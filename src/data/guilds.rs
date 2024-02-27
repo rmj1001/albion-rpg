@@ -82,7 +82,8 @@ impl Guilds {
     }
 }
 
-// ---------- Economy ---------- //
+// -------------------------------------------------- Economy -------------------------------------------------- //
+
 impl Guilds {
     pub fn shop() -> BTreeMap<Guild, usize> {
         BTreeMap::from([
@@ -107,7 +108,7 @@ impl Guilds {
         println!("Gold: {}\n", player.bank.wallet);
     }
 
-    pub fn picker() -> Guild {
+    pub fn select() -> Guild {
         let shop: BTreeMap<Guild, usize> = Self::shop();
         let guilds: Vec<String> = shop.keys().map(|guild| guild.name().to_string()).collect();
 
@@ -126,7 +127,7 @@ impl Guilds {
         item
     }
 
-    pub fn buy(player: &mut Player, guild: Guild, payment: bool) -> crate::Result<()> {
+    pub fn join(player: &mut Player, guild: Guild, payment: bool) -> crate::Result<()> {
         let shop: BTreeMap<Guild, usize> = Self::shop();
         let price: &usize = shop.get(&guild).expect("Item not found in hashmap.");
 
@@ -150,7 +151,7 @@ impl Guilds {
         Ok(())
     }
 
-    pub fn sell(player: &mut Player, guild: Guild, payment: bool) -> crate::Result<()> {
+    pub fn leave(player: &mut Player, guild: Guild, payment: bool) -> crate::Result<()> {
         let shop: BTreeMap<Guild, usize> = Self::shop();
         let price: &usize = shop.get(&guild).expect("Item not found in hashmap.");
 

@@ -137,6 +137,8 @@ impl ItemInventory {
     }
 }
 
+// -------------------------------------------------- Economy -------------------------------------------------- //
+
 impl ItemInventory {
     pub fn shop() -> BTreeMap<Item, usize> {
         BTreeMap::from([
@@ -196,7 +198,7 @@ impl ItemInventory {
     }
 
     pub fn build_transaction() -> crate::Result<(Item, usize)> {
-        let item = Self::picker();
+        let item = Self::select();
         let quantity_result = input_generic::<usize>("Quantity:");
 
         match quantity_result {
@@ -205,7 +207,7 @@ impl ItemInventory {
         }
     }
 
-    pub fn picker() -> Item {
+    pub fn select() -> Item {
         let shop = Self::shop();
         let items = shop.keys();
         let item_names: Vec<String> = items.map(|item| item.name().to_string()).collect();
