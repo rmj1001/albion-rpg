@@ -1,13 +1,16 @@
 use crate::{
     data::{player::Player, xp::XPType},
     utils::{
-        input::select_from_str_array,
-        math::{generic_calculator, Operation},
+        input::{input_generic, select_from_str_array},
         messages::*,
         tui::{page_header, HeaderSubtext},
     },
-    MiscError,
 };
+
+enum Operation {
+    Add,
+    Subtract,
+}
 
 pub fn main(player: &mut Player) {
     page_header("Developer Mode - XP Manager", HeaderSubtext::Keyboard);
@@ -42,30 +45,36 @@ pub fn main(player: &mut Player) {
         _ => out_of_bounds(),
     };
 
-    let calculation = generic_calculator::<usize>();
+    let operation_category: usize = select_from_str_array(&["1. Add", "2. Subtract", "3. Cancel"], None);
+    let mut operation: Operation = Operation::Add;
 
-    if let Operation::Cancel = calculation {
-        cancelling();
-        main(player);
+    match operation_category {
+        0 => operation = Operation::Add,
+        1 => operation = Operation::Subtract,
+        2 => main(player),
+        _ => out_of_bounds(),
     }
 
-    // Return early if the operation was cancelled.
-    let result: crate::Result<()> = match calculation {
-        Operation::Add(_) => player.xp.arithmetic(xp_type, calculation),
-        Operation::Subtract(_) => player.xp.arithmetic(xp_type, calculation),
-        Operation::Multiply(_) => player.xp.arithmetic(xp_type, calculation),
-        Operation::Divide(_) => player.xp.arithmetic(xp_type, calculation),
-        Operation::Cancel => Ok(()),
-        Operation::Invalid => Err(MiscError::InvalidOperator.boxed()),
+    let amount_result: crate::Result<usize> = input_generic("Amount > ");
+    let mut amount: usize = 0;
+
+    match amount_result {
+        Ok(number) => amount = number,
+        Err(error) => {
+            error.failure();
+            main(player);
+        }
+    }
+
+    let result = match operation {
+        Operation::Add => player.xp.add(xp_type, amount),
+        Operation::Subtract => player.xp.subtract(xp_type, amount),
     };
 
     match result {
-        Ok(_) => {
-            success();
-            main(player);
-        }
-        Err(_) => {
-            main(player);
-        }
+        Ok(_) => success(),
+        Err(error) => error.failure(),
     }
+
+    main(player);
 }

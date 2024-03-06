@@ -4,16 +4,16 @@ use crate::{
 };
 
 #[derive(Clone, Debug)]
-pub enum EnemyType {
-    Animal(AnimalType),
+pub enum Enemy {
+    Animal(Animal),
     Human,
-    Monster(MonsterType),
-    Undead(UndeadType),
+    Monster(Monster),
+    Undead(Undead),
     Invalid,
 }
 
 #[derive(Clone, Debug)]
-pub enum AnimalType {
+pub enum Animal {
     Bear,
     DireWolf,
     GiantSpider,
@@ -24,7 +24,7 @@ pub enum AnimalType {
 }
 
 #[derive(Clone, Debug)]
-pub enum MonsterType {
+pub enum Monster {
     Centaur,
     DarkElf,
     Dragon,
@@ -37,7 +37,7 @@ pub enum MonsterType {
 }
 
 #[derive(Clone, Debug)]
-pub enum UndeadType {
+pub enum Undead {
     Banshee,
     Ghost,
     Skeleton,
@@ -47,8 +47,8 @@ pub enum UndeadType {
 }
 
 #[derive(Clone)]
-pub struct Enemy {
-    pub kind_type: EnemyType,
+pub struct EnemyData {
+    pub kind_type: Enemy,
     pub kind: &'static str,
     pub hp: usize,
     pub damage: usize,
@@ -57,11 +57,11 @@ pub struct Enemy {
     pub rewards: Vec<Rewards>,
 }
 
-impl Enemy {
+impl EnemyData {
     pub fn new(user_combat_xp: usize, user_hp: usize) -> Self {
         let user_level: usize = XP::get_level(user_combat_xp);
-        let kind_type: EnemyType = pick_enemy();
-        let kind_string: &str = Enemy::kind_string(kind_type.clone());
+        let kind_type: Enemy = pick_enemy();
+        let kind_string: &str = EnemyData::kind_string(kind_type.clone());
 
         Self {
             kind_type,
@@ -74,94 +74,94 @@ impl Enemy {
         }
     }
 
-    pub fn kind_string(kind: EnemyType) -> &'static str {
+    pub fn kind_string(kind: Enemy) -> &'static str {
         match kind {
-            EnemyType::Human => "Human",
-            EnemyType::Invalid => "Invalid Enemy",
-            EnemyType::Animal(animal) => match animal {
-                AnimalType::Bear => "Bear",
-                AnimalType::Wyrm => "Wyrm",
-                AnimalType::Invalid => "Invalid Animal",
-                AnimalType::Owlbear => "Owlbear",
-                AnimalType::DireWolf => "Dire Wolf",
-                AnimalType::WhiteApe => "White Ape",
-                AnimalType::GiantSpider => "Giant Spider",
+            Enemy::Human => "Human",
+            Enemy::Invalid => "Invalid Enemy",
+            Enemy::Animal(animal) => match animal {
+                Animal::Bear => "Bear",
+                Animal::Wyrm => "Wyrm",
+                Animal::Invalid => "Invalid Animal",
+                Animal::Owlbear => "Owlbear",
+                Animal::DireWolf => "Dire Wolf",
+                Animal::WhiteApe => "White Ape",
+                Animal::GiantSpider => "Giant Spider",
             },
-            EnemyType::Undead(undead) => match undead {
-                UndeadType::Banshee => "Banshee",
-                UndeadType::Ghost => "Ghost",
-                UndeadType::Zombie => "Zombie",
-                UndeadType::Invalid => "Invalid Undead",
-                UndeadType::Vampire => "Vampire",
-                UndeadType::Skeleton => "Skeleton",
+            Enemy::Undead(undead) => match undead {
+                Undead::Banshee => "Banshee",
+                Undead::Ghost => "Ghost",
+                Undead::Zombie => "Zombie",
+                Undead::Invalid => "Invalid Undead",
+                Undead::Vampire => "Vampire",
+                Undead::Skeleton => "Skeleton",
             },
-            EnemyType::Monster(monster) => match monster {
-                MonsterType::Centaur => "Centaur",
-                MonsterType::Orc => "Orc",
-                MonsterType::Giant => "Giant",
-                MonsterType::Troll => "Troll",
-                MonsterType::Dragon => "Dragon",
-                MonsterType::Goblin => "Goblin",
-                MonsterType::DarkElf => "Dark Elf",
-                MonsterType::Invalid => "Invalid Monster",
-                MonsterType::Werewolf => "Werewolf",
+            Enemy::Monster(monster) => match monster {
+                Monster::Centaur => "Centaur",
+                Monster::Orc => "Orc",
+                Monster::Giant => "Giant",
+                Monster::Troll => "Troll",
+                Monster::Dragon => "Dragon",
+                Monster::Goblin => "Goblin",
+                Monster::DarkElf => "Dark Elf",
+                Monster::Invalid => "Invalid Monster",
+                Monster::Werewolf => "Werewolf",
             },
         }
     }
 }
 
-fn pick_enemy() -> EnemyType {
+fn pick_enemy() -> Enemy {
     let number = math::random_num(0, 3);
 
     match number {
-        0 => EnemyType::Animal(pick_animal()),
-        1 => EnemyType::Human,
-        2 => EnemyType::Monster(pick_monster()),
-        3 => EnemyType::Undead(pick_undead()),
-        _ => EnemyType::Invalid,
+        0 => Enemy::Animal(pick_animal()),
+        1 => Enemy::Human,
+        2 => Enemy::Monster(pick_monster()),
+        3 => Enemy::Undead(pick_undead()),
+        _ => Enemy::Invalid,
     }
 }
 
-fn pick_animal() -> AnimalType {
+fn pick_animal() -> Animal {
     let number: usize = math::random_num(0, 5);
 
     match number {
-        0 => AnimalType::Bear,
-        1 => AnimalType::DireWolf,
-        2 => AnimalType::GiantSpider,
-        3 => AnimalType::Owlbear,
-        4 => AnimalType::WhiteApe,
-        5 => AnimalType::Wyrm,
-        _ => AnimalType::Invalid,
+        0 => Animal::Bear,
+        1 => Animal::DireWolf,
+        2 => Animal::GiantSpider,
+        3 => Animal::Owlbear,
+        4 => Animal::WhiteApe,
+        5 => Animal::Wyrm,
+        _ => Animal::Invalid,
     }
 }
 
-fn pick_monster() -> MonsterType {
+fn pick_monster() -> Monster {
     let number: usize = math::random_num(0, 7);
 
     match number {
-        0 => MonsterType::Centaur,
-        1 => MonsterType::DarkElf,
-        2 => MonsterType::Dragon,
-        3 => MonsterType::Giant,
-        4 => MonsterType::Goblin,
-        5 => MonsterType::Orc,
-        6 => MonsterType::Troll,
-        7 => MonsterType::Werewolf,
-        _ => MonsterType::Invalid,
+        0 => Monster::Centaur,
+        1 => Monster::DarkElf,
+        2 => Monster::Dragon,
+        3 => Monster::Giant,
+        4 => Monster::Goblin,
+        5 => Monster::Orc,
+        6 => Monster::Troll,
+        7 => Monster::Werewolf,
+        _ => Monster::Invalid,
     }
 }
 
-fn pick_undead() -> UndeadType {
+fn pick_undead() -> Undead {
     let number: usize = math::random_num(0, 4);
 
     match number {
-        0 => UndeadType::Banshee,
-        1 => UndeadType::Ghost,
-        2 => UndeadType::Skeleton,
-        3 => UndeadType::Vampire,
-        4 => UndeadType::Zombie,
-        _ => UndeadType::Invalid,
+        0 => Undead::Banshee,
+        1 => Undead::Ghost,
+        2 => Undead::Skeleton,
+        3 => Undead::Vampire,
+        4 => Undead::Zombie,
+        _ => Undead::Invalid,
     }
 }
 
@@ -262,38 +262,38 @@ pub fn add_rewards_to_user(player: &mut Player, rewards: Vec<Rewards>) {
 pub mod tests {
     #[test]
     pub fn invalid_enemies() {
-        use crate::combat::enemy::{AnimalType, Enemy, EnemyType, MonsterType, UndeadType};
+        use crate::combat::enemy::{Animal, Enemy, EnemyData, Monster, Undead};
         use crate::data::player::Player;
         use crate::utils::crypt;
 
         let test_player = Player::new("test", &crypt::generate_hash("test".to_string()), false);
 
         let num_enemies: usize = 500;
-        let mut enemies: Vec<Enemy> = vec![];
+        let mut enemies: Vec<EnemyData> = vec![];
 
         let mut index: usize = 0;
 
         while index < num_enemies {
-            enemies.push(Enemy::new(test_player.xp.combat, test_player.health.hp));
+            enemies.push(EnemyData::new(test_player.xp.combat, test_player.health.hp));
             index += 1
         }
 
-        let invalid_enemy_filter = |enemy: &&Enemy| {
+        let invalid_enemy_filter = |enemy: &&EnemyData| {
             matches!(
                 enemy.kind_type,
-                EnemyType::Invalid
-                    | EnemyType::Animal(AnimalType::Invalid)
-                    | EnemyType::Monster(MonsterType::Invalid)
-                    | EnemyType::Undead(UndeadType::Invalid)
+                Enemy::Invalid
+                    | Enemy::Animal(Animal::Invalid)
+                    | Enemy::Monster(Monster::Invalid)
+                    | Enemy::Undead(Undead::Invalid)
             )
         };
 
-        let invalids: Vec<Enemy> = enemies.iter().filter(invalid_enemy_filter).cloned().collect();
-        let mut types: Vec<EnemyType> = vec![];
+        let invalids: Vec<EnemyData> = enemies.iter().filter(invalid_enemy_filter).cloned().collect();
+        let mut types: Vec<Enemy> = vec![];
 
         invalids
             .iter()
-            .for_each(|enemy: &Enemy| types.push(enemy.kind_type.clone()));
+            .for_each(|enemy: &EnemyData| types.push(enemy.kind_type.clone()));
 
         if !invalids.is_empty() {
             panic!(

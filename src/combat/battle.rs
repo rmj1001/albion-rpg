@@ -1,5 +1,5 @@
 use crate::{
-    combat::enemy::{add_rewards_to_user, generate_rewards, Enemy, Rewards},
+    combat::enemy::{add_rewards_to_user, generate_rewards, EnemyData, Rewards},
     data::{inventory::equipment::Equipment, player::Player, xp::XP},
     utils::{
         input,
@@ -13,7 +13,7 @@ pub struct BattleSettings<'a> {
     pub header: &'static str,
     pub prompt: &'static str,
     pub player: &'a mut Player,
-    pub enemy: Enemy,
+    pub enemy: EnemyData,
     pub loops: usize,
     pub floor: usize,
     pub is_first_battle: bool,
@@ -24,6 +24,7 @@ pub struct BattleSettings<'a> {
 
 use super::inventory::battle_inventory;
 
+/// Entry point for starting a battle.
 pub fn new_battle(battle: &mut BattleSettings) {
     // Prelude
     page_header(battle.header, HeaderSubtext::None);
@@ -49,7 +50,7 @@ pub fn new_battle(battle: &mut BattleSettings) {
     sleep(battle.pause_seconds);
 
     if !battle.is_first_battle {
-        battle.enemy = Enemy::new(battle.player.xp.combat, battle.player.health.hp);
+        battle.enemy = EnemyData::new(battle.player.xp.combat, battle.player.health.hp);
     } else {
         battle.is_first_battle = false; // generate new enemy for subsequent battles
     }
@@ -137,8 +138,14 @@ fn player_attack(battle: &mut BattleSettings) {
 
     let hit = success_or_fail();
 
-    if hit && battle.player.equipment.weapon.is_some() {
-        let flag = battle.player.equipment.weapon.as_ref().unwrap().clone();
+    if !hit || battle.player.equipment.weapon.is_none() {
+        println!("You missed the {}.", enemy_type);
+        sleep(battle.pause_seconds);
+        return;
+    }
+
+    if let Some(equipped_weapon) = &battle.player.equipment.weapon {
+        let flag = equipped_weapon.clone();
         let weapon = battle.player.weapons.get(&flag);
         let damage = weapon.damage;
 
@@ -155,8 +162,6 @@ fn player_attack(battle: &mut BattleSettings) {
         } else {
             battle.enemy.hp -= damage;
         }
-    } else {
-        println!("You missed the {}.", enemy_type);
     }
 
     sleep(battle.pause_seconds);
@@ -166,8 +171,8 @@ fn enemy_attack(battle: &mut BattleSettings) {
     let enemy_type = battle.enemy.kind;
     let mut damage: usize = battle.enemy.damage;
 
-    if battle.player.equipment.armor.is_some() {
-        let flag = battle.player.equipment.armor.as_ref().unwrap().clone();
+    if let Some(equipped_armor) = &battle.player.equipment.armor {
+        let flag = equipped_armor.clone();
         let armor = battle.player.armor.get(&flag);
 
         if damage > armor.defense {
@@ -269,12 +274,12 @@ pub fn victory(battle: &mut BattleSettings) {
         crate::menus::game_menu::main(battle.player);
     }
 
-    if battle.is_looped && battle.loops > 0 {
+    if battle.loops > 0 {
         new_battle(battle);
     }
 
-    if battle.is_looped && battle.loops == 0 && battle.end_function.is_some() {
-        battle.end_function.unwrap()(battle.player);
+    if let Some(end_func) = battle.end_function {
+        end_func(battle.player);
     }
 }
 
@@ -303,6 +308,7 @@ pub fn revived(battle: &mut BattleSettings) {
     crate::menus::game_menu::main(battle.player);
 }
 
+/// Result of battle if player defeated and hardmode is enabled.
 pub fn hardmode(battle: &mut BattleSettings) {
     let user_survives = random_num(0, 1);
 

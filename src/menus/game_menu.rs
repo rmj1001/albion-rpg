@@ -1,5 +1,5 @@
 use crate::{
-    combat::{battle::BattleSettings, enemy::Enemy},
+    combat::{battle::BattleSettings, enemy::EnemyData},
     data::{achievements::Achievements, inventory::equipment::Equipment, settings::Settings},
     utils::{
         input::{confirm, prompt_arrow},
@@ -59,7 +59,7 @@ pub fn main(player: &mut Player) {
             let mut battle_settings = BattleSettings {
                 header: "Wandering Gielnor",
                 prompt: "You are wandering the realm...",
-                enemy: Enemy::new(player.xp.combat, player.health.hp),
+                enemy: EnemyData::new(player.xp.combat, player.health.hp),
                 player,
                 loops: 0,
                 floor: 0,
@@ -88,7 +88,7 @@ pub fn main(player: &mut Player) {
             let mut battle_settings = BattleSettings {
                 header: "The Stronghold",
                 prompt: "You delve into the stronghold...",
-                enemy: Enemy::new(player.xp.combat, player.health.hp),
+                enemy: EnemyData::new(player.xp.combat, player.health.hp),
                 player: &mut player.clone(),
                 loops: 50,
                 floor: 0,

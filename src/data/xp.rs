@@ -1,10 +1,7 @@
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 
-use crate::{
-    utils::{math::Operation, messages::*, tui::table_from_csv},
-    MiscError,
-};
+use crate::utils::tui::table_from_csv;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct XP {
@@ -71,8 +68,33 @@ impl XP {
         self.combat + self.fishing + self.cooking + self.woodcutting + self.mining + self.smithing + self.thieving
     }
 
-    pub fn arithmetic(&mut self, flag: XPType, operation: Operation<usize>) -> crate::Result<()> {
-        let xp = match flag {
+    pub fn increment(&mut self, flag: XPType) {
+        let more_xp = rand::thread_rng().gen_range(1..5);
+        let xp = self.get(flag);
+
+        *xp += more_xp;
+    }
+
+    pub fn add(&mut self, flag: XPType, amount: usize) -> crate::Result<()> {
+        let xp = self.get(flag);
+
+        *xp += amount;
+        Ok(())
+    }
+
+    pub fn subtract(&mut self, flag: XPType, amount: usize) -> crate::Result<()> {
+        let xp = self.get(flag);
+
+        if *xp < amount {
+            return Err(crate::InventoryError::NotEnoughXP.boxed());
+        }
+
+        *xp -= amount;
+        Ok(())
+    }
+
+    pub fn get(&mut self, flag: XPType) -> &mut usize {
+        match flag {
             XPType::Combat => &mut self.combat,
             XPType::Fishing => &mut self.fishing,
             XPType::Cooking => &mut self.cooking,
@@ -80,63 +102,6 @@ impl XP {
             XPType::Mining => &mut self.mining,
             XPType::Smithing => &mut self.smithing,
             XPType::Thieving => &mut self.thieving,
-        };
-
-        match operation {
-            Operation::Add(amount) => {
-                *xp += amount;
-                Ok(())
-            }
-            Operation::Subtract(amount) => {
-                if amount > *xp {
-                    Err(MiscError::Custom("The amount is greater than the total XP.").boxed())
-                } else {
-                    *xp -= amount;
-                    Ok(())
-                }
-            }
-            Operation::Multiply(amount) => {
-                *xp *= amount;
-                Ok(())
-            }
-            Operation::Divide(amount) => {
-                *xp /= amount;
-                Ok(())
-            }
-            Operation::Cancel => {
-                cancelling();
-                Ok(())
-            }
-            Operation::Invalid => {
-                failure("Invalid Operator");
-                Err(MiscError::InvalidOperator.boxed())
-            }
-        }
-    }
-
-    pub fn increment(&mut self, flag: XPType) {
-        let more_xp = rand::thread_rng().gen_range(1..5);
-
-        match flag {
-            XPType::Combat => self.combat += more_xp,
-            XPType::Fishing => self.fishing += more_xp,
-            XPType::Cooking => self.cooking += more_xp,
-            XPType::Woodcutting => self.woodcutting += more_xp,
-            XPType::Mining => self.mining += more_xp,
-            XPType::Smithing => self.smithing += more_xp,
-            XPType::Thieving => self.thieving += more_xp,
-        }
-    }
-
-    pub fn get(&self, flag: XPType) -> usize {
-        match flag {
-            XPType::Combat => self.combat,
-            XPType::Fishing => self.fishing,
-            XPType::Cooking => self.cooking,
-            XPType::Woodcutting => self.woodcutting,
-            XPType::Mining => self.mining,
-            XPType::Smithing => self.smithing,
-            XPType::Thieving => self.thieving,
         }
     }
 }

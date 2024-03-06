@@ -8,6 +8,7 @@ use crate::{
     },
 };
 
+/// Choose between equipment and healing
 pub fn battle_inventory(player: &mut Player) {
     page_header("Battle Inventory", HeaderSubtext::Keyboard);
 

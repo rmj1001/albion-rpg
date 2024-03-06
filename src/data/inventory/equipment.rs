@@ -138,20 +138,18 @@ impl Equipment {
             return;
         }
 
-        if player.equipment.weapon.is_none() {
-            return;
-        }
+        if let Some(equipped_weapon) = &player.equipment.weapon {
+            let flag = equipped_weapon.clone();
+            let equipped_weapon = player.weapons.get(&flag);
 
-        let flag = player.equipment.weapon.as_ref().unwrap().clone();
-        let equipped_weapon = player.weapons.get(&flag);
+            equipped_weapon.equipped = false;
 
-        equipped_weapon.equipped = false;
+            player.equipment.weapon = None;
 
-        player.equipment.weapon = None;
-
-        if menu_facing {
-            println!("Weapon successfully unequipped.");
-            press_enter_to_continue();
+            if menu_facing {
+                println!("Weapon successfully unequipped.");
+                press_enter_to_continue();
+            }
         }
     }
 
@@ -203,20 +201,18 @@ impl Equipment {
             return;
         }
 
-        if player.equipment.armor.is_none() {
-            return;
-        }
+        if let Some(equipped_armor) = &player.equipment.armor {
+            let flag = equipped_armor.clone();
+            let equipped_armor = player.armor.get(&flag);
 
-        let flag = player.equipment.armor.as_ref().unwrap().clone();
-        let equipped_armor = player.armor.get(&flag);
+            equipped_armor.equipped = false;
 
-        equipped_armor.equipped = false;
+            player.equipment.armor = None;
 
-        player.equipment.armor = None;
-
-        if menu_facing {
-            println!("Armor successfully unequipped.");
-            press_enter_to_continue();
+            if menu_facing {
+                println!("Armor successfully unequipped.");
+                press_enter_to_continue();
+            }
         }
     }
 

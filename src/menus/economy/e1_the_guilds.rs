@@ -145,7 +145,7 @@ fn print_guild_information(
     let xp = player.xp.get(xp_type);
 
     println!("XP: {}", xp);
-    println!("Level: {}", XP::get_level(xp));
+    println!("Level: {}", XP::get_level(*xp));
     println!();
 
     print_item(player, &Some(increase_item));

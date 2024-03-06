@@ -61,6 +61,9 @@ pub enum InventoryError {
     #[error("You do not own this item.")]
     ItemNotOwned,
 
+    #[error("You do not have enough xp.")]
+    NotEnoughXP,
+
     #[error("You do not own enough {0}.")]
     NotEnoughItem(String),
 }
