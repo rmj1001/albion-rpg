@@ -4,30 +4,30 @@ hunger = 0
 
 [xp]
 combat = 0
-fishing = 592
-cooking = 80
-woodcutting = 25
+fishing = 0
+cooking = 0
+woodcutting = 0
 mining = 0
-smithing = 2
-thieving = 241
+smithing = 0
+thieving = 0
 
 [achievements]
 monsters_killed = 0
 stronghold_defeated = false
-earned_million_gold = false
+earned_million_gold = true
 level_100_reached = false
 hacked_the_game = true
 
 [bank]
-wallet = 400
-account1 = 0
+wallet = 749100
+account1 = 500
 account2 = 0
 account3 = 0
 account4 = 0
 
 [guilds]
-thieving = true
-fishing = true
+thieving = false
+fishing = false
 cooking = false
 woodcutting = false
 mining = false
@@ -36,14 +36,14 @@ smithing = false
 [equipment]
 
 [items]
-bait = 0
+bait = 100
 seeds = 0
 furs = 0
 fish = 0
 food = 0
-wood = 8
+wood = 0
 ore = 0
-ingots = 1
+ingots = 0
 potions = 0
 rubies = 0
 magic_scrolls = 0
@@ -52,100 +52,100 @@ dragon_hides = 0
 runic_tablets = 0
 
 [armor.leather]
-name = "Leather Armor"
 owns = false
 defense = 10
 durability = 100
 default_durability = 100
 equipped = false
+flag = "Leather"
 
 [armor.bronze]
-name = "Bronze Armor"
 owns = false
 defense = 30
 durability = 200
 default_durability = 200
 equipped = false
+flag = "Bronze"
 
 [armor.iron]
-name = "Iron Armor"
 owns = false
 defense = 50
 durability = 300
 default_durability = 300
 equipped = false
+flag = "Iron"
 
 [armor.steel]
-name = "Steel Armor"
 owns = false
 defense = 100
 durability = 500
 default_durability = 500
 equipped = false
+flag = "Steel"
 
 [armor.dragonhide]
-name = "Dragonhide Armor"
 owns = false
 defense = 200
 durability = 500
 default_durability = 500
 equipped = false
+flag = "Dragonhide"
 
 [armor.mystic]
-name = "Mystic Armor"
 owns = false
 defense = 1000
 durability = 10000
 default_durability = 10000
 equipped = false
+flag = "Mystic"
 
 [weapons.wooden_sword]
-name = "Wooden Sword"
 owns = false
 equipped = false
 damage = 10
 durability = 100
 default_durability = 100
+flag = "WoodenSword"
 
 [weapons.bronze_sword]
-name = "Bronze Sword"
 owns = false
 equipped = false
 damage = 20
 durability = 150
 default_durability = 150
+flag = "BronzeSword"
 
 [weapons.iron_sword]
-name = "Iron Sword"
 owns = false
 equipped = false
 damage = 50
 durability = 200
 default_durability = 200
+flag = "IronSword"
 
 [weapons.steel_sword]
-name = "Steel Rapier"
 owns = false
 equipped = false
 damage = 200
 durability = 500
 default_durability = 500
+flag = "SteelSword"
 
 [weapons.mystic_sword]
-name = "Mystic Sword"
 owns = false
 equipped = false
 damage = 500
 durability = 1000
 default_durability = 1000
+flag = "MysticSword"
 
 [weapons.wizard_staff]
-name = "Wizard Staff"
 owns = false
 equipped = false
 damage = 1000
 durability = 2000
 default_durability = 2000
+flag = "WizardStaff"
 
 [settings]
 username = "admin"
