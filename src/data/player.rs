@@ -7,6 +7,8 @@ use super::xp::*;
 use crate::data::inventory::{armor::*, bank::*, equipment::Equipment, items::*, weapons::*};
 
 use crate::utils::files;
+use crate::utils::input::confirm;
+use crate::utils::messages::warning;
 use crate::{DataError, ProfileError};
 use serde::{Deserialize, Serialize};
 use toml as encoder;
@@ -75,9 +77,7 @@ impl Player {
 
     /// Save player data to disk.
     pub fn save(&self) {
-        let serialize_result = self
-            .to_string()
-            .expect("Could not convert Player to config file format.");
+        let serialize_result = self.to_string();
 
         let path = files::handler::generate_profile_path(&self.settings.username);
         files::handler::write_file(path, serialize_result)
@@ -98,10 +98,10 @@ impl Player {
 
     /// Retrieve player data from disk using the username as the search string
     pub fn get_from_username(username: &str) -> crate::Result<Player> {
-        let profile_path = files::handler::generate_profile_path(username);
+        let profile_path: String = files::handler::generate_profile_path(username);
         let mut contents: String = String::new();
 
-        let file_result = files::handler::read_file(profile_path);
+        let file_result: Result<String, ProfileError> = files::handler::read_file(profile_path);
 
         match file_result {
             Ok(data) => contents = data,
@@ -111,16 +111,28 @@ impl Player {
         match Self::from_string(contents) {
             Ok(player) => Ok(player),
             Err(_) => {
-                Player::delete_from_username(username);
+                let delete: bool = confirm("Player data file is corrupted. Delete?");
+
+                if delete {
+                    warning(Some("Deleting player data file."));
+                    Player::delete_from_username(username)
+                } else {
+                    warning(Some("Cancelling."));
+                }
+
                 Err(DataError::Decode.boxed())
             }
         }
     }
 }
 
-/// Serialization/Deserialization/Viewing
+impl ToString for Player {
+    fn to_string(&self) -> String {
+        encoder::to_string_pretty(&self).expect("Should always encode to a string")
+    }
+}
+
 impl Player {
-    /// Convert TOML to player data
     pub fn from_string(data: String) -> Result<Player, ProfileError> {
         let user_result = encoder::from_str(&data);
 
@@ -130,18 +142,10 @@ impl Player {
         }
     }
 
-    /// Convert player data to TOML
-    pub fn to_string(&self) -> Result<String, DataError> {
-        match encoder::to_string(&self) {
-            Ok(string) => Ok(string),
-            Err(_) => Err(DataError::Encode),
-        }
-    }
-
-    pub fn viewer(player: &Player) {
+    pub fn paged_viewer(player: &Player) {
         use crate::utils::tui::{page_header, press_enter_to_continue, HeaderSubtext};
 
-        let string = player.to_string().expect("Should be able to deserialize with SERDE.");
+        let string = player.to_string();
 
         let pages = string.split("\n\n");
         let mut page_number: usize = 1;
@@ -163,7 +167,7 @@ impl Player {
         }
     }
 
-    pub fn view(&self) {
-        Self::viewer(self);
+    pub fn paged_view(&self) {
+        Self::paged_viewer(self);
     }
 }

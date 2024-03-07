@@ -98,7 +98,7 @@ fn view_user(player: &mut Player) {
 
             match profile_result {
                 Ok(profile) => {
-                    Player::viewer(&profile);
+                    Player::paged_viewer(&profile);
                     main(player);
                 }
                 Err(message) => {
