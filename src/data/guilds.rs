@@ -99,10 +99,10 @@ impl Guilds {
     pub fn shop_table(player: &mut Player) {
         let mut strings: Vec<String> = vec!["Guild,Price,Member".to_string()];
 
-        for (flag, price) in Self::shop().iter() {
+        Self::shop().iter().for_each(|(flag, price)| {
             let string = format!("{},{},{}", flag.name(), price, checkmark(*player.guilds.get(flag)));
             strings.push(string)
-        }
+        });
 
         table_from_csv(strings);
         println!("Gold: {}\n", player.bank.wallet);

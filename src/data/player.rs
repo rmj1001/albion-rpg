@@ -151,7 +151,7 @@ impl Player {
         let mut page_number: usize = 1;
         let total_pages = pages.clone().count();
 
-        for page in pages {
+        pages.for_each(|page| {
             page_header(
                 format!(
                     "Player Profile - {} - Page {}/{}",
@@ -164,7 +164,7 @@ impl Player {
             press_enter_to_continue();
 
             page_number += 1;
-        }
+        });
     }
 
     pub fn paged_view(&self) {

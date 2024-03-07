@@ -35,9 +35,9 @@ fn list_users(player: &mut Player) {
 
     let profiles: Vec<String> = files::handler::list_all_profiles();
 
-    for profile_string in &profiles {
+    profiles.iter().for_each(|profile_string| {
         println!("- {}", profile_string);
-    }
+    });
 
     println!();
     tui::press_enter_to_continue();

@@ -228,7 +228,7 @@ pub fn victory(battle: &mut BattleSettings) {
 
     println!("Items Looted:");
 
-    for reward in &rewards {
+    rewards.iter().for_each(|reward| {
         let name: &str = match reward {
             Rewards::Bones(_) => "Bone",
             Rewards::DragonHides(_) => "Dragon Hide",
@@ -252,7 +252,7 @@ pub fn victory(battle: &mut BattleSettings) {
         let reward_string = format!("- {}x {}", quantity, name);
 
         println!("{}", reward_string);
-    }
+    });
 
     add_rewards_to_user(battle.player, rewards);
     println!();

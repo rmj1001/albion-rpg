@@ -164,14 +164,15 @@ where
 
     let mut pages: Vec<String> = Vec::new();
 
-    for chunk in lines.chunks(lines_per_page) {
+    lines.chunks(lines_per_page).for_each(|chunk| {
         let mut page: String = String::new();
-        for line in chunk {
+
+        chunk.iter().for_each(|line| {
             page.push_str(line);
-        }
+        });
 
         pages.push(page);
-    }
+    });
 
     pages
 }

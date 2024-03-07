@@ -153,10 +153,10 @@ impl ArmorInventory {
     pub fn shop_table(player: &mut Player) {
         let mut strings: Vec<String> = vec!["Item,Price,Owns".to_string()];
 
-        for (flag, price) in Self::shop() {
-            let string = format!("{},{},{}", flag.name(), price, checkmark(player.armor.get(&flag).owns));
+        Self::shop().iter().for_each(|(flag, price)| {
+            let string = format!("{},{},{}", flag.name(), price, checkmark(player.armor.get(flag).owns));
             strings.push(string)
-        }
+        });
 
         table_from_csv(strings);
         println!("Gold: {}\n", player.bank.wallet);

@@ -169,20 +169,20 @@ impl ItemInventory {
         let mut current_pair: Pair = ((Item::Bait, 0, 0), (Item::Bait, 0, 0));
         let mut index: usize = 0;
 
-        for (flag, usize) in Self::shop() {
-            let quantity = player.items.get(flag);
+        Self::shop().iter().for_each(|(flag, usize)| {
+            let quantity = player.items.get(*flag);
 
             if index == 0 {
-                current_pair.0 = (flag, usize, *quantity);
+                current_pair.0 = (*flag, *usize, *quantity);
                 index += 1;
             } else if index == 1 {
-                current_pair.1 = (flag, usize, *quantity);
+                current_pair.1 = (*flag, *usize, *quantity);
                 pairs.push(current_pair);
                 index = 0;
             }
-        }
+        });
 
-        for (item1, item2) in pairs {
+        pairs.iter().for_each(|(item1, item2)| {
             strings.push(format!(
                 "{},{},{},,{},{},{}",
                 item1.0.name(),
@@ -192,7 +192,7 @@ impl ItemInventory {
                 item2.1,
                 item2.2
             ));
-        }
+        });
 
         table_from_csv(strings);
     }
