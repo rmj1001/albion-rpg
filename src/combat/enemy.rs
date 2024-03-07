@@ -3,28 +3,24 @@ use crate::{
     utils::math::{self, random_num},
 };
 
-#[derive(Clone, Debug)]
-pub enum Enemy {
-    Animal(Animal),
-    Human,
-    Monster(Monster),
-    Undead(Undead),
-    Invalid,
-}
+use strum::IntoEnumIterator;
+use strum_macros::EnumIter;
 
-#[derive(Clone, Debug)]
-pub enum Animal {
+#[derive(Clone, Debug, PartialEq, EnumIter)]
+pub enum Enemy {
+    // Human
+    Human,
+    Steve,
+
+    // Animals
     Bear,
     DireWolf,
     GiantSpider,
     WhiteApe,
     Owlbear,
     Wyrm,
-    Invalid,
-}
 
-#[derive(Clone, Debug)]
-pub enum Monster {
+    // Monsters
     Centaur,
     DarkElf,
     Dragon,
@@ -33,17 +29,13 @@ pub enum Monster {
     Orc,
     Troll,
     Werewolf,
-    Invalid,
-}
-
-#[derive(Clone, Debug)]
-pub enum Undead {
     Banshee,
+
+    // Undead
     Ghost,
     Skeleton,
     Vampire,
     Zombie,
-    Invalid,
 }
 
 #[derive(Clone)]
@@ -61,7 +53,7 @@ impl EnemyData {
     pub fn new(user_combat_xp: usize, user_hp: usize) -> Self {
         let user_level: usize = XP::get_level(user_combat_xp);
         let kind_type: Enemy = pick_enemy();
-        let kind_string: &str = EnemyData::kind_string(kind_type.clone());
+        let kind_string: &str = EnemyData::name(kind_type.clone());
 
         Self {
             kind_type,
@@ -74,95 +66,45 @@ impl EnemyData {
         }
     }
 
-    pub fn kind_string(kind: Enemy) -> &'static str {
+    pub fn name(kind: Enemy) -> &'static str {
         match kind {
+            // Human
             Enemy::Human => "Human",
-            Enemy::Invalid => "Invalid Enemy",
-            Enemy::Animal(animal) => match animal {
-                Animal::Bear => "Bear",
-                Animal::Wyrm => "Wyrm",
-                Animal::Invalid => "Invalid Animal",
-                Animal::Owlbear => "Owlbear",
-                Animal::DireWolf => "Dire Wolf",
-                Animal::WhiteApe => "White Ape",
-                Animal::GiantSpider => "Giant Spider",
-            },
-            Enemy::Undead(undead) => match undead {
-                Undead::Banshee => "Banshee",
-                Undead::Ghost => "Ghost",
-                Undead::Zombie => "Zombie",
-                Undead::Invalid => "Invalid Undead",
-                Undead::Vampire => "Vampire",
-                Undead::Skeleton => "Skeleton",
-            },
-            Enemy::Monster(monster) => match monster {
-                Monster::Centaur => "Centaur",
-                Monster::Orc => "Orc",
-                Monster::Giant => "Giant",
-                Monster::Troll => "Troll",
-                Monster::Dragon => "Dragon",
-                Monster::Goblin => "Goblin",
-                Monster::DarkElf => "Dark Elf",
-                Monster::Invalid => "Invalid Monster",
-                Monster::Werewolf => "Werewolf",
-            },
+            Enemy::Steve => "Steve",
+
+            // Animal
+            Enemy::Bear => "Bear",
+            Enemy::DireWolf => "Dire Wolf",
+            Enemy::GiantSpider => "Giant Spider",
+            Enemy::WhiteApe => "White Ape",
+            Enemy::Owlbear => "Owlbear",
+            Enemy::Wyrm => "Wyrm",
+
+            // Undead
+            Enemy::Banshee => "Banshee",
+            Enemy::Ghost => "Ghost",
+            Enemy::Zombie => "Zombie",
+            Enemy::Vampire => "Vampire",
+            Enemy::Skeleton => "Skeleton",
+
+            // Monster
+            Enemy::Centaur => "Centaur",
+            Enemy::Orc => "Orc",
+            Enemy::Giant => "Giant",
+            Enemy::Troll => "Troll",
+            Enemy::Dragon => "Dragon",
+            Enemy::Goblin => "Goblin",
+            Enemy::DarkElf => "Dark Elf",
+            Enemy::Werewolf => "Werewolf",
         }
     }
 }
 
 fn pick_enemy() -> Enemy {
-    let number = math::random_num(0, 3);
+    let max = Enemy::iter().len();
+    let number = math::random_num(0, max - 1);
 
-    match number {
-        0 => Enemy::Animal(pick_animal()),
-        1 => Enemy::Human,
-        2 => Enemy::Monster(pick_monster()),
-        3 => Enemy::Undead(pick_undead()),
-        _ => Enemy::Invalid,
-    }
-}
-
-fn pick_animal() -> Animal {
-    let number: usize = math::random_num(0, 5);
-
-    match number {
-        0 => Animal::Bear,
-        1 => Animal::DireWolf,
-        2 => Animal::GiantSpider,
-        3 => Animal::Owlbear,
-        4 => Animal::WhiteApe,
-        5 => Animal::Wyrm,
-        _ => Animal::Invalid,
-    }
-}
-
-fn pick_monster() -> Monster {
-    let number: usize = math::random_num(0, 7);
-
-    match number {
-        0 => Monster::Centaur,
-        1 => Monster::DarkElf,
-        2 => Monster::Dragon,
-        3 => Monster::Giant,
-        4 => Monster::Goblin,
-        5 => Monster::Orc,
-        6 => Monster::Troll,
-        7 => Monster::Werewolf,
-        _ => Monster::Invalid,
-    }
-}
-
-fn pick_undead() -> Undead {
-    let number: usize = math::random_num(0, 4);
-
-    match number {
-        0 => Undead::Banshee,
-        1 => Undead::Ghost,
-        2 => Undead::Skeleton,
-        3 => Undead::Vampire,
-        4 => Undead::Zombie,
-        _ => Undead::Invalid,
-    }
+    Enemy::iter().get(number).expect("Should return a valid enemy")
 }
 
 // Strength
@@ -260,7 +202,7 @@ pub fn add_rewards_to_user(player: &mut Player, rewards: Vec<Rewards>) {
 pub mod tests {
     #[test]
     pub fn invalid_enemies() {
-        use crate::combat::enemy::{Animal, Enemy, EnemyData, Monster, Undead};
+        use crate::combat::enemy::{Enemy, EnemyData};
         use crate::data::player::Player;
         use crate::utils::crypt;
 
@@ -276,17 +218,7 @@ pub mod tests {
             index += 1
         }
 
-        let invalid_enemy_filter = |enemy: &&EnemyData| {
-            matches!(
-                enemy.kind_type,
-                Enemy::Invalid
-                    | Enemy::Animal(Animal::Invalid)
-                    | Enemy::Monster(Monster::Invalid)
-                    | Enemy::Undead(Undead::Invalid)
-            )
-        };
-
-        let invalids: Vec<EnemyData> = enemies.iter().filter(invalid_enemy_filter).cloned().collect();
+        let invalids: Vec<EnemyData> = enemies.to_vec();
         let mut types: Vec<Enemy> = vec![];
 
         invalids
