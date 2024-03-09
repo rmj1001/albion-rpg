@@ -3,7 +3,7 @@ use crate::{
     utils::{
         crypt,
         input::*,
-        messages::*,
+        messages::{self, *},
         tui::{self, page_header},
     },
 };
@@ -61,6 +61,9 @@ pub fn main() {
             crate::menus::game_menu::main(&mut player);
         }
 
-        Err(_) => crate::menus::accounts::main(),
+        Err(message) => {
+            message.failure();
+            crate::menus::accounts::main();
+        }
     }
 }
