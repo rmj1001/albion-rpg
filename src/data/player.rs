@@ -95,7 +95,6 @@ impl Player {
     /// Delete the player file on disk
     pub fn delete(&mut self) {
         Player::delete_from_username(&self.settings.username);
-        self.reset();
     }
 
     /// Delete the player file on disk
