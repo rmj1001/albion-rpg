@@ -1,11 +1,8 @@
-use crate::{
-    data::settings::Settings,
-    utils::{
-        crypt,
-        input::*,
-        messages::{self, *},
-        tui::{self, page_header},
-    },
+use crate::utils::{
+    crypt,
+    input::*,
+    messages::*,
+    tui::{self, page_header},
 };
 
 use crate::data::player::Player;
@@ -22,11 +19,6 @@ fn get_password(profile: &Player) -> bool {
     true
 }
 
-fn profile_remains_locked() {
-    cancel_msg("Profile will remain locked.");
-    crate::menus::accounts::main();
-}
-
 pub fn main() {
     page_header("Login", tui::HeaderSubtext::None);
 
@@ -36,21 +28,6 @@ pub fn main() {
     match profile_result {
         Ok(player) => {
             let mut player = player;
-
-            if player.settings.locked {
-                let unlock_profile: bool = confirm("\nProfile is locked. Unlock?");
-
-                if unlock_profile {
-                    if get_password(&player) {
-                        Settings::toggle_lock(&mut player);
-                    } else {
-                        profile_remains_locked();
-                    }
-                } else {
-                    cancelling();
-                    crate::menus::accounts::main();
-                }
-            }
 
             if !get_password(&player) {
                 crate::menus::accounts::main();

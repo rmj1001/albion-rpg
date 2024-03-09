@@ -8,7 +8,6 @@ pub struct Settings {
     pub username: String,
     pub password_hash: String,
     pub developer: bool,
-    pub locked: bool,
     pub hardmode: bool,
 }
 
@@ -23,18 +22,6 @@ impl Settings {
 
     pub fn reset(&mut self) {
         *self = Self::new(&self.username, &self.password_hash);
-    }
-
-    /// Hinders profile login without double password entry
-    pub fn toggle_lock(player: &mut Player) {
-        player.settings.locked = !player.settings.locked;
-        player.save();
-
-        if player.settings.locked {
-            success_msg("Player locked.");
-        } else {
-            success_msg("Player unlocked.");
-        }
     }
 
     /// Either reset inventory or delete profile if defeated in battle

@@ -17,7 +17,7 @@ pub fn main(player: &mut Player) {
         &[
             "1. Change Username",
             "2. Change Password",
-            "3. Lock Profile",
+            "3. Reset Profile",
             "4. Delete Profile",
             "5. Toggle Hard Mode",
             "6. View Player Data",
@@ -29,7 +29,7 @@ pub fn main(player: &mut Player) {
     match choice {
         0 => change_username(player),
         1 => change_password(player),
-        2 => lock_profile(player),
+        2 => reset(player),
         3 => delete_profile(player),
         4 => hardmode(player),
         5 => {
@@ -90,15 +90,16 @@ fn change_password(player: &mut Player) {
     main(player);
 }
 
-fn lock_profile(player: &mut Player) {
-    let confirm_lock = confirm("Are you sure you want to lock your profile?");
+fn reset(player: &mut Player) {
+    let confirm_reset = confirm("Are you sure you want to reset your profile?");
 
-    if !confirm_lock {
+    if !confirm_reset {
         cancelling();
         main(player);
     }
 
-    Settings::toggle_lock(player);
+    player.reset();
+    player.save();
 
     crate::menus::accounts::main();
 }
