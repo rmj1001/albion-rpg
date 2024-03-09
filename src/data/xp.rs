@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::utils::tui::table_from_csv;
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct XP {
     pub combat: usize,
     pub fishing: usize,
@@ -27,15 +27,7 @@ pub enum XPType {
 
 impl XP {
     pub fn new() -> Self {
-        Self {
-            combat: 0,
-            fishing: 0,
-            cooking: 0,
-            woodcutting: 0,
-            mining: 0,
-            smithing: 0,
-            thieving: 0,
-        }
+        Self::default()
     }
 
     pub fn reset(&mut self) {

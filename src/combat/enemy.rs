@@ -6,9 +6,10 @@ use crate::{
 use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
 
-#[derive(Clone, Debug, PartialEq, EnumIter)]
+#[derive(Clone, Debug, PartialEq, EnumIter, Default)]
 pub enum Enemy {
     // Human
+    #[default]
     Human,
     Steve,
 
@@ -18,6 +19,7 @@ pub enum Enemy {
     GiantSpider,
     WhiteApe,
     Owlbear,
+    Stag,
     Wyrm,
 
     // Monsters
@@ -38,14 +40,28 @@ pub enum Enemy {
     Zombie,
 }
 
-#[derive(Clone)]
+impl std::fmt::Display for Enemy {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let string: String = match self {
+            Enemy::DireWolf => "Dire Wolf".to_string(),
+            Enemy::GiantSpider => "Giant Spider".to_string(),
+            Enemy::WhiteApe => "White Ape".to_string(),
+            Enemy::Owlbear => "Owl Bear".to_string(),
+
+            // Should display one-word names as usual
+            miscellaneous => format!("{:?}", miscellaneous),
+        };
+
+        write!(f, "{}", string)
+    }
+}
+
+#[derive(Clone, Default)]
 pub struct EnemyData {
-    pub kind_type: Enemy,
-    pub kind: &'static str,
+    pub flag: Enemy,
+    pub name: String,
     pub hp: usize,
     pub damage: usize,
-    pub xp: usize,
-    pub gold: usize,
     pub rewards: Vec<Rewards>,
 }
 
@@ -53,49 +69,13 @@ impl EnemyData {
     pub fn new(user_combat_xp: usize, user_hp: usize) -> Self {
         let user_level: usize = XP::get_level(user_combat_xp);
         let kind_type: Enemy = pick_enemy();
-        let kind_string: &str = EnemyData::name(kind_type.clone());
 
         Self {
-            kind_type,
-            kind: kind_string,
+            flag: kind_type.clone(),
+            name: kind_type.to_string(),
             hp: calculate_hp(user_hp),
             damage: calculate_damage(user_hp),
-            xp: linear_xp_gold(user_level),
-            gold: linear_xp_gold(user_level),
-            rewards: generate_rewards(user_level),
-        }
-    }
-
-    pub fn name(kind: Enemy) -> &'static str {
-        match kind {
-            // Human
-            Enemy::Human => "Human",
-            Enemy::Steve => "Steve",
-
-            // Animal
-            Enemy::Bear => "Bear",
-            Enemy::DireWolf => "Dire Wolf",
-            Enemy::GiantSpider => "Giant Spider",
-            Enemy::WhiteApe => "White Ape",
-            Enemy::Owlbear => "Owlbear",
-            Enemy::Wyrm => "Wyrm",
-
-            // Undead
-            Enemy::Banshee => "Banshee",
-            Enemy::Ghost => "Ghost",
-            Enemy::Zombie => "Zombie",
-            Enemy::Vampire => "Vampire",
-            Enemy::Skeleton => "Skeleton",
-
-            // Monster
-            Enemy::Centaur => "Centaur",
-            Enemy::Orc => "Orc",
-            Enemy::Giant => "Giant",
-            Enemy::Troll => "Troll",
-            Enemy::Dragon => "Dragon",
-            Enemy::Goblin => "Goblin",
-            Enemy::DarkElf => "Dark Elf",
-            Enemy::Werewolf => "Werewolf",
+            rewards: Rewards::new(user_level),
         }
     }
 }
@@ -130,73 +110,117 @@ fn calculate_damage(player_hp: usize) -> usize {
 
 #[derive(Debug, Clone)]
 pub enum Rewards {
+    XP(usize),
+    Gold(usize),
     Potions(usize),
     Rubies(usize),
     MagicScrolls(usize),
     Bones(usize),
     DragonHides(usize),
     RunicTablets(usize),
-    Invalid,
 }
 
-pub fn linear_xp_gold(player_level: usize) -> usize {
-    let mut working_xp: usize = 0;
+impl std::fmt::Display for Rewards {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let string: String = match self {
+            Self::XP(xp) => format!("XP: {}", xp),
+            Self::Gold(gold) => format!("Gold: {}", gold),
+            Self::Potions(potions) => format!("Potions: {}", potions),
+            Self::Rubies(rubies) => format!("Rubies: {}", rubies),
+            Self::MagicScrolls(scrolls) => format!("Magic Scrolls: {}", scrolls),
+            Self::Bones(bones) => format!("Bones: {}", bones),
+            Self::DragonHides(hides) => format!("Dragon Hides: {}", hides),
+            Self::RunicTablets(tablets) => format!("Runic Tablets: {}", tablets),
+        };
 
-    if player_level > 0 {
-        working_xp += random_num(0, 10);
+        write!(f, "{}", string)
     }
-
-    if player_level > 10 {
-        working_xp += random_num(10, 20);
-    }
-
-    if player_level > 25 {
-        working_xp += random_num(20, 50);
-    }
-
-    if player_level > 50 {
-        working_xp += random_num(50, 75);
-    }
-
-    if player_level > 100 {
-        working_xp += random_num(75, 100)
-    }
-
-    working_xp
 }
 
-pub fn generate_rewards(player_level: usize) -> Vec<Rewards> {
-    let mut rewards: Vec<Rewards> = vec![Rewards::Potions(random_num(1, 3)), Rewards::Bones(random_num(1, 3))];
-
-    if player_level > 10 {
-        rewards.push(Rewards::MagicScrolls(random_num(1, 3)));
+impl Default for Rewards {
+    fn default() -> Self {
+        Self::Potions(random_num(1, 3))
     }
-
-    if player_level > 25 {
-        rewards.push(Rewards::DragonHides(random_num(1, 3)));
-    }
-
-    if player_level > 50 {
-        rewards.push(Rewards::Rubies(random_num(1, 3)));
-    }
-
-    if player_level > 100 {
-        rewards.push(Rewards::RunicTablets(random_num(1, 3)));
-    }
-
-    rewards
 }
 
-pub fn add_rewards_to_user(player: &mut Player, rewards: Vec<Rewards>) {
-    rewards.iter().for_each(|reward| match reward {
-        Rewards::Potions(quantity) => player.items.potions += quantity,
-        Rewards::Bones(quantity) => player.items.bones += quantity,
-        Rewards::Rubies(quantity) => player.items.rubies += quantity,
-        Rewards::DragonHides(quantity) => player.items.dragon_hides += quantity,
-        Rewards::MagicScrolls(quantity) => player.items.magic_scrolls += quantity,
-        Rewards::RunicTablets(quantity) => player.items.runic_tablets += quantity,
-        Rewards::Invalid => {}
-    });
+impl Rewards {
+    pub fn generate_quantity() -> usize {
+        random_num(1, 3)
+    }
+
+    pub fn default_array() -> Vec<Self> {
+        vec![Rewards::default(), Rewards::Bones(random_num(1, 3))]
+    }
+
+    pub fn new(player_level: usize) -> Vec<Self> {
+        let mut rewards: Vec<Rewards> = Self::default_array();
+        let xp_reward: usize = Self::xp(player_level);
+        let mut gold_reward: usize = random_num(0, 10);
+
+        // Generate XP
+
+        if player_level > 10 {
+            rewards.push(Rewards::MagicScrolls(Self::generate_quantity()));
+            gold_reward += random_num(10, 20);
+        }
+
+        if player_level > 25 {
+            rewards.push(Rewards::DragonHides(Self::generate_quantity()));
+            gold_reward += random_num(20, 50);
+        }
+
+        if player_level > 50 {
+            rewards.push(Rewards::Rubies(Self::generate_quantity()));
+            gold_reward += random_num(50, 75);
+        }
+
+        if player_level > 100 {
+            rewards.push(Rewards::RunicTablets(Self::generate_quantity()));
+            gold_reward += random_num(75, 100);
+        }
+
+        rewards.push(Rewards::XP(xp_reward));
+        rewards.push(Rewards::Gold(gold_reward));
+
+        rewards
+    }
+
+    pub fn xp(player_level: usize) -> usize {
+        let mut xp_reward: usize = random_num(0, 10);
+
+        // Generate XP
+
+        if player_level > 10 {
+            xp_reward += random_num(10, 20);
+        }
+
+        if player_level > 25 {
+            xp_reward += random_num(20, 50);
+        }
+
+        if player_level > 50 {
+            xp_reward += random_num(50, 75);
+        }
+
+        if player_level > 100 {
+            xp_reward += random_num(75, 100)
+        }
+
+        xp_reward
+    }
+
+    pub fn reward_to_player(player: &mut Player, rewards: Vec<Self>) {
+        rewards.iter().for_each(|reward| match reward {
+            Rewards::Potions(quantity) => player.items.potions += quantity,
+            Rewards::Bones(quantity) => player.items.bones += quantity,
+            Rewards::Rubies(quantity) => player.items.rubies += quantity,
+            Rewards::DragonHides(quantity) => player.items.dragon_hides += quantity,
+            Rewards::MagicScrolls(quantity) => player.items.magic_scrolls += quantity,
+            Rewards::RunicTablets(quantity) => player.items.runic_tablets += quantity,
+            Rewards::Gold(gold) => player.bank.wallet += gold,
+            Rewards::XP(xp) => player.xp.combat += xp,
+        });
+    }
 }
 
 pub mod tests {
@@ -223,7 +247,7 @@ pub mod tests {
 
         invalids
             .iter()
-            .for_each(|enemy: &EnemyData| types.push(enemy.kind_type.clone()));
+            .for_each(|enemy: &EnemyData| types.push(enemy.flag.clone()));
 
         if !invalids.is_empty() {
             panic!(

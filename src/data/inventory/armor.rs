@@ -40,15 +40,26 @@ pub struct ArmorData {
     pub flag: Armor,
 }
 
-impl ArmorData {
-    pub fn new(defense: usize, durability: usize, flag: Armor) -> Self {
+impl Default for ArmorData {
+    fn default() -> Self {
         Self {
             owns: false,
             equipped: false,
+            defense: 5,
+            durability: 50,
+            default_durability: 50,
+            flag: Armor::Leather,
+        }
+    }
+}
+
+impl ArmorData {
+    pub fn new(defense: usize, durability: usize, flag: Armor) -> Self {
+        Self {
             defense,
             durability,
-            default_durability: durability,
             flag,
+            ..Default::default()
         }
     }
 

@@ -10,18 +10,15 @@ use crate::data::player::Player;
 
 use super::{armor::Armor, weapons::Weapon};
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
 pub struct Equipment {
     pub armor: Option<Armor>,
     pub weapon: Option<Weapon>,
 }
 
 impl Equipment {
-    pub fn new() -> Equipment {
-        Equipment {
-            armor: None,
-            weapon: None,
-        }
+    pub fn new() -> Self {
+        Self::default()
     }
 
     pub fn reset(&mut self) {
@@ -188,8 +185,9 @@ impl Equipment {
         armor.equipped = true;
 
         println!("Equipped the {}", armor.flag.name());
-        player.equipment.armor = Some(flag);
+
         Self::unequip_armor(player, false);
+        player.equipment.armor = Some(flag);
 
         press_enter_to_continue();
     }

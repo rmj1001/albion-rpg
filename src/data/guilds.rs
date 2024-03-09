@@ -32,7 +32,7 @@ impl Guild {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Guilds {
     pub thieving: bool,
     pub fishing: bool,
@@ -44,14 +44,7 @@ pub struct Guilds {
 
 impl Guilds {
     pub fn new() -> Self {
-        Self {
-            thieving: false,
-            fishing: false,
-            cooking: false,
-            woodcutting: false,
-            mining: false,
-            smithing: false,
-        }
+        Self::default()
     }
 
     pub fn get<'a>(&'a mut self, guild: &Guild) -> &'a mut bool {

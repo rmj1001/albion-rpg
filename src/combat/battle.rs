@@ -1,5 +1,5 @@
 use crate::{
-    combat::enemy::{add_rewards_to_user, generate_rewards, EnemyData, Rewards},
+    combat::enemy::{EnemyData, Rewards},
     data::{inventory::equipment::Equipment, player::Player, xp::XP},
     utils::{
         input,
@@ -56,14 +56,14 @@ pub fn new_battle(battle: &mut BattleSettings) {
     }
 
     println!();
-    println!("You are now fighting a {}.", battle.enemy.kind);
+    println!("You are now fighting a {}.", battle.enemy.name);
     sleep(battle.pause_seconds);
     battle_menu(battle);
 }
 
 pub fn battle_menu(battle: &mut BattleSettings) {
     page_header(
-        format!("{} - {}", battle.header, battle.enemy.kind),
+        format!("{} - {}", battle.header, battle.enemy.name),
         HeaderSubtext::Keyboard,
     );
 
@@ -73,7 +73,7 @@ pub fn battle_menu(battle: &mut BattleSettings) {
         println!();
     }
 
-    println!("Enemy: {}", battle.enemy.kind);
+    println!("Enemy: {}", battle.enemy.name);
     println!("Enemy HP: {}", battle.enemy.hp);
     println!();
 
@@ -83,7 +83,7 @@ pub fn battle_menu(battle: &mut BattleSettings) {
 
     let action = input::select_from_str_array(
         &[
-            &format!("1. Attack the {}", battle.enemy.kind),
+            &format!("1. Attack the {}", battle.enemy.name),
             "2. Inventory",
             "3. Retreat",
         ],
@@ -131,7 +131,7 @@ pub fn attack(battle: &mut BattleSettings) {
 }
 
 fn player_attack(battle: &mut BattleSettings) {
-    let enemy_type = battle.enemy.kind;
+    let enemy_type = &battle.enemy.name;
 
     println!("You attack the {}...", enemy_type);
     sleep(battle.pause_seconds);
@@ -168,7 +168,7 @@ fn player_attack(battle: &mut BattleSettings) {
 }
 
 fn enemy_attack(battle: &mut BattleSettings) {
-    let enemy_type = battle.enemy.kind;
+    let enemy_type = &battle.enemy.name;
     let mut damage: usize = battle.enemy.damage;
 
     if let Some(equipped_armor) = &battle.player.equipment.armor {
@@ -219,52 +219,20 @@ fn success_or_fail() -> bool {
 pub fn victory(battle: &mut BattleSettings) {
     page_header(format!("{} - Victory", battle.header), HeaderSubtext::None);
 
-    println!("You successfully defeated the {}!", battle.enemy.kind);
+    println!("You successfully defeated the {}!", battle.enemy.name);
     battle.player.health.restore();
     battle.player.achievements.monsters_killed += 1;
     println!();
 
-    let rewards: Vec<Rewards> = generate_rewards(XP::get_level(battle.player.xp.total()));
+    let rewards = Rewards::new(XP::get_level(battle.player.xp.total()));
 
     println!("Items Looted:");
 
     rewards.iter().for_each(|reward| {
-        let name: &str = match reward {
-            Rewards::Bones(_) => "Bone",
-            Rewards::DragonHides(_) => "Dragon Hide",
-            Rewards::MagicScrolls(_) => "Magic Scroll",
-            Rewards::Potions(_) => "Potion",
-            Rewards::Rubies(_) => "Ruby",
-            Rewards::RunicTablets(_) => "Runic Tablet",
-            Rewards::Invalid => panic!("Invalid reward generated"),
-        };
-
-        let quantity: &usize = match reward {
-            Rewards::Bones(n) => n,
-            Rewards::DragonHides(n) => n,
-            Rewards::MagicScrolls(n) => n,
-            Rewards::Potions(n) => n,
-            Rewards::Rubies(n) => n,
-            Rewards::RunicTablets(n) => n,
-            Rewards::Invalid => panic!("Invalid reward generated"),
-        };
-
-        let reward_string = format!("- {}x {}", quantity, name);
-
-        println!("{}", reward_string);
+        println!("- {}", reward);
     });
 
-    add_rewards_to_user(battle.player, rewards);
-    println!();
-
-    println!("Gained Combat XP: {}", battle.enemy.xp);
-    battle.player.xp.combat += battle.enemy.xp;
-    println!("Total Combat XP: {}", battle.player.xp.combat);
-    println!();
-
-    println!("Gained Gold: {}", battle.enemy.gold);
-    battle.player.bank.wallet += battle.enemy.gold;
-    println!("Total Gold: {}", battle.player.bank.wallet);
+    Rewards::reward_to_player(battle.player, rewards);
     println!();
 
     press_enter_to_continue();
@@ -316,7 +284,7 @@ pub fn hardmode(battle: &mut BattleSettings) {
         0 => {
             println!(
                 "The {} stole all your gold and inventory, and you lost all your progress.\n",
-                battle.enemy.kind
+                battle.enemy.name
             );
             battle.player.die();
             sleep(battle.pause_seconds);

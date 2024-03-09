@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::utils::{math::random_num, tui::sleep};
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Health {
     pub hp: usize,
     pub hunger: usize,
@@ -10,7 +10,10 @@ pub struct Health {
 
 impl Health {
     pub fn new() -> Self {
-        Self { hp: 100, hunger: 0 }
+        Self {
+            hp: 100,
+            ..Default::default()
+        }
     }
 
     pub fn reset(&mut self) {

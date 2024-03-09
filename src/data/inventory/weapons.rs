@@ -38,15 +38,26 @@ pub struct WeaponData {
     pub flag: Weapon,
 }
 
-impl WeaponData {
-    pub fn new(damage: usize, durability: usize, flag: Weapon) -> Self {
+impl Default for WeaponData {
+    fn default() -> Self {
         Self {
             owns: false,
             equipped: false,
+            damage: 5,
+            durability: 50,
+            default_durability: 50,
+            flag: Weapon::WoodenSword,
+        }
+    }
+}
+
+impl WeaponData {
+    pub fn new(damage: usize, durability: usize, flag: Weapon) -> Self {
+        Self {
             damage,
             durability,
-            default_durability: durability,
             flag,
+            ..Default::default()
         }
     }
 

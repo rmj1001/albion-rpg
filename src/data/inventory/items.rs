@@ -75,7 +75,7 @@ impl GuildItem {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct ItemInventory {
     pub bait: usize,
     pub seeds: usize,
@@ -95,22 +95,7 @@ pub struct ItemInventory {
 
 impl ItemInventory {
     pub fn new() -> ItemInventory {
-        ItemInventory {
-            bait: 0,
-            seeds: 0,
-            furs: 0,
-            fish: 0,
-            food: 0,
-            wood: 0,
-            ore: 0,
-            ingots: 0,
-            potions: 0,
-            rubies: 0,
-            magic_scrolls: 0,
-            bones: 0,
-            dragon_hides: 0,
-            runic_tablets: 0,
-        }
+        Self::default()
     }
 
     pub fn reset(&mut self) {

@@ -27,13 +27,12 @@ pub struct Player {
     pub settings: Settings,
 }
 
-impl Player {
-    /// Creates new instance with empty username/password fields
-    pub fn new(username: &str, password_hash: &str, save: bool) -> Self {
-        let profile: Player = Player {
-            settings: Settings::new(username, password_hash),
-            health: Health::new(),
+impl Default for Player {
+    fn default() -> Self {
+        Self {
+            settings: Settings::default(),
             xp: XP::new(),
+            health: Health::new(),
             achievements: Achievements::new(),
             bank: Bank::new(),
             guilds: Guilds::new(),
@@ -41,6 +40,16 @@ impl Player {
             items: ItemInventory::new(),
             armor: ArmorInventory::new(),
             weapons: WeaponsInventory::new(),
+        }
+    }
+}
+
+impl Player {
+    /// Creates new instance with empty username/password fields
+    pub fn new(username: &str, password_hash: &str, save: bool) -> Self {
+        let profile: Player = Player {
+            settings: Settings::new(username, password_hash),
+            ..Default::default()
         };
 
         if save {

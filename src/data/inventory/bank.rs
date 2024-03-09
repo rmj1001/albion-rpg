@@ -12,7 +12,7 @@ pub enum BankAccount {
     Account4,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Bank {
     pub wallet: usize,
     pub account1: usize,
@@ -25,10 +25,7 @@ impl Bank {
     pub fn new() -> Self {
         Self {
             wallet: 10,
-            account1: 0,
-            account2: 0,
-            account3: 0,
-            account4: 0,
+            ..Default::default()
         }
     }
 

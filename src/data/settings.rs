@@ -3,7 +3,7 @@ use crate::utils::{crypt, files, messages::success_msg};
 use serde::{Deserialize, Serialize};
 use std::{fs, path::Path};
 
-#[derive(Deserialize, Serialize, Debug, Clone)]
+#[derive(Deserialize, Serialize, Debug, Clone, Default)]
 pub struct Settings {
     pub username: String,
     pub password_hash: String,
@@ -17,9 +17,7 @@ impl Settings {
         Self {
             username: username.to_string(),
             password_hash: password_hash.to_string(),
-            developer: false,
-            locked: false,
-            hardmode: false,
+            ..Default::default()
         }
     }
 

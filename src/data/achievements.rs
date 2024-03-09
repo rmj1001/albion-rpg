@@ -4,7 +4,7 @@ use crate::utils::tui::{checkmark, table_from_csv};
 
 use super::{player::Player, xp::XP};
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Achievements {
     // Determined in combat
     pub monsters_killed: usize,
@@ -18,13 +18,7 @@ pub struct Achievements {
 
 impl Achievements {
     pub fn new() -> Self {
-        Self {
-            monsters_killed: 0,
-            earned_million_gold: false,
-            level_100_reached: false,
-            stronghold_defeated: false,
-            hacked_the_game: false,
-        }
+        Self::default()
     }
 
     pub fn reset(&mut self) {
