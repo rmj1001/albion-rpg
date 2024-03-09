@@ -43,6 +43,7 @@ pub fn main(player: &mut Player) {
 
 fn change_username(player: &mut Player) {
     page_header("Profile Settings", HeaderSubtext::None);
+
     let new_username = prompt_colon("New Username");
 
     if new_username == player.settings.username {
@@ -67,6 +68,7 @@ fn change_username(player: &mut Player) {
 
 fn change_password(player: &mut Player) {
     page_header("Profile Settings", HeaderSubtext::Other("Enter new password."));
+
     let new_password = password(false);
     let new_pass_is_old_pass = crypt::verify_hash(new_password.clone(), player.settings.password_hash.clone());
 
@@ -84,13 +86,14 @@ fn change_password(player: &mut Player) {
 
     Settings::change_password(player, new_password);
 
-    page_header("Profile Settings", HeaderSubtext::None);
     success_msg("Password changed.");
 
     main(player);
 }
 
 fn reset(player: &mut Player) {
+    page_header("Profile Settings", HeaderSubtext::None);
+
     let confirm_reset = confirm("Are you sure you want to reset your profile?");
 
     if !confirm_reset {
@@ -98,13 +101,17 @@ fn reset(player: &mut Player) {
         main(player);
     }
 
+    success_msg("Profile reset.");
+
     player.reset();
     player.save();
 
-    crate::menus::accounts::main();
+    main(player);
 }
 
 fn delete_profile(player: &mut Player) {
+    page_header("Profile Settings", HeaderSubtext::None);
+
     let confirm_delete = confirm("Are you sure you want to delete your profile?");
 
     if !confirm_delete {
@@ -114,13 +121,14 @@ fn delete_profile(player: &mut Player) {
 
     player.delete();
 
-    page_header("Profile Settings", HeaderSubtext::None);
     success_msg("Profile deleted.");
 
     crate::menus::accounts::main();
 }
 
 fn hardmode(player: &mut Player) {
+    page_header("Profile Settings", HeaderSubtext::None);
+
     if !player.settings.hardmode {
         println!("Are you sure you want to enable hardmode?");
         let confirmation = confirm("If you lose a battle, you could have your profile deleted.");
