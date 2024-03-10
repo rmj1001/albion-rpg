@@ -80,9 +80,11 @@ pub mod handler {
         }
     }
 
-    /// Writes the data to a file.
-    /// If the file exists, it is overwritten.
-    /// If the file does not exist, the default values are written to the file.
+    /**
+    Writes the data to a file.
+    If the file exists, it is overwritten.
+    If the file does not exist, the default values are written to the file.
+     */
     pub fn write_file(file_path: String, data: String) {
         let directory = profile_directory();
 

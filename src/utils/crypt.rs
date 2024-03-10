@@ -2,18 +2,20 @@ use bcrypt::{hash, DEFAULT_COST};
 
 use crate::panic_screen;
 
-/// Generate a Hash.
-///
-/// # Examples
-///
-/// ```
-/// use albion_terminal_rpg::utils::crypt::generate_hash;
-///
-/// let password: String = String::from("test");
-///
-/// let hashed: String = generate_hash(password);
-/// ```
-///
+/**
+Generate a Hash.
+
+# Examples
+
+```
+use albion_terminal_rpg::utils::crypt::generate_hash;
+
+let password: String = String::from("test");
+
+let hashed: String = generate_hash(password);
+```
+*/
+
 pub fn generate_hash(text: String) -> String {
     let hashed_result = hash(text, DEFAULT_COST);
 

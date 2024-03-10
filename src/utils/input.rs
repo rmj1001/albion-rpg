@@ -87,11 +87,11 @@ pub fn confirm(prompt: &str) -> bool {
     }
 }
 
-/// Prompts for a password, hiding the text as it is typed.
-///
-/// Parameters:
-///
-/// - confirm (bool) -> False: "Password: ", True: "Confirm Password:"
+/**
+Prompts for a password, hiding the text as it is typed.
+# Parameters:
+- confirm (bool) -> False: "Password: ", True: "Confirm Password:"
+ */
 pub fn password(confirm: bool) -> String {
     let dialoguer_result = match confirm {
         true => dialoguer::Password::new().with_prompt("Confirm Password").interact(),

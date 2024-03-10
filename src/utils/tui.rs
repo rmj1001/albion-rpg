@@ -1,6 +1,12 @@
-/// Create a string of dashes with desired length
-///
-/// Example: create_line_string(3) -> ---
+/**
+Create a string of dashes with desired length
+
+# Examples
+```
+create_line_string(3) // ---
+create_line_string(10) // ----------
+````
+ */
 pub fn create_line_string(total_length: usize, optional_character: Option<char>) -> String {
     let mut line_string: String = String::new();
     let mut current_length: usize = 1;

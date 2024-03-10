@@ -20,8 +20,10 @@ impl Health {
         *self = Self::new();
     }
 
-    /// Only resets to default hp if less than 100 hp at the end of a battle
-    /// so potions aren't wasted.
+    /**
+    Only resets to default hp if less than 100 hp
+    at the end of a battle so potions aren't wasted.
+     */
     pub fn restore(&mut self) {
         if self.hp < 100 {
             self.hp = 100;
