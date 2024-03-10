@@ -1,12 +1,4 @@
-use crate::{
-    data::player::Player,
-    utils::{
-        crypt,
-        input::{self, prompt_colon},
-        messages::{failure, success},
-        tui::{page_header, HeaderSubtext},
-    },
-};
+use crate::{data::player::Player, prelude::*};
 
 pub fn main() {
     page_header("Registration", HeaderSubtext::None);
@@ -20,15 +12,15 @@ pub fn main() {
         crate::menus::accounts::main();
     }
 
-    let password: String = input::password(false);
-    let confirm_pass: String = input::password(true);
+    let user_password: String = password(false);
+    let confirm_pass: String = password(true);
 
-    if password != confirm_pass {
+    if user_password != confirm_pass {
         failure("Passwords do not match.");
         crate::menus::accounts::main();
     }
 
-    let password_hash = crypt::generate_hash(password);
+    let password_hash = generate_hash(user_password);
 
     let profile = Player::new(&username, &password_hash, true);
 

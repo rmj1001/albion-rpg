@@ -3,11 +3,7 @@ use crate::{
         inventory::{armor::ArmorInventory, items::ItemInventory, weapons::WeaponsInventory},
         player::Player,
     },
-    utils::{
-        input::select_from_str_array,
-        messages::*,
-        tui::{page_header, HeaderSubtext},
-    },
+    prelude::*,
 };
 
 pub fn main(player: &mut Player) {

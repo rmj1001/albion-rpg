@@ -1,11 +1,6 @@
 use crate::{
     data::{inventory::equipment::Equipment, player::Player},
-    utils::{
-        input::select_from_str_array,
-        math::random_num,
-        messages::out_of_bounds,
-        tui::{page_header, press_enter_to_continue, HeaderSubtext},
-    },
+    prelude::*,
 };
 
 /// Choose between equipment and healing

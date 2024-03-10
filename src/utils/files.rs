@@ -1,7 +1,6 @@
 pub mod handler {
+    use crate::panic_screen;
     use std::{fs, path::Path};
-
-    use crate::ProfileError;
 
     pub fn folder_name() -> &'static str {
         "albion_term_rpg"
@@ -37,7 +36,7 @@ pub mod handler {
             .expect("Path could not be converted to string")
             .to_string(),
 
-            _ => panic!("Empty path provided for directory."),
+            _ => panic_screen!("Empty path provided for directory."),
         }
     }
 
@@ -77,7 +76,7 @@ pub mod handler {
                         .replace(&format!(".{}", extension()), "")
                 })
                 .collect(),
-            Err(error) => panic!("Could not read the directory: {}", error),
+            Err(error) => panic_screen!("Could not read the directory: {}", error),
         }
     }
 
@@ -88,26 +87,29 @@ pub mod handler {
         let directory = profile_directory();
 
         if let Err(message) = fs::create_dir_all(directory) {
-            panic!("Could create directory on disk for player save data:\n{}", message);
+            panic_screen!(format!(
+                "Could create directory on disk for player save data:\n{}",
+                message
+            ));
         };
 
         if let Err(message) = fs::write(&file_path, data) {
-            panic!("Could not write to '{}':\n{}", file_path, message);
+            panic_screen!("Could not write to '{}':\n{}", file_path, message);
         }
     }
 
     /// Read the contents of a file to a string
-    pub fn read_file(file_path: String) -> Result<String, ProfileError> {
+    pub fn read_file(file_path: String) -> crate::Result<String> {
         match fs::read_to_string(file_path.clone()) {
             Ok(contents) => Ok(contents),
-            Err(_) => Err(crate::ProfileError::DoesNotExist),
+            Err(_) => Err(crate::ProfileError::DoesNotExist.boxed()),
         }
     }
 
     /// Delete a file or panic
     pub fn delete_file(file_path: String) {
         if let Err(error) = fs::remove_file(file_path) {
-            panic!("Could not delete profile file:\n{}", error)
+            panic_screen!(format!("Could not delete profile file:\n{}", error))
         }
     }
 }

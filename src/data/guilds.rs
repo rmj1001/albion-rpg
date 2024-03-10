@@ -1,11 +1,4 @@
-use crate::{
-    data::player::Player,
-    utils::{
-        input::select_from_vector,
-        tui::{checkmark, table_from_csv},
-    },
-    InventoryError, MiscError,
-};
+use crate::{data::player::Player, panic_screen, prelude::*, InventoryError, MiscError};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
@@ -108,21 +101,24 @@ impl Guilds {
         let selector: usize = select_from_vector(guilds.clone(), None);
         let selected_guild: String = guilds
             .get(selector)
-            .expect("This shouldn't select a vector item out of bounds.")
+            .unwrap_or_else(|| panic_screen!("Selected a guild from the guild hashmap out of bounds"))
             .to_string();
 
         let item: Guild = *Self::shop()
             .iter()
             .find(|guild| guild.0.name() == selected_guild)
             .map(|guild| guild.0)
-            .expect("Should return a Guild flag");
+            .unwrap_or_else(|| panic_screen!("Guild flag selected out of bounds"));
 
         item
     }
 
     pub fn join(player: &mut Player, guild: Guild, payment: bool) -> crate::Result<()> {
         let shop: BTreeMap<Guild, usize> = Self::shop();
-        let price: &usize = shop.get(&guild).expect("Item not found in hashmap.");
+        let price: &usize = match shop.get(&guild) {
+            Some(item) => item,
+            None => panic_screen!("Guild membership flag not found in hashmap."),
+        };
 
         if player.guilds.check(guild) {
             return Err(MiscError::Custom("You are already a guild member.").boxed());
@@ -146,7 +142,10 @@ impl Guilds {
 
     pub fn leave(player: &mut Player, guild: Guild, payment: bool) -> crate::Result<()> {
         let shop: BTreeMap<Guild, usize> = Self::shop();
-        let price: &usize = shop.get(&guild).expect("Item not found in hashmap.");
+        let price: &usize = match shop.get(&guild) {
+            Some(price) => price,
+            None => panic_screen!("Guild membership flag not found in hashmap."),
+        };
 
         if !player.guilds.check(guild) {
             return Err(MiscError::Custom("You not a member of this guild.").boxed());

@@ -1,4 +1,4 @@
-use super::messages::failure;
+use crate::prelude::failure;
 use std::fmt::{Debug, Display};
 use thiserror::Error;
 
@@ -111,4 +111,68 @@ impl MiscError {
     pub fn boxed(self) -> Box<Self> {
         Box::new(self)
     }
+}
+
+pub fn check_debug_mode() -> bool {
+    use std::env::args;
+    use std::env::vars;
+
+    let env_var: bool = vars().any(|(name, _)| name == "DEBUG");
+    let args: bool = args().any(|arg| arg.to_lowercase() == "--debug");
+
+    env_var || args
+}
+
+pub fn panic_menu_formatter<T: Display, U: Display, V: Display, W: Display>(
+    file: T,
+    line: U,
+    column: V,
+    message: Option<W>,
+) {
+    use crate::utils::terminal::clearscr;
+    use crate::utils::tui::{page_header, press_enter_to_continue, HeaderSubtext};
+
+    page_header("Error", HeaderSubtext::None);
+
+    if check_debug_mode() {
+        println!("File: {}", file.to_string().trim());
+        println!();
+        println!("Line: {}", line.to_string().trim());
+        println!();
+        println!("Column: {}", column.to_string().trim());
+
+        if let Some(message) = message {
+            println!();
+            println!("Message: {}", message.to_string().trim());
+        }
+
+        println!();
+        press_enter_to_continue();
+    } else {
+        match message {
+            Some(message) => failure(message.to_string()),
+            None => failure(""),
+        }
+    }
+
+    clearscr();
+    std::process::exit(1);
+}
+
+#[macro_export]
+macro_rules! panic_screen {
+    () => {
+        $crate::utils::error::panic_menu_formatter(file!(), line!(), column!(), None);
+        std::process::exit(1);
+    };
+
+    ($fmt:expr) => ({
+        $crate::utils::error::panic_menu_formatter(file!(), line!(), column!(), Some($fmt));
+        std::process::exit(1);
+    });
+
+    ($fmt:expr, $($arg:tt)*) => ({
+        $crate::utils::error::panic_menu_formatter(file!(), line!(), column!(), Some(format!($fmt, $($arg)*)));
+        std::process::exit(1);
+    });
 }

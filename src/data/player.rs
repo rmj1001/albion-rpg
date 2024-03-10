@@ -1,15 +1,16 @@
-use super::achievements::*;
-use super::guilds::Guilds;
-use super::health::Health;
-use super::settings::Settings;
-use super::xp::*;
-
-use crate::data::inventory::{armor::*, bank::*, equipment::Equipment, items::*, weapons::*};
-
-use crate::utils::files;
-use crate::utils::input::confirm;
-use crate::utils::messages::warning;
-use crate::{DataError, ProfileError};
+use crate::{
+    data::{
+        achievements::*,
+        guilds::Guilds,
+        health::Health,
+        inventory::{armor::*, bank::*, equipment::Equipment, items::*, weapons::*},
+        settings::Settings,
+        xp::*,
+    },
+    panic_screen,
+    prelude::*,
+    DataError, ProfileError,
+};
 use serde::{Deserialize, Serialize};
 use toml as encoder;
 
@@ -88,8 +89,8 @@ impl Player {
     pub fn save(&self) {
         let serialize_result = self.to_string();
 
-        let path = files::handler::generate_profile_path(&self.settings.username);
-        files::handler::write_file(path, serialize_result)
+        let path = file_handler::generate_profile_path(&self.settings.username);
+        file_handler::write_file(path, serialize_result)
     }
 
     /// Delete the player file on disk
@@ -99,17 +100,17 @@ impl Player {
 
     /// Delete the player file on disk
     pub fn delete_from_username(username: &str) {
-        let profile_path = files::handler::generate_profile_path(username);
+        let profile_path = file_handler::generate_profile_path(username);
 
-        files::handler::delete_file(profile_path);
+        file_handler::delete_file(profile_path);
     }
 
     /// Retrieve player data from disk using the username as the search string
     pub fn get_from_username(username: &str) -> crate::Result<Player> {
-        let profile_path: String = files::handler::generate_profile_path(username);
+        let profile_path: String = file_handler::generate_profile_path(username);
         let mut contents: String = String::new();
 
-        let file_result: Result<String, ProfileError> = files::handler::read_file(profile_path);
+        let file_result: crate::Result<String> = file_handler::read_file(profile_path);
 
         match file_result {
             Ok(data) => contents = data,
@@ -136,23 +137,26 @@ impl Player {
 
 impl ToString for Player {
     fn to_string(&self) -> String {
-        encoder::to_string_pretty(&self).expect("Should always encode to a string")
+        let string = encoder::to_string_pretty(&self);
+
+        match string {
+            Ok(string) => string,
+            Err(message) => panic_screen!(message),
+        }
     }
 }
 
 impl Player {
-    pub fn from_string(data: String) -> Result<Player, ProfileError> {
+    pub fn from_string(data: String) -> crate::Result<Player> {
         let user_result = encoder::from_str(&data);
 
         match user_result {
             Ok(profile) => Ok(profile),
-            Err(_) => Err(crate::ProfileError::Corrupted),
+            Err(_) => Err(crate::ProfileError::Corrupted.boxed()),
         }
     }
 
     pub fn paged_viewer(player: &Player) {
-        use crate::utils::tui::{page_header, press_enter_to_continue, HeaderSubtext};
-
         let string = player.to_string();
 
         let pages = string.split("\n\n");

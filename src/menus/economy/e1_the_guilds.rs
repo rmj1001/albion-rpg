@@ -5,13 +5,7 @@ use crate::{
         inventory::items::GuildItem,
         xp::{XPType, XP},
     },
-    utils::{
-        error::CustomError,
-        input::select_from_str_array,
-        math::random_num,
-        messages::{failure, out_of_bounds, success},
-        tui::{page_header, HeaderSubtext},
-    },
+    prelude::*,
     InventoryError,
 };
 
@@ -89,7 +83,7 @@ fn guild_menu(
     match work_choice {
         0 => {
             if let Some(item) = decrease_item {
-                let result: Result<(), InventoryError> = match item {
+                let result: crate::Result<()> = match item {
                     GuildItem::Gold => {
                         let rand = random_num(1, 3);
 
@@ -182,9 +176,9 @@ fn print_item(player: &mut Player, item: &Option<GuildItem>) {
     }
 }
 
-fn try_subtract(item: &mut usize, item_name: &str) -> Result<(), InventoryError> {
+fn try_subtract(item: &mut usize, item_name: &str) -> crate::Result<()> {
     if *item == 0 {
-        return Err(InventoryError::NotEnoughItem(item_name.to_string()));
+        return Err(InventoryError::NotEnoughItem(item_name.to_string()).boxed());
     }
 
     *item -= 1;

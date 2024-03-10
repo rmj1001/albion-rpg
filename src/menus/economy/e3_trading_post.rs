@@ -1,10 +1,6 @@
 use crate::{
     data::{inventory::items::ItemInventory, player::Player},
-    utils::{
-        input::select_from_str_array,
-        messages::{out_of_bounds, success},
-        tui::page_header,
-    },
+    prelude::*,
 };
 
 pub fn main(player: &mut Player) {

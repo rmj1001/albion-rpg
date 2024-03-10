@@ -2,7 +2,7 @@ use std::process::Command;
 
 use crate::{
     data::player::Player,
-    utils::{messages::success_msg, tui::sleep},
+    prelude::{sleep, success_msg},
 };
 
 use super::tui::page_header;

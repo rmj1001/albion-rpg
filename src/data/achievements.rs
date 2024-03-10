@@ -1,8 +1,9 @@
 use serde::{Deserialize, Serialize};
 
-use crate::utils::tui::{checkmark, table_from_csv};
-
-use super::{player::Player, xp::XP};
+use crate::{
+    data::{player::Player, xp::XP},
+    prelude::*,
+};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Achievements {

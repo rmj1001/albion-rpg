@@ -1,10 +1,6 @@
 use crate::{
     data::{player::Player, xp::XPType},
-    utils::{
-        input::{input_generic, select_from_str_array},
-        messages::*,
-        tui::{page_header, HeaderSubtext},
-    },
+    prelude::*,
 };
 
 enum Operation {

@@ -1,11 +1,4 @@
-use crate::{
-    data::achievements::Achievements,
-    utils::{
-        input::select_from_str_array,
-        messages::*,
-        tui::{page_header, press_enter_to_continue, HeaderSubtext},
-    },
-};
+use crate::{data::achievements::Achievements, prelude::*};
 
 use crate::data::player::Player;
 

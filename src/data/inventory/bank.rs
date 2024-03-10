@@ -1,6 +1,5 @@
-use crate::utils::{messages::*, tui::table_from_csv};
-
 use crate::data::player::*;
+use crate::prelude::*;
 use crate::{InventoryError, MiscError};
 use serde::{Deserialize, Serialize};
 
@@ -110,9 +109,6 @@ impl Bank {
     }
 
     pub fn menu(player: &mut Player, developer_mode: bool) {
-        use crate::utils::input::{prompt_arrow, select_from_str_array};
-        use crate::utils::tui::{page_header, HeaderSubtext};
-
         page_header("The Bank", HeaderSubtext::Keyboard);
 
         println!();

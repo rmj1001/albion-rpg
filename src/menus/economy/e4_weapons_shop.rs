@@ -1,6 +1,6 @@
 use crate::{
     data::{inventory::weapons::WeaponsInventory, player::Player},
-    utils::{input::select_from_str_array, messages::*, tui::page_header},
+    prelude::*,
 };
 
 pub fn main(player: &mut Player) {

@@ -1,5 +1,7 @@
 use bcrypt::{hash, DEFAULT_COST};
 
+use crate::panic_screen;
+
 /// Generate a Hash.
 ///
 /// # Examples
@@ -17,7 +19,7 @@ pub fn generate_hash(text: String) -> String {
 
     match hashed_result {
         Ok(password_hash) => password_hash,
-        Err(error) => panic!("Failed to generate password hash: {}", error),
+        Err(error) => panic_screen!("Failed to generate password hash: {}", error),
     }
 }
 
@@ -26,7 +28,7 @@ pub fn verify_hash(text: String, hash: String) -> bool {
 
     match verified_result {
         Ok(result) => result,
-        Err(error) => panic!("Failed to verify password hash: {}", error),
+        Err(error) => panic_screen!("Failed to verify password hash: {}", error),
     }
 }
 

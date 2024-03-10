@@ -1,3 +1,5 @@
+use crate::panic_screen;
+
 /// Panics if the operating system is not supported by the program.
 pub fn deter_unsupported_os() {
     let os = std::env::consts::OS;
@@ -6,6 +8,6 @@ pub fn deter_unsupported_os() {
         vec!["linux", "macos", "freebsd", "dragonfly", "netbsd", "openbsd", "windows"];
 
     if !supported_operating_systems.contains(&os) {
-        panic!("This program does not support {}.", os);
+        panic_screen!("This program does not support {}.", os);
     }
 }

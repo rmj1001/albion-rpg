@@ -1,5 +1,4 @@
-use super::player::Player;
-use crate::utils::{crypt, files, messages::success_msg};
+use crate::{data::player::Player, panic_screen, prelude::*};
 use serde::{Deserialize, Serialize};
 use std::{fs, path::Path};
 
@@ -51,17 +50,17 @@ impl Settings {
 
     /// Updates password field
     pub fn change_password(player: &mut Player, new_password: String) {
-        let new_hashed_password = crypt::generate_hash(new_password);
+        let new_hashed_password = generate_hash(new_password);
         player.settings.password_hash = new_hashed_password;
         player.save();
     }
 
     /// Updates the username field and profile file name.
     pub fn change_username(player: &mut Player, new_username: String) {
-        let old_profile_path = files::handler::generate_profile_path(&player.settings.username);
+        let old_profile_path = file_handler::generate_profile_path(&player.settings.username);
         let old_file_path: &Path = Path::new(&old_profile_path);
 
-        let new_profile_path = files::handler::generate_profile_path(&new_username);
+        let new_profile_path = file_handler::generate_profile_path(&new_username);
         let new_file_path: &Path = Path::new(&new_profile_path);
 
         match fs::rename(old_file_path, new_file_path) {
@@ -70,7 +69,7 @@ impl Settings {
             }
 
             Err(error) => {
-                panic!("I couldn't rename the profile filename: {}", error);
+                panic_screen!("I couldn't rename the profile filename: {}", error);
             }
         }
 

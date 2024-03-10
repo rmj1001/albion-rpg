@@ -1,15 +1,10 @@
-use crate::utils::{
-    crypt,
-    input::*,
-    messages::*,
-    tui::{self, page_header},
-};
+use crate::prelude::*;
 
 use crate::data::player::Player;
 
 fn get_password(profile: &Player) -> bool {
     let input_password: String = password(false);
-    let verified_password = crypt::verify_hash(input_password.clone(), profile.settings.password_hash.clone());
+    let verified_password = verify_hash(input_password.clone(), profile.settings.password_hash.clone());
 
     if !verified_password {
         failure("Incorrect password.");
@@ -20,7 +15,7 @@ fn get_password(profile: &Player) -> bool {
 }
 
 pub fn main() {
-    page_header("Login", tui::HeaderSubtext::None);
+    page_header("Login", HeaderSubtext::None);
 
     let username: String = prompt_colon("Username");
     let profile_result: crate::Result<Player> = Player::get_from_username(&username);

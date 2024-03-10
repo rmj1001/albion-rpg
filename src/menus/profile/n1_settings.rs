@@ -1,12 +1,4 @@
-use crate::{
-    data::settings::Settings,
-    utils::{
-        crypt,
-        input::{confirm, password, prompt_colon, select_from_str_array},
-        messages::*,
-        tui::{page_header, HeaderSubtext},
-    },
-};
+use crate::{data::settings::Settings, prelude::*};
 
 use crate::data::player::Player;
 
@@ -70,7 +62,7 @@ fn change_password(player: &mut Player) {
     page_header("Profile Settings", HeaderSubtext::Other("Enter new password."));
 
     let new_password = password(false);
-    let new_pass_is_old_pass = crypt::verify_hash(new_password.clone(), player.settings.password_hash.clone());
+    let new_pass_is_old_pass = verify_hash(new_password.clone(), player.settings.password_hash.clone());
 
     if new_pass_is_old_pass {
         failure("This is your current password.");

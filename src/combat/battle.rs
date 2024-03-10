@@ -1,12 +1,7 @@
 use crate::{
     combat::enemy::{EnemyData, Rewards},
     data::{inventory::equipment::Equipment, player::Player, xp::XP},
-    utils::{
-        input,
-        math::random_num,
-        messages::out_of_bounds,
-        tui::{page_header, press_enter_to_continue, sleep, HeaderSubtext},
-    },
+    prelude::*,
 };
 
 pub struct BattleSettings<'a> {
@@ -31,7 +26,7 @@ pub fn new_battle(battle: &mut BattleSettings) {
     Equipment::check_equipment_ownership(battle.player);
 
     if battle.player.equipment.armor.is_none() || battle.player.equipment.weapon.is_none() {
-        let confirm = input::confirm("Are you sure you want to fight without equipment? You'll die.");
+        let confirm = confirm("Are you sure you want to fight without equipment? You'll die.");
 
         if !confirm {
             println!("Returning home.");
@@ -81,7 +76,7 @@ pub fn battle_menu(battle: &mut BattleSettings) {
     println!("Player Hunger: {}", battle.player.health.hunger);
     println!();
 
-    let action = input::select_from_str_array(
+    let action = select_from_str_array(
         &[
             &format!("1. Attack the {}", battle.enemy.name),
             "2. Inventory",

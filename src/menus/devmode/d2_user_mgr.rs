@@ -1,12 +1,4 @@
-use crate::{
-    data::player::Player,
-    utils::{
-        files,
-        input::{confirm, select_from_str_array, select_from_vector},
-        messages::*,
-        tui::{self, page_header, HeaderSubtext},
-    },
-};
+use crate::{data::player::Player, prelude::*};
 
 pub fn main(player: &mut Player) {
     page_header("Developer Mode - Player Manager", HeaderSubtext::Keyboard);
@@ -33,14 +25,14 @@ pub fn main(player: &mut Player) {
 fn list_users(player: &mut Player) {
     page_header("Developer Mode - Player Manager", HeaderSubtext::None);
 
-    let profiles: Vec<String> = files::handler::list_all_profiles();
+    let profiles: Vec<String> = file_handler::list_all_profiles();
 
     profiles.iter().for_each(|profile_string| {
         println!("- {}", profile_string);
     });
 
     println!();
-    tui::press_enter_to_continue();
+    press_enter_to_continue();
 
     main(player);
 }
@@ -48,7 +40,7 @@ fn list_users(player: &mut Player) {
 fn delete_users(player: &mut Player) {
     page_header("Developer Mode - Player Manager", HeaderSubtext::Keyboard);
 
-    let profiles = files::handler::list_all_profiles();
+    let profiles = file_handler::list_all_profiles();
     let choice = select_from_vector(profiles.clone(), Some("Select a profile to delete"));
     let profile_choice = profiles.get(choice);
 
@@ -87,9 +79,9 @@ fn delete_users(player: &mut Player) {
 
 fn view_user(player: &mut Player) {
     page_header("Developer Mode - Player Manager - Data Viewer", HeaderSubtext::None);
-    let choice = select_from_vector(files::handler::list_all_profiles(), Some("Select a player to view"));
+    let choice = select_from_vector(file_handler::list_all_profiles(), Some("Select a player to view"));
 
-    let profiles = files::handler::list_all_profiles();
+    let profiles = file_handler::list_all_profiles();
     let profile_choice = profiles.get(choice);
 
     match profile_choice {

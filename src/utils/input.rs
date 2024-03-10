@@ -1,8 +1,6 @@
-use std::{io::Write, str::FromStr};
-
+use crate::{panic_screen, prelude::*, MiscError};
 use dialoguer::Confirm;
-
-use crate::{utils::messages::*, MiscError};
+use std::{io::Write, str::FromStr};
 
 /// Pass in a raw array of string slices to dialoguer's Select. (i.e. &\["test"\])
 pub fn select_from_str_array(options: &[&str], optional_prompt: Option<&str>) -> usize {
@@ -34,7 +32,9 @@ pub fn select_from_vector(options: Vec<String>, optional_prompt: Option<&str>) -
 pub fn prompt(text: &str) -> String {
     print!("{text} ");
 
-    std::io::stdout().flush().expect("Could not flush stdout");
+    if let Err(message) = std::io::stdout().flush() {
+        panic_screen!("Could not flush stdout: {}", message)
+    }
 
     let mut input: String = String::new();
 
@@ -75,7 +75,7 @@ where
 /// 'y' returns true, 'n' returns false.
 pub fn confirm(prompt: &str) -> bool {
     loop {
-        let input: Result<bool, dialoguer::Error> = Confirm::new().with_prompt(prompt).interact();
+        let input: std::result::Result<bool, dialoguer::Error> = Confirm::new().with_prompt(prompt).interact();
 
         match input {
             Ok(answer) => return answer,
@@ -101,7 +101,7 @@ pub fn password(confirm: bool) -> String {
     match dialoguer_result {
         Ok(text) => text,
         Err(error) => {
-            panic!("Failed to read password with dialogue: {}", error)
+            panic_screen!("Failed to read password with dialogue: {}", error);
         }
     }
 }
@@ -132,11 +132,13 @@ pub fn prompt_input_completion(prompt: &str, completion_strings: Vec<String>) ->
         options: completion_strings,
     };
 
-    let input_string: String = dialoguer::Input::new()
+    let input_string_result = dialoguer::Input::new()
         .with_prompt(prompt)
         .completion_with(&completions)
-        .interact_text()
-        .expect("Input failed.");
+        .interact_text();
 
-    input_string
+    match input_string_result {
+        Ok(string) => string,
+        Err(message) => panic_screen!(message),
+    }
 }

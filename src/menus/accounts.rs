@@ -1,4 +1,4 @@
-use crate::utils::{input::select_from_str_array, messages::*, terminal::*, tui::*};
+use crate::prelude::*;
 
 pub fn main() {
     clearscr();

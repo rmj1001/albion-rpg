@@ -1,7 +1,7 @@
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 
-use crate::utils::tui::table_from_csv;
+use crate::prelude::*;
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct XP {

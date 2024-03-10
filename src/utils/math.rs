@@ -8,6 +8,7 @@ pub fn random_num(min: usize, max: usize) -> usize {
 }
 
 mod tests {
+
     #[test]
     fn rand_nums_out_of_bounds() {
         let loops: usize = 500;
@@ -20,7 +21,7 @@ mod tests {
             let rand = super::random_num(min, max);
 
             if rand < min || rand > max {
-                panic!("The random number generator went out of bounds.")
+                crate::panic_screen!("The random number generator went out of bounds.");
             }
 
             numbers.push(rand);

@@ -1,10 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::utils::{
-    input::select_from_str_array,
-    messages::out_of_bounds,
-    tui::{page_header, press_enter_to_continue, HeaderSubtext},
-};
+use crate::{panic_screen, prelude::*};
 
 use crate::data::player::Player;
 
@@ -107,7 +103,7 @@ impl Equipment {
             3 => W::SteelSword,
             4 => W::MysticSword,
             5 => W::WizardStaff,
-            _ => panic!("Out of bounds"),
+            _ => panic_screen!("Out of bounds"),
         };
 
         let weapon = player.weapons.get(&flag);
@@ -171,7 +167,7 @@ impl Equipment {
             3 => A::Steel,
             4 => A::Dragonhide,
             5 => A::Mystic,
-            _ => panic!("Out of bounds"),
+            _ => panic_screen!("Out of bounds"),
         };
 
         let armor = player.armor.get(&flag);

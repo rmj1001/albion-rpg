@@ -1,6 +1,6 @@
 use crate::{
     data::{player::Player, xp::XP},
-    utils::math::{self, random_num},
+    prelude::*,
 };
 
 use strum::IntoEnumIterator;
@@ -68,7 +68,11 @@ pub struct EnemyData {
 impl EnemyData {
     pub fn new(user_combat_xp: usize, user_hp: usize) -> Self {
         let user_level: usize = XP::get_level(user_combat_xp);
-        let kind_type: Enemy = pick_enemy();
+        let mut kind_type: Enemy = Enemy::default();
+
+        if let Some(enemy) = pick_enemy() {
+            kind_type = enemy;
+        }
 
         Self {
             flag: kind_type.clone(),
@@ -80,11 +84,11 @@ impl EnemyData {
     }
 }
 
-fn pick_enemy() -> Enemy {
+fn pick_enemy() -> Option<Enemy> {
     let max = Enemy::iter().len();
-    let number = math::random_num(0, max - 1);
+    let number = random_num(0, max - 1);
 
-    Enemy::iter().get(number).expect("Should return a valid enemy")
+    Enemy::iter().get(number)
 }
 
 // Strength
@@ -224,6 +228,7 @@ impl Rewards {
 }
 
 pub mod tests {
+
     #[test]
     pub fn invalid_enemies() {
         use crate::combat::enemy::{Enemy, EnemyData};
@@ -250,7 +255,7 @@ pub mod tests {
             .for_each(|enemy: &EnemyData| types.push(enemy.flag.clone()));
 
         if !invalids.is_empty() {
-            panic!(
+            crate::panic_screen!(
                 "{} Invalid enemies generated from sample size of {}.\nTypes generated: {:?}",
                 invalids.len(),
                 num_enemies,

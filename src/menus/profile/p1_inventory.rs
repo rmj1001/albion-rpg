@@ -1,10 +1,6 @@
 use crate::{
     data::inventory::{equipment::Equipment, items::ItemInventory},
-    utils::{
-        input::select_from_str_array,
-        messages::*,
-        tui::{page_header, press_enter_to_continue, HeaderSubtext},
-    },
+    prelude::*,
 };
 
 use crate::data::player::Player;

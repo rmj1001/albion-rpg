@@ -2,14 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::hash::Hash;
 
-use crate::{
-    data::player::Player,
-    utils::{
-        input::{input_generic, select_from_vector},
-        tui::table_from_csv,
-    },
-    InventoryError,
-};
+use crate::{data::player::Player, prelude::*, InventoryError};
 
 #[derive(Hash, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
 pub enum Item {
