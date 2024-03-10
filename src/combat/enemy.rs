@@ -68,46 +68,45 @@ pub struct EnemyData {
 impl EnemyData {
     pub fn new(user_combat_xp: usize, user_hp: usize) -> Self {
         let user_level: usize = XP::get_level(user_combat_xp);
-        let mut kind_type: Enemy = Enemy::default();
-
-        if let Some(enemy) = pick_enemy() {
-            kind_type = enemy;
-        }
+        let flag: Enemy = Self::enemy_type();
+        let name: String = flag.to_string();
 
         Self {
-            flag: kind_type.clone(),
-            name: kind_type.to_string(),
-            hp: calculate_hp(user_hp),
-            damage: calculate_damage(user_hp),
+            flag,
+            name,
+            hp: Self::hp(user_hp),
+            damage: Self::damage(user_hp),
             rewards: Rewards::new(user_level),
         }
     }
-}
 
-fn pick_enemy() -> Option<Enemy> {
-    let max = Enemy::iter().len();
-    let number = random_num(0, max - 1);
+    fn enemy_type() -> Enemy {
+        let max = Enemy::iter().len();
+        let number = random_num(0, max - 1);
+        let option = Enemy::iter().get(number);
 
-    Enemy::iter().get(number)
-}
-
-// Strength
-
-fn calculate_hp(player_hp: usize) -> usize {
-    let deviation: usize = random_num(10, 30);
-    let operation: usize = random_num(0, 1);
-
-    match operation {
-        0 => player_hp + deviation,
-        1 => player_hp - deviation,
-        _ => player_hp,
+        match option {
+            Some(enemy) => enemy,
+            None => crate::panic_screen!("Invalid enemy type chosen."),
+        }
     }
-}
 
-fn calculate_damage(player_hp: usize) -> usize {
-    let deviation: usize = random_num(1, 10);
+    fn hp(player_hp: usize) -> usize {
+        let deviation: usize = random_num(10, 30);
+        let operation: usize = random_num(0, 1);
 
-    (player_hp / 10) + deviation
+        match operation {
+            0 => player_hp + deviation,
+            1 => player_hp - deviation,
+            _ => player_hp,
+        }
+    }
+
+    fn damage(player_hp: usize) -> usize {
+        let deviation: usize = random_num(1, 10);
+
+        (player_hp / 10) + deviation
+    }
 }
 
 // Rewards
