@@ -6,7 +6,6 @@ use crate::{
         xp::{XPType, XP},
     },
     prelude::*,
-    InventoryError,
 };
 
 use crate::data::player::Player;
@@ -83,7 +82,7 @@ fn guild_menu(
     match work_choice {
         0 => {
             if let Some(item) = decrease_item {
-                let result: crate::Result<()> = match item {
+                let result: Result<()> = match item {
                     GuildItem::Gold => {
                         let rand = random_num(1, 3);
 
@@ -176,7 +175,7 @@ fn print_item(player: &mut Player, item: &Option<GuildItem>) {
     }
 }
 
-fn try_subtract(item: &mut usize, item_name: &str) -> crate::Result<()> {
+fn try_subtract(item: &mut usize, item_name: &str) -> Result<()> {
     if *item == 0 {
         return Err(InventoryError::NotEnoughItem(item_name.to_string()).boxed());
     }

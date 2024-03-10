@@ -191,7 +191,7 @@ impl WeaponsInventory {
             .clone()
     }
 
-    pub fn buy(player: &mut Player, weapon: Weapon, payment: bool) -> crate::Result<()> {
+    pub fn buy(player: &mut Player, weapon: Weapon, payment: bool) -> Result<()> {
         let shop = Self::shop();
         let price = shop.get(&weapon).expect("Item not found in hashmap.");
 
@@ -200,7 +200,7 @@ impl WeaponsInventory {
             let wallet: &mut usize = &mut player.bank.wallet;
 
             if gold < *price {
-                return Err(crate::InventoryError::NotEnoughGold.boxed());
+                return Err(InventoryError::NotEnoughGold.boxed());
             }
 
             *wallet -= *price;
@@ -209,20 +209,20 @@ impl WeaponsInventory {
         let owns_item = &mut player.weapons.get(&weapon).owns;
 
         if *owns_item {
-            return Err(crate::InventoryError::ItemOwned.boxed());
+            return Err(InventoryError::ItemOwned.boxed());
         }
 
         *owns_item = true;
         Ok(())
     }
 
-    pub fn sell(player: &mut Player, weapon: Weapon, payment: bool) -> crate::Result<()> {
+    pub fn sell(player: &mut Player, weapon: Weapon, payment: bool) -> Result<()> {
         let shop: BTreeMap<Weapon, usize> = Self::shop();
         let price: &usize = shop.get(&weapon).expect("Item not found in hashmap.");
         let owns_item = &mut player.weapons.get(&weapon).owns;
 
         if !*owns_item {
-            return Err(crate::InventoryError::ItemNotOwned.boxed());
+            return Err(InventoryError::ItemNotOwned.boxed());
         }
 
         *owns_item = false;

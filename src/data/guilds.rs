@@ -1,4 +1,4 @@
-use crate::{data::player::Player, panic_screen, prelude::*, InventoryError, MiscError};
+use crate::{data::player::Player, panic_screen, prelude::*};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
@@ -113,7 +113,7 @@ impl Guilds {
         item
     }
 
-    pub fn join(player: &mut Player, guild: Guild, payment: bool) -> crate::Result<()> {
+    pub fn join(player: &mut Player, guild: Guild, payment: bool) -> Result<()> {
         let shop: BTreeMap<Guild, usize> = Self::shop();
         let price: &usize = match shop.get(&guild) {
             Some(item) => item,
@@ -140,7 +140,7 @@ impl Guilds {
         Ok(())
     }
 
-    pub fn leave(player: &mut Player, guild: Guild, payment: bool) -> crate::Result<()> {
+    pub fn leave(player: &mut Player, guild: Guild, payment: bool) -> Result<()> {
         let shop: BTreeMap<Guild, usize> = Self::shop();
         let price: &usize = match shop.get(&guild) {
             Some(price) => price,

@@ -1,4 +1,4 @@
-use crate::{panic_screen, prelude::*, MiscError};
+use crate::{panic_screen, prelude::*};
 use dialoguer::Confirm;
 use std::{io::Write, str::FromStr};
 
@@ -56,7 +56,7 @@ pub fn prompt_arrow(text: &str) -> String {
 }
 
 /// Attempts to cast the string to a generic type
-pub fn input_generic<T>(text: &str) -> crate::Result<T>
+pub fn input_generic<T>(text: &str) -> Result<T>
 where
     T: FromStr,
 {

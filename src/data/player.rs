@@ -9,7 +9,6 @@ use crate::{
     },
     panic_screen,
     prelude::*,
-    DataError, ProfileError,
 };
 use serde::{Deserialize, Serialize};
 use toml as encoder;
@@ -106,11 +105,11 @@ impl Player {
     }
 
     /// Retrieve player data from disk using the username as the search string
-    pub fn get_from_username(username: &str) -> crate::Result<Player> {
+    pub fn get_from_username(username: &str) -> Result<Player> {
         let profile_path: String = file_handler::generate_profile_path(username);
         let mut contents: String = String::new();
 
-        let file_result: crate::Result<String> = file_handler::read_file(profile_path);
+        let file_result: Result<String> = file_handler::read_file(profile_path);
 
         match file_result {
             Ok(data) => contents = data,
@@ -147,12 +146,12 @@ impl ToString for Player {
 }
 
 impl Player {
-    pub fn from_string(data: String) -> crate::Result<Player> {
+    pub fn from_string(data: String) -> Result<Player> {
         let user_result = encoder::from_str(&data);
 
         match user_result {
             Ok(profile) => Ok(profile),
-            Err(_) => Err(crate::ProfileError::Corrupted.boxed()),
+            Err(_) => Err(ProfileError::Corrupted.boxed()),
         }
     }
 

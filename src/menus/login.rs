@@ -18,7 +18,7 @@ pub fn main() {
     page_header("Login", HeaderSubtext::None);
 
     let username: String = prompt_colon("Username");
-    let profile_result: crate::Result<Player> = Player::get_from_username(&username);
+    let profile_result: Result<Player> = Player::get_from_username(&username);
 
     match profile_result {
         Ok(player) => {

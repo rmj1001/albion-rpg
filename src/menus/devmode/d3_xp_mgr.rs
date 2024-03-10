@@ -51,7 +51,7 @@ pub fn main(player: &mut Player) {
         _ => out_of_bounds(),
     }
 
-    let amount_result: crate::Result<usize> = input_generic("Amount > ");
+    let amount_result: Result<usize> = input_generic("Amount > ");
     let mut amount: usize = 0;
 
     match amount_result {

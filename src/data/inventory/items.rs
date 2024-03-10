@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::hash::Hash;
 
-use crate::{data::player::Player, prelude::*, InventoryError};
+use crate::{data::player::Player, prelude::*};
 
 #[derive(Hash, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
 pub enum Item {
@@ -175,7 +175,7 @@ impl ItemInventory {
         table_from_csv(strings);
     }
 
-    pub fn build_transaction() -> crate::Result<(Item, usize)> {
+    pub fn build_transaction() -> Result<(Item, usize)> {
         let item = Self::select();
         let quantity_result = input_generic::<usize>("Quantity:");
 
@@ -203,7 +203,7 @@ impl ItemInventory {
             .expect("Should return an Item Flag")
     }
 
-    pub fn buy(player: &mut Player, flag: Item, quantity: usize, use_wallet: bool) -> crate::Result<()> {
+    pub fn buy(player: &mut Player, flag: Item, quantity: usize, use_wallet: bool) -> Result<()> {
         let shop = Self::shop();
         let usize: usize = *shop.get(&flag).expect("Item not found in hashmap.");
 
@@ -225,7 +225,7 @@ impl ItemInventory {
         Ok(())
     }
 
-    pub fn sell(player: &mut Player, flag: Item, quantity: usize, use_wallet: bool) -> crate::Result<()> {
+    pub fn sell(player: &mut Player, flag: Item, quantity: usize, use_wallet: bool) -> Result<()> {
         let shop = Self::shop();
         let usize: usize = *shop.get(&flag).expect("Item not found in hashmap.");
         let item = player.items.get(flag);

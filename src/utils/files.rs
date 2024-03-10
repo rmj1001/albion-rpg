@@ -1,5 +1,5 @@
 pub mod handler {
-    use crate::panic_screen;
+    use crate::{panic_screen, prelude::*};
     use std::{fs, path::Path};
 
     pub fn folder_name() -> &'static str {
@@ -99,10 +99,10 @@ pub mod handler {
     }
 
     /// Read the contents of a file to a string
-    pub fn read_file(file_path: String) -> crate::Result<String> {
+    pub fn read_file(file_path: String) -> Result<String> {
         match fs::read_to_string(file_path.clone()) {
             Ok(contents) => Ok(contents),
-            Err(_) => Err(crate::ProfileError::DoesNotExist.boxed()),
+            Err(_) => Err(ProfileError::DoesNotExist.boxed()),
         }
     }
 

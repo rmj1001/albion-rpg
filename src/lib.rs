@@ -1,7 +1,5 @@
 #![allow(unused_assignments, clippy::new_without_default)]
 
-pub use utils::error::{DataError, InventoryError, MiscError, ProfileError, Result};
-
 pub mod utils {
     pub mod crypt;
     pub mod error;

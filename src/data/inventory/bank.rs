@@ -1,6 +1,5 @@
 use crate::data::player::*;
 use crate::prelude::*;
-use crate::{InventoryError, MiscError};
 use serde::{Deserialize, Serialize};
 
 pub enum BankAccount {
@@ -64,12 +63,7 @@ impl Bank {
         }
     }
 
-    pub fn deposit(
-        player: &mut Player,
-        account_flag: BankAccount,
-        amount: usize,
-        use_wallet: bool,
-    ) -> crate::Result<()> {
+    pub fn deposit(player: &mut Player, account_flag: BankAccount, amount: usize, use_wallet: bool) -> Result<()> {
         let wallet_balance: usize = Self::balance(player, &BankAccount::Wallet);
 
         if use_wallet && wallet_balance < amount {
@@ -84,12 +78,7 @@ impl Bank {
         Ok(())
     }
 
-    pub fn withdraw(
-        player: &mut Player,
-        account_flag: BankAccount,
-        amount: usize,
-        use_wallet: bool,
-    ) -> crate::Result<()> {
+    pub fn withdraw(player: &mut Player, account_flag: BankAccount, amount: usize, use_wallet: bool) -> Result<()> {
         let account_balance: usize = Self::balance(player, &account_flag);
 
         if account_balance < amount {
@@ -181,7 +170,7 @@ impl Bank {
             }
         }
 
-        let mut bank_result: crate::Result<()> = Err(MiscError::Custom("Uninitialized").boxed());
+        let mut bank_result: Result<()> = Err(MiscError::Custom("Uninitialized").boxed());
 
         // If developer mode is on then don't use the wallet, and vice versa.
         let use_wallet: bool = !developer_mode;

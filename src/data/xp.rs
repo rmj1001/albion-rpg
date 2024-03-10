@@ -67,18 +67,18 @@ impl XP {
         *xp += more_xp;
     }
 
-    pub fn add(&mut self, flag: XPType, amount: usize) -> crate::Result<()> {
+    pub fn add(&mut self, flag: XPType, amount: usize) -> Result<()> {
         let xp = self.get(flag);
 
         *xp += amount;
         Ok(())
     }
 
-    pub fn subtract(&mut self, flag: XPType, amount: usize) -> crate::Result<()> {
+    pub fn subtract(&mut self, flag: XPType, amount: usize) -> Result<()> {
         let xp = self.get(flag);
 
         if *xp < amount {
-            return Err(crate::InventoryError::NotEnoughXP.boxed());
+            return Err(InventoryError::NotEnoughXP.boxed());
         }
 
         *xp -= amount;
