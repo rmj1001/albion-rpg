@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use crate::prelude::press_enter_to_continue;
 
 pub enum MessageLevel {
@@ -32,11 +34,8 @@ pub enum Color {
 }
 
 impl Color {
-    pub fn paint<T>(flag: Color, message: T) -> String
-    where
-        T: Into<String>,
-    {
-        let style = console::style(message.into());
+    pub fn paint<T: Display>(flag: Color, message: T) -> String {
+        let style = console::style(message.to_string());
 
         let painted = match flag {
             Color::Green => style.green(),
@@ -51,15 +50,13 @@ impl Color {
 }
 
 /// Create a painted response string with a press_enter_to_continue
-pub fn build_response<T>(
+pub fn build_response<T: Display>(
     flag: MessageLevel,
     pause: bool,
     optional_description: Option<T>,
     optional_details: Option<T>,
     panic: bool,
-) where
-    T: Into<String>,
-{
+) {
     let mut message: String = String::new();
 
     match flag {
@@ -72,11 +69,11 @@ pub fn build_response<T>(
     }
 
     if let Some(description) = optional_description {
-        message.push_str(&description.into());
+        message.push_str(&description.to_string());
     }
 
     if let Some(details) = optional_details {
-        message.push_str(&details.into());
+        message.push_str(&details.to_string());
     }
 
     let painted = Color::paint(flag.get_color(), message);
@@ -114,10 +111,7 @@ pub fn invalid_input(input: Option<&str>, expected: Option<&str>, pause: bool) {
 }
 
 /// Yellow text. "Warning: " prefix
-pub fn warning<T>(subtext: Option<T>)
-where
-    T: Into<String>,
-{
+pub fn warning<T: Display>(subtext: Option<T>) {
     build_response(MessageLevel::Warning, true, subtext, None, false);
 }
 
@@ -127,10 +121,7 @@ pub fn cancelling() {
 }
 
 /// Yellow text. "Cancelling." prefix. Custom Suffix.
-pub fn cancel_msg<T>(subtext: T)
-where
-    T: Into<String>,
-{
+pub fn cancel_msg<T: Display>(subtext: T) {
     build_response(MessageLevel::Cancelling, true, Some(subtext), None, false);
 }
 
@@ -140,34 +131,22 @@ pub fn success() {
 }
 
 /// Green text. "Success!" prefix. Custom Suffix.
-pub fn success_msg<T>(subtext: T)
-where
-    T: Into<String>,
-{
+pub fn success_msg<T: Display>(subtext: T) {
     build_response(MessageLevel::Success, true, Some(subtext), None, false);
 }
 
 /// Red text. "Failure!" prefix. Custom Suffix.
-pub fn failure<T>(subtext: T)
-where
-    T: Into<String>,
-{
+pub fn failure<T: Display>(subtext: T) {
     build_response(MessageLevel::Failure, true, Some(subtext), None, false);
 }
 
 /// Blue text. "Note:" prefix. Custom Suffix.
-pub fn note<T>(subtext: T, pause: bool)
-where
-    T: Into<String>,
-{
+pub fn note<T: Display>(subtext: T, pause: bool) {
     build_response(MessageLevel::Note, pause, Some(subtext), None, false);
 }
 
 /// Plain-colored text. press_enter_to_continue.
-pub fn plain_respond<T>(subtext: T, pause: bool)
-where
-    T: Into<String>,
-{
+pub fn plain_respond<T: Display>(subtext: T, pause: bool) {
     build_response(MessageLevel::Plain, pause, Some(subtext), None, false);
 }
 
