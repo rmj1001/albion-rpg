@@ -45,9 +45,3 @@ albionrpg
 - 🪟 Windows
 - 🐧 Linux
 - 😈 BSD
-
-## Demos
-
-[Click Here](./examples/profile.toml) for an example save file.
-
-![Demo thumbnail](demo/GameMenu.png)
