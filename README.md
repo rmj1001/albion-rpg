@@ -45,3 +45,7 @@ albionrpg
 - 🪟 Windows
 - 🐧 Linux
 - 😈 BSD
+
+## Docs
+
+[Click Here](https://docs.rs/albion_terminal_rpg/latest/albion_terminal_rpg/)
