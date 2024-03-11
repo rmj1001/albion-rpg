@@ -7,7 +7,6 @@ use crate::{
         settings::Settings,
         xp::*,
     },
-    panic_screen,
     prelude::*,
 };
 use serde::{Deserialize, Serialize};
@@ -40,6 +39,29 @@ impl Default for Player {
             items: ItemInventory::new(),
             armor: ArmorInventory::new(),
             weapons: WeaponsInventory::new(),
+        }
+    }
+}
+
+impl std::fmt::Display for Player {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let string = encoder::to_string_pretty(&self);
+
+        match string {
+            Ok(string) => write!(f, "{}", string),
+            Err(_) => Err(std::fmt::Error),
+        }
+    }
+}
+
+impl TryFrom<String> for Player {
+    type Error = ProfileError;
+    fn try_from(data: String) -> std::result::Result<Self, Self::Error> {
+        let user_result = encoder::from_str(&data);
+
+        match user_result {
+            Ok(profile) => Ok(profile),
+            Err(_) => Err(ProfileError::Corrupted),
         }
     }
 }
@@ -116,7 +138,7 @@ impl Player {
             Err(_) => return Err(ProfileError::DoesNotExist.boxed()),
         }
 
-        match Self::from_string(contents) {
+        match Self::try_from(contents) {
             Ok(player) => Ok(player),
             Err(_) => {
                 let delete: bool = confirm("Player data file is corrupted. Delete?");
@@ -130,28 +152,6 @@ impl Player {
 
                 Err(DataError::Decode.boxed())
             }
-        }
-    }
-}
-
-impl ToString for Player {
-    fn to_string(&self) -> String {
-        let string = encoder::to_string_pretty(&self);
-
-        match string {
-            Ok(string) => string,
-            Err(message) => panic_screen!(message),
-        }
-    }
-}
-
-impl Player {
-    pub fn from_string(data: String) -> Result<Player> {
-        let user_result = encoder::from_str(&data);
-
-        match user_result {
-            Ok(profile) => Ok(profile),
-            Err(_) => Err(ProfileError::Corrupted.boxed()),
         }
     }
 
