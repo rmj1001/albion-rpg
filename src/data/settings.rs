@@ -1,6 +1,6 @@
 use crate::{data::player::Player, panic_screen, prelude::*};
 use serde::{Deserialize, Serialize};
-use std::{fs, path::Path};
+use std::{fmt::Display, fs, path::Path};
 
 #[derive(Deserialize, Serialize, Debug, Clone, Default)]
 pub struct Settings {
@@ -11,7 +11,7 @@ pub struct Settings {
 }
 
 impl Settings {
-    pub fn new(username: &str, password_hash: &str) -> Self {
+    pub fn new<T: Display, U: Display>(username: &T, password_hash: &U) -> Self {
         Self {
             username: username.to_string(),
             password_hash: password_hash.to_string(),

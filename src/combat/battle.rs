@@ -1,6 +1,7 @@
 use crate::{
     combat::enemy::{EnemyData, Rewards},
     data::{inventory::equipment::Equipment, player::Player, xp::XP},
+    panic_screen,
     prelude::*,
 };
 
@@ -288,9 +289,10 @@ pub fn hardmode(battle: &mut BattleSettings) {
             println!("You didn't survive. This profile will be deleted.\n");
             pause();
 
-            battle.player.delete();
-
-            crate::menus::accounts::main();
+            match battle.player.delete() {
+                Ok(_) => crate::menus::accounts::main(),
+                Err(error) => panic_screen!(error),
+            }
         }
         _ => out_of_bounds(),
     }

@@ -57,18 +57,22 @@ fn delete_users(player: &mut Player) {
             }
 
             if *profile_string == player.settings.username {
-                Player::delete_from(&player.settings.username);
-
                 page_header("Developer Mode - Player Manager", Instructions::None);
-                success(Some("Current profile deleted. Logging out."));
+
+                match Player::delete_from(&player.settings.username) {
+                    Ok(_) => success(Some("Current profile deleted. Logging out.")),
+                    Err(error) => failure(&error.to_string()),
+                }
 
                 crate::menus::accounts::main();
             }
 
-            Player::delete_from(profile_string);
-
             page_header("Developer Mode - Player Manager", Instructions::None);
-            success(Some(&format!("Profile '{}' deleted.", profile_string)));
+
+            match Player::delete_from(profile_string) {
+                Ok(_) => success(Some(&format!("Profile '{}' deleted.", profile_string))),
+                Err(error) => failure(&error.to_string()),
+            }
 
             main(player);
         }

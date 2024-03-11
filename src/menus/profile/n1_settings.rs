@@ -111,9 +111,10 @@ fn delete_profile(player: &mut Player) {
         main(player);
     }
 
-    player.delete();
-
-    success(Some("Profile deleted."));
+    match player.delete() {
+        Ok(_) => success(Some("Profile deleted.")),
+        Err(error) => failure(&error.to_string()),
+    }
 
     crate::menus::accounts::main();
 }

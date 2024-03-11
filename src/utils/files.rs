@@ -1,6 +1,6 @@
 pub mod handler {
     use crate::{panic_screen, prelude::*};
-    use std::{fs, path::Path};
+    use std::{fmt::Display, fs, path::Path};
 
     pub fn folder_name() -> &'static str {
         "albion_term_rpg"
@@ -41,7 +41,7 @@ pub mod handler {
     }
 
     /// Generates the full path string for profiles depending on platform.
-    pub fn generate_profile_path(username: &str) -> String {
+    pub fn generate_profile_path<T: Display>(username: &T) -> String {
         let string: String = format!("{}/{}.{}", profile_directory(), username, extension());
         Path::new(&string)
             .to_str()
@@ -85,7 +85,7 @@ pub mod handler {
     If the file exists, it is overwritten.
     If the file does not exist, the default values are written to the file.
      */
-    pub fn write_file(file_path: String, data: String) {
+    pub fn write_file<T: Display>(file_path: String, data: T) {
         let directory = profile_directory();
 
         if let Err(message) = fs::create_dir_all(directory) {
@@ -95,22 +95,22 @@ pub mod handler {
             ));
         };
 
-        if let Err(message) = fs::write(&file_path, data) {
+        if let Err(message) = fs::write(&file_path, data.to_string()) {
             panic_screen!("Could not write to '{}':\n{}", file_path, message);
         }
     }
 
     /// Read the contents of a file to a string
-    pub fn read_file(file_path: String) -> Result<String> {
-        match fs::read_to_string(file_path) {
+    pub fn read_file<T: Display>(file_path: &T) -> Result<String> {
+        match fs::read_to_string(file_path.to_string()) {
             Ok(contents) => Ok(contents),
             Err(_) => Err(ProfileError::DoesNotExist.boxed()),
         }
     }
 
     /// Delete a file or panic
-    pub fn delete_file(file_path: String) {
-        if let Err(error) = fs::remove_file(file_path) {
+    pub fn delete_file<T: Display>(file_path: &T) {
+        if let Err(error) = fs::remove_file(file_path.to_string()) {
             panic_screen!(format!("Could not delete profile file:\n{}", error))
         }
     }
