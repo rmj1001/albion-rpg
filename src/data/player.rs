@@ -116,18 +116,18 @@ impl Player {
 
     /// Delete the player file on disk
     pub fn delete(&mut self) {
-        Player::delete_from_username(&self.settings.username);
+        Player::delete_from(&self.settings.username);
     }
 
     /// Delete the player file on disk
-    pub fn delete_from_username(username: &str) {
+    pub fn delete_from(username: &str) {
         let profile_path = file_handler::generate_profile_path(username);
 
         file_handler::delete_file(profile_path);
     }
 
     /// Retrieve player data from disk using the username as the search string
-    pub fn get_from_username(username: &str) -> Result<Player> {
+    pub fn get(username: &str) -> Result<Player> {
         let profile_path: String = file_handler::generate_profile_path(username);
         let mut contents: String = String::new();
 
@@ -145,7 +145,7 @@ impl Player {
 
                 if delete {
                     warning(Some("Deleting player data file."));
-                    Player::delete_from_username(username)
+                    Player::delete_from(username)
                 } else {
                     warning(Some("Cancelling."));
                 }

@@ -5,7 +5,7 @@ pub fn main() {
 
     let username: String = prompt_colon("Username");
 
-    let found_profile = Player::get_from_username(&username);
+    let found_profile = Player::get(&username);
 
     if found_profile.is_ok() {
         failure(&format!("Profile '{}' already exists.", username));
