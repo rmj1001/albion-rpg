@@ -40,7 +40,7 @@ pub fn clearscr() {
 
 ///
 /**
-**Description:** Custom exit screen.
+Custom exit screen.
 
 **Details:**
 - Save Player data if player object passed.

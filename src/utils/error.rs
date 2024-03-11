@@ -179,12 +179,8 @@ macro_rules! panic_screen {
 
 /// Standard panic message for dialogue selector
 pub fn out_of_bounds() {
-    use crate::prelude::{response, MessageLevel};
-    response(
-        MessageLevel::Failure,
-        false,
-        Some("Dialoguer selected index out of bounds."),
-        None,
-        true,
-    );
+    use crate::prelude::Logs;
+    const MESSAGE: Option<&str> = Some("Dialoguer selected index out of bounds.");
+
+    Logs::Failure.message(MESSAGE, None, true, true);
 }

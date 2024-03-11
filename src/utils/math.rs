@@ -1,6 +1,16 @@
 use rand::Rng;
 
-/// Generate a random number in a range, inclusive of the ceiling.
+/**
+Generate a random number in a range, inclusive of the ceiling.
+
+# Example
+
+```
+use albion_terminal_rpg::prelude::random_num;
+
+let num: usize = random_num(1, 10);
+```
+*/
 pub fn random_num(min: usize, max: usize) -> usize {
     let result: usize = rand::thread_rng().gen_range(min..=max);
 

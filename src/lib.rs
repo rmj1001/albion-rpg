@@ -8,7 +8,6 @@ pub mod utils {
     pub mod input;
     pub mod math;
     pub mod messages;
-    pub mod os;
     pub mod terminal;
     pub mod tui;
 }
@@ -67,5 +66,5 @@ pub mod combat {
 
 pub mod prelude {
     pub use crate::utils::files::{handler as file_handler, *};
-    pub use crate::utils::{crypt::*, error::*, input::*, math::*, messages::*, os::*, terminal::*, tui::*};
+    pub use crate::utils::{crypt::*, error::*, input::*, math::*, messages::*, terminal::*, tui::*};
 }

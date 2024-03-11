@@ -9,9 +9,8 @@ Top-level module documentation & function docs
   - [ ] error.rs
   - [ ] files.rs
   - [ ] input.rs
-  - [ ] math.rs
-  - [ ] messages.rs
-  - [ ] os.rs
+  - [x] math.rs
+  - [x] messages.rs
   - [x] terminal.rs
   - [x] tui.rs
 - [ ] Combat
