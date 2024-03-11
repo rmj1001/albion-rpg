@@ -27,6 +27,6 @@ Top-level module documentation & function docs
   - [ ] achievements.rs
   - [ ] guilds.rs
   - [ ] health.rs
-  - [ ] player.rs
+  - [x] player.rs
   - [ ] settings.rs
   - [ ] xp.rs
