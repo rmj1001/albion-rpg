@@ -27,7 +27,7 @@ impl Achievements {
     }
 
     pub fn table(&self) {
-        table_from_csv(vec![
+        csv_table(vec![
             "Achievement,Data".to_string(),
             format!("Monsters Killed,{}", self.monsters_killed),
             format!("Stronghold Defeated?,{}", checkmark(self.stronghold_defeated)),

@@ -1,7 +1,7 @@
 use crate::{data::player::Player, prelude::*};
 
 pub fn main() {
-    page_header("Registration", HeaderSubtext::None);
+    page_header("Registration", Instructions::None);
 
     let username: String = prompt_colon("Username");
 

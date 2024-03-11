@@ -114,7 +114,7 @@ impl ArmorInventory {
             )
         }
 
-        table_from_csv(vec![
+        csv_table(vec![
             "Armor,Owned,Equipped,Defense,Durability".to_string(),
             entry(&self.leather),
             entry(&self.bronze),
@@ -165,7 +165,7 @@ impl ArmorInventory {
             strings.push(string)
         });
 
-        table_from_csv(strings);
+        csv_table(strings);
         println!("Gold: {}\n", player.bank.wallet);
     }
 

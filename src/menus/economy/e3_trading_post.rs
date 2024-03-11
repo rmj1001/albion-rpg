@@ -4,7 +4,7 @@ use crate::{
 };
 
 pub fn main(player: &mut Player) {
-    page_header("Trading Post", crate::utils::tui::HeaderSubtext::None);
+    page_header("Trading Post", crate::utils::tui::Instructions::None);
 
     ItemInventory::shop_table(player);
     println!("Gold: {}\n", player.bank.wallet);

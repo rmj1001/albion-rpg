@@ -172,7 +172,7 @@ impl ItemInventory {
             ));
         });
 
-        table_from_csv(strings);
+        csv_table(strings);
     }
 
     pub fn build_transaction() -> Result<(Item, usize)> {

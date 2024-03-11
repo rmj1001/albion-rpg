@@ -1,4 +1,4 @@
-use crate::utils::tui::{checkmark, table_from_csv};
+use crate::utils::tui::{checkmark, csv_table};
 use rand::{thread_rng, Rng};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -115,7 +115,7 @@ impl WeaponsInventory {
                 weapon.durability,
             )
         }
-        table_from_csv(vec![
+        csv_table(vec![
             "Weapon,Owned,Equipped,Damage,Durability".to_string(),
             entry(&self.wooden_sword),
             entry(&self.bronze_sword),
@@ -169,7 +169,7 @@ impl WeaponsInventory {
             strings.push(string)
         });
 
-        table_from_csv(strings);
+        csv_table(strings);
         println!("Gold: {}\n", player.bank.wallet);
     }
 

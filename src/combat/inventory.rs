@@ -5,7 +5,7 @@ use crate::{
 
 /// Choose between equipment and healing
 pub fn battle_inventory(player: &mut Player) {
-    page_header("Battle Inventory", HeaderSubtext::Keyboard);
+    page_header("Battle Inventory", Instructions::Keyboard);
 
     let choice: usize = select_from_str_array(&["1. Equipment", "2. Healing", "NAV: Go Back"], None);
 
@@ -21,7 +21,7 @@ pub fn battle_inventory(player: &mut Player) {
 }
 
 pub fn healing_inventory(player: &mut Player) {
-    page_header("Healing Inventory", HeaderSubtext::Keyboard);
+    page_header("Healing Inventory", Instructions::Keyboard);
 
     println!("Potions: {}", player.items.potions);
     println!("Food: {}", player.items.food);
@@ -46,7 +46,7 @@ pub fn healing_inventory(player: &mut Player) {
 pub fn use_potion(player: &mut Player) {
     if player.items.potions == 0 {
         println!("You do not have enough potions.");
-        press_enter_to_continue();
+        pause();
         return;
     }
 
@@ -56,13 +56,13 @@ pub fn use_potion(player: &mut Player) {
     player.health.hp += health;
 
     println!("Your health increased {} hp, and is now {}.", health, player.health.hp);
-    press_enter_to_continue();
+    pause();
 }
 
 pub fn eat_food(player: &mut Player) {
     if player.items.food == 0 {
         println!("You do not have enough food.");
-        press_enter_to_continue();
+        pause();
         return;
     }
 
@@ -75,5 +75,5 @@ pub fn eat_food(player: &mut Player) {
         "Your hunger decreased {} points, and is now {}.",
         hunger, player.health.hunger
     );
-    press_enter_to_continue();
+    pause();
 }

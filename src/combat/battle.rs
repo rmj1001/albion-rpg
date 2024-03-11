@@ -22,7 +22,7 @@ use super::inventory::battle_inventory;
 /// Entry point for starting a battle.
 pub fn new_battle(battle: &mut BattleSettings) {
     // Prelude
-    page_header(battle.header, HeaderSubtext::None);
+    page_header(battle.header, Instructions::None);
     Equipment::check_equipment_ownership(battle.player);
 
     if battle.player.equipment.armor.is_none() || battle.player.equipment.weapon.is_none() {
@@ -30,7 +30,7 @@ pub fn new_battle(battle: &mut BattleSettings) {
 
         if !confirm {
             println!("Returning home.");
-            press_enter_to_continue();
+            pause();
 
             crate::menus::game_menu::main(battle.player);
         }
@@ -59,7 +59,7 @@ pub fn new_battle(battle: &mut BattleSettings) {
 pub fn battle_menu(battle: &mut BattleSettings) {
     page_header(
         format!("{} - {}", battle.header, battle.enemy.name),
-        HeaderSubtext::Keyboard,
+        Instructions::Keyboard,
     );
 
     if battle.is_looped {
@@ -97,16 +97,16 @@ pub fn battle_menu(battle: &mut BattleSettings) {
 }
 
 pub fn retreat(player: &mut Player) {
-    page_header("Battle - Retreat", HeaderSubtext::None);
+    page_header("Battle - Retreat", Instructions::None);
 
     println!("You have retreated from the battle.");
-    press_enter_to_continue();
+    pause();
 
     crate::menus::game_menu::main(player);
 }
 
 pub fn attack(battle: &mut BattleSettings) {
-    page_header(battle.header, HeaderSubtext::None);
+    page_header(battle.header, Instructions::None);
 
     player_attack(battle);
 
@@ -120,7 +120,7 @@ pub fn attack(battle: &mut BattleSettings) {
 
     println!();
 
-    press_enter_to_continue();
+    pause();
 
     battle_menu(battle);
 }
@@ -212,7 +212,7 @@ fn success_or_fail() -> bool {
 }
 
 pub fn victory(battle: &mut BattleSettings) {
-    page_header(format!("{} - Victory", battle.header), HeaderSubtext::None);
+    page_header(format!("{} - Victory", battle.header), Instructions::None);
 
     println!("You successfully defeated the {}!", battle.enemy.name);
     battle.player.health.restore();
@@ -230,7 +230,7 @@ pub fn victory(battle: &mut BattleSettings) {
     Rewards::reward_to_player(battle.player, rewards);
     println!();
 
-    press_enter_to_continue();
+    pause();
     battle.player.save();
 
     if !battle.is_looped {
@@ -247,7 +247,7 @@ pub fn victory(battle: &mut BattleSettings) {
 }
 
 pub fn defeat(battle: &mut BattleSettings) {
-    page_header(format!("{} - Defeat", battle.header), HeaderSubtext::None);
+    page_header(format!("{} - Defeat", battle.header), Instructions::None);
 
     println!("You have been defeated in battle.\n");
     sleep(battle.pause_seconds);
@@ -267,7 +267,7 @@ pub fn revived(battle: &mut BattleSettings) {
     battle.player.health.reset();
 
     battle.player.save();
-    press_enter_to_continue();
+    pause();
     crate::menus::game_menu::main(battle.player);
 }
 
@@ -288,7 +288,7 @@ pub fn hardmode(battle: &mut BattleSettings) {
         }
         1 => {
             println!("You didn't survive. This profile will be deleted.\n");
-            press_enter_to_continue();
+            pause();
 
             battle.player.delete();
 

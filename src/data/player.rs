@@ -168,11 +168,11 @@ impl Player {
                     "Player Profile - {} - Page {}/{}",
                     player.settings.username, page_number, total_pages
                 ),
-                HeaderSubtext::None,
+                Instructions::None,
             );
 
             println!("{}\n", page);
-            press_enter_to_continue();
+            pause();
 
             page_number += 1;
         });

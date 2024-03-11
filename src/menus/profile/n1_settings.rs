@@ -3,7 +3,7 @@ use crate::{data::settings::Settings, prelude::*};
 use crate::data::player::Player;
 
 pub fn main(player: &mut Player) {
-    page_header("Profile Settings", HeaderSubtext::Keyboard);
+    page_header("Profile Settings", Instructions::Keyboard);
 
     let choice: usize = select_from_str_array(
         &[
@@ -34,7 +34,7 @@ pub fn main(player: &mut Player) {
 }
 
 fn change_username(player: &mut Player) {
-    page_header("Profile Settings", HeaderSubtext::None);
+    page_header("Profile Settings", Instructions::None);
 
     let new_username = prompt_colon("New Username");
 
@@ -52,14 +52,14 @@ fn change_username(player: &mut Player) {
 
     Settings::change_username(player, new_username);
 
-    page_header("Profile Settings", HeaderSubtext::None);
+    page_header("Profile Settings", Instructions::None);
     success_msg("Username changed.");
 
     main(player);
 }
 
 fn change_password(player: &mut Player) {
-    page_header("Profile Settings", HeaderSubtext::Other("Enter new password."));
+    page_header("Profile Settings", Instructions::Other("Enter new password."));
 
     let new_password = password(false);
     let new_pass_is_old_pass = verify_hash(new_password.clone(), player.settings.password_hash.clone());
@@ -84,7 +84,7 @@ fn change_password(player: &mut Player) {
 }
 
 fn reset(player: &mut Player) {
-    page_header("Profile Settings", HeaderSubtext::None);
+    page_header("Profile Settings", Instructions::None);
 
     let confirm_reset = confirm("Are you sure you want to reset your profile?");
 
@@ -102,7 +102,7 @@ fn reset(player: &mut Player) {
 }
 
 fn delete_profile(player: &mut Player) {
-    page_header("Profile Settings", HeaderSubtext::None);
+    page_header("Profile Settings", Instructions::None);
 
     let confirm_delete = confirm("Are you sure you want to delete your profile?");
 
@@ -119,7 +119,7 @@ fn delete_profile(player: &mut Player) {
 }
 
 fn hardmode(player: &mut Player) {
-    page_header("Profile Settings", HeaderSubtext::None);
+    page_header("Profile Settings", Instructions::None);
 
     if !player.settings.hardmode {
         println!("Are you sure you want to enable hardmode?");

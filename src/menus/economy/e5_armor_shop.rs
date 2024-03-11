@@ -4,7 +4,7 @@ use crate::prelude::*;
 use crate::data::player::Player;
 
 pub fn main(player: &mut Player) {
-    page_header("Armor Shop", crate::utils::tui::HeaderSubtext::None);
+    page_header("Armor Shop", crate::utils::tui::Instructions::None);
 
     ArmorInventory::shop_table(player);
 

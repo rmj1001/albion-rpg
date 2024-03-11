@@ -9,7 +9,7 @@ enum Operation {
 }
 
 pub fn main(player: &mut Player) {
-    page_header("Developer Mode - XP Manager", HeaderSubtext::Keyboard);
+    page_header("Developer Mode - XP Manager", Instructions::Keyboard);
 
     player.xp.table();
 

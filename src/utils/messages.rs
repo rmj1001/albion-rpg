@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use crate::prelude::press_enter_to_continue;
+use crate::prelude::pause;
 
 pub enum MessageLevel {
     Success,
@@ -52,7 +52,7 @@ impl Color {
 /// Create a painted response string with a press_enter_to_continue
 pub fn build_response<T: Display>(
     flag: MessageLevel,
-    pause: bool,
+    use_pause: bool,
     optional_description: Option<T>,
     optional_details: Option<T>,
     panic: bool,
@@ -84,8 +84,8 @@ pub fn build_response<T: Display>(
         println!("\n{}", painted);
     }
 
-    if pause {
-        press_enter_to_continue();
+    if use_pause {
+        pause();
     }
 }
 

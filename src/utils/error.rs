@@ -130,9 +130,9 @@ pub fn panic_menu_formatter<T: Display, U: Display, V: Display, W: Display>(
     message: Option<W>,
 ) {
     use crate::utils::terminal::clearscr;
-    use crate::utils::tui::{page_header, press_enter_to_continue, HeaderSubtext};
+    use crate::utils::tui::{page_header, pause, Instructions};
 
-    page_header("Error", HeaderSubtext::None);
+    page_header("Error", Instructions::None);
 
     if check_debug_mode() {
         println!("File: {}", file.to_string().trim());
@@ -147,7 +147,7 @@ pub fn panic_menu_formatter<T: Display, U: Display, V: Display, W: Display>(
         }
 
         println!();
-        press_enter_to_continue();
+        pause();
     } else {
         match message {
             Some(message) => failure(message.to_string()),

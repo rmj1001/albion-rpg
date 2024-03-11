@@ -11,7 +11,7 @@ use crate::{
 use crate::data::player::Player;
 
 pub fn main(player: &mut Player) {
-    page_header("The Guilds", HeaderSubtext::Keyboard);
+    page_header("The Guilds", Instructions::Keyboard);
 
     let guild_choice = select_from_str_array(
         &[
@@ -133,7 +133,7 @@ fn print_guild_information(
     increase_item: GuildItem,
     decrease_item: &Option<GuildItem>,
 ) {
-    page_header(format!("Guild: {}", name), HeaderSubtext::Keyboard);
+    page_header(format!("Guild: {}", name), Instructions::Keyboard);
 
     let xp = player.xp.get(xp_type);
 
@@ -185,7 +185,7 @@ fn try_subtract(item: &mut usize, item_name: &str) -> Result<()> {
 }
 
 fn guild_membership_shop(player: &mut Player) {
-    page_header("Guild Memberships Office", HeaderSubtext::Keyboard);
+    page_header("Guild Memberships Office", Instructions::Keyboard);
 
     Guilds::shop_table(player);
 

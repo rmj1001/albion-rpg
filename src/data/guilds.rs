@@ -90,7 +90,7 @@ impl Guilds {
             strings.push(string)
         });
 
-        table_from_csv(strings);
+        csv_table(strings);
         println!("Gold: {}\n", player.bank.wallet);
     }
 

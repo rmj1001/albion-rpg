@@ -1,48 +1,70 @@
+use std::fmt::Display;
+
 /**
-Create a string of dashes with desired length
+Create a string of dashes with desired length.
 
 # Examples
+
 ```
-create_line_string(3) // ---
-create_line_string(10) // ----------
-````
+use albion_terminal_rpg::prelude::line;
+
+let line1 = line(3);
+let line2 = line(5);
+
+assert_eq!(line1, String::from("---"));
+assert_eq!(line2, String::from("-----"));
+```
  */
-pub fn create_line_string(total_length: usize, optional_character: Option<char>) -> String {
+pub fn line(total_length: usize) -> String {
     let mut line_string: String = String::new();
     let mut current_length: usize = 1;
-    let mut line_character = '-';
-
-    if let Some(character) = optional_character {
-        line_character = character;
-    }
+    const LINE_CHAR: char = '-';
 
     while current_length <= total_length {
-        line_string.push(line_character);
+        line_string.push(LINE_CHAR);
         current_length += 1;
     }
 
     line_string
 }
 
-/// Print a line of dashes to STDOUT. Default Length 80 characters.
-pub fn print_line_string(total_length: Option<usize>) {
-    let mut line_string: String = String::new();
+/**
+Print a line of dashes to STDOUT.
+Default Length 80 characters.
 
-    match total_length {
-        None => line_string = create_line_string(80, None),
-        Some(length) => line_string = create_line_string(length, None),
-    }
+# Examples
 
-    println!("{}", &line_string[..]);
+```
+use albion_terminal_rpg::prelude::print_line;
+
+print_line(Some(10)); // prints a line of dashes with a length of 10
+print_line(None); // prints a line of dashes with the default length (80)
+```
+*/
+pub fn print_line(total_length: Option<usize>) {
+    let line_string: String = match total_length {
+        None => line(80),
+        Some(length) => line(length),
+    };
+
+    println!("{}", line_string);
 }
 
-/// Prints a header box to stdout with a custom line length. The title is centered between two lines.
-pub fn header<T>(title: T, line_length: usize)
-where
-    T: Into<String>,
-{
-    let title = title.into();
+/**
+Prints a header box to stdout with a custom line length.
+The title is centered between two lines.
 
+# Example
+
+```
+use albion_terminal_rpg::prelude::header;
+
+// prints a header with a title centered between two
+// lines of 10 dashes
+header("Albion", 10)
+```
+*/
+pub fn header<T: Display>(title: T, line_length: usize) {
     fn add_spaces_to_string(s: &mut String, spaces: usize) {
         let mut index = 0;
 
@@ -55,138 +77,139 @@ where
 
     let mut header = String::new();
 
-    header.push_str(&create_line_string(line_length, None));
+    header.push_str(&line(line_length));
     header.push('\n');
 
-    let spaces_on_one_side = (line_length - (title.len() + 2)) / 2 + 1;
+    let spaces_on_one_side = (line_length - (title.to_string().len() + 2)) / 2 + 1;
 
     add_spaces_to_string(&mut header, spaces_on_one_side);
 
-    header.push_str(&title);
+    header.push_str(&title.to_string());
 
     header.push('\n');
-    header.push_str(&create_line_string(line_length, None));
+    header.push_str(&line(line_length));
 
     println!("{}", header);
 }
 
-/// Clears terminal screen and prints big_header().
-pub fn page_header<T>(title: T, instructions: HeaderSubtext)
-where
-    T: Into<String>,
-{
+/**
+Clears the screen and prints a header.
+The text "Albion - " is prefixed to the given
+title.
+
+# Example
+
+```
+use albion_terminal_rpg::prelude::{page_header, Instructions};
+
+page_header("Main Menu", Instructions::TypeCode);
+```
+*/
+pub fn page_header<T: Display>(title: T, instructions: Instructions) {
     crate::utils::terminal::clearscr();
-    big_header(title.into(), instructions)
+    header(format!("Albion - {}", title), 80);
+    println!("{}", instructions);
 }
 
-/// Prints a header with 80 character width
-pub fn big_header<T>(title: T, instructions: HeaderSubtext)
-where
-    T: Into<String>,
-{
-    header(format!("Albion - {}", title.into()), 80);
-    header_subtext(instructions);
-}
+/**
+Pre-generated prompts displayed under headers to give players instructions
+for navigating the game. This implement the Display trait for easy printing.
 
-/// Prints a header with 40 character width
-pub fn small_header<T>(title: T, instructions: HeaderSubtext)
-where
-    T: Into<String>,
-{
-    header(title.into(), 40);
-    header_subtext(instructions);
-}
+# Examples
 
-/// These will determine which prompt to display under a header
-pub enum HeaderSubtext {
-    EnterCode,
+```
+use albion_terminal_rpg::prelude::Instructions;
+
+println!("{}", Instructions::TypeCode);
+println!("{}", Instructions::Keyboard);
+println!("{}", Instructions::Other("Some text here"));
+println!("{}", Instructions::None);
+```
+*/
+pub enum Instructions {
+    TypeCode,
     Keyboard,
     Other(&'static str),
     None,
 }
 
-/// Prints text under a header based on enum variant used
-pub fn header_subtext(instructions: HeaderSubtext) {
-    let mut instructions_string = String::new();
-
-    match instructions {
-        HeaderSubtext::Keyboard => instructions_string.push_str("Press ↑ or ↓ to navigate, then press ENTER/RETURN.\n"),
-        HeaderSubtext::EnterCode => instructions_string.push_str("Enter a code (ex. p1), then press ENTER/RETURN.\n"),
-        HeaderSubtext::Other(text) => instructions_string.push_str(&format!("{}\n", text)),
-        HeaderSubtext::None => {}
+impl Display for Instructions {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::TypeCode => write!(f, "Press ↑ or ↓ to navigate, then press ENTER/RETURN."),
+            Self::Keyboard => write!(f, "Enter a code (ex. 1), then press ENTER/RETURN."),
+            Self::Other(text) => write!(f, "{}", text),
+            Self::None => write!(f, ""),
+        }
     }
-
-    println!("{}", instructions_string);
 }
 
-/// Equivalent to DOS "pause" command
-pub fn press_enter_to_continue() {
+/**
+Equivalent of DOS pause command. This waits for the user to press the
+ENTER/RETURN key on their keyboard before moving on to other code.
+
+# Usage
+
+```
+use albion_terminal_rpg::prelude::pause;
+
+pause();
+```
+*/
+pub fn pause() {
     println!("[PRESS (RETURN/ENTER) TO CONTINUE]");
     let mut garbage = String::new();
     let _ = std::io::stdin().read_line(&mut garbage);
 }
 
-/// Print out a table based on a vector of strings with comma separators
-pub fn table_from_csv(strings: Vec<String>) {
+/**
+Print out a table to STDOUT based on a vector of strings with comma separators.
+
+# Example
+
+```
+use albion_terminal_rpg::prelude::csv_table;
+
+csv_table(vec![
+    "Column1,Column2,Column3".to_string(),
+    "Hello,World,Yes".to_string(),
+    "Goodbye,World,No".to_string(),
+]);
+```
+*/
+pub fn csv_table(strings: Vec<String>) {
     let table_string = strings.join("\n");
     let table = csv_to_table::iter::from_reader(table_string.as_bytes()).to_string();
 
     println!("{}\n", table);
 }
 
-/// Convert a boolean to "Yes" or "No"
-pub fn pretty_bool(flag: bool) -> &'static str {
+/**
+Prints a check mark if the boolean is true, or a space if false.
+
+# Examples
+
+```
+use albion_terminal_rpg::prelude::checkmark;
+
+let yes = checkmark(true);
+let no = checkmark(false);
+
+assert_eq!(yes, '✓');
+assert_eq!(no, ' ');
+```
+*/
+pub fn checkmark(flag: bool) -> char {
     match flag {
-        true => "Yes",
-        false => "No",
+        true => '✓',
+        false => ' ',
     }
-}
-
-/// Prints a check mark if the boolean is true
-pub fn checkmark(flag: bool) -> &'static str {
-    match flag {
-        true => "✓",
-        false => "",
-    }
-}
-
-/// Adds "gold" to the end of a number string
-pub fn price(number: usize) -> String {
-    format!("{} gold", number)
-}
-
-/// Pause terminal output for a number of seconds
-pub fn sleep(seconds: u64) {
-    std::thread::sleep(std::time::Duration::from_secs(seconds))
-}
-
-/// Convert a long string with newlines into pages
-pub fn paginate_string<T>(string: T, lines_per_page: usize) -> Vec<String>
-where
-    T: Into<String>,
-{
-    let string: String = string.into();
-    let lines: Vec<String> = string.split('\n').map(|s| format!("{}\n", s)).collect();
-
-    let mut pages: Vec<String> = Vec::new();
-
-    lines.chunks(lines_per_page).for_each(|chunk| {
-        let mut page: String = String::new();
-
-        chunk.iter().for_each(|line| {
-            page.push_str(line);
-        });
-
-        pages.push(page);
-    });
-
-    pages
 }
 
 mod tests {
     #[test]
     fn line() {
-        let output = crate::utils::tui::create_line_string(10, None);
+        let output = crate::utils::tui::line(10);
         let compare: String = "----------".to_string();
 
         assert!(output == compare);

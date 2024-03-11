@@ -3,7 +3,7 @@ use crate::{data::settings::Settings, panic_screen, prelude::*};
 use crate::data::player::Player;
 
 pub fn main(player: &mut Player) {
-    page_header("Developer Mode", HeaderSubtext::Keyboard);
+    page_header("Developer Mode", Instructions::Keyboard);
 
     let choice = select_from_str_array(
         &[
@@ -34,7 +34,7 @@ pub fn main(player: &mut Player) {
 }
 
 pub fn disable_developer_mode(player: &mut Player) {
-    page_header("Developer Mode", HeaderSubtext::None);
+    page_header("Developer Mode", Instructions::None);
 
     if !player.settings.developer {
         failure("Developer mode is already disabled.");

@@ -1,12 +1,7 @@
 use crate::{
     combat::{battle::BattleSettings, enemy::EnemyData},
     data::{achievements::Achievements, inventory::equipment::Equipment, settings::Settings},
-    utils::{
-        input::{confirm, prompt_arrow},
-        messages::{self, success},
-        terminal::exit,
-        tui::{self, page_header, press_enter_to_continue, sleep, HeaderSubtext},
-    },
+    prelude::*,
 };
 
 use crate::data::player::Player;
@@ -20,7 +15,7 @@ pub fn main(player: &mut Player) {
 
     page_header(
         format!("Game Menu (Player: {})", player.settings.username),
-        tui::HeaderSubtext::EnterCode,
+        Instructions::TypeCode,
     );
 
     println!("#------- Combat ------#");
@@ -72,16 +67,16 @@ pub fn main(player: &mut Player) {
             crate::combat::battle::new_battle(&mut battle_settings);
         }
         "2" | "enter the stronghold" => {
-            page_header("The Stronghold", HeaderSubtext::None);
+            page_header("The Stronghold", Instructions::None);
 
             fn exit_stronghold(player: &mut Player) {
-                page_header("The Stronghold", HeaderSubtext::None);
+                page_header("The Stronghold", Instructions::None);
 
                 println!("\nYou have successfully completed the stronghold and won the game! Congratulations!");
                 player.achievements.stronghold_defeated = true;
                 player.save();
 
-                press_enter_to_continue();
+                pause();
                 main(player);
             }
 
@@ -122,7 +117,7 @@ pub fn main(player: &mut Player) {
         "9" | "hall of records" => crate::menus::profile::p2_hall_of_records::main(player),
         "97" | "settings" => crate::menus::profile::n1_settings::main(player),
         "98" | "save game" | "save" => {
-            page_header("Saving Game", HeaderSubtext::None);
+            page_header("Saving Game", Instructions::None);
             println!("\nSaving game...");
             sleep(2);
 
@@ -134,7 +129,7 @@ pub fn main(player: &mut Player) {
         "99" | "logout" => {
             player.save();
 
-            page_header("Accounts Menu", HeaderSubtext::None);
+            page_header("Accounts Menu", Instructions::None);
             println!("\nLogging out...");
             sleep(2);
 
@@ -146,7 +141,7 @@ pub fn main(player: &mut Player) {
         }
 
         "3.141592" => {
-            page_header("Developer Mode", HeaderSubtext::None);
+            page_header("Developer Mode", Instructions::None);
             Settings::toggle_developer(player);
             main(player);
         }
@@ -156,12 +151,12 @@ pub fn main(player: &mut Player) {
                 if player.settings.developer {
                     crate::menus::devmode::d1_developer_menu::main(player);
                 } else {
-                    messages::invalid_input(Some(misc), None, true);
+                    invalid_input(Some(misc), None, true);
                     main(player);
                 }
             }
             _ => {
-                messages::invalid_input(Some(misc), None, true);
+                invalid_input(Some(misc), None, true);
                 main(player);
             }
         },

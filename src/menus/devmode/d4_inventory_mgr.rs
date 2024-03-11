@@ -7,7 +7,7 @@ use crate::{
 };
 
 pub fn main(player: &mut Player) {
-    page_header("Developer Mode - Inventory Manager", HeaderSubtext::None);
+    page_header("Developer Mode - Inventory Manager", Instructions::None);
 
     let manager_option = select_from_str_array(&["1. Items", "2. Weapons", "3. Armor", "NAV: Go Back"], None);
 
@@ -21,7 +21,7 @@ pub fn main(player: &mut Player) {
 }
 
 fn items_manager(player: &mut Player) {
-    page_header("Developer Mode - Inventory Manager - Items", HeaderSubtext::None);
+    page_header("Developer Mode - Inventory Manager - Items", Instructions::None);
 
     ItemInventory::shop_table(player);
 
@@ -74,7 +74,7 @@ fn items_manager(player: &mut Player) {
 }
 
 fn weapons_manager(player: &mut Player) {
-    page_header("Developer Mode - Inventory Manager - Weapons", HeaderSubtext::None);
+    page_header("Developer Mode - Inventory Manager - Weapons", Instructions::None);
 
     WeaponsInventory::shop_table(player);
 
@@ -121,7 +121,7 @@ fn weapons_manager(player: &mut Player) {
 }
 
 fn armor_manager(player: &mut Player) {
-    page_header("Developer Mode - Inventory Manager - Armor", HeaderSubtext::None);
+    page_header("Developer Mode - Inventory Manager - Armor", Instructions::None);
 
     player.armor.table();
 

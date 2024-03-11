@@ -3,16 +3,15 @@ use bcrypt::{hash, DEFAULT_COST};
 use crate::panic_screen;
 
 /**
-Generate a Hash.
+Generate a hashed string for secrets
 
 # Examples
 
 ```
-use albion_terminal_rpg::utils::crypt::generate_hash;
+use albion_terminal_rpg::prelude::*;
 
 let password: String = String::from("test");
-
-let hashed: String = generate_hash(password);
+let hashed: String = generate_hash(password.clone());
 ```
 */
 
@@ -25,6 +24,19 @@ pub fn generate_hash(text: String) -> String {
     }
 }
 
+/**
+Verify that a string matches a hash
+
+# Examples
+```
+use albion_terminal_rpg::prelude::*;
+
+let password: String = String::from("test");
+let hashed: String = generate_hash(password.clone());
+
+assert!(verify_hash(password, hashed));
+```
+*/
 pub fn verify_hash(text: String, hash: String) -> bool {
     let verified_result = bcrypt::verify(text, &hash);
 
@@ -38,7 +50,7 @@ pub fn verify_hash(text: String, hash: String) -> bool {
 mod tests {
     #[test]
     fn check_hashing() {
-        use super::{generate_hash, verify_hash};
+        use crate::prelude::{generate_hash, verify_hash};
 
         const PASSWORD: &str = "1234";
         let hashed = generate_hash(PASSWORD.to_string());

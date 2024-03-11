@@ -1,7 +1,7 @@
 use crate::{data::player::Player, prelude::*};
 
 pub fn main(player: &mut Player) {
-    page_header("Developer Mode - Player Manager", HeaderSubtext::Keyboard);
+    page_header("Developer Mode - Player Manager", Instructions::Keyboard);
 
     let choice1 = select_from_str_array(
         &[
@@ -23,7 +23,7 @@ pub fn main(player: &mut Player) {
 }
 
 fn list_users(player: &mut Player) {
-    page_header("Developer Mode - Player Manager", HeaderSubtext::None);
+    page_header("Developer Mode - Player Manager", Instructions::None);
 
     let profiles: Vec<String> = file_handler::list_all_profiles();
 
@@ -32,13 +32,13 @@ fn list_users(player: &mut Player) {
     });
 
     println!();
-    press_enter_to_continue();
+    pause();
 
     main(player);
 }
 
 fn delete_users(player: &mut Player) {
-    page_header("Developer Mode - Player Manager", HeaderSubtext::Keyboard);
+    page_header("Developer Mode - Player Manager", Instructions::Keyboard);
 
     let profiles = file_handler::list_all_profiles();
     let choice = select_from_vector(profiles.clone(), Some("Select a profile to delete"));
@@ -59,7 +59,7 @@ fn delete_users(player: &mut Player) {
             if *profile_string == player.settings.username {
                 Player::delete_from_username(&player.settings.username);
 
-                page_header("Developer Mode - Player Manager", HeaderSubtext::None);
+                page_header("Developer Mode - Player Manager", Instructions::None);
                 success_msg("Current profile deleted. Logging out.");
 
                 crate::menus::accounts::main();
@@ -67,7 +67,7 @@ fn delete_users(player: &mut Player) {
 
             Player::delete_from_username(profile_string);
 
-            page_header("Developer Mode - Player Manager", HeaderSubtext::None);
+            page_header("Developer Mode - Player Manager", Instructions::None);
             success_msg(format!("Profile '{}' deleted.", profile_string));
 
             main(player);
@@ -78,7 +78,7 @@ fn delete_users(player: &mut Player) {
 }
 
 fn view_user(player: &mut Player) {
-    page_header("Developer Mode - Player Manager - Data Viewer", HeaderSubtext::None);
+    page_header("Developer Mode - Player Manager - Data Viewer", Instructions::None);
     let choice = select_from_vector(file_handler::list_all_profiles(), Some("Select a player to view"));
 
     let profiles = file_handler::list_all_profiles();

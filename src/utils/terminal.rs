@@ -1,9 +1,6 @@
 use std::process::Command;
 
-use crate::{
-    data::player::Player,
-    prelude::{sleep, success_msg},
-};
+use crate::{data::player::Player, prelude::success_msg};
 
 use super::tui::page_header;
 
@@ -27,7 +24,7 @@ pub fn clearscr() {
 
 /// Sends an exit code of 0 (no errors)
 pub fn exit(player: Option<&mut Player>) {
-    page_header("Thanks!", super::tui::HeaderSubtext::None);
+    page_header("Thanks!", super::tui::Instructions::None);
 
     if let Some(player) = player {
         println!("Saving game...");
@@ -44,4 +41,9 @@ pub fn exit(player: Option<&mut Player>) {
 
     clearscr();
     std::process::exit(0);
+}
+
+/// Pause terminal output for a number of seconds
+pub fn sleep(seconds: u64) {
+    std::thread::sleep(std::time::Duration::from_secs(seconds))
 }

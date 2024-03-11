@@ -22,7 +22,7 @@ impl Equipment {
     }
 
     pub fn menu(player: &mut Player) {
-        page_header("Equipment Manager", HeaderSubtext::Keyboard);
+        page_header("Equipment Manager", Instructions::Keyboard);
 
         let choice = select_from_str_array(&["1. Weapons", "2. Armor", "NAV: Go Back"], None);
 
@@ -41,7 +41,7 @@ impl Equipment {
     }
 
     pub fn armor_menu(player: &mut Player) {
-        page_header("Equipment Manager - Armor", HeaderSubtext::Keyboard);
+        page_header("Equipment Manager - Armor", Instructions::Keyboard);
 
         player.armor.table();
 
@@ -62,7 +62,7 @@ impl Equipment {
     }
 
     pub fn weapon_menu(player: &mut Player) {
-        page_header("Equipment Manager - Weapons", HeaderSubtext::Keyboard);
+        page_header("Equipment Manager - Weapons", Instructions::Keyboard);
 
         player.weapons.table();
 
@@ -110,7 +110,7 @@ impl Equipment {
 
         if !weapon.owns {
             println!("You do not own this.");
-            press_enter_to_continue();
+            pause();
             return;
         }
 
@@ -121,13 +121,13 @@ impl Equipment {
         Self::unequip_weapon(player, false);
         player.equipment.weapon = Some(flag);
 
-        press_enter_to_continue();
+        pause();
     }
 
     pub fn unequip_weapon(player: &mut Player, menu_facing: bool) {
         if player.equipment.weapon.is_none() && menu_facing {
             println!("You do not have a weapon equipped.");
-            press_enter_to_continue();
+            pause();
             return;
         }
 
@@ -141,7 +141,7 @@ impl Equipment {
 
             if menu_facing {
                 println!("Weapon successfully unequipped.");
-                press_enter_to_continue();
+                pause();
             }
         }
     }
@@ -174,7 +174,7 @@ impl Equipment {
 
         if !armor.owns {
             println!("You do not own this.");
-            press_enter_to_continue();
+            pause();
             return;
         }
 
@@ -185,13 +185,13 @@ impl Equipment {
         Self::unequip_armor(player, false);
         player.equipment.armor = Some(flag);
 
-        press_enter_to_continue();
+        pause();
     }
 
     pub fn unequip_armor(player: &mut Player, menu_facing: bool) {
         if player.equipment.armor.is_none() && menu_facing {
             println!("You do not have armor equipped.");
-            press_enter_to_continue();
+            pause();
             return;
         }
 
@@ -205,7 +205,7 @@ impl Equipment {
 
             if menu_facing {
                 println!("Armor successfully unequipped.");
-                press_enter_to_continue();
+                pause();
             }
         }
     }

@@ -33,7 +33,7 @@ impl Bank {
 
     /// Prints Bank information as a table using CSV formatting.
     pub fn table(&self) {
-        table_from_csv(vec![
+        csv_table(vec![
             "Account,Balance".to_string(),
             format!("Wallet,{}", self.wallet),
             format!("Account 1,{}", self.account1),
@@ -98,7 +98,7 @@ impl Bank {
     }
 
     pub fn menu(player: &mut Player, developer_mode: bool) {
-        page_header("The Bank", HeaderSubtext::Keyboard);
+        page_header("The Bank", Instructions::Keyboard);
 
         println!();
         player.bank.table();
