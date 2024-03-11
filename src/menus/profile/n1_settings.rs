@@ -25,7 +25,7 @@ pub fn main(player: &mut Player) {
         3 => delete_profile(player),
         4 => hardmode(player),
         5 => {
-            player.paged_view();
+            player.view();
             main(player)
         }
         6 => crate::menus::game_menu::main(player),

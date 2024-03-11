@@ -155,7 +155,7 @@ impl Player {
         }
     }
 
-    pub fn paged_viewer(player: &Player) {
+    pub fn paginate(player: &Player) {
         let string = player.to_string();
 
         let pages = string.split("\n\n");
@@ -178,7 +178,7 @@ impl Player {
         });
     }
 
-    pub fn paged_view(&self) {
-        Self::paged_viewer(self);
+    pub fn view(&self) {
+        Self::paginate(self);
     }
 }
