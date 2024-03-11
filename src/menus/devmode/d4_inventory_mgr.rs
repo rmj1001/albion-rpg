@@ -40,7 +40,7 @@ fn items_manager(player: &mut Player) {
 
             match result {
                 Ok(_) => {
-                    success();
+                    success(None);
                     items_manager(player);
                 }
                 Err(message) => {
@@ -59,7 +59,7 @@ fn items_manager(player: &mut Player) {
 
             match sell_result {
                 Ok(_) => {
-                    success();
+                    success(None);
                     items_manager(player);
                 }
                 Err(message) => {
@@ -93,7 +93,7 @@ fn weapons_manager(player: &mut Player) {
 
         match result {
             Ok(_) => {
-                success();
+                success(None);
                 weapons_manager(player);
             }
             Err(message) => {
@@ -109,7 +109,7 @@ fn weapons_manager(player: &mut Player) {
 
         match result {
             Ok(_) => {
-                success();
+                success(None);
                 weapons_manager(player);
             }
             Err(message) => {
@@ -140,7 +140,7 @@ fn armor_manager(player: &mut Player) {
 
         match result {
             Ok(_) => {
-                success();
+                success(None);
                 armor_manager(player);
             }
             Err(message) => {
@@ -156,7 +156,7 @@ fn armor_manager(player: &mut Player) {
 
         match result {
             Ok(_) => {
-                success();
+                success(None);
                 armor_manager(player);
             }
             Err(message) => {

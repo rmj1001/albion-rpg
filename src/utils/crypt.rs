@@ -1,6 +1,11 @@
-use bcrypt::{hash, DEFAULT_COST};
+/*!
+# Cryptography
+
+Generate and verify hash string signatures for protecting secrets.
+*/
 
 use crate::panic_screen;
+use bcrypt::{hash, DEFAULT_COST};
 
 /**
 Generate a hashed string for secrets

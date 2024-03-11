@@ -26,7 +26,7 @@ pub fn purchase(player: &mut Player) {
 
     match result {
         Ok(_) => {
-            success();
+            success(None);
             main(player);
         }
         Err(message) => {
@@ -42,7 +42,7 @@ pub fn sell(player: &mut Player) {
 
     match result {
         Ok(_) => {
-            success();
+            success(None);
             main(player);
         }
         Err(message) => {

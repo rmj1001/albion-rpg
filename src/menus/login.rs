@@ -28,7 +28,7 @@ pub fn main() {
                 crate::menus::accounts::main();
             }
 
-            success();
+            success(None);
 
             crate::menus::game_menu::main(&mut player);
         }

@@ -44,7 +44,7 @@ pub fn disable_developer_mode(player: &mut Player) {
     let disable_dev_mode = confirm("Are you sure you want to disable developer mode?");
 
     if !disable_dev_mode {
-        cancelling();
+        cancel(None);
         main(player);
     }
 

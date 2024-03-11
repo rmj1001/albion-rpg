@@ -187,7 +187,7 @@ impl Bank {
         }
 
         match bank_result {
-            Ok(_) => success(),
+            Ok(_) => success(None),
             Err(message) => message.failure(),
         }
 

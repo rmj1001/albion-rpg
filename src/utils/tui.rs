@@ -1,3 +1,9 @@
+/*!
+# Terminal User Interface
+
+Design terminal menus for users to navigate.
+*/
+
 use std::fmt::Display;
 
 /**

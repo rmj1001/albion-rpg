@@ -29,9 +29,9 @@ impl Settings {
         player.save();
 
         if player.settings.hardmode {
-            success_msg("Hardmode enabled.");
+            success(Some("Hardmode enabled."));
         } else {
-            success_msg("Hardmode disabled.");
+            success(Some("Hardmode disabled."));
         }
     }
 
@@ -42,9 +42,9 @@ impl Settings {
 
         if player.settings.developer {
             player.achievements.hacked_the_game = true;
-            success_msg("Developer mode enabled.");
+            success(Some("Developer mode enabled."));
         } else {
-            success_msg("Developer mode disabled.");
+            success(Some("Developer mode disabled."));
         }
     }
 

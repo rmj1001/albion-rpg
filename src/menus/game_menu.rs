@@ -122,7 +122,7 @@ pub fn main(player: &mut Player) {
             sleep(2);
 
             player.save();
-            success();
+            success(None);
 
             main(player);
         }

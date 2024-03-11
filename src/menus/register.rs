@@ -8,7 +8,7 @@ pub fn main() {
     let found_profile = Player::get_from_username(&username);
 
     if found_profile.is_ok() {
-        failure(format!("Profile '{}' already exists.", username));
+        failure(&format!("Profile '{}' already exists.", username));
         crate::menus::accounts::main();
     }
 
@@ -25,6 +25,6 @@ pub fn main() {
     let profile = Player::new(&username, &password_hash, true);
 
     profile.save();
-    success();
+    success(None);
     crate::menus::accounts::main();
 }

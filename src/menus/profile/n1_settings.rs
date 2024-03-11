@@ -53,7 +53,7 @@ fn change_username(player: &mut Player) {
     Settings::change_username(player, new_username);
 
     page_header("Profile Settings", Instructions::None);
-    success_msg("Username changed.");
+    success(Some("Username changed."));
 
     main(player);
 }
@@ -78,7 +78,7 @@ fn change_password(player: &mut Player) {
 
     Settings::change_password(player, new_password);
 
-    success_msg("Password changed.");
+    success(Some("Password changed."));
 
     main(player);
 }
@@ -89,11 +89,11 @@ fn reset(player: &mut Player) {
     let confirm_reset = confirm("Are you sure you want to reset your profile?");
 
     if !confirm_reset {
-        cancelling();
+        cancel(None);
         main(player);
     }
 
-    success_msg("Profile reset.");
+    success(Some("Profile reset."));
 
     player.reset();
     player.save();
@@ -107,13 +107,13 @@ fn delete_profile(player: &mut Player) {
     let confirm_delete = confirm("Are you sure you want to delete your profile?");
 
     if !confirm_delete {
-        cancelling();
+        cancel(None);
         main(player);
     }
 
     player.delete();
 
-    success_msg("Profile deleted.");
+    success(Some("Profile deleted."));
 
     crate::menus::accounts::main();
 }
@@ -126,14 +126,14 @@ fn hardmode(player: &mut Player) {
         let confirmation = confirm("If you lose a battle, you could have your profile deleted.");
 
         if !confirmation {
-            cancelling();
+            cancel(None);
             main(player);
         }
     } else {
         let confirmation = confirm("Are you sure you want to disable hardmode?");
 
         if !confirmation {
-            cancelling();
+            cancel(None);
             main(player);
         }
     }

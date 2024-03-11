@@ -8,7 +8,7 @@ where
     Self: Display,
 {
     fn failure(&self) {
-        failure(self.to_string());
+        failure(&self.to_string());
     }
 
     fn display(&self) {
@@ -150,7 +150,7 @@ pub fn panic_menu_formatter<T: Display, U: Display, V: Display, W: Display>(
         pause();
     } else {
         match message {
-            Some(message) => failure(message.to_string()),
+            Some(message) => failure(&message.to_string()),
             None => failure(""),
         }
     }
@@ -175,4 +175,16 @@ macro_rules! panic_screen {
         $crate::utils::error::panic_menu_formatter(file!(), line!(), column!(), Some(format!($fmt, $($arg)*)));
         std::process::exit(1);
     });
+}
+
+/// Standard panic message for dialogue selector
+pub fn out_of_bounds() {
+    use crate::prelude::{response, MessageLevel};
+    response(
+        MessageLevel::Failure,
+        false,
+        Some("Dialoguer selected index out of bounds."),
+        None,
+        true,
+    );
 }

@@ -52,7 +52,7 @@ fn delete_users(player: &mut Player) {
             ));
 
             if !delete_profile {
-                cancelling();
+                cancel(None);
                 main(player);
             }
 
@@ -60,7 +60,7 @@ fn delete_users(player: &mut Player) {
                 Player::delete_from_username(&player.settings.username);
 
                 page_header("Developer Mode - Player Manager", Instructions::None);
-                success_msg("Current profile deleted. Logging out.");
+                success(Some("Current profile deleted. Logging out."));
 
                 crate::menus::accounts::main();
             }
@@ -68,7 +68,7 @@ fn delete_users(player: &mut Player) {
             Player::delete_from_username(profile_string);
 
             page_header("Developer Mode - Player Manager", Instructions::None);
-            success_msg(format!("Profile '{}' deleted.", profile_string));
+            success(Some(&format!("Profile '{}' deleted.", profile_string)));
 
             main(player);
         }

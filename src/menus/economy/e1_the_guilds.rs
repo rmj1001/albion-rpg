@@ -209,7 +209,7 @@ fn join_guild(player: &mut Player) {
     let flag = Guilds::select();
     match Guilds::join(player, flag, true) {
         Ok(_) => {
-            success();
+            success(None);
             guild_membership_shop(player);
         }
         Err(message) => {
@@ -223,7 +223,7 @@ fn leave_guild(player: &mut Player) {
     let flag = Guilds::select();
     match Guilds::leave(player, flag, true) {
         Ok(_) => {
-            success();
+            success(None);
             guild_membership_shop(player);
         }
         Err(message) => {

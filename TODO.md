@@ -2,6 +2,8 @@
 
 ## Documentation
 
+Top-level module documentation & function docs
+
 - [ ] Utils
   - [x] crypt.rs
   - [ ] error.rs
@@ -10,7 +12,7 @@
   - [ ] math.rs
   - [ ] messages.rs
   - [ ] os.rs
-  - [ ] terminal.rs
+  - [x] terminal.rs
   - [x] tui.rs
 - [ ] Combat
   - [ ] battle.rs

@@ -68,7 +68,7 @@ pub fn main(player: &mut Player) {
     };
 
     match result {
-        Ok(_) => success(),
+        Ok(_) => success(None),
         Err(error) => error.failure(),
     }
 
