@@ -132,8 +132,7 @@ impl Equipment {
         }
 
         if let Some(equipped_weapon) = &player.equipment.weapon {
-            let flag = equipped_weapon.clone();
-            let equipped_weapon = player.weapons.get(&flag);
+            let equipped_weapon = player.weapons.get(equipped_weapon);
 
             equipped_weapon.equipped = false;
 
@@ -196,8 +195,7 @@ impl Equipment {
         }
 
         if let Some(equipped_armor) = &player.equipment.armor {
-            let flag = equipped_armor.clone();
-            let equipped_armor = player.armor.get(&flag);
+            let equipped_armor = player.armor.get(equipped_armor);
 
             equipped_armor.equipped = false;
 
@@ -211,16 +209,16 @@ impl Equipment {
     }
 
     pub fn check_equipment_ownership(player: &mut Player) {
-        if let Some(weapon_flag) = player.equipment.weapon.clone() {
-            let weapon = player.weapons.get(&weapon_flag);
+        if let Some(weapon_flag) = &player.equipment.weapon {
+            let weapon = player.weapons.get(weapon_flag);
 
             if !weapon.owns {
                 Self::unequip_weapon(player, false);
             }
         }
 
-        if let Some(armor_flag) = player.equipment.armor.clone() {
-            let armor = player.armor.get(&armor_flag);
+        if let Some(armor_flag) = &player.equipment.armor {
+            let armor = player.armor.get(armor_flag);
 
             if !armor.owns {
                 Self::unequip_armor(player, false);

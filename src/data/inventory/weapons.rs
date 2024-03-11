@@ -177,14 +177,13 @@ impl WeaponsInventory {
         let shop = Self::shop();
         let items: Vec<String> = shop.keys().map(|flag| flag.name().to_string()).collect();
 
-        let selector = select_from_vector(items.clone(), None);
+        let selector = select_from_vector(&items, None);
         let selected_item = items
             .get(selector)
             .expect("This shouldn't select a vector item out of bounds.")
             .to_string();
 
-        Self::shop()
-            .iter()
+        shop.iter()
             .find(|item| item.0.name() == selected_item)
             .map(|item| item.0)
             .expect("Should return an Item Flag")

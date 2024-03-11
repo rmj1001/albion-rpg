@@ -4,7 +4,7 @@ use crate::data::player::Player;
 
 fn get_password(profile: &Player) -> bool {
     let input_password: String = password(false);
-    let verified_password = verify_hash(input_password.clone(), profile.settings.password_hash.clone());
+    let verified_password = verify_hash(&input_password, &profile.settings.password_hash);
 
     if !verified_password {
         failure("Incorrect password.");

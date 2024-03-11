@@ -4,6 +4,8 @@
 Generate and verify hash string signatures for protecting secrets.
 */
 
+use std::fmt::Display;
+
 use crate::panic_screen;
 use bcrypt::{hash, DEFAULT_COST};
 
@@ -16,12 +18,12 @@ Generate a hashed string for secrets
 use albion_terminal_rpg::prelude::*;
 
 let password: String = String::from("test");
-let hashed: String = generate_hash(password.clone());
+let hashed: String = generate_hash(&password);
 ```
 */
 
-pub fn generate_hash(text: String) -> String {
-    let hashed_result = hash(text, DEFAULT_COST);
+pub fn generate_hash<T: Display>(text: &T) -> String {
+    let hashed_result = hash(text.to_string(), DEFAULT_COST);
 
     match hashed_result {
         Ok(password_hash) => password_hash,
@@ -37,13 +39,13 @@ Verify that a string matches a hash
 use albion_terminal_rpg::prelude::*;
 
 let password: String = String::from("test");
-let hashed: String = generate_hash(password.clone());
+let hashed: String = generate_hash(&password);
 
-assert!(verify_hash(password, hashed));
+assert!(verify_hash(&password, &hashed));
 ```
 */
-pub fn verify_hash(text: String, hash: String) -> bool {
-    let verified_result = bcrypt::verify(text, &hash);
+pub fn verify_hash<T: Display, U: Display>(text: &T, hash: &U) -> bool {
+    let verified_result = bcrypt::verify(text.to_string(), &hash.to_string());
 
     match verified_result {
         Ok(result) => result,
@@ -58,10 +60,10 @@ mod tests {
         use crate::prelude::{generate_hash, verify_hash};
 
         const PASSWORD: &str = "1234";
-        let hashed = generate_hash(PASSWORD.to_string());
+        let hashed = generate_hash(&PASSWORD);
 
         assert!(
-            verify_hash(PASSWORD.to_string(), hashed),
+            verify_hash(&PASSWORD, &hashed),
             "The hashes of {} didn't match.",
             PASSWORD
         );

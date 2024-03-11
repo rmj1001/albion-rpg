@@ -103,10 +103,10 @@ Mostly used for either menu codes or type casting.
 use albion_terminal_rpg::prelude::invalid_input;
 
 // Show given input but not expected input & pause
-invalid_input(Some("nrgorg", None, true));
+invalid_input(Some("nrgorg"), None, true);
 
 // shows given input and expected input & pause
-invalid_input(Some("-1", "Positive Integer", true));
+invalid_input(Some("-1"), Some("Positive Integer"), true);
 ```
 */
 pub fn invalid_input(input: Option<&str>, expected: Option<&str>, pause: bool) {

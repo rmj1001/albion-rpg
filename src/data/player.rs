@@ -159,8 +159,8 @@ impl Player {
         let string = player.to_string();
 
         let pages = string.split("\n\n");
-        let mut page_number: usize = 1;
         let total_pages = pages.clone().count();
+        let mut page_number: usize = 1;
 
         pages.for_each(|page| {
             page_header(

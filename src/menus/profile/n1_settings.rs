@@ -62,7 +62,7 @@ fn change_password(player: &mut Player) {
     page_header("Profile Settings", Instructions::Other("Enter new password."));
 
     let new_password = password(false);
-    let new_pass_is_old_pass = verify_hash(new_password.clone(), player.settings.password_hash.clone());
+    let new_pass_is_old_pass = verify_hash(&new_password, &player.settings.password_hash);
 
     if new_pass_is_old_pass {
         failure("This is your current password.");

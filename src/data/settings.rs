@@ -50,7 +50,7 @@ impl Settings {
 
     /// Updates password field
     pub fn change_password(player: &mut Player, new_password: String) {
-        let new_hashed_password = generate_hash(new_password);
+        let new_hashed_password = generate_hash(&new_password);
         player.settings.password_hash = new_hashed_password;
         player.save();
     }

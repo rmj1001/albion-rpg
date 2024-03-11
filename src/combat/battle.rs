@@ -140,8 +140,7 @@ fn player_attack(battle: &mut BattleSettings) {
     }
 
     if let Some(equipped_weapon) = &battle.player.equipment.weapon {
-        let flag = equipped_weapon.clone();
-        let weapon = battle.player.weapons.get(&flag);
+        let weapon = battle.player.weapons.get(equipped_weapon);
         let damage = weapon.damage;
 
         println!("You hit the {} for {} damage!", enemy_type, damage);
@@ -167,8 +166,7 @@ fn enemy_attack(battle: &mut BattleSettings) {
     let mut damage: usize = battle.enemy.damage;
 
     if let Some(equipped_armor) = &battle.player.equipment.armor {
-        let flag = equipped_armor.clone();
-        let armor = battle.player.armor.get(&flag);
+        let armor = battle.player.armor.get(equipped_armor);
 
         if damage > armor.defense {
             damage -= armor.defense;

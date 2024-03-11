@@ -6,7 +6,7 @@ use crate::{
 use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
 
-#[derive(Clone, Debug, PartialEq, EnumIter, Default)]
+#[derive(Clone, Debug, PartialEq, EnumIter, Default, Copy)]
 pub enum Enemy {
     // Human
     #[default]
@@ -234,7 +234,7 @@ pub mod tests {
         use crate::data::player::Player;
         use crate::utils::crypt;
 
-        let test_player = Player::new("test", &crypt::generate_hash("test".to_string()), false);
+        let test_player = Player::new("test", &crypt::generate_hash(&"test"), false);
 
         let num_enemies: usize = 500;
         let mut enemies: Vec<EnemyData> = vec![];
@@ -249,9 +249,7 @@ pub mod tests {
         let invalids: Vec<EnemyData> = enemies.to_vec();
         let mut types: Vec<Enemy> = vec![];
 
-        invalids
-            .iter()
-            .for_each(|enemy: &EnemyData| types.push(enemy.flag.clone()));
+        invalids.iter().for_each(|enemy: &EnemyData| types.push(enemy.flag));
 
         if !invalids.is_empty() {
             crate::panic_screen!(

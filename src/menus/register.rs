@@ -20,7 +20,7 @@ pub fn main() {
         crate::menus::accounts::main();
     }
 
-    let password_hash = generate_hash(user_password);
+    let password_hash = generate_hash(&user_password);
 
     let profile = Player::new(&username, &password_hash, true);
 

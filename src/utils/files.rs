@@ -102,7 +102,7 @@ pub mod handler {
 
     /// Read the contents of a file to a string
     pub fn read_file(file_path: String) -> Result<String> {
-        match fs::read_to_string(file_path.clone()) {
+        match fs::read_to_string(file_path) {
             Ok(contents) => Ok(contents),
             Err(_) => Err(ProfileError::DoesNotExist.boxed()),
         }

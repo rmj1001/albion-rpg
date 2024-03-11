@@ -1,6 +1,6 @@
 use crate::{panic_screen, prelude::*};
 use dialoguer::Confirm;
-use std::{io::Write, str::FromStr};
+use std::{fmt::Display, io::Write, str::FromStr};
 
 /// Pass in a raw array of string slices to dialoguer's Select. (i.e. &\["test"\])
 pub fn select_from_str_array(options: &[&str], optional_prompt: Option<&str>) -> usize {
@@ -16,13 +16,13 @@ pub fn select_from_str_array(options: &[&str], optional_prompt: Option<&str>) ->
 }
 
 /// Pass in a vector of Strings to dialoguer's Select (only use for dynamic data)
-pub fn select_from_vector(options: Vec<String>, optional_prompt: Option<&str>) -> usize {
+pub fn select_from_vector<T: Display>(options: &[T], optional_prompt: Option<&str>) -> usize {
     if let Some(prompt_text) = optional_prompt {
         println!("{prompt_text}");
     }
 
     dialoguer::Select::new()
-        .items(&options[..])
+        .items(options)
         .default(0)
         .interact()
         .unwrap_or(0)

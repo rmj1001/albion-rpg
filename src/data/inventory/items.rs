@@ -190,7 +190,7 @@ impl ItemInventory {
         let items = shop.keys();
         let item_names: Vec<String> = items.map(|item| item.name().to_string()).collect();
 
-        let selector = select_from_vector(item_names.clone(), None);
+        let selector = select_from_vector(&item_names, None);
         let selected_item = item_names
             .get(selector)
             .expect("This shouldn't select a vector item out of bounds.")

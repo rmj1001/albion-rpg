@@ -84,7 +84,7 @@ pub fn main(player: &mut Player) {
                 header: "The Stronghold",
                 prompt: "You delve into the stronghold...",
                 enemy: EnemyData::new(player.xp.combat, player.health.hp),
-                player: &mut player.clone(),
+                player,
                 loops: 50,
                 floor: 0,
                 is_first_battle: true,
@@ -98,11 +98,11 @@ pub fn main(player: &mut Player) {
                 battle_settings.loops
             ));
 
-            if !confirm_stronghold {
-                main(player);
+            if confirm_stronghold {
+                crate::combat::battle::new_battle(&mut battle_settings);
             }
 
-            crate::combat::battle::new_battle(&mut battle_settings);
+            main(player);
         }
 
         // Economy
