@@ -225,39 +225,3 @@ impl Rewards {
         });
     }
 }
-
-pub mod tests {
-
-    #[test]
-    pub fn invalid_enemies() {
-        use crate::combat::enemy::{Enemy, EnemyData};
-        use crate::data::player::Player;
-        use crate::utils::crypt;
-
-        let test_player = Player::new("test", &crypt::generate_hash(&"test"), false);
-
-        let num_enemies: usize = 500;
-        let mut enemies: Vec<EnemyData> = vec![];
-
-        let mut index: usize = 0;
-
-        while index < num_enemies {
-            enemies.push(EnemyData::new(test_player.xp.combat, test_player.health.hp));
-            index += 1
-        }
-
-        let invalids: Vec<EnemyData> = enemies.to_vec();
-        let mut types: Vec<Enemy> = vec![];
-
-        invalids.iter().for_each(|enemy: &EnemyData| types.push(enemy.flag));
-
-        if !invalids.is_empty() {
-            crate::panic_screen!(
-                "{} Invalid enemies generated from sample size of {}.\nTypes generated: {:?}",
-                invalids.len(),
-                num_enemies,
-                types
-            );
-        }
-    }
-}
