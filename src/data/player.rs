@@ -26,7 +26,7 @@ use crate::{
         settings::Settings,
         xp::*,
     },
-    panic_screen,
+    panic_menu,
     prelude::*,
 };
 use serde::{Deserialize, Serialize};
@@ -291,7 +291,7 @@ impl Player {
 
                     match Player::delete_from(username) {
                         Ok(_) => {}
-                        Err(message) => panic_screen!(message),
+                        Err(message) => panic_menu!(message),
                     }
                 } else {
                     warning(Some("Cancelling."));

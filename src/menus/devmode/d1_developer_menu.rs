@@ -1,4 +1,4 @@
-use crate::{data::settings::Settings, panic_screen, prelude::*};
+use crate::{data::settings::Settings, panic_menu, prelude::*};
 
 use crate::data::player::Player;
 
@@ -19,7 +19,7 @@ pub fn main(player: &mut Player) {
     );
 
     match choice {
-        0 => panic_screen!("This is an error."),
+        0 => panic_menu!("This is an error."),
         1 => super::d4_inventory_mgr::main(player),
         2 => super::d3_xp_mgr::main(player),
         3 => super::d5_bank_mgr::main(player),

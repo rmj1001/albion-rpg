@@ -1,5 +1,5 @@
 pub mod handler {
-    use crate::{panic_screen, prelude::*};
+    use crate::{panic_menu, prelude::*};
     use std::{fmt::Display, fs, path::Path};
 
     pub fn folder_name() -> &'static str {
@@ -36,7 +36,7 @@ pub mod handler {
             .expect("Path could not be converted to string")
             .to_string(),
 
-            _ => panic_screen!("Empty path provided for directory."),
+            _ => panic_menu!("Empty path provided for directory."),
         }
     }
 
@@ -76,7 +76,7 @@ pub mod handler {
                         .replace(&format!(".{}", extension()), "")
                 })
                 .collect(),
-            Err(error) => panic_screen!("Could not read the directory: {}", error),
+            Err(error) => panic_menu!("Could not read the directory: {}", error),
         }
     }
 
@@ -89,14 +89,14 @@ pub mod handler {
         let directory = profile_directory();
 
         if let Err(message) = fs::create_dir_all(directory) {
-            panic_screen!(format!(
+            panic_menu!(format!(
                 "Could create directory on disk for player save data:\n{}",
                 message
             ));
         };
 
         if let Err(message) = fs::write(&file_path, data.to_string()) {
-            panic_screen!("Could not write to '{}':\n{}", file_path, message);
+            panic_menu!("Could not write to '{}':\n{}", file_path, message);
         }
     }
 
@@ -111,7 +111,7 @@ pub mod handler {
     /// Delete a file or panic
     pub fn delete_file<T: Display>(file_path: &T) {
         if let Err(error) = fs::remove_file(file_path.to_string()) {
-            panic_screen!(format!("Could not delete profile file:\n{}", error))
+            panic_menu!(format!("Could not delete profile file:\n{}", error))
         }
     }
 }

@@ -31,7 +31,7 @@ mod tests {
             let rand = super::random_num(min, max);
 
             if rand < min || rand > max {
-                crate::panic_screen!("The random number generator went out of bounds.");
+                crate::panic_menu!("The random number generator went out of bounds.");
             }
 
             numbers.push(rand);

@@ -1,7 +1,7 @@
 use crate::{
     combat::enemy::{EnemyData, Rewards},
     data::{inventory::equipment::Equipment, player::Player, xp::XP},
-    panic_screen,
+    panic_menu,
     prelude::*,
 };
 
@@ -291,7 +291,7 @@ pub fn hardmode(battle: &mut BattleSettings) {
 
             match battle.player.delete() {
                 Ok(_) => crate::menus::accounts::main(),
-                Err(error) => panic_screen!(error),
+                Err(error) => panic_menu!(error),
             }
         }
         _ => out_of_bounds(),

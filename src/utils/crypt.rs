@@ -6,7 +6,7 @@ Generate and verify hash string signatures for protecting secrets.
 
 use std::fmt::Display;
 
-use crate::panic_screen;
+use crate::panic_menu;
 use bcrypt::{hash, DEFAULT_COST};
 
 /**
@@ -27,7 +27,7 @@ pub fn generate_hash<T: Display>(text: &T) -> String {
 
     match hashed_result {
         Ok(password_hash) => password_hash,
-        Err(error) => panic_screen!("Failed to generate password hash: {}", error),
+        Err(error) => panic_menu!("Failed to generate password hash: {}", error),
     }
 }
 
@@ -49,7 +49,7 @@ pub fn verify_hash<T: Display, U: Display>(text: &T, hash: &U) -> bool {
 
     match verified_result {
         Ok(result) => result,
-        Err(error) => panic_screen!("Failed to verify password hash: {}", error),
+        Err(error) => panic_menu!("Failed to verify password hash: {}", error),
     }
 }
 

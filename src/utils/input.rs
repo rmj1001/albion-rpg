@@ -1,4 +1,4 @@
-use crate::{panic_screen, prelude::*};
+use crate::{panic_menu, prelude::*};
 use dialoguer::Confirm;
 use std::{fmt::Display, io::Write, str::FromStr};
 
@@ -33,7 +33,7 @@ pub fn prompt(text: &str) -> String {
     print!("{text} ");
 
     if let Err(message) = std::io::stdout().flush() {
-        panic_screen!("Could not flush stdout: {}", message)
+        panic_menu!("Could not flush stdout: {}", message)
     }
 
     let mut input: String = String::new();
@@ -101,7 +101,7 @@ pub fn password(confirm: bool) -> String {
     match dialoguer_result {
         Ok(text) => text,
         Err(error) => {
-            panic_screen!("Failed to read password with dialogue: {}", error);
+            panic_menu!("Failed to read password with dialogue: {}", error);
         }
     }
 }
@@ -139,6 +139,6 @@ pub fn prompt_input_completion(prompt: &str, completion_strings: Vec<String>) ->
 
     match input_string_result {
         Ok(string) => string,
-        Err(message) => panic_screen!(message),
+        Err(message) => panic_menu!(message),
     }
 }

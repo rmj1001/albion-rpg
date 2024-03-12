@@ -87,7 +87,7 @@ impl EnemyData {
 
         match option {
             Some(enemy) => enemy,
-            None => crate::panic_screen!("Invalid enemy type chosen."),
+            None => crate::panic_menu!("Invalid enemy type chosen."),
         }
     }
 

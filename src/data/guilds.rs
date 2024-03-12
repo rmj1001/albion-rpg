@@ -1,4 +1,4 @@
-use crate::{data::player::Player, panic_screen, prelude::*};
+use crate::{data::player::Player, panic_menu, prelude::*};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
@@ -101,14 +101,14 @@ impl Guilds {
         let selector: usize = select_from_vector(&guilds, None);
         let selected_guild: String = guilds
             .get(selector)
-            .unwrap_or_else(|| panic_screen!("Selected a guild from the guild hashmap out of bounds"))
+            .unwrap_or_else(|| panic_menu!("Selected a guild from the guild hashmap out of bounds"))
             .to_string();
 
         let item: Guild = *Self::shop()
             .iter()
             .find(|guild| guild.0.name() == selected_guild)
             .map(|guild| guild.0)
-            .unwrap_or_else(|| panic_screen!("Guild flag selected out of bounds"));
+            .unwrap_or_else(|| panic_menu!("Guild flag selected out of bounds"));
 
         item
     }
@@ -117,7 +117,7 @@ impl Guilds {
         let shop: BTreeMap<Guild, usize> = Self::shop();
         let price: &usize = match shop.get(&guild) {
             Some(item) => item,
-            None => panic_screen!("Guild membership flag not found in hashmap."),
+            None => panic_menu!("Guild membership flag not found in hashmap."),
         };
 
         if player.guilds.check(guild) {
@@ -144,7 +144,7 @@ impl Guilds {
         let shop: BTreeMap<Guild, usize> = Self::shop();
         let price: &usize = match shop.get(&guild) {
             Some(price) => price,
-            None => panic_screen!("Guild membership flag not found in hashmap."),
+            None => panic_menu!("Guild membership flag not found in hashmap."),
         };
 
         if !player.guilds.check(guild) {

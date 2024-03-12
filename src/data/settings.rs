@@ -1,4 +1,4 @@
-use crate::{data::player::Player, panic_screen, prelude::*};
+use crate::{data::player::Player, panic_menu, prelude::*};
 use serde::{Deserialize, Serialize};
 use std::{fmt::Display, fs, path::Path};
 
@@ -69,7 +69,7 @@ impl Settings {
             }
 
             Err(error) => {
-                panic_screen!("I couldn't rename the profile filename: {}", error);
+                panic_menu!("I couldn't rename the profile filename: {}", error);
             }
         }
 
