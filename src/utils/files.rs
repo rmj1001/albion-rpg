@@ -5,7 +5,7 @@ use crate::{panic_menu, prelude::*};
 use std::env::consts::OS;
 use std::{fmt::Display, fs, path::Path};
 
-pub const FOLDER_NAME: &str = "albion_terminal_rpg";
+pub const FOLDER_NAME: &str = ".albion_term_rpg";
 pub const EXTENSION: &str = ".albion";
 
 /**
