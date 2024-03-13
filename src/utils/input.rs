@@ -13,7 +13,7 @@ Select an item using arrow keys from an array.
 
 # Examples
 
-```
+```ignore
 use albion_terminal_rpg::prelude::select;
 
 let choice1: usize = select(&["1. Login", "2. Register", "3. Exit"], None);
@@ -39,7 +39,7 @@ Ask user for input with a prompt string.
 
 # Examples
 
-```
+```ignore
 use albion_terminal_rpg::prelude::prompt;
 
 let answer: String = prompt("test"); // "test > {input here}"
@@ -67,7 +67,7 @@ cast the string to a passed generic type.
 
 # Examples
 
-```
+```ignore
 use albion_terminal_rpg::prelude::{Result, input_generic};
 
 let number: Result<usize> = input_generic("Number"); // "Number > {input here}"
@@ -98,7 +98,7 @@ Ask a user for confirmation and wait for them type 'y' or 'n'.
 
 # Example
 
-```
+```ignore
 use albion_terminal_rpg::prelude::confirm;
 
 match confirm("Go to main menu?") {
