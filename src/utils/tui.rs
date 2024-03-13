@@ -114,7 +114,7 @@ page_header("Main Menu", Instructions::TypeCode);
 pub fn page_header<T: Display>(title: T, instructions: Instructions) {
     crate::utils::terminal::clearscr();
     header(format!("Albion - {}", title), 80);
-    println!("{}", instructions);
+    println!("{}\n", instructions);
 }
 
 /**
