@@ -65,6 +65,5 @@ pub mod combat {
 }
 
 pub mod prelude {
-    pub use crate::utils::files::{handler as file_handler, *};
-    pub use crate::utils::{crypt::*, error::*, input::*, math::*, messages::*, terminal::*, tui::*};
+    pub use crate::utils::{crypt::*, error::*, files::*, input::*, math::*, messages::*, terminal::*, tui::*};
 }

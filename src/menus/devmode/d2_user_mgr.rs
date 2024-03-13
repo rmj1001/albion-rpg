@@ -25,7 +25,7 @@ pub fn main(player: &mut Player) {
 fn list_users(player: &mut Player) {
     page_header("Developer Mode - Player Manager", Instructions::None);
 
-    let profiles: Vec<String> = file_handler::list_all_profiles();
+    let profiles: Vec<String> = all_profiles();
 
     profiles.iter().for_each(|profile_string| {
         println!("- {}", profile_string);
@@ -40,7 +40,7 @@ fn list_users(player: &mut Player) {
 fn delete_users(player: &mut Player) {
     page_header("Developer Mode - Player Manager", Instructions::Keyboard);
 
-    let profiles = file_handler::list_all_profiles();
+    let profiles = all_profiles();
     let choice = select(&profiles, Some("Select a profile to delete"));
     let profile_choice = profiles.get(choice);
 
@@ -83,9 +83,9 @@ fn delete_users(player: &mut Player) {
 
 fn view_user(player: &mut Player) {
     page_header("Developer Mode - Player Manager - Data Viewer", Instructions::None);
-    let choice = select(&file_handler::list_all_profiles(), Some("Select a player to view"));
+    let choice = select(&all_profiles(), Some("Select a player to view"));
 
-    let profiles = file_handler::list_all_profiles();
+    let profiles = all_profiles();
     let profile_choice = profiles.get(choice);
 
     match profile_choice {

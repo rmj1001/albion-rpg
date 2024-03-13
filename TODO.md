@@ -7,7 +7,7 @@ Top-level module documentation & function docs
 - [ ] Utils
   - [x] crypt.rs
   - [x] error.rs
-  - [ ] files.rs
+  - [x] files.rs
   - [x] input.rs
   - [x] math.rs
   - [x] messages.rs

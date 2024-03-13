@@ -57,10 +57,10 @@ impl Settings {
 
     /// Updates the username field and profile file name.
     pub fn change_username(player: &mut Player, new_username: String) {
-        let old_profile_path = file_handler::generate_profile_path(&player.settings.username);
+        let old_profile_path = player_file_path(&player.settings.username);
         let old_file_path: &Path = Path::new(&old_profile_path);
 
-        let new_profile_path = file_handler::generate_profile_path(&new_username);
+        let new_profile_path = player_file_path(&new_username);
         let new_file_path: &Path = Path::new(&new_profile_path);
 
         match fs::rename(old_file_path, new_file_path) {

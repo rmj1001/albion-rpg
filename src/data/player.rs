@@ -213,8 +213,8 @@ impl Player {
     pub fn save(&self) {
         let serialize_result = self.to_string();
 
-        let path = file_handler::generate_profile_path(&self.settings.username);
-        file_handler::write_file(path, serialize_result)
+        let path = player_file_path(&self.settings.username);
+        write_file(path, serialize_result)
     }
 
     /**
@@ -240,12 +240,12 @@ impl Player {
 
     /// Delete the player file on disk
     pub fn delete_from<T: Display>(username: &T) -> Result<()> {
-        let profile_path = file_handler::generate_profile_path(&username);
+        let profile_path = player_file_path(&username);
         let exists = Self::get(username).is_ok();
 
         match exists {
             true => {
-                file_handler::delete_file(&profile_path);
+                delete_file(&profile_path);
                 Ok(())
             }
             false => Err(ProfileError::DoesNotExist.boxed()),
@@ -271,10 +271,10 @@ impl Player {
     ```
     */
     pub fn get<T: Display>(username: &T) -> Result<Player> {
-        let profile_path: String = file_handler::generate_profile_path(username);
+        let profile_path: String = player_file_path(username);
         let mut contents: String = String::new();
 
-        let file_result: Result<String> = file_handler::read_file(&profile_path);
+        let file_result: Result<String> = read_file(&profile_path);
 
         match file_result {
             Ok(data) => contents = data,
