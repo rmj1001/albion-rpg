@@ -4,7 +4,7 @@
 
 Top-level module documentation & function docs
 
-- [ ] Utils
+- [x] Utils
   - [x] crypt.rs
   - [x] error.rs
   - [x] files.rs
