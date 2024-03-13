@@ -240,7 +240,7 @@ impl Player {
 
     /// Delete the player file on disk
     pub fn delete_from<T: Display>(username: &T) -> Result<()> {
-        let profile_path = player_file_path(&username);
+        let profile_path = player_file_path(username);
         let exists = Self::get(username).is_ok();
 
         match exists {
