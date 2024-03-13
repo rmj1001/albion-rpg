@@ -5,7 +5,7 @@ These functions enable menu/dialogue creation & interaction through
 arrow-key selection and type-checking input boxes.
 */
 use crate::{panic_menu, prelude::*};
-use dialoguer::Confirm;
+use dialoguer;
 use std::{fmt::Display, io::Write, str::FromStr};
 
 /**
@@ -109,7 +109,8 @@ match confirm("Go to main menu?") {
 */
 pub fn confirm(prompt: &str) -> bool {
     loop {
-        let input: std::result::Result<bool, dialoguer::Error> = Confirm::new().with_prompt(prompt).interact();
+        let input: std::result::Result<bool, dialoguer::Error> =
+            dialoguer::Confirm::new().with_prompt(prompt).interact();
 
         match input {
             Ok(answer) => return answer,
@@ -134,15 +135,16 @@ let confirm = password(true); // "Confirm:"
 ```
 */
 pub fn password(confirm: bool) -> String {
-    let dialoguer_result = match confirm {
-        true => dialoguer::Password::new().with_prompt("Confirm Password").interact(),
-        false => dialoguer::Password::new().with_prompt("Password").interact(),
+    let string = match confirm {
+        true => "Confirm Password > ",
+        false => "Password > ",
     };
 
-    match dialoguer_result {
+    print!("{}", string);
+    std::io::stdout().flush().expect("Should flush stdout");
+
+    match rpassword::read_password() {
         Ok(text) => text,
-        Err(error) => {
-            panic_menu!("Failed to read password with dialogue: {}", error);
-        }
+        Err(error) => panic_menu!("Failed to read password: {}", error),
     }
 }

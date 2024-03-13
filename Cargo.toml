@@ -14,7 +14,6 @@ name = "albionrpg"
 path = "./src/main.rs"
 
 [dependencies]
-dialoguer = { version = "0.11.0", features = ["completion"] }
 console = "0.15.7"
 rand = "0.8.5"
 serde = { version = "1.0", features = ["derive"] }
@@ -27,3 +26,5 @@ thiserror = "1.0.57"
 toml = "0.8.10"
 strum = { version = "0.26.1", features = ["derive"] }
 strum_macros = "0.26.1"
+rpassword = "7.3.1"
+dialoguer = "0.11.0"
