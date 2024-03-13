@@ -1,3 +1,6 @@
+/*!
+Helper math functions
+*/
 use rand::Rng;
 
 /**

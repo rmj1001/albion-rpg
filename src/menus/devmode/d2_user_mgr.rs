@@ -3,7 +3,7 @@ use crate::{data::player::Player, prelude::*};
 pub fn main(player: &mut Player) {
     page_header("Developer Mode - Player Manager", Instructions::Keyboard);
 
-    let choice1 = select_from_str_array(
+    let choice1 = select(
         &[
             "1. List Players",
             "2. Delete Player",
@@ -41,7 +41,7 @@ fn delete_users(player: &mut Player) {
     page_header("Developer Mode - Player Manager", Instructions::Keyboard);
 
     let profiles = file_handler::list_all_profiles();
-    let choice = select_from_vector(&profiles, Some("Select a profile to delete"));
+    let choice = select(&profiles, Some("Select a profile to delete"));
     let profile_choice = profiles.get(choice);
 
     match profile_choice {
@@ -83,7 +83,7 @@ fn delete_users(player: &mut Player) {
 
 fn view_user(player: &mut Player) {
     page_header("Developer Mode - Player Manager - Data Viewer", Instructions::None);
-    let choice = select_from_vector(&file_handler::list_all_profiles(), Some("Select a player to view"));
+    let choice = select(&file_handler::list_all_profiles(), Some("Select a player to view"));
 
     let profiles = file_handler::list_all_profiles();
     let profile_choice = profiles.get(choice);

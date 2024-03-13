@@ -77,14 +77,9 @@ pub fn battle_menu(battle: &mut BattleSettings) {
     println!("Player Hunger: {}", battle.player.health.hunger);
     println!();
 
-    let action = select_from_str_array(
-        &[
-            &format!("1. Attack the {}", battle.enemy.name),
-            "2. Inventory",
-            "3. Retreat",
-        ],
-        None,
-    );
+    let attack_string = &format!("1. Attack the {}", battle.enemy.name);
+
+    let action = select(&[attack_string.as_str(), "2. Inventory", "3. Retreat"], None);
 
     match action {
         0 => attack(battle),

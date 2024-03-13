@@ -8,7 +8,7 @@ Top-level module documentation & function docs
   - [x] crypt.rs
   - [x] error.rs
   - [ ] files.rs
-  - [ ] input.rs
+  - [x] input.rs
   - [x] math.rs
   - [x] messages.rs
   - [x] terminal.rs

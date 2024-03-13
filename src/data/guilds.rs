@@ -98,7 +98,7 @@ impl Guilds {
         let shop: BTreeMap<Guild, usize> = Self::shop();
         let guilds: Vec<String> = shop.keys().map(|guild| guild.name().to_string()).collect();
 
-        let selector: usize = select_from_vector(&guilds, None);
+        let selector: usize = select(&guilds, None);
         let selected_guild: String = guilds
             .get(selector)
             .unwrap_or_else(|| panic_menu!("Selected a guild from the guild hashmap out of bounds"))

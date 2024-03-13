@@ -6,7 +6,7 @@ pub fn main() {
 
     let main_menu_options = vec!["1. Login", "2. Register", "3. Exit"];
 
-    let chosen_option = select_from_str_array(&main_menu_options, None);
+    let chosen_option = select(&main_menu_options, None);
 
     match chosen_option {
         0 => crate::menus::login::main(),

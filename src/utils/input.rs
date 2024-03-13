@@ -1,9 +1,28 @@
+/*!
+# Input Functionality
+
+These functions enable menu/dialogue creation & interaction through
+arrow-key selection and type-checking input boxes.
+*/
 use crate::{panic_menu, prelude::*};
 use dialoguer::Confirm;
 use std::{fmt::Display, io::Write, str::FromStr};
 
-/// Pass in a raw array of string slices to dialoguer's Select. (i.e. &\["test"\])
-pub fn select_from_str_array(options: &[&str], optional_prompt: Option<&str>) -> usize {
+/**
+Select an item using arrow keys from an array.
+
+# Examples
+
+```
+use albion_terminal_rpg::prelude::select;
+
+let choice1: usize = select(&["1. Login", "2. Register", "3. Exit"], None);
+
+let strings: Vec<String> = vec![String::from("Test"), String::from("No")];
+let choice2: usize = select(&strings, Some("Select one of these."));
+```
+*/
+pub fn select<T: Display>(options: &[T], optional_prompt: Option<&str>) -> usize {
     if let Some(prompt_text) = optional_prompt {
         println!("{prompt_text}");
     }
@@ -15,22 +34,19 @@ pub fn select_from_str_array(options: &[&str], optional_prompt: Option<&str>) ->
         .unwrap_or(0)
 }
 
-/// Pass in a vector of Strings to dialoguer's Select (only use for dynamic data)
-pub fn select_from_vector<T: Display>(options: &[T], optional_prompt: Option<&str>) -> usize {
-    if let Some(prompt_text) = optional_prompt {
-        println!("{prompt_text}");
-    }
+/**
+Ask user for input with a prompt string.
 
-    dialoguer::Select::new()
-        .items(options)
-        .default(0)
-        .interact()
-        .unwrap_or(0)
-}
+# Examples
 
-/// NOTE: Don't use this unless you're using a custom prompt end character
+```
+use albion_terminal_rpg::prelude::prompt;
+
+let answer: String = prompt("test"); // "test > {input here}"
+```
+*/
 pub fn prompt(text: &str) -> String {
-    print!("{text} ");
+    print!("{text} > ");
 
     if let Err(message) = std::io::stdout().flush() {
         panic_menu!("Could not flush stdout: {}", message)
@@ -45,17 +61,19 @@ pub fn prompt(text: &str) -> String {
     input.trim().to_string()
 }
 
-/// Example: prompt_colon("test"); -> test: {input here}
-pub fn prompt_colon(text: &str) -> String {
-    prompt(&format!("{text}:"))
-}
+/**
+Prompts user for input and attempts to
+cast the string to a passed generic type.
 
-/// Example: prompt_arrow("test"); -> test > {input here}
-pub fn prompt_arrow(text: &str) -> String {
-    prompt(&format!("{text} >"))
-}
+# Examples
 
-/// Attempts to cast the string to a generic type
+```
+use albion_terminal_rpg::prelude::{Result, input_generic};
+
+let number: Result<usize> = input_generic("Number"); // "Number > {input here}"
+let string: Result<String> = input_generic("Any String"); // "Any String > {input here}"
+```
+*/
 pub fn input_generic<T>(text: &str) -> Result<T>
 where
     T: FromStr,
@@ -72,7 +90,23 @@ where
     }
 }
 
-/// 'y' returns true, 'n' returns false.
+/**
+Ask a user for confirmation and wait for them type 'y' or 'n'.
+
+- 'y' returns true.
+- 'n' returns false.
+
+# Example
+
+```
+use albion_terminal_rpg::prelude::confirm;
+
+match confirm("Go to main menu?") {
+    true => println!("Going to main menu."),
+    false => println!("Cancelling."),
+}
+```
+*/
 pub fn confirm(prompt: &str) -> bool {
     loop {
         let input: std::result::Result<bool, dialoguer::Error> = Confirm::new().with_prompt(prompt).interact();
@@ -89,9 +123,16 @@ pub fn confirm(prompt: &str) -> bool {
 
 /**
 Prompts for a password, hiding the text as it is typed.
-# Parameters:
-- confirm (bool) -> False: "Password: ", True: "Confirm Password:"
- */
+
+# Example
+
+```ignore
+use albion_terminal_rpg::prelude::password;
+
+let pass = password(false); // "Password: "
+let confirm = password(true); // "Confirm:"
+```
+*/
 pub fn password(confirm: bool) -> String {
     let dialoguer_result = match confirm {
         true => dialoguer::Password::new().with_prompt("Confirm Password").interact(),
@@ -103,42 +144,5 @@ pub fn password(confirm: bool) -> String {
         Err(error) => {
             panic_menu!("Failed to read password with dialogue: {}", error);
         }
-    }
-}
-
-/// Use TAB to complete your input
-pub fn prompt_input_completion(prompt: &str, completion_strings: Vec<String>) -> String {
-    struct Completion {
-        options: Vec<String>,
-    }
-
-    impl dialoguer::Completion for Completion {
-        fn get(&self, input: &str) -> Option<String> {
-            let matches = self
-                .options
-                .iter()
-                .filter(|option| option.starts_with(input))
-                .collect::<Vec<_>>();
-
-            if matches.len() == 1 {
-                Some(matches[0].to_string())
-            } else {
-                None
-            }
-        }
-    }
-
-    let completions = Completion {
-        options: completion_strings,
-    };
-
-    let input_string_result = dialoguer::Input::new()
-        .with_prompt(prompt)
-        .completion_with(&completions)
-        .interact_text();
-
-    match input_string_result {
-        Ok(string) => string,
-        Err(message) => panic_menu!(message),
     }
 }

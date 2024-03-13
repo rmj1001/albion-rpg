@@ -5,7 +5,7 @@ use crate::data::player::Player;
 pub fn main(player: &mut Player) {
     page_header("Developer Mode", Instructions::Keyboard);
 
-    let choice = select_from_str_array(
+    let choice = select(
         &[
             "1. Throw a panic",
             "2. Manipulate Inventory",

@@ -13,7 +13,7 @@ pub fn main(player: &mut Player) {
 
     player.xp.table();
 
-    let xp_category = select_from_str_array(
+    let xp_category = select(
         &[
             "1. Combat",
             "2. Fishing",
@@ -41,7 +41,7 @@ pub fn main(player: &mut Player) {
         _ => out_of_bounds(),
     };
 
-    let operation_category: usize = select_from_str_array(&["1. Add", "2. Subtract", "3. Cancel"], None);
+    let operation_category: usize = select(&["1. Add", "2. Subtract", "3. Cancel"], None);
     let mut operation: Operation = Operation::Add;
 
     match operation_category {

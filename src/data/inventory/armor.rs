@@ -173,7 +173,7 @@ impl ArmorInventory {
         let shop = Self::shop();
         let items: Vec<String> = shop.keys().map(|flag| flag.name().to_string()).collect();
 
-        let selector = select_from_vector(&items, None);
+        let selector = select(&items, None);
         let selected_item = items
             .get(selector)
             .expect("This shouldn't select a vector item out of bounds.")

@@ -17,7 +17,7 @@ fn get_password(profile: &Player) -> bool {
 pub fn main() {
     page_header("Login", Instructions::None);
 
-    let username: String = prompt_colon("Username");
+    let username: String = prompt("Username");
     let profile_result: Result<Player> = Player::get(&username);
 
     match profile_result {

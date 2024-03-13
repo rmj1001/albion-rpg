@@ -9,7 +9,7 @@ use crate::{
 pub fn main(player: &mut Player) {
     page_header("Developer Mode - Inventory Manager", Instructions::None);
 
-    let manager_option = select_from_str_array(&["1. Items", "2. Weapons", "3. Armor", "NAV: Go Back"], None);
+    let manager_option = select(&["1. Items", "2. Weapons", "3. Armor", "NAV: Go Back"], None);
 
     match manager_option {
         0 => items_manager(player),
@@ -25,7 +25,7 @@ fn items_manager(player: &mut Player) {
 
     ItemInventory::shop_table(player);
 
-    let buysell = select_from_str_array(&["1. Add", "2. Subtract", "NAV: Go Back"], None);
+    let buysell = select(&["1. Add", "2. Subtract", "NAV: Go Back"], None);
 
     match buysell {
         0 => add_item(player),
@@ -78,7 +78,7 @@ fn weapons_manager(player: &mut Player) {
 
     WeaponsInventory::shop_table(player);
 
-    let buysell: usize = select_from_str_array(&["1. Own Weapon", "2. Disown Weapon", "NAV: Go Back"], None);
+    let buysell: usize = select(&["1. Own Weapon", "2. Disown Weapon", "NAV: Go Back"], None);
 
     match buysell {
         0 => own_weapon(player),
@@ -125,7 +125,7 @@ fn armor_manager(player: &mut Player) {
 
     player.armor.table();
 
-    let buysell = select_from_str_array(&["1. Own Armor", "2. Disown Armor", "NAV: Go Back"], None);
+    let buysell = select(&["1. Own Armor", "2. Disown Armor", "NAV: Go Back"], None);
 
     match buysell {
         0 => own_armor(player),

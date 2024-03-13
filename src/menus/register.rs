@@ -3,7 +3,7 @@ use crate::{data::player::Player, prelude::*};
 pub fn main() {
     page_header("Registration", Instructions::None);
 
-    let username: String = prompt_colon("Username");
+    let username: String = prompt("Username");
 
     let found_profile = Player::get(&username);
 

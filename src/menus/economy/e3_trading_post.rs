@@ -9,7 +9,7 @@ pub fn main(player: &mut Player) {
     ItemInventory::shop_table(player);
     println!("Gold: {}\n", player.bank.wallet);
 
-    let buysell = select_from_str_array(&["1. Purchase", "2. Sell", "NAV: Go Back"], None);
+    let buysell = select(&["1. Purchase", "2. Sell", "NAV: Go Back"], None);
 
     match buysell {
         0 => purchase(player),

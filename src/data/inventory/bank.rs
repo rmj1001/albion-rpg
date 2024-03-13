@@ -103,7 +103,7 @@ impl Bank {
         println!();
         player.bank.table();
 
-        let option = select_from_str_array(&["1. Deposit", "2. Withdraw", "NAV: Go Back"], None);
+        let option = select(&["1. Deposit", "2. Withdraw", "NAV: Go Back"], None);
 
         // Go to the main game menu
         if option == 2 {
@@ -114,7 +114,7 @@ impl Bank {
         }
 
         let account_choice = match developer_mode {
-            true => select_from_str_array(
+            true => select(
                 &[
                     "1. Wallet",
                     "2. Account 1",
@@ -125,7 +125,7 @@ impl Bank {
                 ],
                 None,
             ),
-            false => select_from_str_array(
+            false => select(
                 &[
                     "1. Account 1",
                     "2. Account 2",
@@ -159,7 +159,7 @@ impl Bank {
             },
         }
 
-        let amount_result = prompt_arrow("Amount").parse::<usize>();
+        let amount_result = prompt("Amount").parse::<usize>();
         let mut amount: usize = 0;
 
         match amount_result {

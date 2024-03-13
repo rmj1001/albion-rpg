@@ -5,7 +5,7 @@ use crate::data::player::Player;
 pub fn main(player: &mut Player) {
     page_header("Profile Settings", Instructions::Keyboard);
 
-    let choice: usize = select_from_str_array(
+    let choice: usize = select(
         &[
             "1. Change Username",
             "2. Change Password",
@@ -36,14 +36,14 @@ pub fn main(player: &mut Player) {
 fn change_username(player: &mut Player) {
     page_header("Profile Settings", Instructions::None);
 
-    let new_username = prompt_colon("New Username");
+    let new_username = prompt("New Username");
 
     if new_username == player.settings.username {
         failure("This is your current username.");
         main(player);
     }
 
-    let confirm_username = prompt_colon("Confirm Username");
+    let confirm_username = prompt("Confirm Username");
 
     if new_username != confirm_username {
         failure("Usernames do not match");

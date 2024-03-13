@@ -24,7 +24,7 @@ impl Equipment {
     pub fn menu(player: &mut Player) {
         page_header("Equipment Manager", Instructions::Keyboard);
 
-        let choice = select_from_str_array(&["1. Weapons", "2. Armor", "NAV: Go Back"], None);
+        let choice = select(&["1. Weapons", "2. Armor", "NAV: Go Back"], None);
 
         match choice {
             0 => {
@@ -45,7 +45,7 @@ impl Equipment {
 
         player.armor.table();
 
-        let choices: usize = select_from_str_array(&["1. Equip Armor", "2. Un-Equip Armor", "NAV: Go Back"], None);
+        let choices: usize = select(&["1. Equip Armor", "2. Un-Equip Armor", "NAV: Go Back"], None);
 
         match choices {
             0 => {
@@ -66,7 +66,7 @@ impl Equipment {
 
         player.weapons.table();
 
-        let choices: usize = select_from_str_array(&["1. Equip Weapon", "2. Un-Equip Weapon", "NAV: Go Back"], None);
+        let choices: usize = select(&["1. Equip Weapon", "2. Un-Equip Weapon", "NAV: Go Back"], None);
 
         match choices {
             0 => {
@@ -94,7 +94,7 @@ impl Equipment {
             player.weapons.wizard_staff.flag.name(),
         ];
 
-        let choice: usize = select_from_str_array(&choices, None);
+        let choice: usize = select(&choices, None);
 
         let flag = match choice {
             0 => W::WoodenSword,
@@ -157,7 +157,7 @@ impl Equipment {
             player.armor.mystic.flag.name(),
         ];
 
-        let choice: usize = select_from_str_array(&choices, None);
+        let choice: usize = select(&choices, None);
 
         let flag = match choice {
             0 => A::Leather,

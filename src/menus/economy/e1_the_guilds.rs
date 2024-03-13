@@ -13,7 +13,7 @@ use crate::data::player::Player;
 pub fn main(player: &mut Player) {
     page_header("The Guilds", Instructions::Keyboard);
 
-    let guild_choice = select_from_str_array(
+    let guild_choice = select(
         &[
             "1. Guild: Fishing",
             "2. Guild: Cooking",
@@ -77,7 +77,7 @@ fn guild_menu(
     decrease_item: Option<GuildItem>,
 ) {
     print_guild_information(guild, player, xp_type, increase_item, &decrease_item);
-    let work_choice = select_from_str_array(&["Work", "NAV: Go Back"], None);
+    let work_choice = select(&["Work", "NAV: Go Back"], None);
 
     match work_choice {
         0 => {
@@ -189,7 +189,7 @@ fn guild_membership_shop(player: &mut Player) {
 
     Guilds::shop_table(player);
 
-    let choices = select_from_str_array(&["1. Join Guild", "2. Leave Guild", "3. Go Back"], None);
+    let choices = select(&["1. Join Guild", "2. Leave Guild", "3. Go Back"], None);
 
     match choices {
         0 => {

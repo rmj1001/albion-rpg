@@ -5,7 +5,7 @@ use crate::data::player::Player;
 pub fn main(player: &mut Player) {
     page_header("Hall of Records", Instructions::Keyboard);
 
-    let menu_option = select_from_str_array(&["1. XP/Levels", "2. Achievements", "NAV: Go Back"], None);
+    let menu_option = select(&["1. XP/Levels", "2. Achievements", "NAV: Go Back"], None);
 
     match menu_option {
         0 => xp(player),
