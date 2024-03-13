@@ -93,8 +93,8 @@ where
 /**
 Ask a user for confirmation and wait for them type 'y' or 'n'.
 
-- 'y' returns true.
-- 'n' returns false. (default for invalid input)
+- 'y', 'yes', and 'true' return true.
+- 'n', 'no', and 'false' return false. (default for invalid input)
 
 # Example
 
