@@ -94,7 +94,7 @@ where
 Ask a user for confirmation and wait for them type 'y' or 'n'.
 
 - 'y' returns true.
-- 'n' returns false.
+- 'n' returns false. (default for invalid input)
 
 # Example
 
@@ -108,17 +108,22 @@ match confirm("Go to main menu?") {
 ```
 */
 pub fn confirm(prompt: &str) -> bool {
-    loop {
-        let input: std::result::Result<bool, dialoguer::Error> =
-            dialoguer::Confirm::new().with_prompt(prompt).interact();
+    let prompt = format!("{prompt} [y/n]");
+    let input: Result<String> = input_generic(&prompt);
 
-        match input {
-            Ok(answer) => return answer,
-            Err(_) => {
-                invalid_input(None, None, true);
-                continue;
-            }
+    if let Ok(input) = input {
+        match input.to_lowercase().as_str() {
+            "yes" => true,
+            "y" => true,
+            "true" => true,
+
+            "no" => false,
+            "n" => false,
+            "false" => false,
+            _ => false,
         }
+    } else {
+        false
     }
 }
 
