@@ -1,2 +1,4 @@
 /target
 /albion-rpg.code-workspace
+*.DS_Store*
+.gitignore

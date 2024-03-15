@@ -13,6 +13,22 @@ license = "BSD-3-Clause"
 name = "albionrpg"
 path = "./src/main.rs"
 
+[badges]
+maintenance = { status = "passively-maintained" }
+
+[profile.release]
+opt-level = 3
+debug = false
+split-debuginfo = '...'  # Platform-specific.
+strip = true
+debug-assertions = false
+overflow-checks = false
+lto = false
+panic = 'unwind'
+incremental = false
+codegen-units = 16
+rpath = false
+
 [dependencies]
 console = "0.15.7"
 rand = "0.8.5"
