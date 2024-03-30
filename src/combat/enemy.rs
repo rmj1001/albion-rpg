@@ -47,6 +47,7 @@ impl std::fmt::Display for Enemy {
             Enemy::GiantSpider => "Giant Spider".to_string(),
             Enemy::WhiteApe => "White Ape".to_string(),
             Enemy::Owlbear => "Owl Bear".to_string(),
+            Enemy::DarkElf => "Dark Elf".to_string(),
 
             // Should display one-word names as usual
             miscellaneous => format!("{:?}", miscellaneous),
