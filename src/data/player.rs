@@ -15,7 +15,7 @@ Provides all the data for the player and passed around all menu functions.
 - Settings
 
 */
-use std::fmt::Display;
+use std::{fmt::Display, path::Path};
 
 use crate::{
     data::{
@@ -241,7 +241,7 @@ impl Player {
     /// Delete the player file on disk
     pub fn delete_from<T: Display>(username: &T) -> Result<()> {
         let profile_path = player_file_path(username);
-        let exists = Self::get(username).is_ok();
+        let exists = Path::new(&profile_path).exists();
 
         match exists {
             true => {
@@ -284,17 +284,19 @@ impl Player {
         match Self::try_from(contents) {
             Ok(player) => Ok(player),
             Err(_) => {
-                let delete: bool = confirm("Player data file is corrupted. Delete?");
+                println!("{}", Logs::Failure.paint("\nPlayer data file is corrupted.\n"));
 
-                if delete {
-                    warning(Some("Deleting player data file."));
+                let delete: bool = confirm("Delete file?");
 
-                    match Player::delete_from(username) {
-                        Ok(_) => {}
-                        Err(message) => panic_menu!(message),
-                    }
-                } else {
+                if !delete {
                     warning(Some("Cancelling."));
+                    return Err(DataError::Decode.boxed());
+                }
+
+                warning(Some("Deleting player data file."));
+
+                if let Err(message) = Player::delete_from(username) {
+                    panic_menu!(message);
                 }
 
                 Err(DataError::Decode.boxed())
