@@ -126,6 +126,12 @@ pub enum InventoryError {
 
     #[error("You do not own enough {0}.")]
     NotEnoughItem(String),
+
+    #[error("That item does not exist.")]
+    ItemNotExist,
+
+    #[error("Transaction failed.")]
+    TransactionFailed,
 }
 
 impl CustomError for InventoryError {}

@@ -23,12 +23,9 @@ assert_eq!(line2, String::from("-----"));
  */
 pub fn line(total_length: usize) -> String {
     let mut line_string: String = String::new();
-    let mut current_length: usize = 1;
-    const LINE_CHAR: char = '-';
 
-    while current_length <= total_length {
-        line_string.push(LINE_CHAR);
-        current_length += 1;
+    for _ in 1..total_length {
+        line_string.push('-');
     }
 
     line_string
@@ -48,12 +45,8 @@ print_line(None); // prints a line of dashes with the default length (80)
 ```
 */
 pub fn print_line(total_length: Option<usize>) {
-    let line_string: String = match total_length {
-        None => line(80),
-        Some(length) => line(length),
-    };
-
-    println!("{}", line_string);
+    let length = total_length.unwrap_or(80);
+    println!("{}", line(length));
 }
 
 /**
@@ -71,28 +64,13 @@ header("Albion", 10)
 ```
 */
 pub fn header<T: Display>(title: T, line_length: usize) {
-    fn add_spaces_to_string(s: &mut String, spaces: usize) {
-        let mut index = 0;
+    let mut header = format!("{}\n", line(line_length));
 
-        while index < spaces {
-            s.push(' ');
-
-            index += 1;
-        }
+    for _ in 0..((line_length - (title.to_string().len() + 2)) / 2 + 1) {
+        header.push(' ');
     }
 
-    let mut header = String::new();
-
-    header.push_str(&line(line_length));
-    header.push('\n');
-
-    let spaces_on_one_side = (line_length - (title.to_string().len() + 2)) / 2 + 1;
-
-    add_spaces_to_string(&mut header, spaces_on_one_side);
-
-    header.push_str(&title.to_string());
-
-    header.push('\n');
+    header.push_str(&format!("{}\n", title));
     header.push_str(&line(line_length));
 
     println!("{}", header);

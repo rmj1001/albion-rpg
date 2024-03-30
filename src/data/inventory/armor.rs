@@ -1,7 +1,7 @@
 use crate::{data::player::Player, prelude::*};
 use rand::{thread_rng, Rng};
 use serde::{Deserialize, Serialize};
-use std::collections::BTreeMap;
+use std::{collections::BTreeMap, result::Result};
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, PartialOrd, Eq, Ord)]
 pub enum Armor {
@@ -186,16 +186,16 @@ impl ArmorInventory {
             .clone()
     }
 
-    pub fn buy(player: &mut Player, flag: &Armor, payment: bool) -> Result<()> {
+    pub fn buy(player: &mut Player, flag: &Armor, payment: bool) -> Result<(), InventoryError> {
         let shop = Self::shop();
-        let price: &usize = shop.get(flag).expect("Item not found in hashmap.");
+        let price: &usize = shop.get(flag).ok_or(InventoryError::TransactionFailed)?;
 
         if payment {
             let gold: usize = player.bank.wallet;
             let wallet: &mut usize = &mut player.bank.wallet;
 
             if gold < *price {
-                return Err(InventoryError::NotEnoughGold.boxed());
+                return Err(InventoryError::NotEnoughGold);
             }
 
             *wallet -= *price;
@@ -204,20 +204,20 @@ impl ArmorInventory {
         let owns_item = &mut player.armor.get(flag).owns;
 
         if *owns_item {
-            return Err(InventoryError::ItemOwned.boxed());
+            return Err(InventoryError::ItemOwned);
         }
 
         *owns_item = true;
         Ok(())
     }
 
-    pub fn sell(player: &mut Player, flag: &Armor, payment: bool) -> Result<()> {
+    pub fn sell(player: &mut Player, flag: &Armor, payment: bool) -> Result<(), InventoryError> {
         let shop: BTreeMap<Armor, usize> = Self::shop();
-        let price: &usize = shop.get(flag).expect("Item not found in hashmap.");
+        let price: &usize = shop.get(flag).ok_or(InventoryError::TransactionFailed)?;
         let owns_item: &mut bool = &mut player.armor.get(flag).owns;
 
         if !*owns_item {
-            return Err(InventoryError::ItemNotOwned.boxed());
+            return Err(InventoryError::ItemNotOwned);
         }
 
         *owns_item = false;

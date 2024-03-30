@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
 use crate::{data::player::Player, prelude::*};
+use std::result::Result;
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, PartialOrd, Eq, Ord)]
 pub enum Weapon {
@@ -190,16 +191,16 @@ impl WeaponsInventory {
             .clone()
     }
 
-    pub fn buy(player: &mut Player, weapon: Weapon, payment: bool) -> Result<()> {
+    pub fn buy(player: &mut Player, weapon: Weapon, payment: bool) -> Result<(), InventoryError> {
         let shop = Self::shop();
-        let price = shop.get(&weapon).expect("Item not found in hashmap.");
+        let price = shop.get(&weapon).ok_or(InventoryError::ItemNotExist)?;
 
         if payment {
             let gold: usize = player.bank.wallet;
             let wallet: &mut usize = &mut player.bank.wallet;
 
             if gold < *price {
-                return Err(InventoryError::NotEnoughGold.boxed());
+                return Err(InventoryError::NotEnoughGold);
             }
 
             *wallet -= *price;
@@ -208,20 +209,20 @@ impl WeaponsInventory {
         let owns_item = &mut player.weapons.get(&weapon).owns;
 
         if *owns_item {
-            return Err(InventoryError::ItemOwned.boxed());
+            return Err(InventoryError::ItemOwned);
         }
 
         *owns_item = true;
         Ok(())
     }
 
-    pub fn sell(player: &mut Player, weapon: Weapon, payment: bool) -> Result<()> {
+    pub fn sell(player: &mut Player, weapon: Weapon, payment: bool) -> Result<(), InventoryError> {
         let shop: BTreeMap<Weapon, usize> = Self::shop();
-        let price: &usize = shop.get(&weapon).expect("Item not found in hashmap.");
+        let price: &usize = shop.get(&weapon).ok_or(InventoryError::ItemNotExist)?;
         let owns_item = &mut player.weapons.get(&weapon).owns;
 
         if !*owns_item {
-            return Err(InventoryError::ItemNotOwned.boxed());
+            return Err(InventoryError::ItemNotOwned);
         }
 
         *owns_item = false;

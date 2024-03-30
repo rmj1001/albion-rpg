@@ -23,9 +23,7 @@ let hashed: String = generate_hash(&password);
 */
 
 pub fn generate_hash<T: Display>(text: &T) -> String {
-    let hashed_result = hash(text.to_string(), DEFAULT_COST);
-
-    match hashed_result {
+    match hash(text.to_string(), DEFAULT_COST) {
         Ok(password_hash) => password_hash,
         Err(error) => panic_menu!("Failed to generate password hash: {}", error),
     }
@@ -45,9 +43,7 @@ assert!(verify_hash(&password, &hashed));
 ```
 */
 pub fn verify_hash<T: Display, U: Display>(text: &T, hash: &U) -> bool {
-    let verified_result = bcrypt::verify(text.to_string(), &hash.to_string());
-
-    match verified_result {
+    match bcrypt::verify(text.to_string(), &hash.to_string()) {
         Ok(result) => result,
         Err(error) => panic_menu!("Failed to verify password hash: {}", error),
     }

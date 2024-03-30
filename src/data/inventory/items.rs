@@ -3,6 +3,7 @@ use std::collections::BTreeMap;
 use std::hash::Hash;
 
 use crate::{data::player::Player, prelude::*};
+use std::result::Result;
 
 #[derive(Hash, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
 pub enum Item {
@@ -175,13 +176,12 @@ impl ItemInventory {
         csv_table(strings);
     }
 
-    pub fn build_transaction() -> Result<(Item, usize)> {
+    pub fn build_transaction() -> Result<(Item, usize), InventoryError> {
         let item = Self::select();
-        let quantity_result = input_generic::<usize>("Quantity:");
 
-        match quantity_result {
+        match input_generic::<usize>("Quantity:") {
             Ok(quantity) => Ok((item, quantity)),
-            Err(error) => Err(error),
+            Err(_) => Err(InventoryError::TransactionFailed),
         }
     }
 
@@ -203,9 +203,9 @@ impl ItemInventory {
             .expect("Should return an Item Flag")
     }
 
-    pub fn buy(player: &mut Player, flag: Item, quantity: usize, use_wallet: bool) -> Result<()> {
+    pub fn buy(player: &mut Player, flag: Item, quantity: usize, use_wallet: bool) -> Result<(), InventoryError> {
         let shop = Self::shop();
-        let usize: usize = *shop.get(&flag).expect("Item not found in hashmap.");
+        let usize: usize = *shop.get(&flag).ok_or(InventoryError::TransactionFailed)?;
 
         if use_wallet {
             let gold: usize = player.bank.wallet;
@@ -213,7 +213,7 @@ impl ItemInventory {
             let usize = quantity * usize;
 
             if gold < usize {
-                return Err(InventoryError::NotEnoughGold.boxed());
+                return Err(InventoryError::NotEnoughGold);
             }
 
             *wallet -= usize;
@@ -225,13 +225,13 @@ impl ItemInventory {
         Ok(())
     }
 
-    pub fn sell(player: &mut Player, flag: Item, quantity: usize, use_wallet: bool) -> Result<()> {
+    pub fn sell(player: &mut Player, flag: Item, quantity: usize, use_wallet: bool) -> Result<(), InventoryError> {
         let shop = Self::shop();
-        let usize: usize = *shop.get(&flag).expect("Item not found in hashmap.");
+        let usize: usize = *shop.get(&flag).ok_or(InventoryError::ItemNotExist)?;
         let item = player.items.get(flag);
 
         if *item == 0 || *item < quantity {
-            return Err(InventoryError::NotEnoughItem(flag.name().to_string()).boxed());
+            return Err(InventoryError::NotEnoughItem(flag.name().to_string()));
         }
 
         *item -= quantity;
