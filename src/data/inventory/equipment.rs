@@ -97,11 +97,11 @@ impl Equipment {
         let choice: usize = select(&choices, None);
 
         let flag = match choice {
-            0 => W::WoodenSword,
-            1 => W::BronzeSword,
-            2 => W::IronSword,
-            3 => W::SteelSword,
-            4 => W::MysticSword,
+            0 => W::Wooden,
+            1 => W::Bronze,
+            2 => W::Iron,
+            3 => W::Steel,
+            4 => W::Mystic,
             5 => W::WizardStaff,
             _ => panic_menu!("Out of bounds"),
         };

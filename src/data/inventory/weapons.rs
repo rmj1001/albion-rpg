@@ -8,23 +8,19 @@ use std::result::Result;
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, PartialOrd, Eq, Ord)]
 pub enum Weapon {
-    WoodenSword,
-    BronzeSword,
-    IronSword,
-    SteelSword,
-    MysticSword,
+    Wooden,
+    Bronze,
+    Iron,
+    Steel,
+    Mystic,
     WizardStaff,
 }
 
 impl Display for Weapon {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let string: &str = match self {
-            Weapon::WoodenSword => "Wooden Sword",
-            Weapon::BronzeSword => "Bronze Sword",
-            Weapon::IronSword => "Iron Sword",
-            Weapon::SteelSword => "Steel Sword",
-            Weapon::MysticSword => "Mystic Sword",
-            Weapon::WizardStaff => "Wizard Staff",
+        let string = match self {
+            Self::WizardStaff => "Wizard Staff".to_string(),
+            sword => format!("{:?} Sword", sword),
         };
 
         write!(f, "{string}")
@@ -49,8 +45,22 @@ impl Default for WeaponData {
             damage: 5,
             durability: 50,
             default_durability: 50,
-            flag: Weapon::WoodenSword,
+            flag: Weapon::Wooden,
         }
+    }
+}
+
+impl Display for WeaponData {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{},{},{},{},{}",
+            self.flag,
+            checkmark(self.owns),
+            checkmark(self.equipped),
+            self.damage,
+            self.durability,
+        )
     }
 }
 
@@ -94,11 +104,11 @@ pub struct WeaponsInventory {
 impl WeaponsInventory {
     pub fn new() -> WeaponsInventory {
         WeaponsInventory {
-            wooden_sword: WeaponData::new(10, 100, Weapon::WoodenSword),
-            bronze_sword: WeaponData::new(20, 150, Weapon::BronzeSword),
-            iron_sword: WeaponData::new(50, 200, Weapon::IronSword),
-            steel_sword: WeaponData::new(200, 500, Weapon::SteelSword),
-            mystic_sword: WeaponData::new(500, 1_000, Weapon::MysticSword),
+            wooden_sword: WeaponData::new(10, 100, Weapon::Wooden),
+            bronze_sword: WeaponData::new(20, 150, Weapon::Bronze),
+            iron_sword: WeaponData::new(50, 200, Weapon::Iron),
+            steel_sword: WeaponData::new(200, 500, Weapon::Steel),
+            mystic_sword: WeaponData::new(500, 1_000, Weapon::Mystic),
             wizard_staff: WeaponData::new(1_000, 2_000, Weapon::WizardStaff),
         }
     }
@@ -108,35 +118,25 @@ impl WeaponsInventory {
     }
 
     pub fn table(&self) {
-        fn entry(weapon: &WeaponData) -> String {
-            format!(
-                "{},{},{},{},{}",
-                weapon.flag,
-                checkmark(weapon.owns),
-                checkmark(weapon.equipped),
-                weapon.damage,
-                weapon.durability,
-            )
-        }
         csv_table(vec![
             "Weapon,Owned,Equipped,Damage,Durability".to_string(),
-            entry(&self.wooden_sword),
-            entry(&self.bronze_sword),
-            entry(&self.iron_sword),
-            entry(&self.steel_sword),
-            entry(&self.mystic_sword),
-            entry(&self.wizard_staff),
+            self.wooden_sword.to_string(),
+            self.bronze_sword.to_string(),
+            self.iron_sword.to_string(),
+            self.steel_sword.to_string(),
+            self.mystic_sword.to_string(),
+            self.wizard_staff.to_string(),
         ])
     }
 
     pub fn get(&mut self, item_flag: &Weapon) -> &mut WeaponData {
         match item_flag {
-            Weapon::BronzeSword => &mut self.bronze_sword,
-            Weapon::IronSword => &mut self.iron_sword,
-            Weapon::MysticSword => &mut self.mystic_sword,
-            Weapon::SteelSword => &mut self.steel_sword,
+            Weapon::Bronze => &mut self.bronze_sword,
+            Weapon::Iron => &mut self.iron_sword,
+            Weapon::Mystic => &mut self.mystic_sword,
+            Weapon::Steel => &mut self.steel_sword,
             Weapon::WizardStaff => &mut self.wizard_staff,
-            Weapon::WoodenSword => &mut self.wooden_sword,
+            Weapon::Wooden => &mut self.wooden_sword,
         }
     }
 
@@ -153,11 +153,11 @@ impl WeaponsInventory {
 impl WeaponsInventory {
     fn shop() -> BTreeMap<Weapon, usize> {
         BTreeMap::from([
-            (Weapon::WoodenSword, 10),
-            (Weapon::BronzeSword, 50),
-            (Weapon::IronSword, 100),
-            (Weapon::SteelSword, 500),
-            (Weapon::MysticSword, 1_000),
+            (Weapon::Wooden, 10),
+            (Weapon::Bronze, 50),
+            (Weapon::Iron, 100),
+            (Weapon::Steel, 500),
+            (Weapon::Mystic, 1_000),
             (Weapon::WizardStaff, 10_000),
         ])
     }

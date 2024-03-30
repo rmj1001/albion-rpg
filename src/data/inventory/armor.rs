@@ -15,16 +15,7 @@ pub enum Armor {
 
 impl Display for Armor {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let string: &str = match self {
-            Armor::Leather => "Leather Armor",
-            Armor::Bronze => "Bronze Armor",
-            Armor::Iron => "Iron Armor",
-            Armor::Steel => "Steel Armor",
-            Armor::Dragonhide => "Dragonhide Armor",
-            Armor::Mystic => "Mystic Armor",
-        };
-
-        write!(f, "{string}")
+        write!(f, "{:?} Armor", self)
     }
 }
 
@@ -48,6 +39,20 @@ impl Default for ArmorData {
             default_durability: 50,
             flag: Armor::Leather,
         }
+    }
+}
+
+impl Display for ArmorData {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{},{},{},{},{}",
+            self.flag,
+            checkmark(self.owns),
+            checkmark(self.equipped),
+            self.defense,
+            self.durability,
+        )
     }
 }
 
@@ -105,25 +110,14 @@ impl ArmorInventory {
     }
 
     pub fn table(&self) {
-        fn entry(armor: &ArmorData) -> String {
-            format!(
-                "{},{},{},{},{}",
-                armor.flag,
-                checkmark(armor.owns),
-                checkmark(armor.equipped),
-                armor.defense,
-                armor.durability,
-            )
-        }
-
         csv_table(vec![
             "Armor,Owned,Equipped,Defense,Durability".to_string(),
-            entry(&self.leather),
-            entry(&self.bronze),
-            entry(&self.iron),
-            entry(&self.steel),
-            entry(&self.dragonhide),
-            entry(&self.mystic),
+            self.leather.to_string(),
+            self.bronze.to_string(),
+            self.iron.to_string(),
+            self.steel.to_string(),
+            self.dragonhide.to_string(),
+            self.mystic.to_string(),
         ])
     }
 
