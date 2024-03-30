@@ -37,7 +37,6 @@ whoami = "1.4.1"
 crossterm = "0.27.0"
 bcrypt = "0.15.0"
 csv_to_table = "0.4.0"
-easy_switch = "0.2.0"
 toml = "0.8.10"
 strum = { version = "0.26.1", features = ["derive"] }
 strum_macros = "0.26.1"
