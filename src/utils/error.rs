@@ -6,9 +6,8 @@
 - Custom panic screen for graceful program exiting
 - Out of bounds function for less code duplication
 */
-use crate::prelude::failure;
+use crate::utils::messages::Logs;
 use std::fmt::{Debug, Display};
-use thiserror::Error;
 
 /**
 Provide a simpler result format with dynamic error handling
@@ -21,13 +20,18 @@ fn function() -> Result<()> {
     Ok(())
 }
 */
-pub type Result<T> = std::result::Result<T, Box<dyn CustomError>>;
-pub trait CustomError
+pub type Result<T> = std::result::Result<T, Box<dyn Printer>>;
+
+pub trait Printer
 where
     Self: Display,
 {
-    fn failure(&self) {
-        failure(&self.to_string());
+    fn print(&self, pause: bool) {
+        println!("{self}");
+
+        if pause {
+            crate::utils::tui::pause();
+        }
     }
 }
 
@@ -46,22 +50,24 @@ fn main() -> Result<()> {
 }
 ```
 */
-#[derive(Debug, Clone, Error)]
+#[derive(Debug, Clone)]
 pub enum ProfileError {
-    #[error("Profile does not exist.")]
     DoesNotExist,
-
-    #[error("Profile is corrupted.")]
     Corrupted,
 }
 
-impl CustomError for ProfileError {}
+impl Display for ProfileError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let string: &str = match self {
+            Self::DoesNotExist => "Profile does not exist.",
+            Self::Corrupted => "Profile is corrupted.",
+        };
 
-impl ProfileError {
-    pub fn boxed(self) -> Box<Self> {
-        Box::new(self)
+        write!(f, "{}", Logs::Failure.paint(string))
     }
 }
+
+impl Printer for ProfileError {}
 
 /**
 Data Serialization/Deserialization Errors
@@ -78,22 +84,24 @@ fn main() -> Result<()> {
 }
 ```
 */
-#[derive(Debug, Clone, Error)]
+#[derive(Debug, Clone)]
 pub enum DataError {
-    #[error("Failed to encode player file.")]
     Encode,
-
-    #[error("Failed to decode player file.")]
     Decode,
 }
 
-impl CustomError for DataError {}
+impl Display for DataError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let string: &str = match self {
+            Self::Encode => "Failed to encode player file.",
+            Self::Decode => "Failed to decode player file.",
+        };
 
-impl DataError {
-    pub fn boxed(self) -> Box<Self> {
-        Box::new(self)
+        write!(f, "{}", Logs::Failure.paint(string))
     }
 }
+
+impl Printer for DataError {}
 
 /**
 Inventory management errors
@@ -110,37 +118,34 @@ fn main() -> Result<()> {
 }
 ```
 */
-#[derive(Debug, Clone, Error)]
+#[derive(Debug, Clone)]
 pub enum InventoryError {
-    #[error("You do not have enough gold.")]
     NotEnoughGold,
-
-    #[error("You already own this item.")]
     ItemOwned,
-
-    #[error("You do not own this item.")]
     ItemNotOwned,
-
-    #[error("You do not have enough xp.")]
     NotEnoughXP,
-
-    #[error("You do not own enough {0}.")]
     NotEnoughItem(String),
-
-    #[error("That item does not exist.")]
     ItemNotExist,
-
-    #[error("Transaction failed.")]
     TransactionFailed,
 }
 
-impl CustomError for InventoryError {}
+impl Display for InventoryError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let string: String = match self {
+            Self::ItemNotExist => "That item does not exist.".to_string(),
+            Self::ItemNotOwned => "You do not own that item.".to_string(),
+            Self::ItemOwned => "You already own this item".to_string(),
+            Self::NotEnoughGold => "You do not have enough gold.".to_string(),
+            Self::NotEnoughItem(item) => format!("You do not own enough {item}."),
+            Self::NotEnoughXP => "You do not have enough xp.".to_string(),
+            Self::TransactionFailed => "Transaction failed.".to_string(),
+        };
 
-impl InventoryError {
-    pub fn boxed(self) -> Box<Self> {
-        Box::new(self)
+        write!(f, "{}", Logs::Failure.paint(string))
     }
 }
+
+impl Printer for InventoryError {}
 
 /**
 File management Errors
@@ -157,22 +162,24 @@ fn main() -> Result<()> {
 }
 ```
 */
-#[derive(Debug, Clone, Error)]
+#[derive(Debug, Clone)]
 pub enum FileError {
-    #[error("Failed to delete file.")]
     Delete,
-
-    #[error("Failed to create file.")]
     Create,
 }
 
-impl CustomError for FileError {}
+impl Display for FileError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let string = match self {
+            Self::Delete => "Failed to delete file.",
+            Self::Create => "Failed to create file.",
+        };
 
-impl FileError {
-    pub fn boxed(self) -> Box<Self> {
-        Box::new(self)
+        write!(f, "{}", Logs::Failure.paint(string))
     }
 }
+
+impl Printer for FileError {}
 
 /**
 Miscellaneous Errors
@@ -189,25 +196,26 @@ fn main() -> Result<()> {
 }
 ```
 */
-#[derive(Debug, Clone, Error)]
+#[derive(Debug, Clone)]
 pub enum MiscError {
-    #[error("Invalid input {0}")]
     InvalidInput(String),
-
-    #[error("{0}")]
     Custom(&'static str),
-
-    #[error("Invalid operator.")]
     InvalidOperator,
 }
 
-impl CustomError for MiscError {}
+impl Display for MiscError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let string: String = match self {
+            Self::InvalidInput(input) => format!("Invalid input {input}."),
+            Self::Custom(error) => error.to_string(),
+            Self::InvalidOperator => "Invalid operator.".to_string(),
+        };
 
-impl MiscError {
-    pub fn boxed(self) -> Box<Self> {
-        Box::new(self)
+        write!(f, "{}", Logs::Failure.paint(string))
     }
 }
+
+impl Printer for MiscError {}
 
 /**
 Check for debugging environment variable or flag
@@ -253,7 +261,6 @@ out_of_bounds();
 ```
 */
 pub fn out_of_bounds() {
-    use crate::prelude::Logs;
     const MESSAGE: Option<&str> = Some("Dialoguer selected index out of bounds.");
 
     Logs::Failure.message(MESSAGE, None, true, true);

@@ -248,7 +248,7 @@ impl Player {
                 delete_file(&profile_path);
                 Ok(())
             }
-            false => Err(ProfileError::DoesNotExist.boxed()),
+            false => Err(Box::new(ProfileError::DoesNotExist)),
         }
     }
 
@@ -278,7 +278,7 @@ impl Player {
 
         match file_result {
             Ok(data) => contents = data,
-            Err(_) => return Err(ProfileError::DoesNotExist.boxed()),
+            Err(_) => return Err(Box::new(ProfileError::DoesNotExist)),
         }
 
         match Self::try_from(contents) {
@@ -290,7 +290,7 @@ impl Player {
 
                 if !delete {
                     warning(Some("Cancelling."));
-                    return Err(DataError::Decode.boxed());
+                    return Err(Box::new(DataError::Decode));
                 }
 
                 warning(Some("Deleting player data file."));
@@ -299,7 +299,7 @@ impl Player {
                     panic_menu!(message);
                 }
 
-                Err(DataError::Decode.boxed())
+                Err(Box::new(DataError::Decode))
             }
         }
     }

@@ -17,7 +17,6 @@ dependencies = [
  "serde",
  "strum",
  "strum_macros",
- "thiserror",
  "toml",
  "whoami",
 ]

@@ -123,7 +123,7 @@ impl Guilds {
         };
 
         if player.guilds.check(guild) {
-            return Err(MiscError::Custom("You are already a guild member.").boxed());
+            return Err(Box::new(MiscError::Custom("You are already a guild member.")));
         }
 
         if payment {
@@ -131,7 +131,7 @@ impl Guilds {
             let wallet: &mut usize = &mut player.bank.wallet;
 
             if gold < *price {
-                return Err(InventoryError::NotEnoughGold.boxed());
+                return Err(Box::new(InventoryError::NotEnoughGold));
             }
 
             *wallet -= *price;
@@ -150,7 +150,7 @@ impl Guilds {
         };
 
         if !player.guilds.check(guild) {
-            return Err(MiscError::Custom("You not a member of this guild.").boxed());
+            return Err(Box::new(MiscError::Custom("You not a member of this guild.")));
         }
 
         if payment {

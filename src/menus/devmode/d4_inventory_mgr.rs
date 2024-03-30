@@ -44,7 +44,7 @@ fn items_manager(player: &mut Player) {
                     items_manager(player);
                 }
                 Err(message) => {
-                    message.failure();
+                    message.print(true);
                     items_manager(player);
                 }
             }
@@ -63,7 +63,7 @@ fn items_manager(player: &mut Player) {
                     items_manager(player);
                 }
                 Err(message) => {
-                    message.failure();
+                    message.print(true);
                     items_manager(player);
                 }
             }
@@ -97,7 +97,7 @@ fn weapons_manager(player: &mut Player) {
                 weapons_manager(player);
             }
             Err(message) => {
-                message.failure();
+                message.print(true);
                 weapons_manager(player);
             }
         }
@@ -113,7 +113,7 @@ fn weapons_manager(player: &mut Player) {
                 weapons_manager(player);
             }
             Err(message) => {
-                message.failure();
+                message.print(true);
                 weapons_manager(player);
             }
         }
@@ -144,7 +144,7 @@ fn armor_manager(player: &mut Player) {
                 armor_manager(player);
             }
             Err(message) => {
-                message.failure();
+                message.print(true);
                 armor_manager(player);
             }
         }
@@ -160,7 +160,7 @@ fn armor_manager(player: &mut Player) {
                 armor_manager(player);
             }
             Err(message) => {
-                message.failure();
+                message.print(true);
                 armor_manager(player);
             }
         }

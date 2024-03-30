@@ -85,7 +85,7 @@ where
         Ok(out) => Ok(out),
         Err(_) => {
             invalid_input(Some(&input_string), None, false);
-            Err(MiscError::InvalidInput(input_string).boxed())
+            Err(Box::new(MiscError::InvalidInput(input_string)))
         }
     }
 }

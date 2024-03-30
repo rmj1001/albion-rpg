@@ -57,7 +57,7 @@ pub fn main(player: &mut Player) {
     match amount_result {
         Ok(number) => amount = number,
         Err(error) => {
-            error.failure();
+            error.print(true);
             main(player);
         }
     }
@@ -69,7 +69,7 @@ pub fn main(player: &mut Player) {
 
     match result {
         Ok(_) => success(None),
-        Err(error) => error.failure(),
+        Err(error) => error.print(true),
     }
 
     main(player);

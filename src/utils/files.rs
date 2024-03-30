@@ -141,7 +141,7 @@ let contents: Result<String> = read_file("/home/{user}/albion_terminal_rpg/playe
 pub fn read_file<T: Display>(file_path: &T) -> Result<String> {
     match fs::read_to_string(file_path.to_string()) {
         Ok(contents) => Ok(contents),
-        Err(_) => Err(ProfileError::DoesNotExist.boxed()),
+        Err(_) => Err(Box::new(ProfileError::DoesNotExist)),
     }
 }
 

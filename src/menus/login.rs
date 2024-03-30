@@ -33,7 +33,8 @@ pub fn main() {
             crate::menus::game_menu::main(&mut player);
         }
 
-        Err(_) => {
+        Err(error) => {
+            error.print(false);
             crate::menus::accounts::main();
         }
     }

@@ -67,7 +67,7 @@ impl Bank {
         let wallet_balance: usize = Self::balance(player, &BankAccount::Wallet);
 
         if use_wallet && wallet_balance < amount {
-            return Err(InventoryError::NotEnoughGold.boxed());
+            return Err(Box::new(InventoryError::NotEnoughGold));
         }
 
         if use_wallet {
@@ -82,7 +82,7 @@ impl Bank {
         let account_balance: usize = Self::balance(player, &account_flag);
 
         if account_balance < amount {
-            return Err(InventoryError::NotEnoughGold.boxed());
+            return Err(Box::new(InventoryError::NotEnoughGold));
         }
 
         if use_wallet {
@@ -170,7 +170,7 @@ impl Bank {
             }
         }
 
-        let mut bank_result: Result<()> = Err(MiscError::Custom("Uninitialized").boxed());
+        let mut bank_result: Result<()> = Err(Box::new(MiscError::Custom("Uninitialized")));
 
         // If developer mode is on then don't use the wallet, and vice versa.
         let use_wallet: bool = !developer_mode;
@@ -188,7 +188,7 @@ impl Bank {
 
         match bank_result {
             Ok(_) => success(None),
-            Err(message) => message.failure(),
+            Err(message) => message.print(true),
         }
 
         Self::menu(player, developer_mode);

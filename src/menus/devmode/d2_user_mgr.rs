@@ -98,7 +98,7 @@ fn view_user(player: &mut Player) {
                     main(player);
                 }
                 Err(message) => {
-                    message.failure();
+                    message.print(true);
                     main(player);
                 }
             }

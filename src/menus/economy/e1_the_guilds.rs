@@ -102,7 +102,7 @@ fn guild_menu(
                 };
 
                 if let Err(error) = result {
-                    error.failure();
+                    error.print(true);
                     guild_menu(player, guild, xp_type, increase_item, decrease_item);
                 }
             }
@@ -177,7 +177,7 @@ fn print_item(player: &mut Player, item: &Option<GuildItem>) {
 
 fn try_subtract(item: &mut usize, item_name: &str) -> Result<()> {
     if *item == 0 {
-        return Err(InventoryError::NotEnoughItem(item_name.to_string()).boxed());
+        return Err(Box::new(InventoryError::NotEnoughItem(item_name.to_string())));
     }
 
     *item -= 1;
@@ -213,7 +213,7 @@ fn join_guild(player: &mut Player) {
             guild_membership_shop(player);
         }
         Err(message) => {
-            message.failure();
+            message.print(true);
             guild_membership_shop(player);
         }
     }
@@ -227,7 +227,7 @@ fn leave_guild(player: &mut Player) {
             guild_membership_shop(player);
         }
         Err(message) => {
-            message.failure();
+            message.print(true);
             guild_membership_shop(player);
         }
     }

@@ -78,7 +78,7 @@ impl XP {
         let xp = self.get(flag);
 
         if *xp < amount {
-            return Err(InventoryError::NotEnoughXP.boxed());
+            return Err(Box::new(InventoryError::NotEnoughXP));
         }
 
         *xp -= amount;
