@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use crate::{
     data::{player::Player, xp::XP},
     prelude::*,
@@ -64,6 +66,12 @@ pub struct EnemyData {
     pub hp: usize,
     pub damage: usize,
     pub rewards: Vec<Rewards>,
+}
+
+impl Display for EnemyData {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Enemy: {}\nHP: {}\n", self.name, self.hp)
+    }
 }
 
 impl EnemyData {

@@ -69,9 +69,7 @@ pub fn battle_menu(battle: &mut BattleSettings) {
         println!();
     }
 
-    println!("Enemy: {}", battle.enemy.name);
-    println!("Enemy HP: {}", battle.enemy.hp);
-    println!();
+    println!("{}", battle.enemy);
 
     println!("Player HP: {}", battle.player.health.hp);
     println!("Player Hunger: {}", battle.player.health.hunger);
