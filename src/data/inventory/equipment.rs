@@ -86,12 +86,12 @@ impl Equipment {
         use Weapon as W;
 
         let choices = [
-            player.weapons.wooden_sword.flag.name(),
-            player.weapons.bronze_sword.flag.name(),
-            player.weapons.iron_sword.flag.name(),
-            player.weapons.steel_sword.flag.name(),
-            player.weapons.mystic_sword.flag.name(),
-            player.weapons.wizard_staff.flag.name(),
+            player.weapons.wooden_sword.flag.to_string(),
+            player.weapons.bronze_sword.flag.to_string(),
+            player.weapons.iron_sword.flag.to_string(),
+            player.weapons.steel_sword.flag.to_string(),
+            player.weapons.mystic_sword.flag.to_string(),
+            player.weapons.wizard_staff.flag.to_string(),
         ];
 
         let choice: usize = select(&choices, None);
@@ -116,7 +116,7 @@ impl Equipment {
 
         weapon.equipped = true;
 
-        println!("Equipped the {}", weapon.flag.name());
+        println!("Equipped the {}", weapon.flag);
 
         Self::unequip_weapon(player, false);
         player.equipment.weapon = Some(flag);
@@ -149,12 +149,12 @@ impl Equipment {
         use Armor as A;
 
         let choices = [
-            player.armor.leather.flag.name(),
-            player.armor.bronze.flag.name(),
-            player.armor.iron.flag.name(),
-            player.armor.steel.flag.name(),
-            player.armor.dragonhide.flag.name(),
-            player.armor.mystic.flag.name(),
+            player.armor.leather.flag.to_string(),
+            player.armor.bronze.flag.to_string(),
+            player.armor.iron.flag.to_string(),
+            player.armor.steel.flag.to_string(),
+            player.armor.dragonhide.flag.to_string(),
+            player.armor.mystic.flag.to_string(),
         ];
 
         let choice: usize = select(&choices, None);
@@ -179,7 +179,7 @@ impl Equipment {
 
         armor.equipped = true;
 
-        println!("Equipped the {}", armor.flag.name());
+        println!("Equipped the {}", armor.flag);
 
         Self::unequip_armor(player, false);
         player.equipment.armor = Some(flag);

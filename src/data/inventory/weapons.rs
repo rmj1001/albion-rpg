@@ -1,7 +1,7 @@
 use crate::utils::tui::{checkmark, csv_table};
 use rand::{thread_rng, Rng};
 use serde::{Deserialize, Serialize};
-use std::collections::BTreeMap;
+use std::{collections::BTreeMap, fmt::Display};
 
 use crate::{data::player::Player, prelude::*};
 use std::result::Result;
@@ -16,16 +16,18 @@ pub enum Weapon {
     WizardStaff,
 }
 
-impl Weapon {
-    pub fn name(&self) -> &'static str {
-        match self {
+impl Display for Weapon {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let string: &str = match self {
             Weapon::WoodenSword => "Wooden Sword",
             Weapon::BronzeSword => "Bronze Sword",
             Weapon::IronSword => "Iron Sword",
             Weapon::SteelSword => "Steel Sword",
             Weapon::MysticSword => "Mystic Sword",
             Weapon::WizardStaff => "Wizard Staff",
-        }
+        };
+
+        write!(f, "{string}")
     }
 }
 
@@ -73,7 +75,7 @@ impl WeaponData {
     }
 
     pub fn break_weapon(&mut self) {
-        println!("Your {} broke!", self.flag.name());
+        println!("Your {} broke!", self.flag);
         self.owns = false;
         self.durability = self.default_durability;
     }
@@ -109,7 +111,7 @@ impl WeaponsInventory {
         fn entry(weapon: &WeaponData) -> String {
             format!(
                 "{},{},{},{},{}",
-                weapon.flag.name(),
+                weapon.flag,
                 checkmark(weapon.owns),
                 checkmark(weapon.equipped),
                 weapon.damage,
@@ -166,7 +168,7 @@ impl WeaponsInventory {
         Self::shop().iter().for_each(|(flag, price)| {
             let owned = player.weapons.get(flag).owns;
 
-            let string = format!("{},{},{}", flag.name(), price, checkmark(owned));
+            let string = format!("{},{},{}", flag, price, checkmark(owned));
             strings.push(string)
         });
 
@@ -176,7 +178,7 @@ impl WeaponsInventory {
 
     pub fn select() -> Weapon {
         let shop = Self::shop();
-        let items: Vec<String> = shop.keys().map(|flag| flag.name().to_string()).collect();
+        let items: Vec<String> = shop.keys().map(|flag| flag.to_string()).collect();
 
         let selector = select(&items, None);
         let selected_item = items
@@ -185,7 +187,7 @@ impl WeaponsInventory {
             .to_string();
 
         shop.iter()
-            .find(|item| item.0.name() == selected_item)
+            .find(|item| item.0.to_string() == selected_item)
             .map(|item| item.0)
             .expect("Should return an Item Flag")
             .clone()

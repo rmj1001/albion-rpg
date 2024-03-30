@@ -1,7 +1,7 @@
 use crate::{data::player::Player, prelude::*};
 use rand::{thread_rng, Rng};
 use serde::{Deserialize, Serialize};
-use std::{collections::BTreeMap, result::Result};
+use std::{collections::BTreeMap, fmt::Display, result::Result};
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, PartialOrd, Eq, Ord)]
 pub enum Armor {
@@ -13,16 +13,18 @@ pub enum Armor {
     Mystic,
 }
 
-impl Armor {
-    pub fn name(&self) -> &'static str {
-        match self {
+impl Display for Armor {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let string: &str = match self {
             Armor::Leather => "Leather Armor",
             Armor::Bronze => "Bronze Armor",
             Armor::Iron => "Iron Armor",
             Armor::Steel => "Steel Armor",
             Armor::Dragonhide => "Dragonhide Armor",
             Armor::Mystic => "Mystic Armor",
-        }
+        };
+
+        write!(f, "{string}")
     }
 }
 
@@ -70,7 +72,7 @@ impl ArmorData {
     }
 
     pub fn break_armor(&mut self) {
-        println!("Your {} broke!", self.flag.name());
+        println!("Your {} broke!", self.flag);
         self.owns = false;
         self.durability = self.default_durability;
     }
@@ -106,7 +108,7 @@ impl ArmorInventory {
         fn entry(armor: &ArmorData) -> String {
             format!(
                 "{},{},{},{},{}",
-                armor.flag.name(),
+                armor.flag,
                 checkmark(armor.owns),
                 checkmark(armor.equipped),
                 armor.defense,
@@ -161,7 +163,7 @@ impl ArmorInventory {
         let mut strings: Vec<String> = vec!["Item,Price,Owns".to_string()];
 
         Self::shop().iter().for_each(|(flag, price)| {
-            let string = format!("{},{},{}", flag.name(), price, checkmark(player.armor.get(flag).owns));
+            let string = format!("{},{},{}", flag, price, checkmark(player.armor.get(flag).owns));
             strings.push(string)
         });
 
@@ -171,7 +173,7 @@ impl ArmorInventory {
 
     pub fn select() -> Armor {
         let shop = Self::shop();
-        let items: Vec<String> = shop.keys().map(|flag| flag.name().to_string()).collect();
+        let items: Vec<String> = shop.keys().map(|flag| flag.to_string()).collect();
 
         let selector = select(&items, None);
         let selected_item = items
@@ -180,7 +182,7 @@ impl ArmorInventory {
             .to_string();
 
         shop.iter()
-            .find(|item| item.0.name() == selected_item)
+            .find(|item| item.0.to_string() == selected_item)
             .map(|item| item.0)
             .expect("Should return an Item Flag")
             .clone()
