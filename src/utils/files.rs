@@ -6,7 +6,7 @@ use std::env::consts::OS;
 use std::{fmt::Display, fs, path::Path};
 
 pub const FOLDER_NAME: &str = ".albion_term_rpg";
-pub const EXTENSION: &str = ".albion";
+pub const EXTENSION: &str = "albion";
 
 /**
 Generate the path for the folder containing player files.
