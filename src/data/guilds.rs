@@ -1,6 +1,6 @@
 use crate::{data::player::Player, panic_menu, prelude::*};
 use serde::{Deserialize, Serialize};
-use std::collections::BTreeMap;
+use std::{collections::BTreeMap, fmt::Display};
 
 #[derive(PartialEq, PartialOrd, Eq, Ord, Clone, Copy, Debug)]
 pub enum Guild {
@@ -12,16 +12,18 @@ pub enum Guild {
     Thieving,
 }
 
-impl Guild {
-    pub fn name(&self) -> &'static str {
-        match self {
+impl Display for Guild {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let string: &str = match self {
             Guild::Fishing => "Fishing",
             Guild::Cooking => "Cooking",
             Guild::Mining => "Mining",
             Guild::Woodcutting => "Woodcutting",
             Guild::Smithing => "Smithing",
             Guild::Thieving => "Thieving",
-        }
+        };
+
+        write!(f, "{string}")
     }
 }
 
@@ -86,7 +88,7 @@ impl Guilds {
         let mut strings: Vec<String> = vec!["Guild,Price,Member".to_string()];
 
         Self::shop().iter().for_each(|(flag, price)| {
-            let string = format!("{},{},{}", flag.name(), price, checkmark(*player.guilds.get(flag)));
+            let string = format!("{},{},{}", flag, price, checkmark(*player.guilds.get(flag)));
             strings.push(string)
         });
 
@@ -96,7 +98,7 @@ impl Guilds {
 
     pub fn select() -> Guild {
         let shop: BTreeMap<Guild, usize> = Self::shop();
-        let guilds: Vec<String> = shop.keys().map(|guild| guild.name().to_string()).collect();
+        let guilds: Vec<String> = shop.keys().map(|guild| guild.to_string()).collect();
 
         let selector: usize = select(&guilds, None);
         let selected_guild: String = guilds
@@ -106,7 +108,7 @@ impl Guilds {
 
         let item: Guild = *Self::shop()
             .iter()
-            .find(|guild| guild.0.name() == selected_guild)
+            .find(|guild| guild.0.to_string() == selected_guild)
             .map(|guild| guild.0)
             .unwrap_or_else(|| panic_menu!("Guild flag selected out of bounds"));
 
