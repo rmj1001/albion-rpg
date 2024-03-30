@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
-use std::collections::BTreeMap;
 use std::hash::Hash;
+use std::{collections::BTreeMap, fmt::Display};
 
 use crate::{data::player::Player, prelude::*};
 use std::result::Result;
@@ -23,9 +23,9 @@ pub enum Item {
     RunicTablets,
 }
 
-impl Item {
-    pub fn name(&self) -> &'static str {
-        match self {
+impl Display for Item {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let string: &str = match self {
             Item::Bait => "Bait",
             Item::Seeds => "Seeds",
             Item::Furs => "Fur",
@@ -40,7 +40,9 @@ impl Item {
             Item::Bones => "Bone",
             Item::DragonHides => "Dragon Hide",
             Item::RunicTablets => "Runic Tablet",
-        }
+        };
+
+        write!(f, "{string}")
     }
 }
 
@@ -164,12 +166,7 @@ impl ItemInventory {
         pairs.iter().for_each(|(item1, item2)| {
             strings.push(format!(
                 "{},{},{},,{},{},{}",
-                item1.0.name(),
-                item1.1,
-                item1.2,
-                item2.0.name(),
-                item2.1,
-                item2.2
+                item1.0, item1.1, item1.2, item2.0, item2.1, item2.2
             ));
         });
 
@@ -188,7 +185,7 @@ impl ItemInventory {
     pub fn select() -> Item {
         let shop = Self::shop();
         let items = shop.keys();
-        let item_names: Vec<String> = items.map(|item| item.name().to_string()).collect();
+        let item_names: Vec<String> = items.map(|item| item.to_string()).collect();
 
         let selector = select(&item_names, None);
         let selected_item = item_names
@@ -198,7 +195,7 @@ impl ItemInventory {
 
         *Self::shop()
             .iter()
-            .find(|item| item.0.name() == selected_item)
+            .find(|item| item.0.to_string() == selected_item)
             .map(|item| item.0)
             .expect("Should return an Item Flag")
     }
@@ -231,7 +228,7 @@ impl ItemInventory {
         let item = player.items.get(flag);
 
         if *item == 0 || *item < quantity {
-            return Err(InventoryError::NotEnoughItem(flag.name().to_string()));
+            return Err(InventoryError::NotEnoughItem(flag.to_string()));
         }
 
         *item -= quantity;
