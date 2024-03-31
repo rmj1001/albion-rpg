@@ -28,7 +28,7 @@ where
     Self: Display,
 {
     fn print(&self, pause: bool) {
-        println!("{self}");
+        println!("\n{self}\n");
 
         if pause {
             crate::utils::tui::pause();

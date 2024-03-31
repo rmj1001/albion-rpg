@@ -34,7 +34,7 @@ pub fn main() {
         }
 
         Err(error) => {
-            error.print(false);
+            error.print(true);
             crate::menus::accounts::main();
         }
     }
