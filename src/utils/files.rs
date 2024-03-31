@@ -138,8 +138,11 @@ use albion_terminal_rpg::prelude::{Result, read_file};
 let contents: Result<String> = read_file("/home/{user}/albion_terminal_rpg/player.albion");
 ```
 */
-pub fn read_file<T: Display>(file_path: &T) -> std::result::Result<String, ProfileError> {
-    fs::read_to_string(file_path.to_string()).map_err(|_| ProfileError::Corrupted)
+pub fn read_file<T: Display>(file_path: &T) -> Result<String> {
+    match fs::read_to_string(file_path.to_string()) {
+        Ok(data) => Ok(data),
+        Err(_) => Err(Box::new(ProfileError::Corrupted)),
+    }
 }
 
 /**

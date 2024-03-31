@@ -7,6 +7,7 @@
 - Out of bounds function for less code duplication
 */
 use crate::utils::messages::Logs;
+use std::error::Error;
 use std::fmt::{Debug, Display};
 
 /**
@@ -68,6 +69,7 @@ impl Display for ProfileError {
 }
 
 impl Printer for ProfileError {}
+impl Error for ProfileError {}
 
 /**
 Data Serialization/Deserialization Errors
@@ -102,6 +104,7 @@ impl Display for DataError {
 }
 
 impl Printer for DataError {}
+impl Error for DataError {}
 
 /**
 Inventory management errors
@@ -146,6 +149,7 @@ impl Display for InventoryError {
 }
 
 impl Printer for InventoryError {}
+impl Error for InventoryError {}
 
 /**
 File management Errors
@@ -180,6 +184,7 @@ impl Display for FileError {
 }
 
 impl Printer for FileError {}
+impl Error for FileError {}
 
 /**
 Miscellaneous Errors
@@ -216,6 +221,7 @@ impl Display for MiscError {
 }
 
 impl Printer for MiscError {}
+impl Error for MiscError {}
 
 /**
 Check for debugging environment variable or flag
