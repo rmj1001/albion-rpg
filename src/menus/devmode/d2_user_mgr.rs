@@ -18,7 +18,7 @@ pub fn main(player: &mut Player) {
         1 => delete_users(player),
         2 => view_user(player),
         3 => super::d1_developer_menu::main(player),
-        _ => out_of_bounds(),
+        _ => unreachable(),
     }
 }
 
@@ -77,7 +77,7 @@ fn delete_users(player: &mut Player) {
             main(player);
         }
 
-        None => out_of_bounds(),
+        None => unreachable(),
     }
 }
 
@@ -103,7 +103,7 @@ fn view_user(player: &mut Player) {
                 }
             }
         }
-        None => out_of_bounds(),
+        None => unreachable(),
     }
 
     main(player);

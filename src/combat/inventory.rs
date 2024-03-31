@@ -16,7 +16,7 @@ pub fn battle_inventory(player: &mut Player) {
         }
         1 => healing_inventory(player),
         2 => {} // just returns to battle menu since the battle menu function is recursive called after this menu
-        _ => out_of_bounds(),
+        _ => unreachable(),
     }
 }
 
@@ -39,7 +39,7 @@ pub fn healing_inventory(player: &mut Player) {
             healing_inventory(player);
         }
         2 => battle_inventory(player),
-        _ => out_of_bounds(),
+        _ => unreachable(),
     }
 }
 

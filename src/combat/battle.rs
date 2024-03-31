@@ -86,7 +86,7 @@ pub fn battle_menu(battle: &mut BattleSettings) {
             battle_menu(battle);
         }
         2 => retreat(battle.player),
-        _ => out_of_bounds(),
+        _ => unreachable(),
     }
 }
 
@@ -287,6 +287,6 @@ pub fn hardmode(battle: &mut BattleSettings) {
                 Err(error) => panic_menu!(error),
             }
         }
-        _ => out_of_bounds(),
+        _ => unreachable(),
     }
 }

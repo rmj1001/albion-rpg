@@ -38,7 +38,7 @@ pub fn main(player: &mut Player) {
         5 => xp_type = XPType::Smithing,
         6 => xp_type = XPType::Thieving,
         7 => super::d1_developer_menu::main(player),
-        _ => out_of_bounds(),
+        _ => unreachable(),
     };
 
     let operation_category: usize = select(&["1. Add", "2. Subtract", "3. Cancel"], None);
@@ -48,7 +48,7 @@ pub fn main(player: &mut Player) {
         0 => operation = Operation::Add,
         1 => operation = Operation::Subtract,
         2 => main(player),
-        _ => out_of_bounds(),
+        _ => unreachable(),
     }
 
     let amount_result: Result<usize> = input_generic("Amount > ");

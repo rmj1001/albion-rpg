@@ -29,7 +29,7 @@ pub fn main(player: &mut Player) {
             player.save();
             crate::menus::game_menu::main(player);
         }
-        _ => out_of_bounds(),
+        _ => unreachable(),
     }
 }
 

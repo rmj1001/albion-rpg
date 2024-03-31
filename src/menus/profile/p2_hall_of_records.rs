@@ -11,7 +11,7 @@ pub fn main(player: &mut Player) {
         0 => xp(player),
         1 => achievements(player),
         2 => crate::menus::game_menu::main(player),
-        _ => out_of_bounds(),
+        _ => unreachable(),
     }
 }
 

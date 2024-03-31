@@ -147,7 +147,7 @@ impl Bank {
                 3 => account = BankAccount::Account3,
                 4 => account = BankAccount::Account4,
                 5 => Self::menu(player, developer_mode),
-                _ => out_of_bounds(),
+                _ => unreachable(),
             },
             false => match account_choice {
                 0 => account = BankAccount::Account1,
@@ -155,7 +155,7 @@ impl Bank {
                 2 => account = BankAccount::Account3,
                 3 => account = BankAccount::Account4,
                 4 => Self::menu(player, developer_mode),
-                _ => out_of_bounds(),
+                _ => unreachable(),
             },
         }
 
@@ -183,7 +183,7 @@ impl Bank {
             1 => bank_result = Self::withdraw(player, account, amount, use_wallet),
 
             // The "Go Back" option was already handled.
-            _ => out_of_bounds(),
+            _ => unreachable(),
         }
 
         match bank_result {

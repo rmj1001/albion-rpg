@@ -58,7 +58,7 @@ pub fn main(player: &mut Player) {
         5 => guild_menu(player, "Thieving", XPType::Thieving, GuildItem::Gold, None),
         6 => guild_membership_shop(player),
         7 => crate::menus::game_menu::main(player),
-        _ => out_of_bounds(),
+        _ => unreachable(),
     }
 }
 
@@ -120,7 +120,7 @@ fn guild_menu(
             player.xp.increment(xp_type);
         }
         1 => main(player),
-        _ => out_of_bounds(),
+        _ => unreachable(),
     }
 
     guild_menu(player, guild, xp_type, increase_item, decrease_item);
@@ -201,7 +201,7 @@ fn guild_membership_shop(player: &mut Player) {
             guild_membership_shop(player);
         }
         2 => main(player),
-        _ => out_of_bounds(),
+        _ => unreachable(),
     }
 }
 

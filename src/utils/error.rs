@@ -260,10 +260,9 @@ use albion_terminal_rpg::prelude::{out_of_bounds};
 out_of_bounds();
 ```
 */
-pub fn out_of_bounds() {
-    const MESSAGE: Option<&str> = Some("Dialoguer selected index out of bounds.");
-
-    Logs::Failure.message(MESSAGE, None, true, true);
+pub fn unreachable() {
+    const MESSAGE: &str = "Dialoguer selected index out of bounds.";
+    unreachable!("{}", Logs::Failure.paint(MESSAGE));
 }
 
 pub mod macros {

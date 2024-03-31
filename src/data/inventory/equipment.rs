@@ -36,7 +36,7 @@ impl Equipment {
                 Self::menu(player);
             }
             2 => player.save(), // goes back to whatever menu called it due to recursion
-            _ => out_of_bounds(),
+            _ => unreachable(),
         }
     }
 
@@ -57,7 +57,7 @@ impl Equipment {
                 Self::armor_menu(player);
             }
             2 => {}
-            _ => out_of_bounds(),
+            _ => unreachable(),
         }
     }
 
@@ -78,7 +78,7 @@ impl Equipment {
                 Self::weapon_menu(player);
             }
             2 => {}
-            _ => out_of_bounds(),
+            _ => unreachable(),
         }
     }
 

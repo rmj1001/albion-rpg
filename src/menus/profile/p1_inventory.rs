@@ -18,7 +18,7 @@ pub fn main(player: &mut Player) {
         }
         2 => finances(player),
         3 => crate::menus::game_menu::main(player),
-        _ => out_of_bounds(),
+        _ => unreachable(),
     }
 }
 

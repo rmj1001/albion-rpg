@@ -14,7 +14,7 @@ pub fn main(player: &mut Player) {
         0 => purchase(player),
         1 => sell(player),
         2 => crate::menus::game_menu::main(player),
-        _ => out_of_bounds(),
+        _ => unreachable(),
     }
 
     crate::menus::game_menu::main(player);

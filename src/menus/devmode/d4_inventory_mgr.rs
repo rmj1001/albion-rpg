@@ -16,7 +16,7 @@ pub fn main(player: &mut Player) {
         1 => weapons_manager(player),
         2 => armor_manager(player),
         3 => super::d1_developer_menu::main(player),
-        _ => out_of_bounds(),
+        _ => unreachable(),
     }
 }
 
@@ -31,7 +31,7 @@ fn items_manager(player: &mut Player) {
         0 => add_item(player),
         1 => subtract_item(player),
         2 => main(player),
-        _ => out_of_bounds(),
+        _ => unreachable(),
     }
 
     pub fn add_item(player: &mut Player) {
@@ -84,7 +84,7 @@ fn weapons_manager(player: &mut Player) {
         0 => own_weapon(player),
         1 => disown_weapon(player),
         2 => main(player),
-        _ => out_of_bounds(),
+        _ => unreachable(),
     }
 
     pub fn own_weapon(player: &mut Player) {
@@ -131,7 +131,7 @@ fn armor_manager(player: &mut Player) {
         0 => own_armor(player),
         1 => disown_armor(player),
         2 => main(player),
-        _ => out_of_bounds(),
+        _ => unreachable(),
     }
 
     pub fn own_armor(player: &mut Player) {
