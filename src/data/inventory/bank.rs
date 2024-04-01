@@ -1,5 +1,8 @@
-use crate::data::player::*;
-use crate::prelude::*;
+use crate::data::player::Player;
+use crate::prelude::{
+    csv_table, invalid_input, page_header, prompt, select, success, unreachable, Instructions, InventoryError,
+    MiscError, Result,
+};
 use serde::{Deserialize, Serialize};
 
 pub enum BankAccount {

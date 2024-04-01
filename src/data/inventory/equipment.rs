@@ -1,6 +1,8 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{panic_menu, prelude::*};
+use crate::panic_menu;
+
+use crate::prelude::{page_header, pause, select, unreachable, Instructions};
 
 use crate::data::player::Player;
 

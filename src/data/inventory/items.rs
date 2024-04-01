@@ -2,7 +2,8 @@ use serde::{Deserialize, Serialize};
 use std::hash::Hash;
 use std::{collections::BTreeMap, fmt::Display};
 
-use crate::{data::player::Player, prelude::*};
+use crate::data::player::Player;
+use crate::prelude::{csv_table, input_generic, select, InventoryError};
 use std::result::Result;
 
 #[derive(Hash, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]

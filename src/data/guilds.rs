@@ -1,4 +1,6 @@
-use crate::{data::player::Player, panic_menu, prelude::*};
+use crate::prelude::{checkmark, csv_table, select, InventoryError, MiscError, Result};
+use crate::{data::player::Player, panic_menu};
+
 use serde::{Deserialize, Serialize};
 use std::{collections::BTreeMap, fmt::Display};
 

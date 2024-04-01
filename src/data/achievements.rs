@@ -1,9 +1,7 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{
-    data::{player::Player, xp::XP},
-    prelude::*,
-};
+use crate::data::{player::Player, xp::XP};
+use crate::prelude::{checkmark, csv_table};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Achievements {

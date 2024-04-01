@@ -3,7 +3,8 @@ use rand::{thread_rng, Rng};
 use serde::{Deserialize, Serialize};
 use std::{collections::BTreeMap, fmt::Display};
 
-use crate::{data::player::Player, prelude::*};
+use crate::data::player::Player;
+use crate::prelude::{select, InventoryError};
 use std::result::Result;
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, PartialOrd, Eq, Ord)]

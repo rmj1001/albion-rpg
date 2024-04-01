@@ -8,7 +8,8 @@ use crate::{
     data::player::Player,
     prelude::{page_header, success},
 };
-use std::process::Command;
+
+use std::{process, thread};
 
 /**
 Clears the terminal screen.
@@ -23,14 +24,14 @@ clearscr();
 */
 pub fn clearscr() {
     if cfg!(target_os = "windows") {
-        Command::new("cmd")
+        process::Command::new("cmd")
             .args(["/c", "cls"])
             .spawn()
             .expect("cls command failed to start")
             .wait()
             .expect("failed to wait");
     } else {
-        Command::new("clear")
+        process::Command::new("clear")
             .spawn()
             .expect("clear command failed to start")
             .wait()
@@ -76,7 +77,7 @@ pub fn exit(player: Option<&mut Player>) {
     success(Some("Thanks for playing!"));
 
     clearscr();
-    std::process::exit(0);
+    process::exit(0);
 }
 
 /**
@@ -91,5 +92,5 @@ sleep(1);
 ```
 */
 pub fn sleep(seconds: u64) {
-    std::thread::sleep(std::time::Duration::from_secs(seconds))
+    thread::sleep(std::time::Duration::from_secs(seconds))
 }

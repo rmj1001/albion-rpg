@@ -19,15 +19,20 @@ use std::{fmt::Display, path::Path};
 
 use crate::{
     data::{
-        achievements::*,
+        achievements::Achievements,
         guilds::Guilds,
         health::Health,
-        inventory::{armor::*, bank::*, equipment::Equipment, items::*, weapons::*},
+        inventory::{
+            armor::ArmorInventory, bank::Bank, equipment::Equipment, items::ItemInventory, weapons::WeaponsInventory,
+        },
         settings::Settings,
-        xp::*,
+        xp::XP,
     },
     panic_menu,
-    prelude::*,
+    prelude::{
+        confirm, delete_file, page_header, pause, player_file_path, read_file, warning, write_file, DataError,
+        Instructions, Logs, ProfileError, Result,
+    },
 };
 use serde::{Deserialize, Serialize};
 use toml as encoder;

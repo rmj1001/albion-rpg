@@ -2,7 +2,7 @@ use crate::{
     combat::enemy::{EnemyData, Rewards},
     data::{inventory::equipment::Equipment, player::Player, xp::XP},
     panic_menu,
-    prelude::*,
+    prelude::{confirm, page_header, pause, random_num, select, sleep, unreachable, Instructions},
 };
 
 pub struct BattleSettings<'a> {

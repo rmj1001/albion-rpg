@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use crate::{
     data::{player::Player, xp::XP},
-    prelude::*,
+    prelude::random_num,
 };
 
 use strum::IntoEnumIterator;

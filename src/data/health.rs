@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::prelude::*;
+use crate::prelude::{random_num, sleep};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Health {
