@@ -96,9 +96,9 @@ pub struct Inventory {
     pub mystic: Data,
 }
 
-impl Inventory {
-    pub fn new() -> Inventory {
-        Inventory {
+impl Default for Inventory {
+    fn default() -> Self {
+        Self {
             leather: Data::new(10, 100, Types::Leather),
             bronze: Data::new(30, 200, Types::Bronze),
             iron: Data::new(50, 300, Types::Iron),
@@ -107,9 +107,11 @@ impl Inventory {
             mystic: Data::new(1_000, 10_000, Types::Mystic),
         }
     }
+}
 
+impl Inventory {
     pub fn reset(&mut self) {
-        *self = Self::new();
+        *self = Self::default();
     }
 
     pub fn table(&self) {

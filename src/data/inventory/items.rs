@@ -94,12 +94,8 @@ pub struct Inventory {
 }
 
 impl Inventory {
-    pub fn new() -> Inventory {
-        Self::default()
-    }
-
     pub fn reset(&mut self) {
-        *self = Self::new();
+        *self = Self::default();
     }
 
     pub fn get(&mut self, flag: Types) -> &mut usize {

@@ -1,7 +1,5 @@
 #![warn(clippy::pedantic, clippy::wildcard_imports)]
 #![allow(
-    unused_assignments,
-    clippy::new_without_default,
     clippy::must_use_candidate,
     clippy::missing_panics_doc,
     clippy::missing_errors_doc,

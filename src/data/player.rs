@@ -91,9 +91,9 @@ impl Default for Player {
             bank: Bank::new(),
             guilds: Guilds::new(),
             equipment: Equipment::new(),
-            items: items::Inventory::new(),
-            armor: armor::Inventory::new(),
-            weapons: Inventory::new(),
+            items: items::Inventory::default(),
+            armor: armor::Inventory::default(),
+            weapons: Inventory::default(),
         }
     }
 }
@@ -274,14 +274,12 @@ impl Player {
     */
     pub fn get<T: Display>(username: &T) -> error::Result<Player> {
         let profile_path: String = player_file_path(username);
-        let mut contents: String = String::new();
 
         let file_result: error::Result<String> = read_file(&profile_path);
 
-        match file_result {
-            Ok(data) => contents = data,
-            Err(_) => return Err(Box::new(error::Profile::DoesNotExist)),
-        }
+        let Ok(contents) = file_result else {
+            return Err(Box::new(error::Profile::DoesNotExist));
+        };
 
         if let Ok(player) = Self::try_from(contents) {
             Ok(player)

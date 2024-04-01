@@ -102,9 +102,9 @@ pub struct Inventory {
     pub wizard_staff: Data,
 }
 
-impl Inventory {
-    pub fn new() -> Inventory {
-        Inventory {
+impl Default for Inventory {
+    fn default() -> Self {
+        Self {
             wooden_sword: Data::new(10, 100, Types::Wooden),
             bronze_sword: Data::new(20, 150, Types::Bronze),
             iron_sword: Data::new(50, 200, Types::Iron),
@@ -113,9 +113,11 @@ impl Inventory {
             wizard_staff: Data::new(1_000, 2_000, Types::WizardStaff),
         }
     }
+}
 
+impl Inventory {
     pub fn reset(&mut self) {
-        *self = Self::new();
+        *self = Self::default();
     }
 
     pub fn table(&self) {
