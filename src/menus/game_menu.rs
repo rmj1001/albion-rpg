@@ -1,5 +1,5 @@
 use crate::{
-    combat::{battle::Battle, enemy::EnemyData},
+    combat::battle::Battle,
     data::{achievements::Achievements, inventory::equipment::Equipment, settings::Settings},
     prelude::{confirm, exit, invalid_input, page_header, pause, prompt, sleep, success, Instructions},
 };
@@ -55,44 +55,23 @@ pub fn main(player: &mut Player) {
     match &choice[..] {
         // Combat
         "1" | "wander the realm" => {
-            let mut battle_settings = Battle {
-                header: "Wandering Gielnor",
-                prompt: "You are wandering the realm...",
-                enemy: EnemyData::new(player.xp.combat, player.health.hp),
-                player,
-                loops: 0,
-                floor: 0,
-                is_first_battle: true,
-                is_looped: false,
-                pause_seconds: 1,
-                end_function: None,
-            };
-
-            crate::combat::battle::new(&mut battle_settings);
+            Battle::new("Wandering the Wild", "You are wandering the realm...", player, 0, None).start();
         }
         "2" | "enter the stronghold" => {
             page_header("The Stronghold", &Instructions::None);
 
-            let mut battle_settings = Battle {
-                header: "The Stronghold",
-                prompt: "You delve into the stronghold...",
-                enemy: EnemyData::new(player.xp.combat, player.health.hp),
-                player,
-                loops: 50,
-                floor: 0,
-                is_first_battle: true,
-                is_looped: true,
-                pause_seconds: 1,
-                end_function: Some(exit_stronghold),
-            };
+            let enter_stronghold =
+                confirm("Are you sure you want to enter the stronghold? You must win many hard battles.");
 
-            let confirm_stronghold = confirm(&format!(
-                "Are you sure you want to enter the stronghold? You must win {} hard battles.",
-                battle_settings.loops
-            ));
-
-            if confirm_stronghold {
-                crate::combat::battle::new(&mut battle_settings);
+            if enter_stronghold {
+                Battle::new(
+                    "The Stronghold",
+                    "You delve into the stronghold...",
+                    player,
+                    50,
+                    Some(exit_stronghold),
+                )
+                .start();
             }
 
             main(player);

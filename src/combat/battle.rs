@@ -1,3 +1,4 @@
+use super::inventory::battle_inventory;
 use crate::{
     combat::enemy::{EnemyData, Rewards},
     data::{inventory::equipment::Equipment, player::Player, xp::XP},
@@ -18,275 +19,293 @@ pub struct Battle<'a> {
     pub end_function: Option<fn(&mut Player)>,
 }
 
-use super::inventory::battle_inventory;
-
-/// Entry point for starting a battle.
-pub fn new(battle: &mut Battle) {
-    // Prelude
-    page_header(battle.header, &Instructions::None);
-    Equipment::check_equipment_ownership(battle.player);
-
-    if battle.player.equipment.armor.is_none() || battle.player.equipment.weapon.is_none() {
-        let confirm = confirm("Are you sure you want to fight without equipment? You'll die.");
-
-        if !confirm {
-            println!("Returning home.");
-            pause();
-
-            crate::menus::game_menu::main(battle.player);
+impl<'a> Battle<'a> {
+    pub fn new(
+        title: &'static str,
+        prompt: &'static str,
+        player: &'a mut Player,
+        loops: usize,
+        exit_function: Option<fn(&mut Player)>,
+    ) -> Self {
+        Self {
+            header: title,
+            prompt,
+            enemy: EnemyData::new(player.xp.combat, player.health.hp),
+            player,
+            loops,
+            floor: 0,
+            is_first_battle: true,
+            is_looped: loops > 0,
+            pause_seconds: 1,
+            end_function: exit_function,
         }
     }
 
-    if battle.loops > 0 {
-        battle.floor += 1;
-        battle.loops -= 1;
-    }
-
-    println!("{}", battle.prompt);
-    sleep(battle.pause_seconds);
-
-    if battle.is_first_battle {
-        battle.is_first_battle = false; // generate new enemy for subsequent battles
-    } else {
-        battle.enemy = EnemyData::new(battle.player.xp.combat, battle.player.health.hp);
-    }
-
-    println!();
-    println!("You are now fighting a {}.", battle.enemy.name);
-    sleep(battle.pause_seconds);
-    main_menu(battle);
-}
-
-pub fn main_menu(battle: &mut Battle) {
-    page_header(
-        format!("{} - {}", battle.header, battle.enemy.name),
-        &Instructions::Keyboard,
-    );
-
-    if battle.is_looped {
-        println!("Floor: {}", battle.floor);
-        println!("Floors Left: {}", battle.loops);
-        println!();
-    }
-
-    println!("{}", battle.enemy);
-
-    println!("Player HP: {}", battle.player.health.hp);
-    println!("Player Hunger: {}", battle.player.health.hunger);
-    println!();
-
-    let attack_string = &format!("1. Attack the {}", battle.enemy.name);
-
-    let action = select(&[attack_string.as_str(), "2. Inventory", "3. Retreat"], None);
-
-    match action {
-        0 => attack(battle),
-        1 => {
-            battle_inventory(battle.player);
-            main_menu(battle);
-        }
-        2 => retreat(battle.player),
-        _ => unreachable(),
-    }
-}
-
-pub fn retreat(player: &mut Player) {
-    page_header("Battle - Retreat", &Instructions::None);
-
-    println!("You have retreated from the battle.");
-    pause();
-
-    crate::menus::game_menu::main(player);
-}
-
-pub fn attack(battle: &mut Battle) {
-    page_header(battle.header, &Instructions::None);
-
-    player_attack(battle);
-
-    println!();
-
-    enemy_attack(battle);
-
-    println!();
-
-    battle.player.health.heal();
-
-    println!();
-
-    pause();
-
-    main_menu(battle);
-}
-
-fn player_attack(battle: &mut Battle) {
-    let enemy_type = &battle.enemy.name;
-
-    println!("You attack the {enemy_type}...");
-    sleep(battle.pause_seconds);
-
-    let hit = success_or_fail();
-
-    if !hit || battle.player.equipment.weapon.is_none() {
-        println!("You missed the {enemy_type}.");
-        sleep(battle.pause_seconds);
-        return;
-    }
-
-    if let Some(equipped_weapon) = &battle.player.equipment.weapon {
-        let weapon = battle.player.weapons.get(equipped_weapon);
-        let damage = weapon.damage;
-
-        println!("You hit the {enemy_type} for {damage} damage!");
-
-        weapon.decrease_durability();
-
-        if !weapon.owns {
-            Equipment::unequip_weapon(battle.player, false);
-        }
-
-        if battle.enemy.hp < damage {
-            victory(battle);
-        } else {
-            battle.enemy.hp -= damage;
-        }
-    }
-
-    sleep(battle.pause_seconds);
-}
-
-fn enemy_attack(battle: &mut Battle) {
-    let enemy_type = &battle.enemy.name;
-    let mut damage: usize = battle.enemy.damage;
-
-    if let Some(equipped_armor) = &battle.player.equipment.armor {
-        let armor = battle.player.armor.get(equipped_armor);
-
-        if damage > armor.defense {
-            damage -= armor.defense;
-        } else {
-            damage = 0;
-        }
-
-        armor.decrease_durability();
-
-        if !armor.owns {
-            Equipment::unequip_armor(battle.player, false);
-        }
-    }
-
-    println!("The {enemy_type} attacks you...");
-    sleep(battle.pause_seconds);
-
-    let hit = success_or_fail();
-
-    if hit && damage > 0 {
-        println!("The {enemy_type} hit you for {damage} damage!!");
-
-        if battle.player.health.hp < damage {
-            defeat(battle);
-        } else {
-            battle.player.health.hp -= damage;
-        }
-    } else if damage == 0 {
-        println!("The {enemy_type} hit but the damage was negated by your armor!");
-    } else {
-        println!("The {enemy_type} missed you.");
-    }
-
-    sleep(battle.pause_seconds);
-}
-
-fn success_or_fail() -> bool {
-    let num = random_num(0, 1);
-
-    num == 0
-}
-
-pub fn victory(battle: &mut Battle) {
-    page_header(format!("{} - Victory", battle.header), &Instructions::None);
-
-    println!("You successfully defeated the {}!", battle.enemy.name);
-    battle.player.health.restore();
-    battle.player.achievements.monsters_killed += 1;
-    println!();
-
-    let rewards = Rewards::new(XP::get_level(battle.player.xp.total()));
-
-    println!("Items Looted:");
-
-    for reward in &rewards {
-        println!("- {reward}");
-    }
-
-    Rewards::reward_to_player(battle.player, rewards);
-    println!();
-
-    pause();
-    battle.player.save();
-
-    if !battle.is_looped {
-        crate::menus::game_menu::main(battle.player);
-    }
-
-    if battle.loops > 0 {
-        new(battle);
-    }
-
-    if let Some(end_func) = battle.end_function {
-        end_func(battle.player);
-    }
-}
-
-pub fn defeat(battle: &mut Battle) {
-    page_header(format!("{} - Defeat", battle.header), &Instructions::None);
-
-    println!("You have been defeated in battle.\n");
-    sleep(battle.pause_seconds);
-
-    println!("You have been rushed to the local physician.\n");
-    sleep(battle.pause_seconds);
-
-    if battle.player.settings.hardmode {
-        hardmode(battle);
-    } else {
-        revived(battle);
-    }
-}
-
-pub fn revived(battle: &mut Battle) {
-    println!("You were successfully revived with 100 hp.\n");
-    battle.player.health.reset();
-
-    battle.player.save();
-    pause();
-    crate::menus::game_menu::main(battle.player);
-}
-
-/// Result of battle if player defeated and hardmode is enabled.
-pub fn hardmode(battle: &mut Battle) {
-    let user_survives = random_num(0, 1);
-
-    match user_survives {
-        0 => {
-            println!(
-                "The {} stole all your gold and inventory, and you lost all your progress.\n",
-                battle.enemy.name
-            );
-            battle.player.die();
-            sleep(battle.pause_seconds);
-
-            revived(battle);
-        }
-        1 => {
-            println!("You didn't survive. This profile will be deleted.\n");
-            pause();
-
-            match battle.player.delete() {
-                Ok(()) => crate::menus::accounts::main(),
-                Err(error) => panic_menu!(error),
+    pub fn start(&mut self) {
+        // Prelude
+        page_header(self.header, &Instructions::None);
+        Equipment::check_equipment_ownership(self.player);
+
+        if self.player.equipment.armor.is_none() || self.player.equipment.weapon.is_none() {
+            let confirm = confirm("Are you sure you want to fight without equipment? You'll die.");
+
+            if !confirm {
+                println!("Returning home.");
+                pause();
+
+                crate::menus::game_menu::main(self.player);
             }
         }
-        _ => unreachable(),
+
+        if self.loops > 0 {
+            self.floor += 1;
+            self.loops -= 1;
+        }
+
+        println!("{}", self.prompt);
+        sleep(self.pause_seconds);
+
+        if self.is_first_battle {
+            self.is_first_battle = false; // generate new enemy for subsequent battles
+        } else {
+            self.enemy = EnemyData::new(self.player.xp.combat, self.player.health.hp);
+        }
+
+        println!();
+        println!("You are now fighting a {}.", self.enemy.name);
+        sleep(self.pause_seconds);
+        self.main_menu();
     }
+
+    fn main_menu(&mut self) {
+        page_header(
+            format!("{} - {}", self.header, self.enemy.name),
+            &Instructions::Keyboard,
+        );
+
+        if self.is_looped {
+            println!("Floor: {}", self.floor);
+            println!("Floors Left: {}", self.loops);
+            println!();
+        }
+
+        println!("{}", self.enemy);
+
+        println!("Player HP: {}", self.player.health.hp);
+        println!("Player Hunger: {}", self.player.health.hunger);
+        println!();
+
+        let attack_string = &format!("1. Attack the {}", self.enemy.name);
+
+        let action = select(&[attack_string.as_str(), "2. Inventory", "3. Retreat"], None);
+
+        match action {
+            0 => self.attack(),
+            1 => {
+                battle_inventory(self.player);
+                self.main_menu();
+            }
+            2 => Self::retreat(self.player),
+            _ => unreachable(),
+        }
+    }
+
+    fn attack(&mut self) {
+        page_header(self.header, &Instructions::None);
+
+        self.player_attack();
+
+        println!();
+
+        self.enemy_attack();
+
+        println!();
+
+        self.player.health.heal();
+
+        println!();
+
+        pause();
+
+        self.main_menu();
+    }
+
+    fn player_attack(&mut self) {
+        let enemy_type = &self.enemy.name;
+
+        println!("You attack the {enemy_type}...");
+        sleep(self.pause_seconds);
+
+        let hit = success();
+
+        if !hit || self.player.equipment.weapon.is_none() {
+            println!("You missed the {enemy_type}.");
+            sleep(self.pause_seconds);
+            return;
+        }
+
+        if let Some(equipped_weapon) = &self.player.equipment.weapon {
+            let weapon = self.player.weapons.get(equipped_weapon);
+            let damage = weapon.damage;
+
+            println!("You hit the {enemy_type} for {damage} damage!");
+
+            weapon.decrease_durability();
+
+            if !weapon.owns {
+                Equipment::unequip_weapon(self.player, false);
+            }
+
+            if self.enemy.hp < damage {
+                self.victory();
+            } else {
+                self.enemy.hp -= damage;
+            }
+        }
+
+        sleep(self.pause_seconds);
+    }
+
+    fn enemy_attack(&mut self) {
+        let enemy_type = &self.enemy.name;
+        let mut damage: usize = self.enemy.damage;
+
+        if let Some(equipped_armor) = &self.player.equipment.armor {
+            let armor = self.player.armor.get(equipped_armor);
+
+            if damage > armor.defense {
+                damage -= armor.defense;
+            } else {
+                damage = 0;
+            }
+
+            armor.decrease_durability();
+
+            if !armor.owns {
+                Equipment::unequip_armor(self.player, false);
+            }
+        }
+
+        println!("The {enemy_type} attacks you...");
+        sleep(self.pause_seconds);
+
+        let hit = success();
+
+        if hit && damage > 0 {
+            println!("The {enemy_type} hit you for {damage} damage!!");
+
+            if self.player.health.hp < damage {
+                self.defeat();
+            } else {
+                self.player.health.hp -= damage;
+            }
+        } else if damage == 0 {
+            println!("The {enemy_type} hit but the damage was negated by your armor!");
+        } else {
+            println!("The {enemy_type} missed you.");
+        }
+
+        sleep(self.pause_seconds);
+    }
+
+    fn retreat(player: &mut Player) {
+        page_header("Battle - Retreat", &Instructions::None);
+
+        println!("You have retreated from the battle.");
+        pause();
+
+        crate::menus::game_menu::main(player);
+    }
+
+    fn victory(&mut self) {
+        page_header(format!("{} - Victory", self.header), &Instructions::None);
+
+        println!("You successfully defeated the {}!", self.enemy.name);
+        self.player.health.restore();
+        self.player.achievements.monsters_killed += 1;
+        println!();
+
+        let rewards = Rewards::new(XP::get_level(self.player.xp.total()));
+
+        println!("Items Looted:");
+
+        for reward in &rewards {
+            println!("- {reward}");
+        }
+
+        Rewards::reward_to_player(self.player, rewards);
+        println!();
+
+        pause();
+        self.player.save();
+
+        if !self.is_looped {
+            crate::menus::game_menu::main(self.player);
+        }
+
+        if self.loops > 0 {
+            self.start();
+        }
+
+        if let Some(end_func) = self.end_function {
+            end_func(self.player);
+        }
+    }
+
+    fn defeat(&mut self) {
+        page_header(format!("{} - Defeat", self.header), &Instructions::None);
+
+        println!("You have been defeated in battle.\n");
+        sleep(self.pause_seconds);
+
+        println!("You have been rushed to the local physician.\n");
+        sleep(self.pause_seconds);
+
+        if self.player.settings.hardmode {
+            self.hardmode();
+        } else {
+            self.revived();
+        }
+    }
+
+    fn revived(&mut self) {
+        println!("You were successfully revived with 100 hp.\n");
+        self.player.health.reset();
+
+        self.player.save();
+        pause();
+        crate::menus::game_menu::main(self.player);
+    }
+
+    /// Result of battle if player defeated and hardmode is enabled.
+    fn hardmode(&mut self) {
+        let user_survives = random_num(0, 1);
+
+        match user_survives {
+            0 => {
+                println!(
+                    "The {} stole all your gold and inventory, and you lost all your progress.\n",
+                    self.enemy.name
+                );
+                self.player.die();
+                sleep(self.pause_seconds);
+
+                self.revived();
+            }
+            1 => {
+                println!("You didn't survive. This profile will be deleted.\n");
+                pause();
+
+                match self.player.delete() {
+                    Ok(()) => crate::menus::accounts::main(),
+                    Err(error) => panic_menu!(error),
+                }
+            }
+            _ => unreachable(),
+        }
+    }
+}
+
+fn success() -> bool {
+    random_num(0, 1) == 0
 }
