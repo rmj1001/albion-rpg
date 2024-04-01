@@ -24,7 +24,7 @@ impl Equipment {
     }
 
     pub fn menu(player: &mut Player) {
-        page_header("Equipment Manager", Instructions::Keyboard);
+        page_header("Equipment Manager", &Instructions::Keyboard);
 
         let choice = select(&["1. Weapons", "2. Armor", "NAV: Go Back"], None);
 
@@ -43,7 +43,7 @@ impl Equipment {
     }
 
     pub fn armor_menu(player: &mut Player) {
-        page_header("Equipment Manager - Armor", Instructions::Keyboard);
+        page_header("Equipment Manager - Armor", &Instructions::Keyboard);
 
         player.armor.table();
 
@@ -64,7 +64,7 @@ impl Equipment {
     }
 
     pub fn weapon_menu(player: &mut Player) {
-        page_header("Equipment Manager - Weapons", Instructions::Keyboard);
+        page_header("Equipment Manager - Weapons", &Instructions::Keyboard);
 
         player.weapons.table();
 

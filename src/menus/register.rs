@@ -1,14 +1,14 @@
 use crate::{data::player::Player, prelude::*};
 
 pub fn main() {
-    page_header("Registration", Instructions::None);
+    page_header("Registration", &Instructions::None);
 
     let username: String = prompt("Username");
 
     let found_profile = Player::get(&username);
 
     if found_profile.is_ok() {
-        failure(&format!("Profile '{}' already exists.", username));
+        failure(&format!("Profile '{username}' already exists."));
         crate::menus::accounts::main();
     }
 

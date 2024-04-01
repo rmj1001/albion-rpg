@@ -6,7 +6,7 @@ use crate::{
 use crate::data::player::Player;
 
 pub fn main(player: &mut Player) {
-    page_header("Inventory Viewer", Instructions::None);
+    page_header("Inventory Viewer", &Instructions::None);
 
     let menu_option = select(&["1. Items", "2. Equipment", "3. Finances", "NAV: Go Back"], None);
 
@@ -23,7 +23,7 @@ pub fn main(player: &mut Player) {
 }
 
 pub fn mundane_inventory(player: &mut Player) {
-    page_header("Items Inventory", Instructions::None);
+    page_header("Items Inventory", &Instructions::None);
 
     ItemInventory::shop_table(player);
 
@@ -32,7 +32,7 @@ pub fn mundane_inventory(player: &mut Player) {
 }
 
 pub fn finances(player: &mut Player) {
-    page_header("Finances", Instructions::None);
+    page_header("Finances", &Instructions::None);
 
     player.bank.table();
 

@@ -24,9 +24,6 @@ mod tests {
 
     #[test]
     fn rand_nums_out_of_bounds() {
-        let loops: usize = 500;
-        let mut numbers: Vec<usize> = vec![];
-
         fn looper(numbers: &mut Vec<usize>, loops: usize) {
             let min: usize = 0;
             let max: usize = loops;
@@ -43,10 +40,13 @@ mod tests {
                 return;
             }
 
-            looper(numbers, loops - 1)
+            looper(numbers, loops - 1);
         }
 
+        let loops: usize = 500;
+        let mut numbers: Vec<usize> = vec![];
+
         looper(&mut numbers, loops);
-        println!("{:?}", numbers);
+        println!("{numbers:?}");
     }
 }

@@ -66,14 +66,14 @@ header("Albion", 10)
 pub fn header<T: Display>(title: T, line_length: usize) {
     let mut header = format!("{}\n", line(line_length));
 
-    for _ in 0..((line_length - (title.to_string().len() + 2)) / 2 + 1) {
+    for _ in 0..=((line_length - (title.to_string().len() + 2)) / 2) {
         header.push(' ');
     }
 
-    header.push_str(&format!("{}\n", title));
+    header.push_str(&format!("{title}\n"));
     header.push_str(&line(line_length));
 
-    println!("{}", header);
+    println!("{header}");
 }
 
 /**
@@ -86,13 +86,13 @@ title.
 ```
 use albion_terminal_rpg::prelude::{page_header, Instructions};
 
-page_header("Main Menu", Instructions::TypeCode);
+page_header("Main Menu", &Instructions::TypeCode);
 ```
 */
-pub fn page_header<T: Display>(title: T, instructions: Instructions) {
+pub fn page_header<T: Display>(title: T, instructions: &Instructions) {
     crate::utils::terminal::clearscr();
-    header(format!("Albion - {}", title), 80);
-    println!("{}\n", instructions);
+    header(format!("Albion - {title}"), 80);
+    println!("{instructions}\n");
 }
 
 /**
@@ -122,7 +122,7 @@ impl Display for Instructions {
         match self {
             Self::TypeCode => write!(f, "Press ↑ or ↓ to navigate, then press ENTER/RETURN."),
             Self::Keyboard => write!(f, "Enter a code (ex. 1), then press ENTER/RETURN."),
-            Self::Other(text) => write!(f, "{}", text),
+            Self::Other(text) => write!(f, "{text}"),
             Self::None => write!(f, ""),
         }
     }
@@ -161,11 +161,11 @@ csv_table(vec![
 ]);
 ```
 */
-pub fn csv_table(strings: Vec<String>) {
+pub fn csv_table(strings: &[String]) {
     let table_string = strings.join("\n");
     let table = csv_to_table::iter::from_reader(table_string.as_bytes()).to_string();
 
-    println!("{}\n", table);
+    println!("{table}\n");
 }
 
 /**
@@ -184,9 +184,10 @@ assert_eq!(no, ' ');
 ```
 */
 pub fn checkmark(flag: bool) -> char {
-    match flag {
-        true => '✓',
-        false => ' ',
+    if flag {
+        '✓'
+    } else {
+        ' '
     }
 }
 

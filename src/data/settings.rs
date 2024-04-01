@@ -50,7 +50,7 @@ impl Settings {
     }
 
     /// Updates password field
-    pub fn change_password(player: &mut Player, new_password: String) {
+    pub fn change_password(player: &mut Player, new_password: &str) {
         let new_hashed_password = generate_hash(&new_password);
         player.settings.password_hash = new_hashed_password;
         player.save();
@@ -65,7 +65,7 @@ impl Settings {
         let new_file_path: &Path = Path::new(&new_profile_path);
 
         match fs::rename(old_file_path, new_file_path) {
-            Ok(_) => {
+            Ok(()) => {
                 player.settings.username = new_username;
             }
 

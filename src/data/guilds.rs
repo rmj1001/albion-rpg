@@ -89,18 +89,18 @@ impl Guilds {
     pub fn shop_table(player: &mut Player) {
         let mut strings: Vec<String> = vec!["Guild,Price,Member".to_string()];
 
-        Self::shop().iter().for_each(|(flag, price)| {
+        for (flag, price) in &Self::shop() {
             let string = format!("{},{},{}", flag, price, checkmark(*player.guilds.get(flag)));
-            strings.push(string)
-        });
+            strings.push(string);
+        }
 
-        csv_table(strings);
+        csv_table(&strings);
         println!("Gold: {}\n", player.bank.wallet);
     }
 
     pub fn select() -> Guild {
         let shop: BTreeMap<Guild, usize> = Self::shop();
-        let guilds: Vec<String> = shop.keys().map(|guild| guild.to_string()).collect();
+        let guilds: Vec<String> = shop.keys().map(std::string::ToString::to_string).collect();
 
         let selector: usize = select(&guilds, None);
         let selected_guild: String = guilds
@@ -111,17 +111,17 @@ impl Guilds {
         let item: Guild = *Self::shop()
             .iter()
             .find(|guild| guild.0.to_string() == selected_guild)
-            .map(|guild| guild.0)
-            .unwrap_or_else(|| panic_menu!("Guild flag selected out of bounds"));
+            .map_or_else(|| panic_menu!("Guild flag selected out of bounds"), |guild| guild.0);
 
         item
     }
 
     pub fn join(player: &mut Player, guild: Guild, payment: bool) -> Result<()> {
         let shop: BTreeMap<Guild, usize> = Self::shop();
-        let price: &usize = match shop.get(&guild) {
-            Some(item) => item,
-            None => panic_menu!("Guild membership flag not found in hashmap."),
+        let price: &usize = if let Some(item) = shop.get(&guild) {
+            item
+        } else {
+            panic_menu!("Guild membership flag not found in hashmap.");
         };
 
         if player.guilds.check(guild) {
@@ -146,9 +146,10 @@ impl Guilds {
 
     pub fn leave(player: &mut Player, guild: Guild, payment: bool) -> Result<()> {
         let shop: BTreeMap<Guild, usize> = Self::shop();
-        let price: &usize = match shop.get(&guild) {
-            Some(price) => price,
-            None => panic_menu!("Guild membership flag not found in hashmap."),
+        let price: &usize = if let Some(item) = shop.get(&guild) {
+            item
+        } else {
+            panic_menu!("Guild membership flag not found in hashmap.");
         };
 
         if !player.guilds.check(guild) {

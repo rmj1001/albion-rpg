@@ -2,7 +2,7 @@ use crate::prelude::*;
 
 pub fn main() {
     clearscr();
-    page_header("Accounts Menu", Instructions::Keyboard);
+    page_header("Accounts Menu", &Instructions::Keyboard);
 
     let main_menu_options = vec!["1. Login", "2. Register", "3. Exit"];
 

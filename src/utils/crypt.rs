@@ -60,8 +60,7 @@ mod tests {
 
         assert!(
             verify_hash(&PASSWORD, &hashed),
-            "The hashes of {} didn't match.",
-            PASSWORD
+            "The hashes of {PASSWORD} didn't match."
         );
     }
 }

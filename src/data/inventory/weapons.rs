@@ -21,7 +21,7 @@ impl Display for Weapon {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let string = match self {
             Self::WizardStaff => "Wizard Staff".to_string(),
-            sword => format!("{:?} Sword", sword),
+            sword => format!("{sword:?} Sword"),
         };
 
         write!(f, "{string}")
@@ -119,7 +119,7 @@ impl WeaponsInventory {
     }
 
     pub fn table(&self) {
-        csv_table(vec![
+        csv_table(&[
             "Weapon,Owned,Equipped,Damage,Durability".to_string(),
             self.wooden_sword.to_string(),
             self.bronze_sword.to_string(),
@@ -127,7 +127,7 @@ impl WeaponsInventory {
             self.steel_sword.to_string(),
             self.mystic_sword.to_string(),
             self.wizard_staff.to_string(),
-        ])
+        ]);
     }
 
     pub fn get(&mut self, item_flag: &Weapon) -> &mut WeaponData {
@@ -166,20 +166,20 @@ impl WeaponsInventory {
     pub fn shop_table(player: &mut Player) {
         let mut strings: Vec<String> = vec!["Item,Price,Owned".to_string()];
 
-        Self::shop().iter().for_each(|(flag, price)| {
+        for (flag, price) in &Self::shop() {
             let owned = player.weapons.get(flag).owns;
 
             let string = format!("{},{},{}", flag, price, checkmark(owned));
-            strings.push(string)
-        });
+            strings.push(string);
+        }
 
-        csv_table(strings);
+        csv_table(&strings);
         println!("Gold: {}\n", player.bank.wallet);
     }
 
     pub fn select() -> Weapon {
         let shop = Self::shop();
-        let items: Vec<String> = shop.keys().map(|flag| flag.to_string()).collect();
+        let items: Vec<String> = shop.keys().map(std::string::ToString::to_string).collect();
 
         let selector = select(&items, None);
         let selected_item = items
@@ -194,9 +194,9 @@ impl WeaponsInventory {
             .clone()
     }
 
-    pub fn buy(player: &mut Player, weapon: Weapon, payment: bool) -> Result<(), InventoryError> {
+    pub fn buy(player: &mut Player, weapon: &Weapon, payment: bool) -> Result<(), InventoryError> {
         let shop = Self::shop();
-        let price = shop.get(&weapon).ok_or(InventoryError::ItemNotExist)?;
+        let price = shop.get(weapon).ok_or(InventoryError::ItemNotExist)?;
 
         if payment {
             let gold: usize = player.bank.wallet;
@@ -209,7 +209,7 @@ impl WeaponsInventory {
             *wallet -= *price;
         }
 
-        let owns_item = &mut player.weapons.get(&weapon).owns;
+        let owns_item = &mut player.weapons.get(weapon).owns;
 
         if *owns_item {
             return Err(InventoryError::ItemOwned);
@@ -219,10 +219,10 @@ impl WeaponsInventory {
         Ok(())
     }
 
-    pub fn sell(player: &mut Player, weapon: Weapon, payment: bool) -> Result<(), InventoryError> {
+    pub fn sell(player: &mut Player, weapon: &Weapon, payment: bool) -> Result<(), InventoryError> {
         let shop: BTreeMap<Weapon, usize> = Self::shop();
-        let price: &usize = shop.get(&weapon).ok_or(InventoryError::ItemNotExist)?;
-        let owns_item = &mut player.weapons.get(&weapon).owns;
+        let price: &usize = shop.get(weapon).ok_or(InventoryError::ItemNotExist)?;
+        let owns_item = &mut player.weapons.get(weapon).owns;
 
         if !*owns_item {
             return Err(InventoryError::ItemNotOwned);

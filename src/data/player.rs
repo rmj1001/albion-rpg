@@ -105,7 +105,7 @@ impl std::fmt::Display for Player {
         let string = encoder::to_string_pretty(&self);
 
         match string {
-            Ok(string) => write!(f, "{}", string),
+            Ok(string) => write!(f, "{string}"),
             Err(_) => Err(std::fmt::Error),
         }
     }
@@ -219,7 +219,7 @@ impl Player {
         let serialize_result = self.to_string();
 
         let path = player_file_path(&self.settings.username);
-        write_file(path, serialize_result)
+        write_file(&path, serialize_result);
     }
 
     /**
@@ -234,7 +234,7 @@ impl Player {
     let mut player = Player::default();
 
     match player.delete() {
-        Ok(_) => success(None),
+        Ok(()) => success(None),
         Err(error) => failure(&error.to_string()),
     }
     ```
@@ -248,12 +248,11 @@ impl Player {
         let profile_path = player_file_path(username);
         let exists = Path::new(&profile_path).exists();
 
-        match exists {
-            true => {
-                delete_file(&profile_path);
-                Ok(())
-            }
-            false => Err(Box::new(ProfileError::DoesNotExist)),
+        if exists {
+            delete_file(&profile_path);
+            Ok(())
+        } else {
+            Err(Box::new(ProfileError::DoesNotExist))
         }
     }
 
@@ -286,26 +285,25 @@ impl Player {
             Err(_) => return Err(Box::new(ProfileError::DoesNotExist)),
         }
 
-        match Self::try_from(contents) {
-            Ok(player) => Ok(player),
-            Err(_) => {
-                println!("{}", Logs::Failure.paint("\nPlayer data file is corrupted.\n"));
+        if let Ok(player) = Self::try_from(contents) {
+            Ok(player)
+        } else {
+            println!("{}", Logs::Failure.paint("\nPlayer data file is corrupted.\n"));
 
-                let delete: bool = confirm("Delete file?");
+            let delete: bool = confirm("Delete file?");
 
-                if !delete {
-                    warning(Some("Cancelling."));
-                    return Err(Box::new(DataError::Decode));
-                }
-
-                warning(Some("Deleting player data file."));
-
-                if let Err(message) = Player::delete_from(username) {
-                    panic_menu!(message);
-                }
-
-                Err(Box::new(DataError::Decode))
+            if !delete {
+                warning(Some("Cancelling."));
+                return Err(Box::new(DataError::Decode));
             }
+
+            warning(Some("Deleting player data file."));
+
+            if let Err(message) = Player::delete_from(username) {
+                panic_menu!(message);
+            }
+
+            Err(Box::new(DataError::Decode))
         }
     }
 
@@ -334,10 +332,10 @@ impl Player {
                     "Player Profile - {} - Page {}/{}",
                     player.settings.username, page_number, total_pages
                 ),
-                Instructions::None,
+                &Instructions::None,
             );
 
-            println!("{}\n", page);
+            println!("{page}\n");
             pause();
 
             page_number += 1;

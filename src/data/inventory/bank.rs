@@ -36,14 +36,14 @@ impl Bank {
 
     /// Prints Bank information as a table using CSV formatting.
     pub fn table(&self) {
-        csv_table(vec![
+        csv_table(&[
             "Account,Balance".to_string(),
             format!("Wallet,{}", self.wallet),
             format!("Account 1,{}", self.account1),
             format!("Account 2,{}", self.account2),
             format!("Account 3,{}", self.account3),
             format!("Account 4,{}", self.account4),
-        ])
+        ]);
     }
 
     pub fn balance(player: &Player, account: &BankAccount) -> usize {
@@ -66,7 +66,7 @@ impl Bank {
         }
     }
 
-    pub fn deposit(player: &mut Player, account_flag: BankAccount, amount: usize, use_wallet: bool) -> Result<()> {
+    pub fn deposit(player: &mut Player, account_flag: &BankAccount, amount: usize, use_wallet: bool) -> Result<()> {
         let wallet_balance: usize = Self::balance(player, &BankAccount::Wallet);
 
         if use_wallet && wallet_balance < amount {
@@ -77,12 +77,12 @@ impl Bank {
             player.bank.wallet -= amount;
         }
 
-        *Self::account(player, &account_flag) += amount;
+        *Self::account(player, account_flag) += amount;
         Ok(())
     }
 
-    pub fn withdraw(player: &mut Player, account_flag: BankAccount, amount: usize, use_wallet: bool) -> Result<()> {
-        let account_balance: usize = Self::balance(player, &account_flag);
+    pub fn withdraw(player: &mut Player, account_flag: &BankAccount, amount: usize, use_wallet: bool) -> Result<()> {
+        let account_balance: usize = Self::balance(player, account_flag);
 
         if account_balance < amount {
             return Err(Box::new(InventoryError::NotEnoughGold));
@@ -92,7 +92,7 @@ impl Bank {
             player.bank.wallet += amount;
         }
 
-        *Self::account(player, &account_flag) -= amount;
+        *Self::account(player, account_flag) -= amount;
         Ok(())
     }
 
@@ -101,7 +101,7 @@ impl Bank {
     }
 
     pub fn menu(player: &mut Player, developer_mode: bool) {
-        page_header("The Bank", Instructions::Keyboard);
+        page_header("The Bank", &Instructions::Keyboard);
 
         println!();
         player.bank.table();
@@ -110,14 +110,15 @@ impl Bank {
 
         // Go to the main game menu
         if option == 2 {
-            match developer_mode {
-                true => crate::menus::devmode::d1_developer_menu::main(player),
-                false => crate::menus::game_menu::main(player),
+            if developer_mode {
+                crate::menus::devmode::d1_developer_menu::main(player);
+            } else {
+                crate::menus::game_menu::main(player);
             }
         }
 
-        let account_choice = match developer_mode {
-            true => select(
+        let account_choice = if developer_mode {
+            select(
                 &[
                     "1. Wallet",
                     "2. Account 1",
@@ -127,8 +128,9 @@ impl Bank {
                     "NAV: Cancel",
                 ],
                 None,
-            ),
-            false => select(
+            )
+        } else {
+            select(
                 &[
                     "1. Account 1",
                     "2. Account 2",
@@ -137,13 +139,13 @@ impl Bank {
                     "NAV: Cancel",
                 ],
                 None,
-            ),
+            )
         };
 
         let mut account: BankAccount = BankAccount::Account1;
 
-        match developer_mode {
-            true => match account_choice {
+        if developer_mode {
+            match account_choice {
                 0 => account = BankAccount::Wallet,
                 1 => account = BankAccount::Account1,
                 2 => account = BankAccount::Account2,
@@ -151,26 +153,26 @@ impl Bank {
                 4 => account = BankAccount::Account4,
                 5 => Self::menu(player, developer_mode),
                 _ => unreachable(),
-            },
-            false => match account_choice {
+            }
+        } else {
+            match account_choice {
                 0 => account = BankAccount::Account1,
                 1 => account = BankAccount::Account2,
                 2 => account = BankAccount::Account3,
                 3 => account = BankAccount::Account4,
                 4 => Self::menu(player, developer_mode),
                 _ => unreachable(),
-            },
+            }
         }
 
         let amount_result = prompt("Amount").parse::<usize>();
         let mut amount: usize = 0;
 
-        match amount_result {
-            Ok(number) => amount = number,
-            Err(_) => {
-                invalid_input(None, None, true);
-                Self::menu(player, developer_mode);
-            }
+        if let Ok(number) = amount_result {
+            amount = number;
+        } else {
+            invalid_input(None, None, true);
+            Self::menu(player, developer_mode);
         }
 
         let mut bank_result: Result<()> = Err(Box::new(MiscError::Custom("Uninitialized")));
@@ -180,17 +182,17 @@ impl Bank {
 
         match option {
             // Deposit
-            0 => bank_result = Self::deposit(player, account, amount, use_wallet),
+            0 => bank_result = Self::deposit(player, &account, amount, use_wallet),
 
             // Withdrawal
-            1 => bank_result = Self::withdraw(player, account, amount, use_wallet),
+            1 => bank_result = Self::withdraw(player, &account, amount, use_wallet),
 
             // The "Go Back" option was already handled.
             _ => unreachable(),
         }
 
         match bank_result {
-            Ok(_) => success(None),
+            Ok(()) => success(None),
             Err(message) => message.print(true),
         }
 

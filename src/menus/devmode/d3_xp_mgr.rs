@@ -9,7 +9,7 @@ enum Operation {
 }
 
 pub fn main(player: &mut Player) {
-    page_header("Developer Mode - XP Manager", Instructions::Keyboard);
+    page_header("Developer Mode - XP Manager", &Instructions::Keyboard);
 
     player.xp.table();
 
@@ -68,7 +68,7 @@ pub fn main(player: &mut Player) {
     };
 
     match result {
-        Ok(_) => success(None),
+        Ok(()) => success(None),
         Err(error) => error.print(true),
     }
 

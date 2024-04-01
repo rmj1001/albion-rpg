@@ -212,7 +212,7 @@ impl Display for MiscError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let string: String = match self {
             Self::InvalidInput(input) => format!("Invalid input {input}."),
-            Self::Custom(error) => error.to_string(),
+            Self::Custom(error) => (*error).to_string(),
             Self::InvalidOperator => "Invalid operator.".to_string(),
         };
 
@@ -295,7 +295,7 @@ pub mod macros {
         use crate::utils::terminal::clearscr;
         use crate::utils::tui::{page_header, pause, Instructions};
 
-        page_header("Error", Instructions::None);
+        page_header("Error", &Instructions::None);
 
         if check_debug_mode() {
             println!("File: {}", file.to_string().trim());

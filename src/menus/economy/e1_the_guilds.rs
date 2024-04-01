@@ -11,7 +11,7 @@ use crate::{
 use crate::data::player::Player;
 
 pub fn main(player: &mut Player) {
-    page_header("The Guilds", Instructions::Keyboard);
+    page_header("The Guilds", &Instructions::Keyboard);
 
     let guild_choice = select(
         &[
@@ -76,7 +76,7 @@ fn guild_menu(
     increase_item: GuildItem,
     decrease_item: Option<GuildItem>,
 ) {
-    print_guild_information(guild, player, xp_type, increase_item, &decrease_item);
+    print_guild_information(guild, player, xp_type, increase_item, decrease_item);
     let work_choice = select(&["Work", "NAV: Go Back"], None);
 
     match work_choice {
@@ -131,47 +131,46 @@ fn print_guild_information(
     player: &mut Player,
     xp_type: XPType,
     increase_item: GuildItem,
-    decrease_item: &Option<GuildItem>,
+    decrease_item: Option<GuildItem>,
 ) {
-    page_header(format!("Guild: {}", name), Instructions::Keyboard);
+    page_header(format!("Guild: {name}"), &Instructions::Keyboard);
 
     let xp = player.xp.get(xp_type);
 
-    println!("XP: {}", xp);
+    println!("XP: {xp}");
     println!("Level: {}", XP::get_level(*xp));
     println!();
 
-    print_item(player, &Some(increase_item));
+    print_item(player, Some(increase_item));
     print_item(player, decrease_item);
     println!();
 }
 
-fn print_item(player: &mut Player, item: &Option<GuildItem>) {
-    match item {
-        Some(item) => match item {
+fn print_item(player: &mut Player, item: Option<GuildItem>) {
+    if let Some(item) = item {
+        match item {
             GuildItem::Gold => {
-                println!("Gold: {}", player.bank.wallet)
+                println!("Gold: {}", player.bank.wallet);
             }
             GuildItem::Bait => {
-                println!("Bait: {}", player.items.bait)
+                println!("Bait: {}", player.items.bait);
             }
             GuildItem::Food => {
-                println!("Cooked Fish: {}", player.items.food)
+                println!("Cooked Fish: {}", player.items.food);
             }
             GuildItem::Fish => {
-                println!("Fish: {}", player.items.fish)
+                println!("Fish: {}", player.items.fish);
             }
             GuildItem::Wood => {
-                println!("Wood: {}", player.items.wood)
+                println!("Wood: {}", player.items.wood);
             }
             GuildItem::Ingots => {
-                println!("Ingots: {}", player.items.ingots)
+                println!("Ingots: {}", player.items.ingots);
             }
             GuildItem::Ore => {
-                println!("Ores: {}", player.items.ore)
+                println!("Ores: {}", player.items.ore);
             }
-        },
-        None => {}
+        }
     }
 }
 
@@ -185,7 +184,7 @@ fn try_subtract(item: &mut usize, item_name: &str) -> Result<()> {
 }
 
 fn guild_membership_shop(player: &mut Player) {
-    page_header("Guild Memberships Office", Instructions::Keyboard);
+    page_header("Guild Memberships Office", &Instructions::Keyboard);
 
     Guilds::shop_table(player);
 
@@ -208,7 +207,7 @@ fn guild_membership_shop(player: &mut Player) {
 fn join_guild(player: &mut Player) {
     let flag = Guilds::select();
     match Guilds::join(player, flag, true) {
-        Ok(_) => {
+        Ok(()) => {
             success(None);
             guild_membership_shop(player);
         }
@@ -222,7 +221,7 @@ fn join_guild(player: &mut Player) {
 fn leave_guild(player: &mut Player) {
     let flag = Guilds::select();
     match Guilds::leave(player, flag, true) {
-        Ok(_) => {
+        Ok(()) => {
             success(None);
             guild_membership_shop(player);
         }

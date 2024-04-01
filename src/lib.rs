@@ -1,4 +1,13 @@
-#![allow(unused_assignments, clippy::new_without_default)]
+#![warn(clippy::pedantic, clippy::wildcard_imports)]
+#![allow(
+    unused_assignments,
+    clippy::new_without_default,
+    clippy::module_name_repetitions,
+    clippy::must_use_candidate,
+    clippy::missing_panics_doc,
+    clippy::missing_errors_doc,
+    clippy::struct_excessive_bools
+)]
 #![doc = include_str!("../README.md")]
 
 pub mod utils {

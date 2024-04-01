@@ -4,7 +4,7 @@ use crate::{
 };
 
 pub fn main(player: &mut Player) {
-    page_header("Trading Post", crate::utils::tui::Instructions::None);
+    page_header("Trading Post", &Instructions::None);
 
     ItemInventory::shop_table(player);
     println!("Gold: {}\n", player.bank.wallet);
@@ -27,7 +27,7 @@ pub fn purchase(player: &mut Player) {
             let bought = ItemInventory::buy(player, item_flag, quantity, true);
 
             match bought {
-                Ok(_) => {
+                Ok(()) => {
                     success(None);
                     main(player);
                 }
@@ -50,7 +50,7 @@ pub fn sell(player: &mut Player) {
             let sold = ItemInventory::sell(player, item_flag, quantity, true);
 
             match sold {
-                Ok(_) => {
+                Ok(()) => {
                     success(None);
                     main(player);
                 }

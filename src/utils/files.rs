@@ -96,7 +96,7 @@ pub fn all_profiles() -> Vec<String> {
                     .to_str()
                     .unwrap_or("")
                     .to_string()
-                    .replace(&format!(".{}", EXTENSION), "")
+                    .replace(&format!(".{EXTENSION}"), "")
             })
             .collect(),
         Err(error) => panic_menu!("Could not read the directory: {}", error),
@@ -114,7 +114,7 @@ use albion_terminal_rpg::prelude::write_file;
 write_file("/home/{user}/albion_terminal_rpg/player.albion", "some data");
 ```
 */
-pub fn write_file<T: Display>(file_path: String, data: T) {
+pub fn write_file<T: Display>(file_path: &str, data: T) {
     if let Err(message) = fs::create_dir_all(player_files_directory()) {
         panic_menu!(format!(
             "Could create directory on disk for player save data:\n{}",
@@ -122,7 +122,7 @@ pub fn write_file<T: Display>(file_path: String, data: T) {
         ));
     };
 
-    if let Err(message) = fs::write(&file_path, data.to_string()) {
+    if let Err(message) = fs::write(file_path, data.to_string()) {
         panic_menu!("Could not write to '{}':\n{}", file_path, message);
     }
 }

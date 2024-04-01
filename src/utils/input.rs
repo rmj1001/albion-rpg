@@ -81,12 +81,11 @@ where
     let input_string = prompt(text);
     let trimmed = input_string.trim();
 
-    match trimmed.parse::<T>() {
-        Ok(out) => Ok(out),
-        Err(_) => {
-            invalid_input(Some(&input_string), None, false);
-            Err(Box::new(MiscError::InvalidInput(input_string)))
-        }
+    if let Ok(out) = trimmed.parse::<T>() {
+        Ok(out)
+    } else {
+        invalid_input(Some(&input_string), None, false);
+        Err(Box::new(MiscError::InvalidInput(input_string)))
     }
 }
 
@@ -112,16 +111,7 @@ pub fn confirm(prompt: &str) -> bool {
     let input: Result<String> = input_generic(&prompt);
 
     if let Ok(input) = input {
-        match input.to_lowercase().as_str() {
-            "yes" => true,
-            "y" => true,
-            "true" => true,
-
-            "no" => false,
-            "n" => false,
-            "false" => false,
-            _ => false,
-        }
+        matches!(input.to_lowercase().as_str(), "yes" | "y" | "true")
     } else {
         false
     }
@@ -140,12 +130,9 @@ let confirm = password(true); // "Confirm:"
 ```
 */
 pub fn password(confirm: bool) -> String {
-    let string = match confirm {
-        true => "Confirm Password > ",
-        false => "Password > ",
-    };
+    let string = if confirm { "Confirm Password > " } else { "Password > " };
 
-    print!("{}", string);
+    print!("{string}");
     std::io::stdout().flush().expect("Should flush stdout");
 
     match rpassword::read_password() {

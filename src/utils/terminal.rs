@@ -61,7 +61,7 @@ exit(Some(&mut example_player));
 ```
  */
 pub fn exit(player: Option<&mut Player>) {
-    page_header("Thanks!", super::tui::Instructions::None);
+    page_header("Thanks!", &super::tui::Instructions::None);
 
     if let Some(player) = player {
         println!("Saving game...");
@@ -92,5 +92,5 @@ sleep(1);
 ```
 */
 pub fn sleep(seconds: u64) {
-    thread::sleep(std::time::Duration::from_secs(seconds))
+    thread::sleep(std::time::Duration::from_secs(seconds));
 }

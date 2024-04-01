@@ -50,7 +50,7 @@ impl Health {
             println!("Your health is fully restored!");
         } else {
             self.hp += new_health;
-            println!("Your health has been restored {} points.", new_health);
+            println!("Your health has been restored {new_health} points.");
         }
     }
 }

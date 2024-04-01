@@ -39,7 +39,7 @@ impl XP {
             format!("{},{},{}", name, xp, self::XP::get_level(xp))
         }
 
-        csv_table(vec![
+        csv_table(&vec![
             format!("Category,XP,Level"),
             entry("Combat", self.combat),
             entry("Fishing", self.fishing),
@@ -49,7 +49,7 @@ impl XP {
             entry("Smithing", self.smithing),
             entry("Thieving", self.thieving),
             entry("Player Total", self.total()),
-        ])
+        ]);
     }
 
     pub fn get_level(xp: usize) -> usize {

@@ -82,9 +82,9 @@ impl Logs {
         let painted = self.paint(message);
 
         if panic {
-            panic!("\n{}", painted);
+            panic!("\n{painted}");
         } else {
-            println!("\n{}", painted);
+            println!("\n{painted}");
         }
 
         if use_pause {
@@ -113,11 +113,11 @@ pub fn invalid_input(input: Option<&str>, expected: Option<&str>, pause: bool) {
     let mut description = String::new();
 
     if let Some(text) = input {
-        description.push_str(&format!("Input: '{}'. ", text))
+        description.push_str(&format!("Input: '{text}'. "));
     }
 
     if let Some(text) = expected {
-        description.push_str(&format!("Expected '{}'. ", text));
+        description.push_str(&format!("Expected '{text}'. "));
     }
 
     Logs::Failure.message(Some("Invalid Input."), Some(&description), pause, false);

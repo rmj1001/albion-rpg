@@ -3,7 +3,7 @@ use crate::{data::achievements::Achievements, prelude::*};
 use crate::data::player::Player;
 
 pub fn main(player: &mut Player) {
-    page_header("Hall of Records", Instructions::Keyboard);
+    page_header("Hall of Records", &Instructions::Keyboard);
 
     let menu_option = select(&["1. XP/Levels", "2. Achievements", "NAV: Go Back"], None);
 
@@ -16,7 +16,7 @@ pub fn main(player: &mut Player) {
 }
 
 pub fn xp(player: &mut Player) {
-    page_header("Hall of Records - XP/Levels", Instructions::None);
+    page_header("Hall of Records - XP/Levels", &Instructions::None);
 
     player.xp.table();
 
@@ -33,7 +33,7 @@ pub fn achievements(player: &mut Player) {
     player.save();
 
     // Print out all achievements
-    page_header("Hall of Records - Achievements", Instructions::None);
+    page_header("Hall of Records - Achievements", &Instructions::None);
 
     player.achievements.table();
 

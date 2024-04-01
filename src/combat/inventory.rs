@@ -5,7 +5,7 @@ use crate::{
 
 /// Choose between equipment and healing
 pub fn battle_inventory(player: &mut Player) {
-    page_header("Battle Inventory", Instructions::Keyboard);
+    page_header("Battle Inventory", &Instructions::Keyboard);
 
     let choice: usize = select(&["1. Equipment", "2. Healing", "NAV: Go Back"], None);
 
@@ -21,7 +21,7 @@ pub fn battle_inventory(player: &mut Player) {
 }
 
 pub fn healing_inventory(player: &mut Player) {
-    page_header("Healing Inventory", Instructions::Keyboard);
+    page_header("Healing Inventory", &Instructions::Keyboard);
 
     println!("Potions: {}", player.items.potions);
     println!("Food: {}", player.items.food);

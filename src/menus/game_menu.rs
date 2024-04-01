@@ -1,21 +1,15 @@
 use crate::{
-    combat::{battle::BattleSettings, enemy::EnemyData},
+    combat::{battle::Battle, enemy::EnemyData},
     data::{achievements::Achievements, inventory::equipment::Equipment, settings::Settings},
     prelude::*,
 };
 
 use crate::data::player::Player;
 
-pub fn main(player: &mut Player) {
-    // Check for achievements at login to keep the player file up to date
-    Achievements::check(player);
-
-    // Update armor equipment status
-    Equipment::check_equipment_ownership(player);
-
+fn print_menu(player: &mut Player) {
     page_header(
         format!("Game Menu (Player: {})", player.settings.username),
-        Instructions::TypeCode,
+        &Instructions::TypeCode,
     );
 
     println!("#------- Combat ------#");
@@ -45,13 +39,23 @@ pub fn main(player: &mut Player) {
     println!("98. Save Game");
     println!("99. Logout");
     println!();
+}
+
+pub fn main(player: &mut Player) {
+    // Check for achievements at login to keep the player file up to date
+    Achievements::check(player);
+
+    // Update armor equipment status
+    Equipment::check_equipment_ownership(player);
+
+    print_menu(player);
 
     let choice = prompt("Enter Menu Code").to_lowercase();
 
     match &choice[..] {
         // Combat
         "1" | "wander the realm" => {
-            let mut battle_settings = BattleSettings {
+            let mut battle_settings = Battle {
                 header: "Wandering Gielnor",
                 prompt: "You are wandering the realm...",
                 enemy: EnemyData::new(player.xp.combat, player.health.hp),
@@ -64,23 +68,12 @@ pub fn main(player: &mut Player) {
                 end_function: None,
             };
 
-            crate::combat::battle::new_battle(&mut battle_settings);
+            crate::combat::battle::new(&mut battle_settings);
         }
         "2" | "enter the stronghold" => {
-            page_header("The Stronghold", Instructions::None);
+            page_header("The Stronghold", &Instructions::None);
 
-            fn exit_stronghold(player: &mut Player) {
-                page_header("The Stronghold", Instructions::None);
-
-                println!("\nYou have successfully completed the stronghold and won the game! Congratulations!");
-                player.achievements.stronghold_defeated = true;
-                player.save();
-
-                pause();
-                main(player);
-            }
-
-            let mut battle_settings = BattleSettings {
+            let mut battle_settings = Battle {
                 header: "The Stronghold",
                 prompt: "You delve into the stronghold...",
                 enemy: EnemyData::new(player.xp.combat, player.health.hp),
@@ -99,7 +92,7 @@ pub fn main(player: &mut Player) {
             ));
 
             if confirm_stronghold {
-                crate::combat::battle::new_battle(&mut battle_settings);
+                crate::combat::battle::new(&mut battle_settings);
             }
 
             main(player);
@@ -117,7 +110,7 @@ pub fn main(player: &mut Player) {
         "9" | "hall of records" => crate::menus::profile::p2_hall_of_records::main(player),
         "97" | "settings" => crate::menus::profile::n1_settings::main(player),
         "98" | "save game" | "save" => {
-            page_header("Saving Game", Instructions::None);
+            page_header("Saving Game", &Instructions::None);
             println!("\nSaving game...");
             sleep(2);
 
@@ -129,7 +122,7 @@ pub fn main(player: &mut Player) {
         "99" | "logout" => {
             player.save();
 
-            page_header("Accounts Menu", Instructions::None);
+            page_header("Accounts Menu", &Instructions::None);
             println!("\nLogging out...");
             sleep(2);
 
@@ -141,7 +134,7 @@ pub fn main(player: &mut Player) {
         }
 
         "3.141592" => {
-            page_header("Developer Mode", Instructions::None);
+            page_header("Developer Mode", &Instructions::None);
             Settings::toggle_developer(player);
             main(player);
         }
@@ -161,4 +154,15 @@ pub fn main(player: &mut Player) {
             }
         },
     }
+}
+
+fn exit_stronghold(player: &mut Player) {
+    page_header("The Stronghold", &Instructions::None);
+
+    println!("\nYou have successfully completed the stronghold and won the game! Congratulations!");
+    player.achievements.stronghold_defeated = true;
+    player.save();
+
+    pause();
+    main(player);
 }

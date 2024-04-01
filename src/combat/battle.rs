@@ -5,7 +5,7 @@ use crate::{
     prelude::{confirm, page_header, pause, random_num, select, sleep, unreachable, Instructions},
 };
 
-pub struct BattleSettings<'a> {
+pub struct Battle<'a> {
     pub header: &'static str,
     pub prompt: &'static str,
     pub player: &'a mut Player,
@@ -21,9 +21,9 @@ pub struct BattleSettings<'a> {
 use super::inventory::battle_inventory;
 
 /// Entry point for starting a battle.
-pub fn new_battle(battle: &mut BattleSettings) {
+pub fn new(battle: &mut Battle) {
     // Prelude
-    page_header(battle.header, Instructions::None);
+    page_header(battle.header, &Instructions::None);
     Equipment::check_equipment_ownership(battle.player);
 
     if battle.player.equipment.armor.is_none() || battle.player.equipment.weapon.is_none() {
@@ -45,22 +45,22 @@ pub fn new_battle(battle: &mut BattleSettings) {
     println!("{}", battle.prompt);
     sleep(battle.pause_seconds);
 
-    if !battle.is_first_battle {
-        battle.enemy = EnemyData::new(battle.player.xp.combat, battle.player.health.hp);
-    } else {
+    if battle.is_first_battle {
         battle.is_first_battle = false; // generate new enemy for subsequent battles
+    } else {
+        battle.enemy = EnemyData::new(battle.player.xp.combat, battle.player.health.hp);
     }
 
     println!();
     println!("You are now fighting a {}.", battle.enemy.name);
     sleep(battle.pause_seconds);
-    battle_menu(battle);
+    main_menu(battle);
 }
 
-pub fn battle_menu(battle: &mut BattleSettings) {
+pub fn main_menu(battle: &mut Battle) {
     page_header(
         format!("{} - {}", battle.header, battle.enemy.name),
-        Instructions::Keyboard,
+        &Instructions::Keyboard,
     );
 
     if battle.is_looped {
@@ -83,7 +83,7 @@ pub fn battle_menu(battle: &mut BattleSettings) {
         0 => attack(battle),
         1 => {
             battle_inventory(battle.player);
-            battle_menu(battle);
+            main_menu(battle);
         }
         2 => retreat(battle.player),
         _ => unreachable(),
@@ -91,7 +91,7 @@ pub fn battle_menu(battle: &mut BattleSettings) {
 }
 
 pub fn retreat(player: &mut Player) {
-    page_header("Battle - Retreat", Instructions::None);
+    page_header("Battle - Retreat", &Instructions::None);
 
     println!("You have retreated from the battle.");
     pause();
@@ -99,8 +99,8 @@ pub fn retreat(player: &mut Player) {
     crate::menus::game_menu::main(player);
 }
 
-pub fn attack(battle: &mut BattleSettings) {
-    page_header(battle.header, Instructions::None);
+pub fn attack(battle: &mut Battle) {
+    page_header(battle.header, &Instructions::None);
 
     player_attack(battle);
 
@@ -116,19 +116,19 @@ pub fn attack(battle: &mut BattleSettings) {
 
     pause();
 
-    battle_menu(battle);
+    main_menu(battle);
 }
 
-fn player_attack(battle: &mut BattleSettings) {
+fn player_attack(battle: &mut Battle) {
     let enemy_type = &battle.enemy.name;
 
-    println!("You attack the {}...", enemy_type);
+    println!("You attack the {enemy_type}...");
     sleep(battle.pause_seconds);
 
     let hit = success_or_fail();
 
     if !hit || battle.player.equipment.weapon.is_none() {
-        println!("You missed the {}.", enemy_type);
+        println!("You missed the {enemy_type}.");
         sleep(battle.pause_seconds);
         return;
     }
@@ -137,7 +137,7 @@ fn player_attack(battle: &mut BattleSettings) {
         let weapon = battle.player.weapons.get(equipped_weapon);
         let damage = weapon.damage;
 
-        println!("You hit the {} for {} damage!", enemy_type, damage);
+        println!("You hit the {enemy_type} for {damage} damage!");
 
         weapon.decrease_durability();
 
@@ -155,7 +155,7 @@ fn player_attack(battle: &mut BattleSettings) {
     sleep(battle.pause_seconds);
 }
 
-fn enemy_attack(battle: &mut BattleSettings) {
+fn enemy_attack(battle: &mut Battle) {
     let enemy_type = &battle.enemy.name;
     let mut damage: usize = battle.enemy.damage;
 
@@ -165,7 +165,7 @@ fn enemy_attack(battle: &mut BattleSettings) {
         if damage > armor.defense {
             damage -= armor.defense;
         } else {
-            damage = 0
+            damage = 0;
         }
 
         armor.decrease_durability();
@@ -175,13 +175,13 @@ fn enemy_attack(battle: &mut BattleSettings) {
         }
     }
 
-    println!("The {} attacks you...", enemy_type);
+    println!("The {enemy_type} attacks you...");
     sleep(battle.pause_seconds);
 
     let hit = success_or_fail();
 
     if hit && damage > 0 {
-        println!("The {} hit you for {} damage!!", enemy_type, damage);
+        println!("The {enemy_type} hit you for {damage} damage!!");
 
         if battle.player.health.hp < damage {
             defeat(battle);
@@ -189,9 +189,9 @@ fn enemy_attack(battle: &mut BattleSettings) {
             battle.player.health.hp -= damage;
         }
     } else if damage == 0 {
-        println!("The {} hit but the damage was negated by your armor!", enemy_type);
+        println!("The {enemy_type} hit but the damage was negated by your armor!");
     } else {
-        println!("The {} missed you.", enemy_type);
+        println!("The {enemy_type} missed you.");
     }
 
     sleep(battle.pause_seconds);
@@ -203,8 +203,8 @@ fn success_or_fail() -> bool {
     num == 0
 }
 
-pub fn victory(battle: &mut BattleSettings) {
-    page_header(format!("{} - Victory", battle.header), Instructions::None);
+pub fn victory(battle: &mut Battle) {
+    page_header(format!("{} - Victory", battle.header), &Instructions::None);
 
     println!("You successfully defeated the {}!", battle.enemy.name);
     battle.player.health.restore();
@@ -215,9 +215,9 @@ pub fn victory(battle: &mut BattleSettings) {
 
     println!("Items Looted:");
 
-    rewards.iter().for_each(|reward| {
-        println!("- {}", reward);
-    });
+    for reward in &rewards {
+        println!("- {reward}");
+    }
 
     Rewards::reward_to_player(battle.player, rewards);
     println!();
@@ -230,7 +230,7 @@ pub fn victory(battle: &mut BattleSettings) {
     }
 
     if battle.loops > 0 {
-        new_battle(battle);
+        new(battle);
     }
 
     if let Some(end_func) = battle.end_function {
@@ -238,8 +238,8 @@ pub fn victory(battle: &mut BattleSettings) {
     }
 }
 
-pub fn defeat(battle: &mut BattleSettings) {
-    page_header(format!("{} - Defeat", battle.header), Instructions::None);
+pub fn defeat(battle: &mut Battle) {
+    page_header(format!("{} - Defeat", battle.header), &Instructions::None);
 
     println!("You have been defeated in battle.\n");
     sleep(battle.pause_seconds);
@@ -254,7 +254,7 @@ pub fn defeat(battle: &mut BattleSettings) {
     }
 }
 
-pub fn revived(battle: &mut BattleSettings) {
+pub fn revived(battle: &mut Battle) {
     println!("You were successfully revived with 100 hp.\n");
     battle.player.health.reset();
 
@@ -264,7 +264,7 @@ pub fn revived(battle: &mut BattleSettings) {
 }
 
 /// Result of battle if player defeated and hardmode is enabled.
-pub fn hardmode(battle: &mut BattleSettings) {
+pub fn hardmode(battle: &mut Battle) {
     let user_survives = random_num(0, 1);
 
     match user_survives {
@@ -283,7 +283,7 @@ pub fn hardmode(battle: &mut BattleSettings) {
             pause();
 
             match battle.player.delete() {
-                Ok(_) => crate::menus::accounts::main(),
+                Ok(()) => crate::menus::accounts::main(),
                 Err(error) => panic_menu!(error),
             }
         }

@@ -1,7 +1,7 @@
 use crate::{data::player::Player, prelude::*};
 
 pub fn main(player: &mut Player) {
-    page_header("Developer Mode - Player Manager", Instructions::Keyboard);
+    page_header("Developer Mode - Player Manager", &Instructions::Keyboard);
 
     let choice1 = select(
         &[
@@ -23,13 +23,13 @@ pub fn main(player: &mut Player) {
 }
 
 fn list_users(player: &mut Player) {
-    page_header("Developer Mode - Player Manager", Instructions::None);
+    page_header("Developer Mode - Player Manager", &Instructions::None);
 
     let profiles: Vec<String> = all_profiles();
 
-    profiles.iter().for_each(|profile_string| {
-        println!("- {}", profile_string);
-    });
+    for profile_string in &profiles {
+        println!("- {profile_string}");
+    }
 
     println!();
     pause();
@@ -38,7 +38,7 @@ fn list_users(player: &mut Player) {
 }
 
 fn delete_users(player: &mut Player) {
-    page_header("Developer Mode - Player Manager", Instructions::Keyboard);
+    page_header("Developer Mode - Player Manager", &Instructions::Keyboard);
 
     let profiles = all_profiles();
     let choice = select(&profiles, Some("Select a profile to delete"));
@@ -46,10 +46,7 @@ fn delete_users(player: &mut Player) {
 
     match profile_choice {
         Some(profile_string) => {
-            let delete_profile = confirm(&format!(
-                "Are you sure you want to delete profile '{}'?",
-                profile_string
-            ));
+            let delete_profile = confirm(&format!("Are you sure you want to delete profile '{profile_string}'?"));
 
             if !delete_profile {
                 cancel(None);
@@ -57,20 +54,20 @@ fn delete_users(player: &mut Player) {
             }
 
             if *profile_string == player.settings.username {
-                page_header("Developer Mode - Player Manager", Instructions::None);
+                page_header("Developer Mode - Player Manager", &Instructions::None);
 
                 match Player::delete_from(&player.settings.username) {
-                    Ok(_) => success(Some("Current profile deleted. Logging out.")),
+                    Ok(()) => success(Some("Current profile deleted. Logging out.")),
                     Err(error) => failure(&error.to_string()),
                 }
 
                 crate::menus::accounts::main();
             }
 
-            page_header("Developer Mode - Player Manager", Instructions::None);
+            page_header("Developer Mode - Player Manager", &Instructions::None);
 
             match Player::delete_from(profile_string) {
-                Ok(_) => success(Some(&format!("Profile '{}' deleted.", profile_string))),
+                Ok(()) => success(Some(&format!("Profile '{profile_string}' deleted."))),
                 Err(error) => failure(&error.to_string()),
             }
 
@@ -82,7 +79,7 @@ fn delete_users(player: &mut Player) {
 }
 
 fn view_user(player: &mut Player) {
-    page_header("Developer Mode - Player Manager - Data Viewer", Instructions::None);
+    page_header("Developer Mode - Player Manager - Data Viewer", &Instructions::None);
     let choice = select(&all_profiles(), Some("Select a player to view"));
 
     let profiles = all_profiles();

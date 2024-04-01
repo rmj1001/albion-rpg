@@ -18,7 +18,7 @@ pub enum Armor {
 
 impl Display for Armor {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{:?} Armor", self)
+        write!(f, "{self:?} Armor")
     }
 }
 
@@ -113,7 +113,7 @@ impl ArmorInventory {
     }
 
     pub fn table(&self) {
-        csv_table(vec![
+        csv_table(&[
             "Armor,Owned,Equipped,Defense,Durability".to_string(),
             self.leather.to_string(),
             self.bronze.to_string(),
@@ -121,7 +121,7 @@ impl ArmorInventory {
             self.steel.to_string(),
             self.dragonhide.to_string(),
             self.mystic.to_string(),
-        ])
+        ]);
     }
 
     pub fn get(&mut self, item_flag: &Armor) -> &mut ArmorData {
@@ -159,18 +159,18 @@ impl ArmorInventory {
     pub fn shop_table(player: &mut Player) {
         let mut strings: Vec<String> = vec!["Item,Price,Owns".to_string()];
 
-        Self::shop().iter().for_each(|(flag, price)| {
+        for (flag, price) in &Self::shop() {
             let string = format!("{},{},{}", flag, price, checkmark(player.armor.get(flag).owns));
-            strings.push(string)
-        });
+            strings.push(string);
+        }
 
-        csv_table(strings);
+        csv_table(&strings);
         println!("Gold: {}\n", player.bank.wallet);
     }
 
     pub fn select() -> Armor {
         let shop = Self::shop();
-        let items: Vec<String> = shop.keys().map(|flag| flag.to_string()).collect();
+        let items: Vec<String> = shop.keys().map(std::string::ToString::to_string).collect();
 
         let selector = select(&items, None);
         let selected_item = items

@@ -4,7 +4,7 @@ use crate::prelude::*;
 use crate::data::player::Player;
 
 pub fn main(player: &mut Player) {
-    page_header("Armor Shop", crate::utils::tui::Instructions::None);
+    page_header("Armor Shop", &Instructions::None);
 
     ArmorInventory::shop_table(player);
 
@@ -25,7 +25,7 @@ pub fn purchase(player: &mut Player) {
     let result = ArmorInventory::buy(player, &flag, true);
 
     match result {
-        Ok(_) => {
+        Ok(()) => {
             success(None);
             main(player);
         }
@@ -41,7 +41,7 @@ pub fn sell(player: &mut Player) {
     let result = ArmorInventory::sell(player, &flag, true);
 
     match result {
-        Ok(_) => {
+        Ok(()) => {
             success(None);
             main(player);
         }

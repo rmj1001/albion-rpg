@@ -25,14 +25,14 @@ impl Achievements {
     }
 
     pub fn table(&self) {
-        csv_table(vec![
+        csv_table(&[
             "Achievement,Data".to_string(),
             format!("Monsters Killed,{}", self.monsters_killed),
             format!("Stronghold Defeated?,{}", checkmark(self.stronghold_defeated)),
             format!("Earned One Million Gold?,{}", checkmark(self.earned_million_gold)),
             format!("Passed level 100?,{}", checkmark(self.level_100_reached)),
             format!("Hacked the Game?,{}", checkmark(self.hacked_the_game)),
-        ])
+        ]);
     }
 
     /// Detects earned achievements, namely 1Mil gold and level 100

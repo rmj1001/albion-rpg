@@ -7,7 +7,7 @@ use crate::{
 };
 
 pub fn main(player: &mut Player) {
-    page_header("Developer Mode - Inventory Manager", Instructions::None);
+    page_header("Developer Mode - Inventory Manager", &Instructions::None);
 
     let manager_option = select(&["1. Items", "2. Weapons", "3. Armor", "NAV: Go Back"], None);
 
@@ -21,7 +21,7 @@ pub fn main(player: &mut Player) {
 }
 
 fn items_manager(player: &mut Player) {
-    page_header("Developer Mode - Inventory Manager - Items", Instructions::None);
+    page_header("Developer Mode - Inventory Manager - Items", &Instructions::None);
 
     ItemInventory::shop_table(player);
 
@@ -33,48 +33,10 @@ fn items_manager(player: &mut Player) {
         2 => main(player),
         _ => unreachable(),
     }
-
-    pub fn add_item(player: &mut Player) {
-        if let Ok((flag, quantity)) = ItemInventory::build_transaction() {
-            let result = ItemInventory::buy(player, flag, quantity, false);
-
-            match result {
-                Ok(_) => {
-                    success(None);
-                    items_manager(player);
-                }
-                Err(message) => {
-                    message.print(true);
-                    items_manager(player);
-                }
-            }
-        } else {
-            items_manager(player);
-        }
-    }
-
-    pub fn subtract_item(player: &mut Player) {
-        if let Ok((flag, quantity)) = ItemInventory::build_transaction() {
-            let sell_result = ItemInventory::sell(player, flag, quantity, false);
-
-            match sell_result {
-                Ok(_) => {
-                    success(None);
-                    items_manager(player);
-                }
-                Err(message) => {
-                    message.print(true);
-                    items_manager(player);
-                }
-            }
-        } else {
-            items_manager(player);
-        }
-    }
 }
 
 fn weapons_manager(player: &mut Player) {
-    page_header("Developer Mode - Inventory Manager - Weapons", Instructions::None);
+    page_header("Developer Mode - Inventory Manager - Weapons", &Instructions::None);
 
     WeaponsInventory::shop_table(player);
 
@@ -86,42 +48,10 @@ fn weapons_manager(player: &mut Player) {
         2 => main(player),
         _ => unreachable(),
     }
-
-    pub fn own_weapon(player: &mut Player) {
-        let flag = WeaponsInventory::select();
-        let result = WeaponsInventory::buy(player, flag, false);
-
-        match result {
-            Ok(_) => {
-                success(None);
-                weapons_manager(player);
-            }
-            Err(message) => {
-                message.print(true);
-                weapons_manager(player);
-            }
-        }
-    }
-
-    pub fn disown_weapon(player: &mut Player) {
-        let flag = WeaponsInventory::select();
-        let result = WeaponsInventory::sell(player, flag, false);
-
-        match result {
-            Ok(_) => {
-                success(None);
-                weapons_manager(player);
-            }
-            Err(message) => {
-                message.print(true);
-                weapons_manager(player);
-            }
-        }
-    }
 }
 
 fn armor_manager(player: &mut Player) {
-    page_header("Developer Mode - Inventory Manager - Armor", Instructions::None);
+    page_header("Developer Mode - Inventory Manager - Armor", &Instructions::None);
 
     player.armor.table();
 
@@ -133,36 +63,106 @@ fn armor_manager(player: &mut Player) {
         2 => main(player),
         _ => unreachable(),
     }
+}
 
-    pub fn own_armor(player: &mut Player) {
-        let item = ArmorInventory::select();
-        let result = ArmorInventory::buy(player, &item, false);
+fn add_item(player: &mut Player) {
+    if let Ok((flag, quantity)) = ItemInventory::build_transaction() {
+        let result = ItemInventory::buy(player, flag, quantity, false);
 
         match result {
-            Ok(_) => {
+            Ok(()) => {
                 success(None);
-                armor_manager(player);
+                items_manager(player);
             }
             Err(message) => {
                 message.print(true);
-                armor_manager(player);
+                items_manager(player);
             }
         }
+    } else {
+        items_manager(player);
     }
+}
 
-    pub fn disown_armor(player: &mut Player) {
-        let item = ArmorInventory::select();
-        let result = ArmorInventory::buy(player, &item, false);
+fn subtract_item(player: &mut Player) {
+    if let Ok((flag, quantity)) = ItemInventory::build_transaction() {
+        let sell_result = ItemInventory::sell(player, flag, quantity, false);
 
-        match result {
-            Ok(_) => {
+        match sell_result {
+            Ok(()) => {
                 success(None);
-                armor_manager(player);
+                items_manager(player);
             }
             Err(message) => {
                 message.print(true);
-                armor_manager(player);
+                items_manager(player);
             }
+        }
+    } else {
+        items_manager(player);
+    }
+}
+
+fn own_weapon(player: &mut Player) {
+    let flag = WeaponsInventory::select();
+    let result = WeaponsInventory::buy(player, &flag, false);
+
+    match result {
+        Ok(()) => {
+            success(None);
+            weapons_manager(player);
+        }
+        Err(message) => {
+            message.print(true);
+            weapons_manager(player);
+        }
+    }
+}
+
+fn disown_weapon(player: &mut Player) {
+    let flag = WeaponsInventory::select();
+    let result = WeaponsInventory::sell(player, &flag, false);
+
+    match result {
+        Ok(()) => {
+            success(None);
+            weapons_manager(player);
+        }
+        Err(message) => {
+            message.print(true);
+            weapons_manager(player);
+        }
+    }
+}
+
+fn own_armor(player: &mut Player) {
+    let item = ArmorInventory::select();
+    let result = ArmorInventory::buy(player, &item, false);
+
+    match result {
+        Ok(()) => {
+            success(None);
+            armor_manager(player);
+        }
+        Err(message) => {
+            message.print(true);
+            armor_manager(player);
+        }
+    }
+}
+
+fn disown_armor(player: &mut Player) {
+    let item = ArmorInventory::select();
+    let result = ArmorInventory::buy(player, &item, false);
+
+    match result {
+        Ok(()) => {
+            success(None);
+            armor_manager(player);
+        }
+        Err(message) => {
+            message.print(true);
+            armor_manager(player);
         }
     }
 }

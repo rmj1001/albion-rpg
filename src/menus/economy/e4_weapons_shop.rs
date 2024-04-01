@@ -4,7 +4,7 @@ use crate::{
 };
 
 pub fn main(player: &mut Player) {
-    page_header("Weapons Shop", crate::utils::tui::Instructions::None);
+    page_header("Weapons Shop", &Instructions::None);
 
     WeaponsInventory::shop_table(player);
 
@@ -22,10 +22,10 @@ pub fn main(player: &mut Player) {
 
 pub fn purchase(player: &mut Player) {
     let flag = WeaponsInventory::select();
-    let result = WeaponsInventory::buy(player, flag, true);
+    let result = WeaponsInventory::buy(player, &flag, true);
 
     match result {
-        Ok(_) => {
+        Ok(()) => {
             success(None);
             main(player);
         }
@@ -38,10 +38,10 @@ pub fn purchase(player: &mut Player) {
 
 pub fn sell(player: &mut Player) {
     let flag = WeaponsInventory::select();
-    let result = WeaponsInventory::sell(player, flag, true);
+    let result = WeaponsInventory::sell(player, &flag, true);
 
     match result {
-        Ok(_) => {
+        Ok(()) => {
             success(None);
             main(player);
         }

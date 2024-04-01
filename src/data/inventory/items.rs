@@ -6,6 +6,9 @@ use crate::data::player::Player;
 use crate::prelude::{csv_table, input_generic, select, InventoryError};
 use std::result::Result;
 
+type ShopItem = (Item, usize, usize);
+type Pair = (ShopItem, ShopItem);
+
 #[derive(Hash, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
 pub enum Item {
     Bait,
@@ -144,14 +147,11 @@ impl ItemInventory {
     pub fn shop_table(player: &mut Player) {
         let mut strings: Vec<String> = vec!["Item,usize,Quantity,,Item,usize,Quantity".to_string()];
 
-        type ShopItem = (Item, usize, usize);
-        type Pair = (ShopItem, ShopItem);
-
         let mut pairs: Vec<Pair> = vec![];
         let mut current_pair: Pair = ((Item::Bait, 0, 0), (Item::Bait, 0, 0));
         let mut index: usize = 0;
 
-        Self::shop().iter().for_each(|(flag, usize)| {
+        for (flag, usize) in &Self::shop() {
             let quantity = player.items.get(*flag);
 
             if index == 0 {
@@ -162,16 +162,16 @@ impl ItemInventory {
                 pairs.push(current_pair);
                 index = 0;
             }
-        });
+        }
 
-        pairs.iter().for_each(|(item1, item2)| {
+        for (item1, item2) in &pairs {
             strings.push(format!(
                 "{},{},{},,{},{},{}",
                 item1.0, item1.1, item1.2, item2.0, item2.1, item2.2
             ));
-        });
+        }
 
-        csv_table(strings);
+        csv_table(&strings);
     }
 
     pub fn build_transaction() -> Result<(Item, usize), InventoryError> {
@@ -186,7 +186,7 @@ impl ItemInventory {
     pub fn select() -> Item {
         let shop = Self::shop();
         let items = shop.keys();
-        let item_names: Vec<String> = items.map(|item| item.to_string()).collect();
+        let item_names: Vec<String> = items.map(std::string::ToString::to_string).collect();
 
         let selector = select(&item_names, None);
         let selected_item = item_names

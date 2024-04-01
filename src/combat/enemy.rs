@@ -52,10 +52,10 @@ impl std::fmt::Display for Enemy {
             Enemy::DarkElf => "Dark Elf".to_string(),
 
             // Should display one-word names as usual
-            miscellaneous => format!("{:?}", miscellaneous),
+            miscellaneous => format!("{miscellaneous:?}"),
         };
 
-        write!(f, "{}", string)
+        write!(f, "{string}:")
     }
 }
 
@@ -75,6 +75,7 @@ impl Display for EnemyData {
 }
 
 impl EnemyData {
+    
     pub fn new(user_combat_xp: usize, user_hp: usize) -> Self {
         let user_level: usize = XP::get_level(user_combat_xp);
         let flag: Enemy = Self::enemy_type();
@@ -94,9 +95,10 @@ impl EnemyData {
         let number = random_num(0, max - 1);
         let option = Enemy::iter().get(number);
 
-        match option {
-            Some(enemy) => enemy,
-            None => crate::panic_menu!("Invalid enemy type chosen."),
+        if let Some(enemy) = option {
+            enemy
+        } else {
+            crate::panic_menu!("Invalid enemy type chosen.")
         }
     }
 
@@ -135,17 +137,17 @@ pub enum Rewards {
 impl std::fmt::Display for Rewards {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let string: String = match self {
-            Self::XP(xp) => format!("XP: {}", xp),
-            Self::Gold(gold) => format!("Gold: {}", gold),
-            Self::Potions(potions) => format!("Potions: {}", potions),
-            Self::Rubies(rubies) => format!("Rubies: {}", rubies),
-            Self::MagicScrolls(scrolls) => format!("Magic Scrolls: {}", scrolls),
-            Self::Bones(bones) => format!("Bones: {}", bones),
-            Self::DragonHides(hides) => format!("Dragon Hides: {}", hides),
-            Self::RunicTablets(tablets) => format!("Runic Tablets: {}", tablets),
+            Self::XP(xp) => format!("XP: {xp}"),
+            Self::Gold(gold) => format!("Gold: {gold}"),
+            Self::Potions(potions) => format!("Potions: {potions}"),
+            Self::Rubies(rubies) => format!("Rubies: {rubies}"),
+            Self::MagicScrolls(scrolls) => format!("Magic Scrolls: {scrolls}"),
+            Self::Bones(bones) => format!("Bones: {bones}"),
+            Self::DragonHides(hides) => format!("Dragon Hides: {hides}"),
+            Self::RunicTablets(tablets) => format!("Runic Tablets: {tablets}"),
         };
 
-        write!(f, "{}", string)
+        write!(f, "{string}")
     }
 }
 
@@ -156,14 +158,17 @@ impl Default for Rewards {
 }
 
 impl Rewards {
+    
     pub fn generate_quantity() -> usize {
         random_num(1, 3)
     }
 
+    
     pub fn default_array() -> Vec<Self> {
         vec![Rewards::default(), Rewards::Bones(random_num(1, 3))]
     }
 
+    
     pub fn new(player_level: usize) -> Vec<Self> {
         let mut rewards: Vec<Rewards> = Self::default_array();
         let xp_reward: usize = Self::xp(player_level);
@@ -197,6 +202,7 @@ impl Rewards {
         rewards
     }
 
+    
     pub fn xp(player_level: usize) -> usize {
         let mut xp_reward: usize = random_num(0, 10);
 
@@ -215,22 +221,24 @@ impl Rewards {
         }
 
         if player_level > 100 {
-            xp_reward += random_num(75, 100)
+            xp_reward += random_num(75, 100);
         }
 
         xp_reward
     }
 
     pub fn reward_to_player(player: &mut Player, rewards: Vec<Self>) {
-        rewards.iter().for_each(|reward| match reward {
-            Rewards::Potions(quantity) => player.items.potions += quantity,
-            Rewards::Bones(quantity) => player.items.bones += quantity,
-            Rewards::Rubies(quantity) => player.items.rubies += quantity,
-            Rewards::DragonHides(quantity) => player.items.dragon_hides += quantity,
-            Rewards::MagicScrolls(quantity) => player.items.magic_scrolls += quantity,
-            Rewards::RunicTablets(quantity) => player.items.runic_tablets += quantity,
-            Rewards::Gold(gold) => player.bank.wallet += gold,
-            Rewards::XP(xp) => player.xp.combat += xp,
-        });
+        for reward in rewards {
+            match reward {
+                Rewards::Potions(quantity) => player.items.potions += quantity,
+                Rewards::Bones(quantity) => player.items.bones += quantity,
+                Rewards::Rubies(quantity) => player.items.rubies += quantity,
+                Rewards::DragonHides(quantity) => player.items.dragon_hides += quantity,
+                Rewards::MagicScrolls(quantity) => player.items.magic_scrolls += quantity,
+                Rewards::RunicTablets(quantity) => player.items.runic_tablets += quantity,
+                Rewards::Gold(gold) => player.bank.wallet += gold,
+                Rewards::XP(xp) => player.xp.combat += xp,
+            }
+        }
     }
 }
