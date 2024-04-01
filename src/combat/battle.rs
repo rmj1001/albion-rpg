@@ -19,6 +19,11 @@ pub struct Battle<'a> {
     pub end_function: Option<fn(&mut Player)>,
 }
 
+/**
+--------------------------------------------------------------------------------
+Entrypoint and Main Battle Menu
+--------------------------------------------------------------------------------
+*/
 impl<'a> Battle<'a> {
     pub fn new(
         title: &'static str,
@@ -109,7 +114,14 @@ impl<'a> Battle<'a> {
             _ => unreachable(),
         }
     }
+}
 
+/**
+--------------------------------------------------------------------------------
+Attacking Sequences
+--------------------------------------------------------------------------------
+*/
+impl<'a> Battle<'a> {
     fn attack(&mut self) {
         page_header(self.header, &Instructions::None);
 
@@ -204,6 +216,18 @@ impl<'a> Battle<'a> {
         sleep(self.pause_seconds);
     }
 
+    /// Determines if the target of an attack was hit or not.
+    fn hit() -> bool {
+        random_num(0, 1) == 0
+    }
+}
+
+/**
+--------------------------------------------------------------------------------
+Victory, Defeat, Retreat
+--------------------------------------------------------------------------------
+*/
+impl<'a> Battle<'a> {
     fn retreat(&mut self) {
         page_header("Battle - Retreat", &Instructions::None);
 
@@ -300,10 +324,5 @@ impl<'a> Battle<'a> {
             }
             _ => unreachable(),
         }
-    }
-
-    /// Determines if the target of an attack was hit or not.
-    fn hit() -> bool {
-        random_num(0, 1) == 0
     }
 }
