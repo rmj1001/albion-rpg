@@ -1,6 +1,6 @@
 use crate::{
     data::{
-        inventory::{armor::ArmorInventory, items::ItemInventory, weapons::WeaponsInventory},
+        inventory::{armor, items, weapons},
         player::Player,
     },
     prelude::{page_header, select, success, unreachable, Instructions, Printer},
@@ -23,7 +23,7 @@ pub fn main(player: &mut Player) {
 fn items_manager(player: &mut Player) {
     page_header("Developer Mode - Inventory Manager - Items", &Instructions::None);
 
-    ItemInventory::shop_table(player);
+    items::Inventory::shop_table(player);
 
     let buysell = select(&["1. Add", "2. Subtract", "NAV: Go Back"], None);
 
@@ -38,7 +38,7 @@ fn items_manager(player: &mut Player) {
 fn weapons_manager(player: &mut Player) {
     page_header("Developer Mode - Inventory Manager - Weapons", &Instructions::None);
 
-    WeaponsInventory::shop_table(player);
+    weapons::Inventory::shop_table(player);
 
     let buysell: usize = select(&["1. Own Weapon", "2. Disown Weapon", "NAV: Go Back"], None);
 
@@ -66,8 +66,8 @@ fn armor_manager(player: &mut Player) {
 }
 
 fn add_item(player: &mut Player) {
-    if let Ok((flag, quantity)) = ItemInventory::build_transaction() {
-        let result = ItemInventory::buy(player, flag, quantity, false);
+    if let Ok((flag, quantity)) = items::Inventory::build_transaction() {
+        let result = items::Inventory::buy(player, flag, quantity, false);
 
         match result {
             Ok(()) => {
@@ -85,8 +85,8 @@ fn add_item(player: &mut Player) {
 }
 
 fn subtract_item(player: &mut Player) {
-    if let Ok((flag, quantity)) = ItemInventory::build_transaction() {
-        let sell_result = ItemInventory::sell(player, flag, quantity, false);
+    if let Ok((flag, quantity)) = items::Inventory::build_transaction() {
+        let sell_result = items::Inventory::sell(player, flag, quantity, false);
 
         match sell_result {
             Ok(()) => {
@@ -104,8 +104,8 @@ fn subtract_item(player: &mut Player) {
 }
 
 fn own_weapon(player: &mut Player) {
-    let flag = WeaponsInventory::select();
-    let result = WeaponsInventory::buy(player, &flag, false);
+    let flag = weapons::Inventory::select();
+    let result = weapons::Inventory::buy(player, &flag, false);
 
     match result {
         Ok(()) => {
@@ -120,8 +120,8 @@ fn own_weapon(player: &mut Player) {
 }
 
 fn disown_weapon(player: &mut Player) {
-    let flag = WeaponsInventory::select();
-    let result = WeaponsInventory::sell(player, &flag, false);
+    let flag = weapons::Inventory::select();
+    let result = weapons::Inventory::sell(player, &flag, false);
 
     match result {
         Ok(()) => {
@@ -136,8 +136,8 @@ fn disown_weapon(player: &mut Player) {
 }
 
 fn own_armor(player: &mut Player) {
-    let item = ArmorInventory::select();
-    let result = ArmorInventory::buy(player, &item, false);
+    let item = armor::Inventory::select();
+    let result = armor::Inventory::buy(player, &item, false);
 
     match result {
         Ok(()) => {
@@ -152,8 +152,8 @@ fn own_armor(player: &mut Player) {
 }
 
 fn disown_armor(player: &mut Player) {
-    let item = ArmorInventory::select();
-    let result = ArmorInventory::buy(player, &item, false);
+    let item = armor::Inventory::select();
+    let result = armor::Inventory::buy(player, &item, false);
 
     match result {
         Ok(()) => {

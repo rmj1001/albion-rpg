@@ -8,7 +8,7 @@ use crate::prelude::{select, InventoryError};
 use std::result::Result;
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, PartialOrd, Eq, Ord)]
-pub enum Weapon {
+pub enum Types {
     Wooden,
     Bronze,
     Iron,
@@ -17,7 +17,7 @@ pub enum Weapon {
     WizardStaff,
 }
 
-impl Display for Weapon {
+impl Display for Types {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let string = match self {
             Self::WizardStaff => "Wizard Staff".to_string(),
@@ -29,16 +29,16 @@ impl Display for Weapon {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct WeaponData {
+pub struct Data {
     pub owns: bool,
     pub equipped: bool,
     pub damage: usize,
     pub durability: usize,
     pub default_durability: usize,
-    pub flag: Weapon,
+    pub flag: Types,
 }
 
-impl Default for WeaponData {
+impl Default for Data {
     fn default() -> Self {
         Self {
             owns: false,
@@ -46,12 +46,12 @@ impl Default for WeaponData {
             damage: 5,
             durability: 50,
             default_durability: 50,
-            flag: Weapon::Wooden,
+            flag: Types::Wooden,
         }
     }
 }
 
-impl Display for WeaponData {
+impl Display for Data {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
@@ -65,8 +65,8 @@ impl Display for WeaponData {
     }
 }
 
-impl WeaponData {
-    pub fn new(damage: usize, durability: usize, flag: Weapon) -> Self {
+impl Data {
+    pub fn new(damage: usize, durability: usize, flag: Types) -> Self {
         Self {
             damage,
             durability,
@@ -93,24 +93,24 @@ impl WeaponData {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct WeaponsInventory {
-    pub wooden_sword: WeaponData,
-    pub bronze_sword: WeaponData,
-    pub iron_sword: WeaponData,
-    pub steel_sword: WeaponData,
-    pub mystic_sword: WeaponData,
-    pub wizard_staff: WeaponData,
+pub struct Inventory {
+    pub wooden_sword: Data,
+    pub bronze_sword: Data,
+    pub iron_sword: Data,
+    pub steel_sword: Data,
+    pub mystic_sword: Data,
+    pub wizard_staff: Data,
 }
 
-impl WeaponsInventory {
-    pub fn new() -> WeaponsInventory {
-        WeaponsInventory {
-            wooden_sword: WeaponData::new(10, 100, Weapon::Wooden),
-            bronze_sword: WeaponData::new(20, 150, Weapon::Bronze),
-            iron_sword: WeaponData::new(50, 200, Weapon::Iron),
-            steel_sword: WeaponData::new(200, 500, Weapon::Steel),
-            mystic_sword: WeaponData::new(500, 1_000, Weapon::Mystic),
-            wizard_staff: WeaponData::new(1_000, 2_000, Weapon::WizardStaff),
+impl Inventory {
+    pub fn new() -> Inventory {
+        Inventory {
+            wooden_sword: Data::new(10, 100, Types::Wooden),
+            bronze_sword: Data::new(20, 150, Types::Bronze),
+            iron_sword: Data::new(50, 200, Types::Iron),
+            steel_sword: Data::new(200, 500, Types::Steel),
+            mystic_sword: Data::new(500, 1_000, Types::Mystic),
+            wizard_staff: Data::new(1_000, 2_000, Types::WizardStaff),
         }
     }
 
@@ -130,19 +130,19 @@ impl WeaponsInventory {
         ]);
     }
 
-    pub fn get(&mut self, item_flag: &Weapon) -> &mut WeaponData {
+    pub fn get(&mut self, item_flag: &Types) -> &mut Data {
         match item_flag {
-            Weapon::Bronze => &mut self.bronze_sword,
-            Weapon::Iron => &mut self.iron_sword,
-            Weapon::Mystic => &mut self.mystic_sword,
-            Weapon::Steel => &mut self.steel_sword,
-            Weapon::WizardStaff => &mut self.wizard_staff,
-            Weapon::Wooden => &mut self.wooden_sword,
+            Types::Bronze => &mut self.bronze_sword,
+            Types::Iron => &mut self.iron_sword,
+            Types::Mystic => &mut self.mystic_sword,
+            Types::Steel => &mut self.steel_sword,
+            Types::WizardStaff => &mut self.wizard_staff,
+            Types::Wooden => &mut self.wooden_sword,
         }
     }
 
     /// For use in developer mode only
-    pub fn toggle_own(&mut self, item_flag: &Weapon) {
+    pub fn toggle_own(&mut self, item_flag: &Types) {
         let item = self.get(item_flag);
 
         item.owns = !item.owns;
@@ -151,15 +151,15 @@ impl WeaponsInventory {
 
 // -------------------------------------------------- Economy -------------------------------------------------- //
 
-impl WeaponsInventory {
-    fn shop() -> BTreeMap<Weapon, usize> {
+impl Inventory {
+    fn shop() -> BTreeMap<Types, usize> {
         BTreeMap::from([
-            (Weapon::Wooden, 10),
-            (Weapon::Bronze, 50),
-            (Weapon::Iron, 100),
-            (Weapon::Steel, 500),
-            (Weapon::Mystic, 1_000),
-            (Weapon::WizardStaff, 10_000),
+            (Types::Wooden, 10),
+            (Types::Bronze, 50),
+            (Types::Iron, 100),
+            (Types::Steel, 500),
+            (Types::Mystic, 1_000),
+            (Types::WizardStaff, 10_000),
         ])
     }
 
@@ -177,7 +177,7 @@ impl WeaponsInventory {
         println!("Gold: {}\n", player.bank.wallet);
     }
 
-    pub fn select() -> Weapon {
+    pub fn select() -> Types {
         let shop = Self::shop();
         let items: Vec<String> = shop.keys().map(std::string::ToString::to_string).collect();
 
@@ -194,7 +194,7 @@ impl WeaponsInventory {
             .clone()
     }
 
-    pub fn buy(player: &mut Player, weapon: &Weapon, payment: bool) -> Result<(), InventoryError> {
+    pub fn buy(player: &mut Player, weapon: &Types, payment: bool) -> Result<(), InventoryError> {
         let shop = Self::shop();
         let price = shop.get(weapon).ok_or(InventoryError::ItemNotExist)?;
 
@@ -219,8 +219,8 @@ impl WeaponsInventory {
         Ok(())
     }
 
-    pub fn sell(player: &mut Player, weapon: &Weapon, payment: bool) -> Result<(), InventoryError> {
-        let shop: BTreeMap<Weapon, usize> = Self::shop();
+    pub fn sell(player: &mut Player, weapon: &Types, payment: bool) -> Result<(), InventoryError> {
+        let shop: BTreeMap<Types, usize> = Self::shop();
         let price: &usize = shop.get(weapon).ok_or(InventoryError::ItemNotExist)?;
         let owns_item = &mut player.weapons.get(weapon).owns;
 

@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 use std::{collections::BTreeMap, fmt::Display, result::Result};
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, PartialOrd, Eq, Ord)]
-pub enum Armor {
+pub enum Types {
     Leather,
     Bronze,
     Iron,
@@ -16,23 +16,23 @@ pub enum Armor {
     Mystic,
 }
 
-impl Display for Armor {
+impl Display for Types {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{self:?} Armor")
     }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct ArmorData {
+pub struct Data {
     pub owns: bool,
     pub defense: usize,
     pub durability: usize,
     pub default_durability: usize,
     pub equipped: bool,
-    pub flag: Armor,
+    pub flag: Types,
 }
 
-impl Default for ArmorData {
+impl Default for Data {
     fn default() -> Self {
         Self {
             owns: false,
@@ -40,12 +40,12 @@ impl Default for ArmorData {
             defense: 5,
             durability: 50,
             default_durability: 50,
-            flag: Armor::Leather,
+            flag: Types::Leather,
         }
     }
 }
 
-impl Display for ArmorData {
+impl Display for Data {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
@@ -59,8 +59,8 @@ impl Display for ArmorData {
     }
 }
 
-impl ArmorData {
-    pub fn new(defense: usize, durability: usize, flag: Armor) -> Self {
+impl Data {
+    pub fn new(defense: usize, durability: usize, flag: Types) -> Self {
         Self {
             defense,
             durability,
@@ -87,24 +87,24 @@ impl ArmorData {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct ArmorInventory {
-    pub leather: ArmorData,
-    pub bronze: ArmorData,
-    pub iron: ArmorData,
-    pub steel: ArmorData,
-    pub dragonhide: ArmorData,
-    pub mystic: ArmorData,
+pub struct Inventory {
+    pub leather: Data,
+    pub bronze: Data,
+    pub iron: Data,
+    pub steel: Data,
+    pub dragonhide: Data,
+    pub mystic: Data,
 }
 
-impl ArmorInventory {
-    pub fn new() -> ArmorInventory {
-        ArmorInventory {
-            leather: ArmorData::new(10, 100, Armor::Leather),
-            bronze: ArmorData::new(30, 200, Armor::Bronze),
-            iron: ArmorData::new(50, 300, Armor::Iron),
-            steel: ArmorData::new(100, 500, Armor::Steel),
-            dragonhide: ArmorData::new(200, 500, Armor::Dragonhide),
-            mystic: ArmorData::new(1_000, 10_000, Armor::Mystic),
+impl Inventory {
+    pub fn new() -> Inventory {
+        Inventory {
+            leather: Data::new(10, 100, Types::Leather),
+            bronze: Data::new(30, 200, Types::Bronze),
+            iron: Data::new(50, 300, Types::Iron),
+            steel: Data::new(100, 500, Types::Steel),
+            dragonhide: Data::new(200, 500, Types::Dragonhide),
+            mystic: Data::new(1_000, 10_000, Types::Mystic),
         }
     }
 
@@ -124,19 +124,19 @@ impl ArmorInventory {
         ]);
     }
 
-    pub fn get(&mut self, item_flag: &Armor) -> &mut ArmorData {
+    pub fn get(&mut self, item_flag: &Types) -> &mut Data {
         match item_flag {
-            Armor::Bronze => &mut self.bronze,
-            Armor::Dragonhide => &mut self.dragonhide,
-            Armor::Iron => &mut self.iron,
-            Armor::Leather => &mut self.leather,
-            Armor::Mystic => &mut self.mystic,
-            Armor::Steel => &mut self.steel,
+            Types::Bronze => &mut self.bronze,
+            Types::Dragonhide => &mut self.dragonhide,
+            Types::Iron => &mut self.iron,
+            Types::Leather => &mut self.leather,
+            Types::Mystic => &mut self.mystic,
+            Types::Steel => &mut self.steel,
         }
     }
 
     /// For use in developer mode only
-    pub fn toggle_own(&mut self, item_flag: &Armor) {
+    pub fn toggle_own(&mut self, item_flag: &Types) {
         let item = self.get(item_flag);
         item.owns = !item.owns;
     }
@@ -144,15 +144,15 @@ impl ArmorInventory {
 
 // -------------------------------------------------- Economy -------------------------------------------------- //
 
-impl ArmorInventory {
-    fn shop() -> BTreeMap<Armor, usize> {
+impl Inventory {
+    fn shop() -> BTreeMap<Types, usize> {
         BTreeMap::from([
-            (Armor::Leather, 100),
-            (Armor::Bronze, 300),
-            (Armor::Iron, 1_000),
-            (Armor::Steel, 5_000),
-            (Armor::Dragonhide, 10_000),
-            (Armor::Mystic, 20_000),
+            (Types::Leather, 100),
+            (Types::Bronze, 300),
+            (Types::Iron, 1_000),
+            (Types::Steel, 5_000),
+            (Types::Dragonhide, 10_000),
+            (Types::Mystic, 20_000),
         ])
     }
 
@@ -168,7 +168,7 @@ impl ArmorInventory {
         println!("Gold: {}\n", player.bank.wallet);
     }
 
-    pub fn select() -> Armor {
+    pub fn select() -> Types {
         let shop = Self::shop();
         let items: Vec<String> = shop.keys().map(std::string::ToString::to_string).collect();
 
@@ -185,7 +185,7 @@ impl ArmorInventory {
             .clone()
     }
 
-    pub fn buy(player: &mut Player, flag: &Armor, payment: bool) -> Result<(), InventoryError> {
+    pub fn buy(player: &mut Player, flag: &Types, payment: bool) -> Result<(), InventoryError> {
         let shop = Self::shop();
         let price: &usize = shop.get(flag).ok_or(InventoryError::TransactionFailed)?;
 
@@ -210,8 +210,8 @@ impl ArmorInventory {
         Ok(())
     }
 
-    pub fn sell(player: &mut Player, flag: &Armor, payment: bool) -> Result<(), InventoryError> {
-        let shop: BTreeMap<Armor, usize> = Self::shop();
+    pub fn sell(player: &mut Player, flag: &Types, payment: bool) -> Result<(), InventoryError> {
+        let shop: BTreeMap<Types, usize> = Self::shop();
         let price: &usize = shop.get(flag).ok_or(InventoryError::TransactionFailed)?;
         let owns_item: &mut bool = &mut player.armor.get(flag).owns;
 

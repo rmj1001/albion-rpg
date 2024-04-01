@@ -6,11 +6,11 @@ use crate::data::player::Player;
 use crate::prelude::{csv_table, input_generic, select, InventoryError};
 use std::result::Result;
 
-type ShopItem = (Item, usize, usize);
+type ShopItem = (Types, usize, usize);
 type Pair = (ShopItem, ShopItem);
 
 #[derive(Hash, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
-pub enum Item {
+pub enum Types {
     Bait,
     Seeds,
     Furs,
@@ -27,23 +27,23 @@ pub enum Item {
     RunicTablets,
 }
 
-impl Display for Item {
+impl Display for Types {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let string: &str = match self {
-            Item::Bait => "Bait",
-            Item::Seeds => "Seeds",
-            Item::Furs => "Fur",
-            Item::Fish => "Fish",
-            Item::Food => "Food",
-            Item::Wood => "Wood",
-            Item::Ore => "Ore",
-            Item::Ingots => "Ingot",
-            Item::Potions => "Potion",
-            Item::Rubies => "Ruby",
-            Item::MagicScrolls => "Magic Scroll",
-            Item::Bones => "Bone",
-            Item::DragonHides => "Dragon Hide",
-            Item::RunicTablets => "Runic Tablet",
+            Types::Bait => "Bait",
+            Types::Seeds => "Seeds",
+            Types::Furs => "Fur",
+            Types::Fish => "Fish",
+            Types::Food => "Food",
+            Types::Wood => "Wood",
+            Types::Ore => "Ore",
+            Types::Ingots => "Ingot",
+            Types::Potions => "Potion",
+            Types::Rubies => "Ruby",
+            Types::MagicScrolls => "Magic Scroll",
+            Types::Bones => "Bone",
+            Types::DragonHides => "Dragon Hide",
+            Types::RunicTablets => "Runic Tablet",
         };
 
         write!(f, "{string}")
@@ -51,7 +51,7 @@ impl Display for Item {
 }
 
 #[derive(Hash, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
-pub enum GuildItem {
+pub enum GuildTypes {
     Bait,
     Fish,
     Food,
@@ -61,22 +61,22 @@ pub enum GuildItem {
     Gold,
 }
 
-impl GuildItem {
-    pub fn to_mundane_item(&self) -> Option<Item> {
+impl GuildTypes {
+    pub fn to_mundane_item(&self) -> Option<Types> {
         match self {
-            GuildItem::Ore => Some(Item::Ore),
-            GuildItem::Bait => Some(Item::Bait),
-            GuildItem::Fish => Some(Item::Fish),
-            GuildItem::Food => Some(Item::Food),
-            GuildItem::Ingots => Some(Item::Ingots),
-            GuildItem::Wood => Some(Item::Wood),
-            GuildItem::Gold => None,
+            GuildTypes::Ore => Some(Types::Ore),
+            GuildTypes::Bait => Some(Types::Bait),
+            GuildTypes::Fish => Some(Types::Fish),
+            GuildTypes::Food => Some(Types::Food),
+            GuildTypes::Ingots => Some(Types::Ingots),
+            GuildTypes::Wood => Some(Types::Wood),
+            GuildTypes::Gold => None,
         }
     }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
-pub struct ItemInventory {
+pub struct Inventory {
     pub bait: usize,
     pub seeds: usize,
     pub furs: usize,
@@ -93,8 +93,8 @@ pub struct ItemInventory {
     pub runic_tablets: usize,
 }
 
-impl ItemInventory {
-    pub fn new() -> ItemInventory {
+impl Inventory {
+    pub fn new() -> Inventory {
         Self::default()
     }
 
@@ -102,45 +102,45 @@ impl ItemInventory {
         *self = Self::new();
     }
 
-    pub fn get(&mut self, flag: Item) -> &mut usize {
+    pub fn get(&mut self, flag: Types) -> &mut usize {
         match flag {
-            Item::Bait => &mut self.bait,
-            Item::Bones => &mut self.bones,
-            Item::DragonHides => &mut self.dragon_hides,
-            Item::Fish => &mut self.fish,
-            Item::Food => &mut self.food,
-            Item::Furs => &mut self.furs,
-            Item::Ingots => &mut self.ingots,
-            Item::MagicScrolls => &mut self.magic_scrolls,
-            Item::Ore => &mut self.ore,
-            Item::Potions => &mut self.potions,
-            Item::Rubies => &mut self.rubies,
-            Item::RunicTablets => &mut self.runic_tablets,
-            Item::Seeds => &mut self.seeds,
-            Item::Wood => &mut self.wood,
+            Types::Bait => &mut self.bait,
+            Types::Bones => &mut self.bones,
+            Types::DragonHides => &mut self.dragon_hides,
+            Types::Fish => &mut self.fish,
+            Types::Food => &mut self.food,
+            Types::Furs => &mut self.furs,
+            Types::Ingots => &mut self.ingots,
+            Types::MagicScrolls => &mut self.magic_scrolls,
+            Types::Ore => &mut self.ore,
+            Types::Potions => &mut self.potions,
+            Types::Rubies => &mut self.rubies,
+            Types::RunicTablets => &mut self.runic_tablets,
+            Types::Seeds => &mut self.seeds,
+            Types::Wood => &mut self.wood,
         }
     }
 }
 
 // -------------------------------------------------- Economy -------------------------------------------------- //
 
-impl ItemInventory {
-    fn shop() -> BTreeMap<Item, usize> {
+impl Inventory {
+    fn shop() -> BTreeMap<Types, usize> {
         BTreeMap::from([
-            (Item::Bait, 1),
-            (Item::Seeds, 1),
-            (Item::Furs, 50),
-            (Item::Fish, 5),
-            (Item::Food, 10),
-            (Item::Wood, 10),
-            (Item::Ore, 15),
-            (Item::Ingots, 30),
-            (Item::Potions, 20),
-            (Item::Rubies, 100),
-            (Item::MagicScrolls, 200),
-            (Item::Bones, 10),
-            (Item::DragonHides, 50),
-            (Item::RunicTablets, 300),
+            (Types::Bait, 1),
+            (Types::Seeds, 1),
+            (Types::Furs, 50),
+            (Types::Fish, 5),
+            (Types::Food, 10),
+            (Types::Wood, 10),
+            (Types::Ore, 15),
+            (Types::Ingots, 30),
+            (Types::Potions, 20),
+            (Types::Rubies, 100),
+            (Types::MagicScrolls, 200),
+            (Types::Bones, 10),
+            (Types::DragonHides, 50),
+            (Types::RunicTablets, 300),
         ])
     }
 
@@ -148,7 +148,7 @@ impl ItemInventory {
         let mut strings: Vec<String> = vec!["Item,usize,Quantity,,Item,usize,Quantity".to_string()];
 
         let mut pairs: Vec<Pair> = vec![];
-        let mut current_pair: Pair = ((Item::Bait, 0, 0), (Item::Bait, 0, 0));
+        let mut current_pair: Pair = ((Types::Bait, 0, 0), (Types::Bait, 0, 0));
         let mut index: usize = 0;
 
         for (flag, usize) in &Self::shop() {
@@ -174,7 +174,7 @@ impl ItemInventory {
         csv_table(&strings);
     }
 
-    pub fn build_transaction() -> Result<(Item, usize), InventoryError> {
+    pub fn build_transaction() -> Result<(Types, usize), InventoryError> {
         let item = Self::select();
 
         match input_generic::<usize>("Quantity:") {
@@ -183,7 +183,7 @@ impl ItemInventory {
         }
     }
 
-    pub fn select() -> Item {
+    pub fn select() -> Types {
         let shop = Self::shop();
         let items = shop.keys();
         let item_names: Vec<String> = items.map(std::string::ToString::to_string).collect();
@@ -201,7 +201,7 @@ impl ItemInventory {
             .expect("Should return an Item Flag")
     }
 
-    pub fn buy(player: &mut Player, flag: Item, quantity: usize, use_wallet: bool) -> Result<(), InventoryError> {
+    pub fn buy(player: &mut Player, flag: Types, quantity: usize, use_wallet: bool) -> Result<(), InventoryError> {
         let shop = Self::shop();
         let usize: usize = *shop.get(&flag).ok_or(InventoryError::TransactionFailed)?;
 
@@ -223,7 +223,7 @@ impl ItemInventory {
         Ok(())
     }
 
-    pub fn sell(player: &mut Player, flag: Item, quantity: usize, use_wallet: bool) -> Result<(), InventoryError> {
+    pub fn sell(player: &mut Player, flag: Types, quantity: usize, use_wallet: bool) -> Result<(), InventoryError> {
         let shop = Self::shop();
         let usize: usize = *shop.get(&flag).ok_or(InventoryError::ItemNotExist)?;
         let item = player.items.get(flag);

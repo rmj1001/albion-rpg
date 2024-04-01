@@ -1,12 +1,12 @@
 use crate::{
-    data::{inventory::items::ItemInventory, player::Player},
+    data::{inventory::items, player::Player},
     prelude::{page_header, select, success, unreachable, Instructions, Printer},
 };
 
 pub fn main(player: &mut Player) {
     page_header("Trading Post", &Instructions::None);
 
-    ItemInventory::shop_table(player);
+    items::Inventory::shop_table(player);
     println!("Gold: {}\n", player.bank.wallet);
 
     let buysell = select(&["1. Purchase", "2. Sell", "NAV: Go Back"], None);
@@ -22,9 +22,9 @@ pub fn main(player: &mut Player) {
 }
 
 pub fn purchase(player: &mut Player) {
-    match ItemInventory::build_transaction() {
+    match items::Inventory::build_transaction() {
         Ok((item_flag, quantity)) => {
-            let bought = ItemInventory::buy(player, item_flag, quantity, true);
+            let bought = items::Inventory::buy(player, item_flag, quantity, true);
 
             match bought {
                 Ok(()) => {
@@ -45,9 +45,9 @@ pub fn purchase(player: &mut Player) {
 }
 
 pub fn sell(player: &mut Player) {
-    match ItemInventory::build_transaction() {
+    match items::Inventory::build_transaction() {
         Ok((item_flag, quantity)) => {
-            let sold = ItemInventory::sell(player, item_flag, quantity, true);
+            let sold = items::Inventory::sell(player, item_flag, quantity, true);
 
             match sold {
                 Ok(()) => {

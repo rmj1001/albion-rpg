@@ -1,5 +1,5 @@
 use crate::{
-    data::inventory::{equipment::Equipment, items::ItemInventory},
+    data::inventory::{equipment::Equipment, items},
     prelude::{page_header, pause, select, unreachable, Instructions},
 };
 
@@ -25,7 +25,7 @@ pub fn main(player: &mut Player) {
 pub fn mundane_inventory(player: &mut Player) {
     page_header("Items Inventory", &Instructions::None);
 
-    ItemInventory::shop_table(player);
+    items::Inventory::shop_table(player);
 
     pause();
     main(player);

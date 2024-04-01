@@ -22,9 +22,7 @@ use crate::{
         achievements::Achievements,
         guilds::Guilds,
         health::Health,
-        inventory::{
-            armor::ArmorInventory, bank::Bank, equipment::Equipment, items::ItemInventory, weapons::WeaponsInventory,
-        },
+        inventory::{armor, bank::Bank, equipment::Equipment, items, weapons::Inventory},
         settings::Settings,
         xp::XP,
     },
@@ -77,9 +75,9 @@ pub struct Player {
     pub bank: Bank,
     pub guilds: Guilds,
     pub equipment: Equipment,
-    pub items: ItemInventory,
-    pub armor: ArmorInventory,
-    pub weapons: WeaponsInventory,
+    pub items: items::Inventory,
+    pub armor: armor::Inventory,
+    pub weapons: Inventory,
     pub settings: Settings,
 }
 
@@ -93,9 +91,9 @@ impl Default for Player {
             bank: Bank::new(),
             guilds: Guilds::new(),
             equipment: Equipment::new(),
-            items: ItemInventory::new(),
-            armor: ArmorInventory::new(),
-            weapons: WeaponsInventory::new(),
+            items: items::Inventory::new(),
+            armor: armor::Inventory::new(),
+            weapons: Inventory::new(),
         }
     }
 }

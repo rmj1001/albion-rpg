@@ -5,7 +5,7 @@ use crate::prelude::{
 };
 use serde::{Deserialize, Serialize};
 
-pub enum BankAccount {
+pub enum Account {
     Wallet,
     Account1,
     Account2,
@@ -46,28 +46,28 @@ impl Bank {
         ]);
     }
 
-    pub fn balance(player: &Player, account: &BankAccount) -> usize {
+    pub fn balance(player: &Player, account: &Account) -> usize {
         match account {
-            BankAccount::Wallet => player.bank.wallet,
-            BankAccount::Account1 => player.bank.account1,
-            BankAccount::Account2 => player.bank.account2,
-            BankAccount::Account3 => player.bank.account3,
-            BankAccount::Account4 => player.bank.account4,
+            Account::Wallet => player.bank.wallet,
+            Account::Account1 => player.bank.account1,
+            Account::Account2 => player.bank.account2,
+            Account::Account3 => player.bank.account3,
+            Account::Account4 => player.bank.account4,
         }
     }
 
-    pub fn account<'a>(player: &'a mut Player, account: &BankAccount) -> &'a mut usize {
+    pub fn account<'a>(player: &'a mut Player, account: &Account) -> &'a mut usize {
         match account {
-            BankAccount::Account1 => &mut player.bank.account1,
-            BankAccount::Account2 => &mut player.bank.account2,
-            BankAccount::Account3 => &mut player.bank.account3,
-            BankAccount::Account4 => &mut player.bank.account4,
-            BankAccount::Wallet => &mut player.bank.wallet,
+            Account::Account1 => &mut player.bank.account1,
+            Account::Account2 => &mut player.bank.account2,
+            Account::Account3 => &mut player.bank.account3,
+            Account::Account4 => &mut player.bank.account4,
+            Account::Wallet => &mut player.bank.wallet,
         }
     }
 
-    pub fn deposit(player: &mut Player, account_flag: &BankAccount, amount: usize, use_wallet: bool) -> Result<()> {
-        let wallet_balance: usize = Self::balance(player, &BankAccount::Wallet);
+    pub fn deposit(player: &mut Player, account_flag: &Account, amount: usize, use_wallet: bool) -> Result<()> {
+        let wallet_balance: usize = Self::balance(player, &Account::Wallet);
 
         if use_wallet && wallet_balance < amount {
             return Err(Box::new(InventoryError::NotEnoughGold));
@@ -81,7 +81,7 @@ impl Bank {
         Ok(())
     }
 
-    pub fn withdraw(player: &mut Player, account_flag: &BankAccount, amount: usize, use_wallet: bool) -> Result<()> {
+    pub fn withdraw(player: &mut Player, account_flag: &Account, amount: usize, use_wallet: bool) -> Result<()> {
         let account_balance: usize = Self::balance(player, account_flag);
 
         if account_balance < amount {
@@ -142,24 +142,24 @@ impl Bank {
             )
         };
 
-        let mut account: BankAccount = BankAccount::Account1;
+        let mut account: Account = Account::Account1;
 
         if developer_mode {
             match account_choice {
-                0 => account = BankAccount::Wallet,
-                1 => account = BankAccount::Account1,
-                2 => account = BankAccount::Account2,
-                3 => account = BankAccount::Account3,
-                4 => account = BankAccount::Account4,
+                0 => account = Account::Wallet,
+                1 => account = Account::Account1,
+                2 => account = Account::Account2,
+                3 => account = Account::Account3,
+                4 => account = Account::Account4,
                 5 => Self::menu(player, developer_mode),
                 _ => unreachable(),
             }
         } else {
             match account_choice {
-                0 => account = BankAccount::Account1,
-                1 => account = BankAccount::Account2,
-                2 => account = BankAccount::Account3,
-                3 => account = BankAccount::Account4,
+                0 => account = Account::Account1,
+                1 => account = Account::Account2,
+                2 => account = Account::Account3,
+                3 => account = Account::Account4,
                 4 => Self::menu(player, developer_mode),
                 _ => unreachable(),
             }

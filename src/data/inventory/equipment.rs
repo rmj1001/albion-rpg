@@ -6,12 +6,12 @@ use crate::prelude::{page_header, pause, select, unreachable, Instructions};
 
 use crate::data::player::Player;
 
-use super::{armor::Armor, weapons::Weapon};
+use super::{armor, weapons};
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
 pub struct Equipment {
-    pub armor: Option<Armor>,
-    pub weapon: Option<Weapon>,
+    pub armor: Option<armor::Types>,
+    pub weapon: Option<weapons::Types>,
 }
 
 impl Equipment {
@@ -85,7 +85,7 @@ impl Equipment {
     }
 
     pub fn equip_weapon(player: &mut Player) {
-        use Weapon as W;
+        use weapons::Types as W;
 
         let choices = [
             player.weapons.wooden_sword.flag.to_string(),
@@ -148,7 +148,7 @@ impl Equipment {
     }
 
     pub fn equip_armor(player: &mut Player) {
-        use Armor as A;
+        use armor::Types as A;
 
         let choices = [
             player.armor.leather.flag.to_string(),

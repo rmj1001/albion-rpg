@@ -1,4 +1,4 @@
-use crate::data::inventory::armor::ArmorInventory;
+use crate::data::inventory::armor;
 use crate::prelude::{page_header, select, success, unreachable, Instructions, Printer};
 
 use crate::data::player::Player;
@@ -6,7 +6,7 @@ use crate::data::player::Player;
 pub fn main(player: &mut Player) {
     page_header("Armor Shop", &Instructions::None);
 
-    ArmorInventory::shop_table(player);
+    armor::Inventory::shop_table(player);
 
     let buysell = select(&["1. Purchase", "2. Sell", "NAV: Go Back"], None);
 
@@ -21,8 +21,8 @@ pub fn main(player: &mut Player) {
 }
 
 pub fn purchase(player: &mut Player) {
-    let flag = ArmorInventory::select();
-    let result = ArmorInventory::buy(player, &flag, true);
+    let flag = armor::Inventory::select();
+    let result = armor::Inventory::buy(player, &flag, true);
 
     match result {
         Ok(()) => {
@@ -37,8 +37,8 @@ pub fn purchase(player: &mut Player) {
 }
 
 pub fn sell(player: &mut Player) {
-    let flag = ArmorInventory::select();
-    let result = ArmorInventory::sell(player, &flag, true);
+    let flag = armor::Inventory::select();
+    let result = armor::Inventory::sell(player, &flag, true);
 
     match result {
         Ok(()) => {

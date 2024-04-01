@@ -1,12 +1,12 @@
 use crate::{
-    data::{inventory::weapons::WeaponsInventory, player::Player},
+    data::{inventory::weapons::Inventory, player::Player},
     prelude::{page_header, select, success, unreachable, Instructions, Printer},
 };
 
 pub fn main(player: &mut Player) {
     page_header("Weapons Shop", &Instructions::None);
 
-    WeaponsInventory::shop_table(player);
+    Inventory::shop_table(player);
 
     let buysell = select(&["1. Purchase", "2. Sell", "NAV: Go Back"], None);
 
@@ -21,8 +21,8 @@ pub fn main(player: &mut Player) {
 }
 
 pub fn purchase(player: &mut Player) {
-    let flag = WeaponsInventory::select();
-    let result = WeaponsInventory::buy(player, &flag, true);
+    let flag = Inventory::select();
+    let result = Inventory::buy(player, &flag, true);
 
     match result {
         Ok(()) => {
@@ -37,8 +37,8 @@ pub fn purchase(player: &mut Player) {
 }
 
 pub fn sell(player: &mut Player) {
-    let flag = WeaponsInventory::select();
-    let result = WeaponsInventory::sell(player, &flag, true);
+    let flag = Inventory::select();
+    let result = Inventory::sell(player, &flag, true);
 
     match result {
         Ok(()) => {
