@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::prelude::{random_num, sleep};
+use crate::prelude::{random_num, sleep, STANDARD_SLEEP};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Health {
@@ -40,7 +40,7 @@ impl Health {
 
         println!("Healing...");
 
-        sleep(1);
+        sleep(STANDARD_SLEEP);
 
         let new_health = random_num(1, 5);
 

@@ -4,6 +4,7 @@ use crate::{
     data::{inventory::equipment::Equipment, player::Player, xp::XP},
     panic_menu,
     prelude::{confirm, page_header, pause, random_num, select, sleep, unreachable, Instructions},
+    utils::terminal::STANDARD_SLEEP,
 };
 
 pub struct Battle<'a> {
@@ -41,7 +42,7 @@ impl<'a> Battle<'a> {
             floor: 0,
             is_first_battle: true,
             is_looped: loops > 0,
-            pause_seconds: 1,
+            pause_seconds: STANDARD_SLEEP,
             end_function: exit_function,
         }
     }

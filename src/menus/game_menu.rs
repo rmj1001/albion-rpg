@@ -2,6 +2,7 @@ use crate::{
     combat::battle::Battle,
     data::{achievements::Achievements, inventory::equipment::Equipment, settings::Settings},
     prelude::{confirm, exit, invalid_input, page_header, pause, prompt, sleep, success, Instructions},
+    utils::terminal::STANDARD_SLEEP,
 };
 
 use crate::data::player::Player;
@@ -91,7 +92,7 @@ pub fn main(player: &mut Player) {
         "98" | "save game" | "save" => {
             page_header("Saving Game", &Instructions::None);
             println!("\nSaving game...");
-            sleep(2);
+            sleep(STANDARD_SLEEP);
 
             player.save();
             success(None);
@@ -103,7 +104,7 @@ pub fn main(player: &mut Player) {
 
             page_header("Accounts Menu", &Instructions::None);
             println!("\nLogging out...");
-            sleep(2);
+            sleep(STANDARD_SLEEP);
 
             crate::menus::accounts::main();
         }

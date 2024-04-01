@@ -66,7 +66,7 @@ pub fn exit(player: Option<&mut Player>) {
     if let Some(player) = player {
         println!("Saving game...");
         player.save();
-        sleep(2);
+        sleep(STANDARD_SLEEP);
 
         success(Some("Game saved! Thanks for playing!"));
 
@@ -79,6 +79,8 @@ pub fn exit(player: Option<&mut Player>) {
     clearscr();
     process::exit(0);
 }
+
+pub const STANDARD_SLEEP: u64 = 1;
 
 /**
 Pause terminal output for a number of seconds.
