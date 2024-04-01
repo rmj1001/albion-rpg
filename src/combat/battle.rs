@@ -7,6 +7,20 @@ use crate::{
     utils::terminal::STANDARD_SLEEP,
 };
 
+/**
+Dynamic battle generator/handler.
+
+# Example
+
+```ignore
+use albion_terminal_rpg::combat::battle::Battle;
+use albion_terminal_rpg::data::player::Player;
+
+let mut player = Player::default();
+
+Battle::new("The Stronghold", "You delve into the Stronghold...", &mut player, 50, None).start();
+```
+*/
 pub struct Battle<'a> {
     pub header: &'static str,
     pub prompt: &'static str,
@@ -26,6 +40,7 @@ Entrypoint and Main Battle Menu
 --------------------------------------------------------------------------------
 */
 impl<'a> Battle<'a> {
+    /// Instantiate a new battle
     pub fn new(
         title: &'static str,
         prompt: &'static str,
@@ -47,6 +62,8 @@ impl<'a> Battle<'a> {
         }
     }
 
+    /// This is the function caled to begin the battle sequence after the battle
+    /// settings have been set.
     pub fn start(&mut self) {
         // Prelude
         page_header(self.header, &Instructions::None);
@@ -84,6 +101,7 @@ impl<'a> Battle<'a> {
         self.player_actions();
     }
 
+    /// Player can either attack, manage inventory, or retreat.
     fn player_actions(&mut self) {
         page_header(
             format!("{} - {}", self.header, self.enemy.name),
@@ -124,6 +142,7 @@ Attacking Sequences
 --------------------------------------------------------------------------------
 */
 impl<'a> Battle<'a> {
+    /// Player attacks first, enemy attacks second, player heals, repeat.
     fn attack_sequence(&mut self) {
         page_header(self.header, &Instructions::None);
 
@@ -144,6 +163,7 @@ impl<'a> Battle<'a> {
         self.player_actions();
     }
 
+    /// Player attacks the enemy.
     fn player_turn(&mut self) {
         let enemy_type = &self.enemy.name;
 
@@ -178,6 +198,7 @@ impl<'a> Battle<'a> {
         sleep(self.pause_seconds);
     }
 
+    /// Enemy attacks the player
     fn enemy_turn(&mut self) {
         let enemy_type = &self.enemy.name;
         let mut damage: usize = self.enemy.damage;
@@ -230,6 +251,7 @@ Victory, Defeat, Retreat
 --------------------------------------------------------------------------------
 */
 impl<'a> Battle<'a> {
+    /// Go back to the main menu
     fn retreat(&mut self) {
         page_header("Battle - Retreat", &Instructions::None);
 
@@ -239,6 +261,7 @@ impl<'a> Battle<'a> {
         crate::menus::game_menu::main(self.player);
     }
 
+    /// Receive rewards, then either continue battles if looped or go back to main menu.
     fn victory(&mut self) {
         page_header(format!("{} - Victory", self.header), &Instructions::None);
 
@@ -274,6 +297,7 @@ impl<'a> Battle<'a> {
         }
     }
 
+    /// Hardmode disabled defeat, basically just revive.
     fn defeat(&mut self) {
         page_header(format!("{} - Defeat", self.header), &Instructions::None);
 
@@ -290,6 +314,7 @@ impl<'a> Battle<'a> {
         }
     }
 
+    /// Reset player health and go to main game menu
     fn revived(&mut self) {
         println!("You were successfully revived with 100 hp.\n");
         self.player.health.reset();
@@ -300,7 +325,7 @@ impl<'a> Battle<'a> {
         crate::menus::game_menu::main(self.player);
     }
 
-    /// Result of battle if player defeated and hardmode is enabled.
+    /// Player is either revived or has their account reset.
     fn hardmode(&mut self) {
         let user_survives = random_num(0, 1);
 
@@ -316,13 +341,10 @@ impl<'a> Battle<'a> {
                 self.revived();
             }
             1 => {
-                println!("You didn't survive. This profile will be deleted.\n");
+                println!("You didn't survive. This profile will be reset.\n");
                 pause();
 
-                match self.player.delete() {
-                    Ok(()) => crate::menus::accounts::main(),
-                    Err(error) => panic_menu!(error),
-                }
+                self.player.reset();
             }
             _ => unreachable(),
         }
