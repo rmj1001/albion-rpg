@@ -105,7 +105,7 @@ impl<'a> Battle<'a> {
                 battle_menu(self.player);
                 self.main_menu();
             }
-            2 => Self::retreat(self.player),
+            2 => self.retreat(),
             _ => unreachable(),
         }
     }
@@ -136,9 +136,7 @@ impl<'a> Battle<'a> {
         println!("You attack the {enemy_type}...");
         sleep(self.pause_seconds);
 
-        let hit = success();
-
-        if !hit || self.player.equipment.weapon.is_none() {
+        if !Self::hit() || self.player.equipment.weapon.is_none() {
             println!("You missed the {enemy_type}.");
             sleep(self.pause_seconds);
             return;
@@ -189,9 +187,7 @@ impl<'a> Battle<'a> {
         println!("The {enemy_type} attacks you...");
         sleep(self.pause_seconds);
 
-        let hit = success();
-
-        if hit && damage > 0 {
+        if Self::hit() && damage > 0 {
             println!("The {enemy_type} hit you for {damage} damage!!");
 
             if self.player.health.hp < damage {
@@ -208,13 +204,13 @@ impl<'a> Battle<'a> {
         sleep(self.pause_seconds);
     }
 
-    fn retreat(player: &mut Player) {
+    fn retreat(&mut self) {
         page_header("Battle - Retreat", &Instructions::None);
 
         println!("You have retreated from the battle.");
         pause();
 
-        crate::menus::game_menu::main(player);
+        crate::menus::game_menu::main(self.player);
     }
 
     fn victory(&mut self) {
@@ -274,6 +270,7 @@ impl<'a> Battle<'a> {
 
         self.player.save();
         pause();
+
         crate::menus::game_menu::main(self.player);
     }
 
@@ -304,8 +301,9 @@ impl<'a> Battle<'a> {
             _ => unreachable(),
         }
     }
-}
 
-fn success() -> bool {
-    random_num(0, 1) == 0
+    /// Determines if the target of an attack was hit or not.
+    fn hit() -> bool {
+        random_num(0, 1) == 0
+    }
 }
