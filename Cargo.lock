@@ -4,7 +4,7 @@ version = 3
 
 [[package]]
 name = "albion_terminal_rpg"
-version = "1.7.12"
+version = "1.8.0"
 dependencies = [
  "bcrypt",
  "console",
