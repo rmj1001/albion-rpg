@@ -79,10 +79,11 @@ impl<'a> Battle<'a> {
         println!();
         println!("You are now fighting a {}.", self.enemy.name);
         sleep(self.pause_seconds);
-        self.main_menu();
+
+        self.player_actions();
     }
 
-    fn main_menu(&mut self) {
+    fn player_actions(&mut self) {
         page_header(
             format!("{} - {}", self.header, self.enemy.name),
             &Instructions::Keyboard,
@@ -105,10 +106,10 @@ impl<'a> Battle<'a> {
         let action = select(&[attack_string.as_str(), "2. Inventory", "3. Retreat"], None);
 
         match action {
-            0 => self.attack(),
+            0 => self.attack_sequence(),
             1 => {
                 battle_menu(self.player);
-                self.main_menu();
+                self.player_actions();
             }
             2 => self.retreat(),
             _ => unreachable(),
@@ -122,14 +123,14 @@ Attacking Sequences
 --------------------------------------------------------------------------------
 */
 impl<'a> Battle<'a> {
-    fn attack(&mut self) {
+    fn attack_sequence(&mut self) {
         page_header(self.header, &Instructions::None);
 
-        self.player_attack();
+        self.player_turn();
 
         println!();
 
-        self.enemy_attack();
+        self.enemy_turn();
 
         println!();
 
@@ -139,10 +140,10 @@ impl<'a> Battle<'a> {
 
         pause();
 
-        self.main_menu();
+        self.player_actions();
     }
 
-    fn player_attack(&mut self) {
+    fn player_turn(&mut self) {
         let enemy_type = &self.enemy.name;
 
         println!("You attack the {enemy_type}...");
@@ -176,7 +177,7 @@ impl<'a> Battle<'a> {
         sleep(self.pause_seconds);
     }
 
-    fn enemy_attack(&mut self) {
+    fn enemy_turn(&mut self) {
         let enemy_type = &self.enemy.name;
         let mut damage: usize = self.enemy.damage;
 
