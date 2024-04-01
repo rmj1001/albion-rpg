@@ -14,7 +14,7 @@ Top-level module documentation & function docs
   - [x] terminal.rs
   - [x] tui.rs
 - [ ] Combat
-  - [ ] battle.rs
+  - [x] battle.rs
   - [ ] enemy.rs
   - [ ] inventory.rs
 - [ ] Data
