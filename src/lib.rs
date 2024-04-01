@@ -1,4 +1,4 @@
-#![warn(clippy::pedantic, clippy::wildcard_imports)]
+#![warn(clippy::pedantic)]
 #![allow(
     clippy::must_use_candidate,
     clippy::missing_panics_doc,
