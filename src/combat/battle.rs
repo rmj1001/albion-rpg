@@ -2,7 +2,6 @@ use super::inventory::battle_menu;
 use crate::{
     combat::enemy::{Data, Rewards},
     data::{inventory::equipment::Equipment, player::Player, xp::XP},
-    panic_menu,
     prelude::{confirm, page_header, pause, random_num, select, sleep, unreachable, Instructions},
     utils::terminal::STANDARD_SLEEP,
 };
@@ -345,6 +344,7 @@ impl<'a> Battle<'a> {
                 pause();
 
                 self.player.reset();
+                crate::menus::game_menu::main(self.player);
             }
             _ => unreachable(),
         }
