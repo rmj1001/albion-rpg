@@ -1,4 +1,8 @@
-use crate::{data::settings::Settings, panic_menu, prelude::*};
+use crate::{
+    data::settings::Settings,
+    panic_menu,
+    prelude::{cancel, confirm, failure, page_header, select, unreachable, Instructions},
+};
 
 use crate::data::player::Player;
 

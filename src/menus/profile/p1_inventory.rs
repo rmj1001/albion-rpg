@@ -1,6 +1,6 @@
 use crate::{
     data::inventory::{equipment::Equipment, items::ItemInventory},
-    prelude::*,
+    prelude::{page_header, pause, select, unreachable, Instructions},
 };
 
 use crate::data::player::Player;

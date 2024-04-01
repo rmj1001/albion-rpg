@@ -1,4 +1,7 @@
-use crate::{data::player::Player, prelude::*};
+use crate::{
+    data::player::Player,
+    prelude::{all_profiles, cancel, confirm, failure, page_header, pause, select, success, unreachable, Instructions},
+};
 
 pub fn main(player: &mut Player) {
     page_header("Developer Mode - Player Manager", &Instructions::Keyboard);

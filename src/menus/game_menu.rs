@@ -1,7 +1,7 @@
 use crate::{
     combat::{battle::Battle, enemy::EnemyData},
     data::{achievements::Achievements, inventory::equipment::Equipment, settings::Settings},
-    prelude::*,
+    prelude::{confirm, exit, invalid_input, page_header, pause, prompt, sleep, success, Instructions},
 };
 
 use crate::data::player::Player;

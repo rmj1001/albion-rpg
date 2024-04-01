@@ -1,4 +1,7 @@
-use crate::{data::player::Player, prelude::*};
+use crate::{
+    data::player::Player,
+    prelude::{failure, generate_hash, page_header, password, prompt, success, Instructions},
+};
 
 pub fn main() {
     page_header("Registration", &Instructions::None);

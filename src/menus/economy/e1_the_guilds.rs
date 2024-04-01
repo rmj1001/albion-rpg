@@ -5,7 +5,7 @@ use crate::{
         inventory::items::GuildItem,
         xp::{XPType, XP},
     },
-    prelude::*,
+    prelude::{failure, page_header, random_num, select, success, unreachable, Instructions, InventoryError, Result},
 };
 
 use crate::data::player::Player;

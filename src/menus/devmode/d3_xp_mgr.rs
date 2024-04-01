@@ -1,6 +1,6 @@
 use crate::{
     data::{player::Player, xp::XPType},
-    prelude::*,
+    prelude::{input_generic, page_header, select, success, unreachable, Instructions, Result},
 };
 
 enum Operation {

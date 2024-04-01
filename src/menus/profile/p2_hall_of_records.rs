@@ -1,4 +1,7 @@
-use crate::{data::achievements::Achievements, prelude::*};
+use crate::{
+    data::achievements::Achievements,
+    prelude::{page_header, pause, select, unreachable, Instructions},
+};
 
 use crate::data::player::Player;
 

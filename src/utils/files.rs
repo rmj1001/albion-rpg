@@ -1,7 +1,10 @@
 /*!
 Helper functionality for reading/writing player data files.
 */
-use crate::{panic_menu, prelude::*};
+use crate::{
+    panic_menu,
+    prelude::{ProfileError, Result},
+};
 use std::env::consts::OS;
 use std::{fmt::Display, fs, path::Path};
 

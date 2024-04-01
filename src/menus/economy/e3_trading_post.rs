@@ -1,6 +1,6 @@
 use crate::{
     data::{inventory::items::ItemInventory, player::Player},
-    prelude::*,
+    prelude::{page_header, select, success, unreachable, Instructions, Printer},
 };
 
 pub fn main(player: &mut Player) {

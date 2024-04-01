@@ -15,7 +15,7 @@ Generate a hashed string for secrets
 # Examples
 
 ```
-use albion_terminal_rpg::prelude::*;
+use albion_terminal_rpg::prelude::generate_hash;
 
 let password: String = String::from("test");
 let hashed: String = generate_hash(&password);
@@ -34,7 +34,7 @@ Verify that a string matches a hash
 
 # Examples
 ```
-use albion_terminal_rpg::prelude::*;
+use albion_terminal_rpg::prelude::{generate_hash, verify_hash};
 
 let password: String = String::from("test");
 let hashed: String = generate_hash(&password);

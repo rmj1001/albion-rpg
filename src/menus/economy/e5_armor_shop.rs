@@ -1,5 +1,5 @@
 use crate::data::inventory::armor::ArmorInventory;
-use crate::prelude::*;
+use crate::prelude::{page_header, select, success, unreachable, Instructions, Printer};
 
 use crate::data::player::Player;
 

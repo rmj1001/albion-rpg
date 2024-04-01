@@ -4,7 +4,10 @@
 These functions enable menu/dialogue creation & interaction through
 arrow-key selection and type-checking input boxes.
 */
-use crate::{panic_menu, prelude::*};
+use crate::{
+    panic_menu,
+    prelude::{invalid_input, MiscError, Result},
+};
 use dialoguer;
 use std::{fmt::Display, io::Write, str::FromStr};
 

@@ -1,4 +1,10 @@
-use crate::{data::settings::Settings, prelude::*};
+use crate::{
+    data::settings::Settings,
+    prelude::{
+        cancel, confirm, failure, page_header, password, prompt, select, success, unreachable, verify_hash,
+        Instructions,
+    },
+};
 
 use crate::data::player::Player;
 
