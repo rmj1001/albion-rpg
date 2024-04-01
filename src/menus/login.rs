@@ -1,4 +1,4 @@
-use crate::prelude::{failure, page_header, password, prompt, success, verify_hash, Instructions, Result};
+use crate::prelude::{error, failure, page_header, password, prompt, success, verify_hash, Instructions};
 
 use crate::data::player::Player;
 
@@ -18,7 +18,7 @@ pub fn main() {
     page_header("Login", &Instructions::None);
 
     let username: String = prompt("Username");
-    let profile_result: Result<Player> = Player::get(&username);
+    let profile_result: error::Result<Player> = Player::get(&username);
 
     match profile_result {
         Ok(player) => {

@@ -3,7 +3,7 @@ use std::hash::Hash;
 use std::{collections::BTreeMap, fmt::Display};
 
 use crate::data::player::Player;
-use crate::prelude::{csv_table, input_generic, select, InventoryError};
+use crate::prelude::{csv_table, error, generic_prompt, select};
 use std::result::Result;
 
 type ShopItem = (Types, usize, usize);
@@ -174,12 +174,12 @@ impl Inventory {
         csv_table(&strings);
     }
 
-    pub fn build_transaction() -> Result<(Types, usize), InventoryError> {
+    pub fn build_transaction() -> Result<(Types, usize), error::Inventory> {
         let item = Self::select();
 
-        match input_generic::<usize>("Quantity:") {
+        match generic_prompt::<usize>("Quantity:") {
             Ok(quantity) => Ok((item, quantity)),
-            Err(_) => Err(InventoryError::TransactionFailed),
+            Err(_) => Err(error::Inventory::TransactionFailed),
         }
     }
 
@@ -201,9 +201,9 @@ impl Inventory {
             .expect("Should return an Item Flag")
     }
 
-    pub fn buy(player: &mut Player, flag: Types, quantity: usize, use_wallet: bool) -> Result<(), InventoryError> {
+    pub fn buy(player: &mut Player, flag: Types, quantity: usize, use_wallet: bool) -> Result<(), error::Inventory> {
         let shop = Self::shop();
-        let usize: usize = *shop.get(&flag).ok_or(InventoryError::TransactionFailed)?;
+        let usize: usize = *shop.get(&flag).ok_or(error::Inventory::TransactionFailed)?;
 
         if use_wallet {
             let gold: usize = player.bank.wallet;
@@ -211,7 +211,7 @@ impl Inventory {
             let usize = quantity * usize;
 
             if gold < usize {
-                return Err(InventoryError::NotEnoughGold);
+                return Err(error::Inventory::NotEnoughGold);
             }
 
             *wallet -= usize;
@@ -223,13 +223,13 @@ impl Inventory {
         Ok(())
     }
 
-    pub fn sell(player: &mut Player, flag: Types, quantity: usize, use_wallet: bool) -> Result<(), InventoryError> {
+    pub fn sell(player: &mut Player, flag: Types, quantity: usize, use_wallet: bool) -> Result<(), error::Inventory> {
         let shop = Self::shop();
-        let usize: usize = *shop.get(&flag).ok_or(InventoryError::ItemNotExist)?;
+        let usize: usize = *shop.get(&flag).ok_or(error::Inventory::ItemNotExist)?;
         let item = player.items.get(flag);
 
         if *item == 0 || *item < quantity {
-            return Err(InventoryError::NotEnoughItem(flag.to_string()));
+            return Err(error::Inventory::NotEnoughItem(flag.to_string()));
         }
 
         *item -= quantity;

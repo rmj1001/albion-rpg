@@ -1,6 +1,6 @@
 use crate::{
     data::{player::Player, xp::XPType},
-    prelude::{input_generic, page_header, select, success, unreachable, Instructions, Result},
+    prelude::{error, generic_prompt, page_header, select, success, unreachable, Instructions},
 };
 
 enum Operation {
@@ -51,7 +51,7 @@ pub fn main(player: &mut Player) {
         _ => unreachable(),
     }
 
-    let amount_result: Result<usize> = input_generic("Amount > ");
+    let amount_result: error::Result<usize> = generic_prompt("Amount > ");
     let mut amount: usize = 0;
 
     match amount_result {

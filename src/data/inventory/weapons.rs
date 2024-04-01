@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use std::{collections::BTreeMap, fmt::Display};
 
 use crate::data::player::Player;
-use crate::prelude::{select, InventoryError};
+use crate::prelude::{error, select};
 use std::result::Result;
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, PartialOrd, Eq, Ord)]
@@ -194,16 +194,16 @@ impl Inventory {
             .clone()
     }
 
-    pub fn buy(player: &mut Player, weapon: &Types, payment: bool) -> Result<(), InventoryError> {
+    pub fn buy(player: &mut Player, weapon: &Types, payment: bool) -> Result<(), error::Inventory> {
         let shop = Self::shop();
-        let price = shop.get(weapon).ok_or(InventoryError::ItemNotExist)?;
+        let price = shop.get(weapon).ok_or(error::Inventory::ItemNotExist)?;
 
         if payment {
             let gold: usize = player.bank.wallet;
             let wallet: &mut usize = &mut player.bank.wallet;
 
             if gold < *price {
-                return Err(InventoryError::NotEnoughGold);
+                return Err(error::Inventory::NotEnoughGold);
             }
 
             *wallet -= *price;
@@ -212,20 +212,20 @@ impl Inventory {
         let owns_item = &mut player.weapons.get(weapon).owns;
 
         if *owns_item {
-            return Err(InventoryError::ItemOwned);
+            return Err(error::Inventory::ItemOwned);
         }
 
         *owns_item = true;
         Ok(())
     }
 
-    pub fn sell(player: &mut Player, weapon: &Types, payment: bool) -> Result<(), InventoryError> {
+    pub fn sell(player: &mut Player, weapon: &Types, payment: bool) -> Result<(), error::Inventory> {
         let shop: BTreeMap<Types, usize> = Self::shop();
-        let price: &usize = shop.get(weapon).ok_or(InventoryError::ItemNotExist)?;
+        let price: &usize = shop.get(weapon).ok_or(error::Inventory::ItemNotExist)?;
         let owns_item = &mut player.weapons.get(weapon).owns;
 
         if !*owns_item {
-            return Err(InventoryError::ItemNotOwned);
+            return Err(error::Inventory::ItemNotOwned);
         }
 
         *owns_item = false;

@@ -52,12 +52,12 @@ fn main() -> Result<()> {
 ```
 */
 #[derive(Debug, Clone)]
-pub enum ProfileError {
+pub enum Profile {
     DoesNotExist,
     Corrupted,
 }
 
-impl Display for ProfileError {
+impl Display for Profile {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let string: &str = match self {
             Self::DoesNotExist => "Profile does not exist.",
@@ -68,8 +68,8 @@ impl Display for ProfileError {
     }
 }
 
-impl Printer for ProfileError {}
-impl Error for ProfileError {}
+impl Printer for Profile {}
+impl Error for Profile {}
 
 /**
 Data Serialization/Deserialization Errors
@@ -87,12 +87,12 @@ fn main() -> Result<()> {
 ```
 */
 #[derive(Debug, Clone)]
-pub enum DataError {
+pub enum Data {
     Encode,
     Decode,
 }
 
-impl Display for DataError {
+impl Display for Data {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let string: &str = match self {
             Self::Encode => "Failed to encode player file.",
@@ -103,8 +103,8 @@ impl Display for DataError {
     }
 }
 
-impl Printer for DataError {}
-impl Error for DataError {}
+impl Printer for Data {}
+impl Error for Data {}
 
 /**
 Inventory management errors
@@ -122,7 +122,7 @@ fn main() -> Result<()> {
 ```
 */
 #[derive(Debug, Clone)]
-pub enum InventoryError {
+pub enum Inventory {
     NotEnoughGold,
     ItemOwned,
     ItemNotOwned,
@@ -132,7 +132,7 @@ pub enum InventoryError {
     TransactionFailed,
 }
 
-impl Display for InventoryError {
+impl Display for Inventory {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let string: String = match self {
             Self::ItemNotExist => "That item does not exist.".to_string(),
@@ -148,8 +148,8 @@ impl Display for InventoryError {
     }
 }
 
-impl Printer for InventoryError {}
-impl Error for InventoryError {}
+impl Printer for Inventory {}
+impl Error for Inventory {}
 
 /**
 File management Errors
@@ -167,12 +167,12 @@ fn main() -> Result<()> {
 ```
 */
 #[derive(Debug, Clone)]
-pub enum FileError {
+pub enum File {
     Delete,
     Create,
 }
 
-impl Display for FileError {
+impl Display for File {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let string = match self {
             Self::Delete => "Failed to delete file.",
@@ -183,8 +183,8 @@ impl Display for FileError {
     }
 }
 
-impl Printer for FileError {}
-impl Error for FileError {}
+impl Printer for File {}
+impl Error for File {}
 
 /**
 Miscellaneous Errors
@@ -202,26 +202,24 @@ fn main() -> Result<()> {
 ```
 */
 #[derive(Debug, Clone)]
-pub enum MiscError {
+pub enum Miscellaneous {
     InvalidInput(String),
     Custom(&'static str),
-    InvalidOperator,
 }
 
-impl Display for MiscError {
+impl Display for Miscellaneous {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let string: String = match self {
             Self::InvalidInput(input) => format!("Invalid input {input}."),
             Self::Custom(error) => (*error).to_string(),
-            Self::InvalidOperator => "Invalid operator.".to_string(),
         };
 
         write!(f, "{}", Logs::Failure.paint(string))
     }
 }
 
-impl Printer for MiscError {}
-impl Error for MiscError {}
+impl Printer for Miscellaneous {}
+impl Error for Miscellaneous {}
 
 /**
 Check for debugging environment variable or flag

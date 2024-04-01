@@ -3,7 +3,7 @@ use crate::{
         inventory::{armor, items, weapons},
         player::Player,
     },
-    prelude::{page_header, select, success, unreachable, Instructions, Printer},
+    prelude::{error::Printer, page_header, select, success, unreachable, Instructions},
 };
 
 pub fn main(player: &mut Player) {

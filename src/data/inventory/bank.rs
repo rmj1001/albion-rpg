@@ -1,7 +1,6 @@
 use crate::data::player::Player;
 use crate::prelude::{
-    csv_table, invalid_input, page_header, prompt, select, success, unreachable, Instructions, InventoryError,
-    MiscError, Result,
+    csv_table, error, invalid_input, page_header, prompt, select, success, unreachable, Instructions,
 };
 use serde::{Deserialize, Serialize};
 
@@ -66,11 +65,11 @@ impl Bank {
         }
     }
 
-    pub fn deposit(player: &mut Player, account_flag: &Account, amount: usize, use_wallet: bool) -> Result<()> {
+    pub fn deposit(player: &mut Player, account_flag: &Account, amount: usize, use_wallet: bool) -> error::Result<()> {
         let wallet_balance: usize = Self::balance(player, &Account::Wallet);
 
         if use_wallet && wallet_balance < amount {
-            return Err(Box::new(InventoryError::NotEnoughGold));
+            return Err(Box::new(error::Inventory::NotEnoughGold));
         }
 
         if use_wallet {
@@ -81,11 +80,11 @@ impl Bank {
         Ok(())
     }
 
-    pub fn withdraw(player: &mut Player, account_flag: &Account, amount: usize, use_wallet: bool) -> Result<()> {
+    pub fn withdraw(player: &mut Player, account_flag: &Account, amount: usize, use_wallet: bool) -> error::Result<()> {
         let account_balance: usize = Self::balance(player, account_flag);
 
         if account_balance < amount {
-            return Err(Box::new(InventoryError::NotEnoughGold));
+            return Err(Box::new(error::Inventory::NotEnoughGold));
         }
 
         if use_wallet {
@@ -175,7 +174,7 @@ impl Bank {
             Self::menu(player, developer_mode);
         }
 
-        let mut bank_result: Result<()> = Err(Box::new(MiscError::Custom("Uninitialized")));
+        let mut bank_result: error::Result<()> = Err(Box::new(error::Miscellaneous::Custom("Uninitialized")));
 
         // If developer mode is on then don't use the wallet, and vice versa.
         let use_wallet: bool = !developer_mode;

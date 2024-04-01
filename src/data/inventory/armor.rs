@@ -1,6 +1,6 @@
 use crate::{
     data::player::Player,
-    prelude::{checkmark, csv_table, select, InventoryError},
+    prelude::{checkmark, csv_table, error, select},
 };
 use rand::{thread_rng, Rng};
 use serde::{Deserialize, Serialize};
@@ -185,16 +185,16 @@ impl Inventory {
             .clone()
     }
 
-    pub fn buy(player: &mut Player, flag: &Types, payment: bool) -> Result<(), InventoryError> {
+    pub fn buy(player: &mut Player, flag: &Types, payment: bool) -> Result<(), error::Inventory> {
         let shop = Self::shop();
-        let price: &usize = shop.get(flag).ok_or(InventoryError::TransactionFailed)?;
+        let price: &usize = shop.get(flag).ok_or(error::Inventory::TransactionFailed)?;
 
         if payment {
             let gold: usize = player.bank.wallet;
             let wallet: &mut usize = &mut player.bank.wallet;
 
             if gold < *price {
-                return Err(InventoryError::NotEnoughGold);
+                return Err(error::Inventory::NotEnoughGold);
             }
 
             *wallet -= *price;
@@ -203,20 +203,20 @@ impl Inventory {
         let owns_item = &mut player.armor.get(flag).owns;
 
         if *owns_item {
-            return Err(InventoryError::ItemOwned);
+            return Err(error::Inventory::ItemOwned);
         }
 
         *owns_item = true;
         Ok(())
     }
 
-    pub fn sell(player: &mut Player, flag: &Types, payment: bool) -> Result<(), InventoryError> {
+    pub fn sell(player: &mut Player, flag: &Types, payment: bool) -> Result<(), error::Inventory> {
         let shop: BTreeMap<Types, usize> = Self::shop();
-        let price: &usize = shop.get(flag).ok_or(InventoryError::TransactionFailed)?;
+        let price: &usize = shop.get(flag).ok_or(error::Inventory::TransactionFailed)?;
         let owns_item: &mut bool = &mut player.armor.get(flag).owns;
 
         if !*owns_item {
-            return Err(InventoryError::ItemNotOwned);
+            return Err(error::Inventory::ItemNotOwned);
         }
 
         *owns_item = false;

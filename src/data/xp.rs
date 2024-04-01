@@ -1,7 +1,7 @@
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 
-use crate::prelude::{csv_table, InventoryError, Result};
+use crate::prelude::{csv_table, error};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct XP {
@@ -67,18 +67,18 @@ impl XP {
         *xp += more_xp;
     }
 
-    pub fn add(&mut self, flag: XPType, amount: usize) -> Result<()> {
+    pub fn add(&mut self, flag: XPType, amount: usize) -> error::Result<()> {
         let xp = self.get(flag);
 
         *xp += amount;
         Ok(())
     }
 
-    pub fn subtract(&mut self, flag: XPType, amount: usize) -> Result<()> {
+    pub fn subtract(&mut self, flag: XPType, amount: usize) -> error::Result<()> {
         let xp = self.get(flag);
 
         if *xp < amount {
-            return Err(Box::new(InventoryError::NotEnoughXP));
+            return Err(Box::new(error::Inventory::NotEnoughXP));
         }
 
         *xp -= amount;

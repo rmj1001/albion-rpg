@@ -1,4 +1,4 @@
-use crate::prelude::{checkmark, csv_table, select, InventoryError, MiscError, Result};
+use crate::prelude::{checkmark, csv_table, error, select};
 use crate::{data::player::Player, panic_menu};
 
 use serde::{Deserialize, Serialize};
@@ -116,7 +116,7 @@ impl Guilds {
         item
     }
 
-    pub fn join(player: &mut Player, guild: Guild, payment: bool) -> Result<()> {
+    pub fn join(player: &mut Player, guild: Guild, payment: bool) -> error::Result<()> {
         let shop: BTreeMap<Guild, usize> = Self::shop();
         let price: &usize = if let Some(item) = shop.get(&guild) {
             item
@@ -125,7 +125,9 @@ impl Guilds {
         };
 
         if player.guilds.check(guild) {
-            return Err(Box::new(MiscError::Custom("You are already a guild member.")));
+            return Err(Box::new(error::Miscellaneous::Custom(
+                "You are already a guild member.",
+            )));
         }
 
         if payment {
@@ -133,7 +135,7 @@ impl Guilds {
             let wallet: &mut usize = &mut player.bank.wallet;
 
             if gold < *price {
-                return Err(Box::new(InventoryError::NotEnoughGold));
+                return Err(Box::new(error::Inventory::NotEnoughGold));
             }
 
             *wallet -= *price;
@@ -144,7 +146,7 @@ impl Guilds {
         Ok(())
     }
 
-    pub fn leave(player: &mut Player, guild: Guild, payment: bool) -> Result<()> {
+    pub fn leave(player: &mut Player, guild: Guild, payment: bool) -> error::Result<()> {
         let shop: BTreeMap<Guild, usize> = Self::shop();
         let price: &usize = if let Some(item) = shop.get(&guild) {
             item
@@ -153,7 +155,9 @@ impl Guilds {
         };
 
         if !player.guilds.check(guild) {
-            return Err(Box::new(MiscError::Custom("You not a member of this guild.")));
+            return Err(Box::new(error::Miscellaneous::Custom(
+                "You not a member of this guild.",
+            )));
         }
 
         if payment {

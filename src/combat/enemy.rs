@@ -9,7 +9,7 @@ use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
 
 #[derive(Clone, Debug, PartialEq, EnumIter, Default, Copy)]
-pub enum Enemy {
+pub enum Enemies {
     // Human
     #[default]
     Human,
@@ -42,14 +42,14 @@ pub enum Enemy {
     Zombie,
 }
 
-impl std::fmt::Display for Enemy {
+impl std::fmt::Display for Enemies {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let string: String = match self {
-            Enemy::DireWolf => "Dire Wolf".to_string(),
-            Enemy::GiantSpider => "Giant Spider".to_string(),
-            Enemy::WhiteApe => "White Ape".to_string(),
-            Enemy::Owlbear => "Owl Bear".to_string(),
-            Enemy::DarkElf => "Dark Elf".to_string(),
+            Enemies::DireWolf => "Dire Wolf".to_string(),
+            Enemies::GiantSpider => "Giant Spider".to_string(),
+            Enemies::WhiteApe => "White Ape".to_string(),
+            Enemies::Owlbear => "Owl Bear".to_string(),
+            Enemies::DarkElf => "Dark Elf".to_string(),
 
             // Should display one-word names as usual
             miscellaneous => format!("{miscellaneous:?}"),
@@ -60,25 +60,24 @@ impl std::fmt::Display for Enemy {
 }
 
 #[derive(Clone, Default)]
-pub struct EnemyData {
-    pub flag: Enemy,
+pub struct Data {
+    pub flag: Enemies,
     pub name: String,
     pub hp: usize,
     pub damage: usize,
     pub rewards: Vec<Rewards>,
 }
 
-impl Display for EnemyData {
+impl Display for Data {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "Enemy: {}\nHP: {}\n", self.name, self.hp)
     }
 }
 
-impl EnemyData {
-    
+impl Data {
     pub fn new(user_combat_xp: usize, user_hp: usize) -> Self {
         let user_level: usize = XP::get_level(user_combat_xp);
-        let flag: Enemy = Self::enemy_type();
+        let flag: Enemies = Self::enemy_type();
         let name: String = flag.to_string();
 
         Self {
@@ -90,10 +89,10 @@ impl EnemyData {
         }
     }
 
-    fn enemy_type() -> Enemy {
-        let max = Enemy::iter().len();
+    fn enemy_type() -> Enemies {
+        let max = Enemies::iter().len();
         let number = random_num(0, max - 1);
-        let option = Enemy::iter().get(number);
+        let option = Enemies::iter().get(number);
 
         if let Some(enemy) = option {
             enemy
@@ -158,17 +157,14 @@ impl Default for Rewards {
 }
 
 impl Rewards {
-    
     pub fn generate_quantity() -> usize {
         random_num(1, 3)
     }
 
-    
     pub fn default_array() -> Vec<Self> {
         vec![Rewards::default(), Rewards::Bones(random_num(1, 3))]
     }
 
-    
     pub fn new(player_level: usize) -> Vec<Self> {
         let mut rewards: Vec<Rewards> = Self::default_array();
         let xp_reward: usize = Self::xp(player_level);
@@ -202,7 +198,6 @@ impl Rewards {
         rewards
     }
 
-    
     pub fn xp(player_level: usize) -> usize {
         let mut xp_reward: usize = random_num(0, 10);
 

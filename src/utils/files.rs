@@ -1,10 +1,7 @@
 /*!
 Helper functionality for reading/writing player data files.
 */
-use crate::{
-    panic_menu,
-    prelude::{ProfileError, Result},
-};
+use crate::{panic_menu, prelude::error};
 use std::env::consts::OS;
 use std::{fmt::Display, fs, path::Path};
 
@@ -141,10 +138,10 @@ use albion_terminal_rpg::prelude::{Result, read_file};
 let contents: Result<String> = read_file("/home/{user}/albion_terminal_rpg/player.albion");
 ```
 */
-pub fn read_file<T: Display>(file_path: &T) -> Result<String> {
+pub fn read_file<T: Display>(file_path: &T) -> error::Result<String> {
     match fs::read_to_string(file_path.to_string()) {
         Ok(data) => Ok(data),
-        Err(_) => Err(Box::new(ProfileError::Corrupted)),
+        Err(_) => Err(Box::new(error::Profile::Corrupted)),
     }
 }
 

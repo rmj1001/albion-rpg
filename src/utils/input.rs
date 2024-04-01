@@ -6,7 +6,7 @@ arrow-key selection and type-checking input boxes.
 */
 use crate::{
     panic_menu,
-    prelude::{invalid_input, MiscError, Result},
+    prelude::{error, invalid_input},
 };
 use dialoguer;
 use std::{fmt::Display, io::Write, str::FromStr};
@@ -77,7 +77,7 @@ let number: Result<usize> = input_generic("Number"); // "Number > {input here}"
 let string: Result<String> = input_generic("Any String"); // "Any String > {input here}"
 ```
 */
-pub fn input_generic<T>(text: &str) -> Result<T>
+pub fn generic_prompt<T>(text: &str) -> error::Result<T>
 where
     T: FromStr,
 {
@@ -88,7 +88,7 @@ where
         Ok(out)
     } else {
         invalid_input(Some(&input_string), None, false);
-        Err(Box::new(MiscError::InvalidInput(input_string)))
+        Err(Box::new(error::Miscellaneous::InvalidInput(input_string)))
     }
 }
 
@@ -111,7 +111,7 @@ match confirm("Go to main menu?") {
 */
 pub fn confirm(prompt: &str) -> bool {
     let prompt = format!("{prompt} [y/n]");
-    let input: Result<String> = input_generic(&prompt);
+    let input: error::Result<String> = generic_prompt(&prompt);
 
     if let Ok(input) = input {
         matches!(input.to_lowercase().as_str(), "yes" | "y" | "true")

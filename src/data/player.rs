@@ -28,8 +28,8 @@ use crate::{
     },
     panic_menu,
     prelude::{
-        confirm, delete_file, page_header, pause, player_file_path, read_file, warning, write_file, DataError,
-        Instructions, Logs, ProfileError, Result,
+        confirm, delete_file, error, page_header, pause, player_file_path, read_file, warning, write_file,
+        Instructions, Logs,
     },
 };
 use serde::{Deserialize, Serialize};
@@ -110,13 +110,13 @@ impl std::fmt::Display for Player {
 }
 
 impl TryFrom<String> for Player {
-    type Error = ProfileError;
+    type Error = error::Profile;
     fn try_from(data: String) -> std::result::Result<Self, Self::Error> {
         let user_result = encoder::from_str(&data);
 
         match user_result {
             Ok(profile) => Ok(profile),
-            Err(_) => Err(ProfileError::Corrupted),
+            Err(_) => Err(error::Profile::Corrupted),
         }
     }
 }
@@ -237,12 +237,12 @@ impl Player {
     }
     ```
     */
-    pub fn delete(&mut self) -> Result<()> {
+    pub fn delete(&mut self) -> error::Result<()> {
         Player::delete_from(&self.settings.username)
     }
 
     /// Delete the player file on disk
-    pub fn delete_from<T: Display>(username: &T) -> Result<()> {
+    pub fn delete_from<T: Display>(username: &T) -> error::Result<()> {
         let profile_path = player_file_path(username);
         let exists = Path::new(&profile_path).exists();
 
@@ -250,7 +250,7 @@ impl Player {
             delete_file(&profile_path);
             Ok(())
         } else {
-            Err(Box::new(ProfileError::DoesNotExist))
+            Err(Box::new(error::Profile::DoesNotExist))
         }
     }
 
@@ -272,15 +272,15 @@ impl Player {
     }
     ```
     */
-    pub fn get<T: Display>(username: &T) -> Result<Player> {
+    pub fn get<T: Display>(username: &T) -> error::Result<Player> {
         let profile_path: String = player_file_path(username);
         let mut contents: String = String::new();
 
-        let file_result: Result<String> = read_file(&profile_path);
+        let file_result: error::Result<String> = read_file(&profile_path);
 
         match file_result {
             Ok(data) => contents = data,
-            Err(_) => return Err(Box::new(ProfileError::DoesNotExist)),
+            Err(_) => return Err(Box::new(error::Profile::DoesNotExist)),
         }
 
         if let Ok(player) = Self::try_from(contents) {
@@ -292,7 +292,7 @@ impl Player {
 
             if !delete {
                 warning(Some("Cancelling."));
-                return Err(Box::new(DataError::Decode));
+                return Err(Box::new(error::Data::Decode));
             }
 
             warning(Some("Deleting player data file."));
@@ -301,7 +301,7 @@ impl Player {
                 panic_menu!(message);
             }
 
-            Err(Box::new(DataError::Decode))
+            Err(Box::new(error::Data::Decode))
         }
     }
 

@@ -4,7 +4,7 @@ use crate::{
 };
 
 /// Choose between equipment and healing
-pub fn battle_inventory(player: &mut Player) {
+pub fn battle_menu(player: &mut Player) {
     page_header("Battle Inventory", &Instructions::Keyboard);
 
     let choice: usize = select(&["1. Equipment", "2. Healing", "NAV: Go Back"], None);
@@ -12,15 +12,15 @@ pub fn battle_inventory(player: &mut Player) {
     match choice {
         0 => {
             Equipment::menu(player);
-            battle_inventory(player);
+            battle_menu(player);
         }
-        1 => healing_inventory(player),
+        1 => healing_menu(player),
         2 => {} // just returns to battle menu since the battle menu function is recursive called after this menu
         _ => unreachable(),
     }
 }
 
-pub fn healing_inventory(player: &mut Player) {
+pub fn healing_menu(player: &mut Player) {
     page_header("Healing Inventory", &Instructions::Keyboard);
 
     println!("Potions: {}", player.items.potions);
@@ -32,13 +32,13 @@ pub fn healing_inventory(player: &mut Player) {
     match choice {
         0 => {
             use_potion(player);
-            healing_inventory(player);
+            healing_menu(player);
         }
         1 => {
             eat_food(player);
-            healing_inventory(player);
+            healing_menu(player);
         }
-        2 => battle_inventory(player),
+        2 => battle_menu(player),
         _ => unreachable(),
     }
 }

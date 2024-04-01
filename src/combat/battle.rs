@@ -1,6 +1,6 @@
-use super::inventory::battle_inventory;
+use super::inventory::battle_menu;
 use crate::{
-    combat::enemy::{EnemyData, Rewards},
+    combat::enemy::{Data, Rewards},
     data::{inventory::equipment::Equipment, player::Player, xp::XP},
     panic_menu,
     prelude::{confirm, page_header, pause, random_num, select, sleep, unreachable, Instructions},
@@ -10,7 +10,7 @@ pub struct Battle<'a> {
     pub header: &'static str,
     pub prompt: &'static str,
     pub player: &'a mut Player,
-    pub enemy: EnemyData,
+    pub enemy: Data,
     pub loops: usize,
     pub floor: usize,
     pub is_first_battle: bool,
@@ -30,7 +30,7 @@ impl<'a> Battle<'a> {
         Self {
             header: title,
             prompt,
-            enemy: EnemyData::new(player.xp.combat, player.health.hp),
+            enemy: Data::new(player.xp.combat, player.health.hp),
             player,
             loops,
             floor: 0,
@@ -68,7 +68,7 @@ impl<'a> Battle<'a> {
         if self.is_first_battle {
             self.is_first_battle = false; // generate new enemy for subsequent battles
         } else {
-            self.enemy = EnemyData::new(self.player.xp.combat, self.player.health.hp);
+            self.enemy = Data::new(self.player.xp.combat, self.player.health.hp);
         }
 
         println!();
@@ -102,7 +102,7 @@ impl<'a> Battle<'a> {
         match action {
             0 => self.attack(),
             1 => {
-                battle_inventory(self.player);
+                battle_menu(self.player);
                 self.main_menu();
             }
             2 => Self::retreat(self.player),
