@@ -67,7 +67,7 @@ let mut player = Player::new(&username, &hash, true);
 let player_string = default_player.to_string();
 ```
 */
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Player {
     pub health: Health,
     pub xp: XP,
@@ -79,23 +79,6 @@ pub struct Player {
     pub armor: armor::Inventory,
     pub weapons: Inventory,
     pub settings: Settings,
-}
-
-impl Default for Player {
-    fn default() -> Self {
-        Self {
-            settings: Settings::default(),
-            xp: XP::new(),
-            health: Health::new(),
-            achievements: Achievements::new(),
-            bank: Bank::new(),
-            guilds: Guilds::new(),
-            equipment: Equipment::new(),
-            items: items::Inventory::default(),
-            armor: armor::Inventory::default(),
-            weapons: Inventory::default(),
-        }
-    }
 }
 
 impl std::fmt::Display for Player {

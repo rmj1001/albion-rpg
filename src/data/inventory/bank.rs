@@ -12,7 +12,7 @@ pub enum Account {
     Account4,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Bank {
     pub wallet: usize,
     pub account1: usize,
@@ -21,16 +21,21 @@ pub struct Bank {
     pub account4: usize,
 }
 
-impl Bank {
-    pub fn new() -> Self {
+impl Default for Bank {
+    fn default() -> Self {
         Self {
             wallet: 10,
-            ..Default::default()
+            account1: 0,
+            account2: 0,
+            account3: 0,
+            account4: 0,
         }
     }
+}
 
+impl Bank {
     pub fn reset(&mut self) {
-        *self = Self::new();
+        *self = Self::default();
     }
 
     /// Prints Bank information as a table using CSV formatting.

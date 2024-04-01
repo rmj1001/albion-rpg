@@ -15,12 +15,8 @@ pub struct Equipment {
 }
 
 impl Equipment {
-    pub fn new() -> Self {
-        Self::default()
-    }
-
     pub fn reset(&mut self) {
-        *self = Self::new();
+        *self = Self::default();
     }
 
     pub fn menu(player: &mut Player) {

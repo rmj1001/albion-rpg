@@ -2,22 +2,21 @@ use serde::{Deserialize, Serialize};
 
 use crate::prelude::{random_num, sleep};
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Health {
     pub hp: usize,
     pub hunger: usize,
 }
 
-impl Health {
-    pub fn new() -> Self {
-        Self {
-            hp: 100,
-            ..Default::default()
-        }
+impl Default for Health {
+    fn default() -> Self {
+        Self { hp: 100, hunger: 0 }
     }
+}
 
+impl Health {
     pub fn reset(&mut self) {
-        *self = Self::new();
+        *self = Self::default();
     }
 
     /**

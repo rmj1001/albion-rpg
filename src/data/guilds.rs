@@ -40,10 +40,6 @@ pub struct Guilds {
 }
 
 impl Guilds {
-    pub fn new() -> Self {
-        Self::default()
-    }
-
     pub fn get<'a>(&'a mut self, guild: &Guild) -> &'a mut bool {
         match guild {
             Guild::Thieving => &mut self.thieving,
