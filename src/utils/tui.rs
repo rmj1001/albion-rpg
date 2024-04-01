@@ -24,7 +24,7 @@ assert_eq!(line2, String::from("-----"));
 pub fn line(total_length: usize) -> String {
     let mut line_string: String = String::new();
 
-    for _ in 1..total_length {
+    for _ in 1..=total_length {
         line_string.push('-');
     }
 
@@ -154,7 +154,7 @@ Print out a table to STDOUT based on a vector of strings with comma separators.
 ```
 use albion_terminal_rpg::prelude::csv_table;
 
-csv_table(vec![
+csv_table(&[
     "Column1,Column2,Column3".to_string(),
     "Hello,World,Yes".to_string(),
     "Goodbye,World,No".to_string(),

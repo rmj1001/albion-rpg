@@ -15,7 +15,7 @@ Provide a simpler result format with dynamic error handling
 # Usage
 
 ```
-use albion_terminal_rpg::prelude::Result;
+use albion_terminal_rpg::prelude::error::Result;
 
 fn function() -> Result<()> {
     Ok(())
