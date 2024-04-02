@@ -141,7 +141,7 @@ impl Inventory {
     }
 
     pub fn shop_table(player: &mut Player) {
-        let mut strings: Vec<String> = vec!["Item,usize,Quantity,,Item,usize,Quantity".to_string()];
+        let mut strings: Vec<String> = vec!["Item,Price,Quantity,,Item,Price,Quantity".to_string()];
 
         let mut pairs: Vec<Pair> = vec![];
         let mut current_pair: Pair = ((Types::Bait, 0, 0), (Types::Bait, 0, 0));
