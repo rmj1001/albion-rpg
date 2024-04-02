@@ -55,7 +55,7 @@ impl std::fmt::Display for Enemies {
             miscellaneous => format!("{miscellaneous:?}"),
         };
 
-        write!(f, "{string}:")
+        write!(f, "{string}")
     }
 }
 
