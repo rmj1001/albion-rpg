@@ -133,9 +133,8 @@ let confirm = password(true); // "Confirm:"
 ```
 */
 pub fn password(confirm: bool) -> String {
-    let string = if confirm { "Confirm Password > " } else { "Password > " };
+    print!("{}", if confirm { "Confirm Password > " } else { "Password > " });
 
-    print!("{string}");
     std::io::stdout().flush().expect("Should flush stdout");
 
     match rpassword::read_password() {

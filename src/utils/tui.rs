@@ -119,12 +119,16 @@ pub enum Instructions {
 
 impl Display for Instructions {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Self::TypeCode => write!(f, "Press ↑ or ↓ to navigate, then press ENTER/RETURN."),
-            Self::Keyboard => write!(f, "Enter a code (ex. 1), then press ENTER/RETURN."),
-            Self::Other(text) => write!(f, "{text}"),
-            Self::None => write!(f, ""),
-        }
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::TypeCode => "Press ↑ or ↓ to navigate, then press ENTER/RETURN.",
+                Self::Keyboard => "Enter a code (ex. 1), then press ENTER/RETURN.",
+                Self::Other(text) => text,
+                Self::None => "",
+            }
+        )
     }
 }
 

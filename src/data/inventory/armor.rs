@@ -162,8 +162,7 @@ impl Inventory {
         let mut strings: Vec<String> = vec!["Item,Price,Owns".to_string()];
 
         for (flag, price) in &Self::shop() {
-            let string = format!("{},{},{}", flag, price, checkmark(player.armor.get(flag).owns));
-            strings.push(string);
+            strings.push(format!("{},{},{}", flag, price, checkmark(player.armor.get(flag).owns)));
         }
 
         csv_table(&strings);

@@ -59,12 +59,14 @@ pub enum Profile {
 
 impl Display for Profile {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let string: &str = match self {
-            Self::DoesNotExist => "Profile does not exist.",
-            Self::Corrupted => "Profile is corrupted.",
-        };
-
-        write!(f, "{}", Logs::Failure.paint(string))
+        write!(
+            f,
+            "{}",
+            Logs::Failure.paint(match self {
+                Self::DoesNotExist => "Profile does not exist.",
+                Self::Corrupted => "Profile is corrupted.",
+            })
+        )
     }
 }
 
@@ -94,12 +96,14 @@ pub enum Data {
 
 impl Display for Data {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let string: &str = match self {
-            Self::Encode => "Failed to encode player file.",
-            Self::Decode => "Failed to decode player file.",
-        };
-
-        write!(f, "{}", Logs::Failure.paint(string))
+        write!(
+            f,
+            "{}",
+            Logs::Failure.paint(match self {
+                Self::Encode => "Failed to encode player file.",
+                Self::Decode => "Failed to decode player file.",
+            })
+        )
     }
 }
 
@@ -134,17 +138,19 @@ pub enum Inventory {
 
 impl Display for Inventory {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let string: String = match self {
-            Self::ItemNotExist => "That item does not exist.".to_string(),
-            Self::ItemNotOwned => "You do not own that item.".to_string(),
-            Self::ItemOwned => "You already own this item".to_string(),
-            Self::NotEnoughGold => "You do not have enough gold.".to_string(),
-            Self::NotEnoughItem(item) => format!("You do not own enough {item}."),
-            Self::NotEnoughXP => "You do not have enough xp.".to_string(),
-            Self::TransactionFailed => "Transaction failed.".to_string(),
-        };
-
-        write!(f, "{}", Logs::Failure.paint(string))
+        write!(
+            f,
+            "{}",
+            Logs::Failure.paint(match self {
+                Self::ItemNotExist => "That item does not exist.".to_string(),
+                Self::ItemNotOwned => "You do not own that item.".to_string(),
+                Self::ItemOwned => "You already own this item".to_string(),
+                Self::NotEnoughGold => "You do not have enough gold.".to_string(),
+                Self::NotEnoughItem(item) => format!("You do not own enough {item}."),
+                Self::NotEnoughXP => "You do not have enough xp.".to_string(),
+                Self::TransactionFailed => "Transaction failed.".to_string(),
+            })
+        )
     }
 }
 
@@ -174,12 +180,14 @@ pub enum File {
 
 impl Display for File {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let string = match self {
-            Self::Delete => "Failed to delete file.",
-            Self::Create => "Failed to create file.",
-        };
-
-        write!(f, "{}", Logs::Failure.paint(string))
+        write!(
+            f,
+            "{}",
+            Logs::Failure.paint(match self {
+                Self::Delete => "Failed to delete file.",
+                Self::Create => "Failed to create file.",
+            })
+        )
     }
 }
 
@@ -209,12 +217,14 @@ pub enum Miscellaneous {
 
 impl Display for Miscellaneous {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let string: String = match self {
-            Self::InvalidInput(input) => format!("Invalid input {input}."),
-            Self::Custom(error) => (*error).to_string(),
-        };
-
-        write!(f, "{}", Logs::Failure.paint(string))
+        write!(
+            f,
+            "{}",
+            Logs::Failure.paint(match self {
+                Self::InvalidInput(input) => format!("Invalid input {input}."),
+                Self::Custom(error) => (*error).to_string(),
+            })
+        )
     }
 }
 

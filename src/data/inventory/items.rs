@@ -29,24 +29,26 @@ pub enum Types {
 
 impl Display for Types {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let string: &str = match self {
-            Types::Bait => "Bait",
-            Types::Seeds => "Seeds",
-            Types::Furs => "Fur",
-            Types::Fish => "Fish",
-            Types::Food => "Food",
-            Types::Wood => "Wood",
-            Types::Ore => "Ore",
-            Types::Ingots => "Ingot",
-            Types::Potions => "Potion",
-            Types::Rubies => "Ruby",
-            Types::MagicScrolls => "Magic Scroll",
-            Types::Bones => "Bone",
-            Types::DragonHides => "Dragon Hide",
-            Types::RunicTablets => "Runic Tablet",
-        };
-
-        write!(f, "{string}")
+        write!(
+            f,
+            "{}",
+            match self {
+                Types::Bait => "Bait",
+                Types::Seeds => "Seeds",
+                Types::Furs => "Fur",
+                Types::Fish => "Fish",
+                Types::Food => "Food",
+                Types::Wood => "Wood",
+                Types::Ore => "Ore",
+                Types::Ingots => "Ingot",
+                Types::Potions => "Potion",
+                Types::Rubies => "Ruby",
+                Types::MagicScrolls => "Magic Scroll",
+                Types::Bones => "Bone",
+                Types::DragonHides => "Dragon Hide",
+                Types::RunicTablets => "Runic Tablet",
+            }
+        )
     }
 }
 

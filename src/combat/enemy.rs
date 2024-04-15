@@ -44,18 +44,20 @@ pub enum Enemies {
 
 impl std::fmt::Display for Enemies {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let string: String = match self {
-            Enemies::DireWolf => "Dire Wolf".to_string(),
-            Enemies::GiantSpider => "Giant Spider".to_string(),
-            Enemies::WhiteApe => "White Ape".to_string(),
-            Enemies::Owlbear => "Owl Bear".to_string(),
-            Enemies::DarkElf => "Dark Elf".to_string(),
+        write!(
+            f,
+            "{}",
+            match self {
+                Enemies::DireWolf => "Dire Wolf".to_string(),
+                Enemies::GiantSpider => "Giant Spider".to_string(),
+                Enemies::WhiteApe => "White Ape".to_string(),
+                Enemies::Owlbear => "Owl Bear".to_string(),
+                Enemies::DarkElf => "Dark Elf".to_string(),
 
-            // Should display one-word names as usual
-            miscellaneous => format!("{miscellaneous:?}"),
-        };
-
-        write!(f, "{string}")
+                // Should display one-word names as usual
+                miscellaneous => format!("{miscellaneous:?}"),
+            }
+        )
     }
 }
 
@@ -135,18 +137,20 @@ pub enum Rewards {
 
 impl std::fmt::Display for Rewards {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let string: String = match self {
-            Self::XP(xp) => format!("XP: {xp}"),
-            Self::Gold(gold) => format!("Gold: {gold}"),
-            Self::Potions(potions) => format!("Potions: {potions}"),
-            Self::Rubies(rubies) => format!("Rubies: {rubies}"),
-            Self::MagicScrolls(scrolls) => format!("Magic Scrolls: {scrolls}"),
-            Self::Bones(bones) => format!("Bones: {bones}"),
-            Self::DragonHides(hides) => format!("Dragon Hides: {hides}"),
-            Self::RunicTablets(tablets) => format!("Runic Tablets: {tablets}"),
-        };
-
-        write!(f, "{string}")
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::XP(xp) => format!("XP: {xp}"),
+                Self::Gold(gold) => format!("Gold: {gold}"),
+                Self::Potions(potions) => format!("Potions: {potions}"),
+                Self::Rubies(rubies) => format!("Rubies: {rubies}"),
+                Self::MagicScrolls(scrolls) => format!("Magic Scrolls: {scrolls}"),
+                Self::Bones(bones) => format!("Bones: {bones}"),
+                Self::DragonHides(hides) => format!("Dragon Hides: {hides}"),
+                Self::RunicTablets(tablets) => format!("Runic Tablets: {tablets}"),
+            }
+        )
     }
 }
 

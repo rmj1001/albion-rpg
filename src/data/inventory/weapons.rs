@@ -19,12 +19,14 @@ pub enum Types {
 
 impl Display for Types {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let string = match self {
-            Self::WizardStaff => "Wizard Staff".to_string(),
-            sword => format!("{sword:?} Sword"),
-        };
-
-        write!(f, "{string}")
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::WizardStaff => "Wizard Staff".to_string(),
+                sword => format!("{sword:?} Sword"),
+            }
+        )
     }
 }
 
@@ -171,8 +173,7 @@ impl Inventory {
         for (flag, price) in &Self::shop() {
             let owned = player.weapons.get(flag).owns;
 
-            let string = format!("{},{},{}", flag, price, checkmark(owned));
-            strings.push(string);
+            strings.push(format!("{},{},{}", flag, price, checkmark(owned)));
         }
 
         csv_table(&strings);

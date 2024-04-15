@@ -16,16 +16,18 @@ pub enum Guild {
 
 impl Display for Guild {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let string: &str = match self {
-            Guild::Fishing => "Fishing",
-            Guild::Cooking => "Cooking",
-            Guild::Mining => "Mining",
-            Guild::Woodcutting => "Woodcutting",
-            Guild::Smithing => "Smithing",
-            Guild::Thieving => "Thieving",
-        };
-
-        write!(f, "{string}")
+        write!(
+            f,
+            "{}",
+            match self {
+                Guild::Fishing => "Fishing",
+                Guild::Cooking => "Cooking",
+                Guild::Mining => "Mining",
+                Guild::Woodcutting => "Woodcutting",
+                Guild::Smithing => "Smithing",
+                Guild::Thieving => "Thieving",
+            }
+        )
     }
 }
 
@@ -86,8 +88,7 @@ impl Guilds {
         let mut strings: Vec<String> = vec!["Guild,Price,Member".to_string()];
 
         for (flag, price) in &Self::shop() {
-            let string = format!("{},{},{}", flag, price, checkmark(*player.guilds.get(flag)));
-            strings.push(string);
+            strings.push(format!("{},{},{}", flag, price, checkmark(*player.guilds.get(flag))));
         }
 
         csv_table(&strings);

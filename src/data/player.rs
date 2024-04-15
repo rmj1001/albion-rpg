@@ -83,9 +83,7 @@ pub struct Player {
 
 impl std::fmt::Display for Player {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let string = encoder::to_string_pretty(&self);
-
-        match string {
+        match encoder::to_string_pretty(&self) {
             Ok(string) => write!(f, "{string}"),
             Err(_) => Err(std::fmt::Error),
         }
