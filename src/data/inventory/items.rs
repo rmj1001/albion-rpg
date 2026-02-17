@@ -190,7 +190,7 @@ impl Inventory {
         let selected_item = item_names
             .get(selector)
             .expect("This shouldn't select a vector item out of bounds.")
-            .to_string();
+            .clone();
 
         *Self::shop()
             .iter()

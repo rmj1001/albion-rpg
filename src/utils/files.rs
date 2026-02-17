@@ -120,7 +120,7 @@ pub fn write_file<T: Display>(file_path: &str, data: T) {
             "Could create directory on disk for player save data:\n{}",
             message
         ));
-    };
+    }
 
     if let Err(message) = fs::write(file_path, data.to_string()) {
         panic_menu!("Could not write to '{}':\n{}", file_path, message);

@@ -103,7 +103,7 @@ impl Guilds {
         let selected_guild: String = guilds
             .get(selector)
             .unwrap_or_else(|| panic_menu!("Selected a guild from the guild hashmap out of bounds"))
-            .to_string();
+            .clone();
 
         let item: Guild = *Self::shop()
             .iter()

@@ -39,7 +39,7 @@ pub fn main(player: &mut Player) {
         6 => xp_type = XPType::Thieving,
         7 => super::d1_developer_menu::main(player),
         _ => unreachable(),
-    };
+    }
 
     let operation_category: usize = select(&["1. Add", "2. Subtract", "3. Cancel"], None);
     let mut operation: Operation = Operation::Add;

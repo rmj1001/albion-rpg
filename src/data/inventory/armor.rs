@@ -177,7 +177,7 @@ impl Inventory {
         let selected_item = items
             .get(selector)
             .expect("This shouldn't select a vector item out of bounds.")
-            .to_string();
+            .clone();
 
         shop.iter()
             .find(|item| item.0.to_string() == selected_item)

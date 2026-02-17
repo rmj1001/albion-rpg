@@ -5,6 +5,7 @@ Design terminal menus for users to navigate.
 */
 
 use std::fmt::Display;
+use std::fmt::Write;
 
 /**
 Create a string of dashes with desired length.
@@ -70,8 +71,10 @@ pub fn header<T: Display>(title: T, line_length: usize) {
         header.push(' ');
     }
 
-    header.push_str(&format!("{title}\n"));
-    header.push_str(&line(line_length));
+    let write_line = &line(line_length);
+
+    let _ = writeln!(header, "{title}");
+    let _ = write!(header, "{write_line}");
 
     println!("{header}");
 }

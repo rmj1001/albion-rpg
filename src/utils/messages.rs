@@ -4,7 +4,7 @@
 Standardized response messages with coloring!
 */
 use crate::prelude::pause;
-use std::fmt::Display;
+use std::fmt::{Display, Write};
 
 /**
 Standard levels for logging and coloring.
@@ -113,11 +113,11 @@ pub fn invalid_input(input: Option<&str>, expected: Option<&str>, pause: bool) {
     let mut description = String::new();
 
     if let Some(text) = input {
-        description.push_str(&format!("Input: '{text}'. "));
+        let _ = write!(description, "Input: '{text}'. ");
     }
 
     if let Some(text) = expected {
-        description.push_str(&format!("Expected '{text}'. "));
+        let _ = write!(description, "Expected '{text}'. ");
     }
 
     Logs::Failure.message(Some("Invalid Input."), Some(&description), pause, false);

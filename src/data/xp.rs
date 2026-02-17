@@ -35,8 +35,8 @@ impl XP {
             format!("{},{},{}", name, xp, self::XP::get_level(xp))
         }
 
-        csv_table(&vec![
-            format!("Category,XP,Level"),
+        csv_table(&[
+            "Category,XP,Level".to_string(),
             entry("Combat", self.combat),
             entry("Fishing", self.fishing),
             entry("Cooking", self.cooking),

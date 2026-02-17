@@ -36,7 +36,7 @@ pub fn clearscr() {
             .expect("clear command failed to start")
             .wait()
             .expect("failed to wait");
-    };
+    }
 }
 
 ///

@@ -21,7 +21,6 @@ let password: String = String::from("test");
 let hashed: String = generate_hash(&password);
 ```
 */
-
 pub fn generate_hash<T: Display>(text: &T) -> String {
     match hash(text.to_string(), DEFAULT_COST) {
         Ok(password_hash) => password_hash,

@@ -140,7 +140,7 @@ impl<'a> Battle<'a> {
 Attacking Sequences
 --------------------------------------------------------------------------------
 */
-impl<'a> Battle<'a> {
+impl Battle<'_> {
     /// Player attacks first, enemy attacks second, player heals, repeat.
     fn attack_sequence(&mut self) {
         page_header(self.header, &Instructions::None);
@@ -249,7 +249,7 @@ impl<'a> Battle<'a> {
 Victory, Defeat, Retreat
 --------------------------------------------------------------------------------
 */
-impl<'a> Battle<'a> {
+impl Battle<'_> {
     /// Go back to the main menu
     fn retreat(&mut self) {
         page_header("Battle - Retreat", &Instructions::None);
