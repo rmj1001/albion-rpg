@@ -82,54 +82,54 @@ fn guild_menu(
     increase_item: items::GuildTypes,
     decrease_item: Option<items::GuildTypes>,
 ) {
-    print_guild_information(guild, player, xp_type, increase_item, decrease_item);
-    let work_choice = select(&["Work", "NAV: Go Back"], None);
+    loop {
+        print_guild_information(guild, player, xp_type, increase_item, decrease_item);
+        let work_choice = select(&["Work", "NAV: Go Back"], None);
 
-    match work_choice {
-        0 => {
-            if let Some(item) = decrease_item {
-                let result: error::Result<()> = match item {
-                    items::GuildTypes::Gold => {
-                        let rand = random_num(1, 3);
+        match work_choice {
+            0 => {
+                if let Some(item) = decrease_item {
+                    let result: error::Result<()> = match item {
+                        items::GuildTypes::Gold => {
+                            let rand = random_num(1, 3);
 
-                        if player.bank.wallet < rand {
-                            player.bank.wallet = 0;
-                        } else {
-                            player.bank.wallet -= rand;
+                            if player.bank.wallet < rand {
+                                player.bank.wallet = 0;
+                            } else {
+                                player.bank.wallet -= rand;
+                            }
+                            Ok(())
                         }
-                        Ok(())
+                        items::GuildTypes::Bait => try_subtract(&mut player.items.bait, "Bait"),
+                        items::GuildTypes::Food => try_subtract(&mut player.items.food, "Cooked Fish"),
+                        items::GuildTypes::Fish => try_subtract(&mut player.items.fish, "Fish"),
+                        items::GuildTypes::Wood => try_subtract(&mut player.items.wood, "Wood"),
+                        items::GuildTypes::Ingots => try_subtract(&mut player.items.ingots, "Ingots"),
+                        items::GuildTypes::Ore => try_subtract(&mut player.items.ore, "Ore"),
+                    };
+
+                    if let Err(error) = result {
+                        error.print(true);
+                        guild_menu(player, guild, xp_type, increase_item, decrease_item);
                     }
-                    items::GuildTypes::Bait => try_subtract(&mut player.items.bait, "Bait"),
-                    items::GuildTypes::Food => try_subtract(&mut player.items.food, "Cooked Fish"),
-                    items::GuildTypes::Fish => try_subtract(&mut player.items.fish, "Fish"),
-                    items::GuildTypes::Wood => try_subtract(&mut player.items.wood, "Wood"),
-                    items::GuildTypes::Ingots => try_subtract(&mut player.items.ingots, "Ingots"),
-                    items::GuildTypes::Ore => try_subtract(&mut player.items.ore, "Ore"),
-                };
-
-                if let Err(error) = result {
-                    error.print(true);
-                    guild_menu(player, guild, xp_type, increase_item, decrease_item);
                 }
-            }
 
-            match increase_item {
-                items::GuildTypes::Gold => player.bank.wallet += random_num(0, 2),
-                items::GuildTypes::Bait => player.items.bait += 1,
-                items::GuildTypes::Food => player.items.food += 1,
-                items::GuildTypes::Fish => player.items.fish += 1,
-                items::GuildTypes::Wood => player.items.wood += 1,
-                items::GuildTypes::Ingots => player.items.ingots += 1,
-                items::GuildTypes::Ore => player.items.ore += 1,
-            }
+                match increase_item {
+                    items::GuildTypes::Gold => player.bank.wallet += random_num(0, 2),
+                    items::GuildTypes::Bait => player.items.bait += 1,
+                    items::GuildTypes::Food => player.items.food += 1,
+                    items::GuildTypes::Fish => player.items.fish += 1,
+                    items::GuildTypes::Wood => player.items.wood += 1,
+                    items::GuildTypes::Ingots => player.items.ingots += 1,
+                    items::GuildTypes::Ore => player.items.ore += 1,
+                }
 
-            player.xp.increment(xp_type);
+                player.xp.increment(xp_type);
+            }
+            1 => main(player),
+            _ => unreachable(),
         }
-        1 => main(player),
-        _ => unreachable(),
     }
-
-    guild_menu(player, guild, xp_type, increase_item, decrease_item);
 }
 
 fn print_guild_information(
@@ -190,23 +190,23 @@ fn try_subtract(item: &mut usize, item_name: &str) -> error::Result<()> {
 }
 
 fn guild_membership_shop(player: &mut Player) {
-    page_header("Guild Memberships Office", &Instructions::Keyboard);
+    loop {
+        page_header("Guild Memberships Office", &Instructions::Keyboard);
 
-    Guilds::shop_table(player);
+        Guilds::shop_table(player);
 
-    let choices = select(&["1. Join Guild", "2. Leave Guild", "3. Go Back"], None);
+        let choices = select(&["1. Join Guild", "2. Leave Guild", "3. Go Back"], None);
 
-    match choices {
-        0 => {
-            join_guild(player);
-            guild_membership_shop(player);
+        match choices {
+            0 => {
+                join_guild(player);
+            }
+            1 => {
+                leave_guild(player);
+            }
+            2 => main(player),
+            _ => unreachable(),
         }
-        1 => {
-            leave_guild(player);
-            guild_membership_shop(player);
-        }
-        2 => main(player),
-        _ => unreachable(),
     }
 }
 
@@ -215,11 +215,9 @@ fn join_guild(player: &mut Player) {
     match Guilds::join(player, flag, true) {
         Ok(()) => {
             success(None);
-            guild_membership_shop(player);
         }
         Err(message) => {
             message.print(true);
-            guild_membership_shop(player);
         }
     }
 }
@@ -229,11 +227,9 @@ fn leave_guild(player: &mut Player) {
     match Guilds::leave(player, flag, true) {
         Ok(()) => {
             success(None);
-            guild_membership_shop(player);
         }
         Err(message) => {
             message.print(true);
-            guild_membership_shop(player);
         }
     }
 }

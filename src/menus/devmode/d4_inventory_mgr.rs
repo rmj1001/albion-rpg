@@ -7,61 +7,69 @@ use crate::{
 };
 
 pub fn main(player: &mut Player) {
-    page_header("Developer Mode - Inventory Manager", &Instructions::None);
+    loop {
+        page_header("Developer Mode - Inventory Manager", &Instructions::None);
 
-    let manager_option = select(&["1. Items", "2. Weapons", "3. Armor", "NAV: Go Back"], None);
+        let manager_option = select(&["1. Items", "2. Weapons", "3. Armor", "NAV: Go Back"], None);
 
-    match manager_option {
-        0 => items_manager(player),
-        1 => weapons_manager(player),
-        2 => armor_manager(player),
-        3 => super::d1_developer_menu::main(player),
-        _ => unreachable(),
+        match manager_option {
+            0 => items_manager(player),
+            1 => weapons_manager(player),
+            2 => armor_manager(player),
+            3 => super::d1_developer_menu::main(player),
+            _ => unreachable(),
+        }
     }
 }
 
 fn items_manager(player: &mut Player) {
-    page_header("Developer Mode - Inventory Manager - Items", &Instructions::None);
+    loop {
+        page_header("Developer Mode - Inventory Manager - Items", &Instructions::None);
 
-    items::Inventory::shop_table(player);
+        items::Inventory::shop_table(player);
 
-    let buysell = select(&["1. Add", "2. Subtract", "NAV: Go Back"], None);
+        let buysell = select(&["1. Add", "2. Subtract", "NAV: Go Back"], None);
 
-    match buysell {
-        0 => add_item(player),
-        1 => subtract_item(player),
-        2 => main(player),
-        _ => unreachable(),
+        match buysell {
+            0 => add_item(player),
+            1 => subtract_item(player),
+            2 => (),
+            _ => unreachable(),
+        }
     }
 }
 
 fn weapons_manager(player: &mut Player) {
-    page_header("Developer Mode - Inventory Manager - Weapons", &Instructions::None);
+    loop {
+        page_header("Developer Mode - Inventory Manager - Weapons", &Instructions::None);
 
-    weapons::Inventory::shop_table(player);
+        weapons::Inventory::shop_table(player);
 
-    let buysell: usize = select(&["1. Own Weapon", "2. Disown Weapon", "NAV: Go Back"], None);
+        let buysell: usize = select(&["1. Own Weapon", "2. Disown Weapon", "NAV: Go Back"], None);
 
-    match buysell {
-        0 => own_weapon(player),
-        1 => disown_weapon(player),
-        2 => main(player),
-        _ => unreachable(),
+        match buysell {
+            0 => own_weapon(player),
+            1 => disown_weapon(player),
+            2 => (),
+            _ => unreachable(),
+        }
     }
 }
 
 fn armor_manager(player: &mut Player) {
-    page_header("Developer Mode - Inventory Manager - Armor", &Instructions::None);
+    loop {
+        page_header("Developer Mode - Inventory Manager - Armor", &Instructions::None);
 
-    player.armor.table();
+        player.armor.table();
 
-    let buysell = select(&["1. Own Armor", "2. Disown Armor", "NAV: Go Back"], None);
+        let buysell = select(&["1. Own Armor", "2. Disown Armor", "NAV: Go Back"], None);
 
-    match buysell {
-        0 => own_armor(player),
-        1 => disown_armor(player),
-        2 => main(player),
-        _ => unreachable(),
+        match buysell {
+            0 => own_armor(player),
+            1 => disown_armor(player),
+            2 => (),
+            _ => unreachable(),
+        }
     }
 }
 
@@ -72,15 +80,11 @@ fn add_item(player: &mut Player) {
         match result {
             Ok(()) => {
                 success(None);
-                items_manager(player);
             }
             Err(message) => {
                 message.print(true);
-                items_manager(player);
             }
         }
-    } else {
-        items_manager(player);
     }
 }
 
@@ -91,15 +95,11 @@ fn subtract_item(player: &mut Player) {
         match sell_result {
             Ok(()) => {
                 success(None);
-                items_manager(player);
             }
             Err(message) => {
                 message.print(true);
-                items_manager(player);
             }
         }
-    } else {
-        items_manager(player);
     }
 }
 
@@ -110,11 +110,9 @@ fn own_weapon(player: &mut Player) {
     match result {
         Ok(()) => {
             success(None);
-            weapons_manager(player);
         }
         Err(message) => {
             message.print(true);
-            weapons_manager(player);
         }
     }
 }
@@ -126,11 +124,9 @@ fn disown_weapon(player: &mut Player) {
     match result {
         Ok(()) => {
             success(None);
-            weapons_manager(player);
         }
         Err(message) => {
             message.print(true);
-            weapons_manager(player);
         }
     }
 }
@@ -142,11 +138,9 @@ fn own_armor(player: &mut Player) {
     match result {
         Ok(()) => {
             success(None);
-            armor_manager(player);
         }
         Err(message) => {
             message.print(true);
-            armor_manager(player);
         }
     }
 }
@@ -158,11 +152,9 @@ fn disown_armor(player: &mut Player) {
     match result {
         Ok(()) => {
             success(None);
-            armor_manager(player);
         }
         Err(message) => {
             message.print(true);
-            armor_manager(player);
         }
     }
 }

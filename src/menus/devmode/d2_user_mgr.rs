@@ -4,28 +4,30 @@ use crate::{
 };
 
 pub fn main(player: &mut Player) {
-    page_header("Developer Mode - Player Manager", &Instructions::Keyboard);
+    loop {
+        page_header("Developer Mode - Player Manager", &Instructions::Keyboard);
 
-    let choice1 = select(
-        &[
-            "1. List Players",
-            "2. Delete Player",
-            "3. View Player File",
-            "NAV: Go Back",
-        ],
-        None,
-    );
+        let choice1 = select(
+            &[
+                "1. List Players",
+                "2. Delete Player",
+                "3. View Player File",
+                "NAV: Go Back",
+            ],
+            None,
+        );
 
-    match choice1 {
-        0 => list_users(player),
-        1 => delete_users(player),
-        2 => view_user(player),
-        3 => super::d1_developer_menu::main(player),
-        _ => unreachable(),
+        match choice1 {
+            0 => list_users(),
+            1 => delete_users(player),
+            2 => view_user(),
+            3 => super::d1_developer_menu::main(player),
+            _ => unreachable(),
+        }
     }
 }
 
-fn list_users(player: &mut Player) {
+fn list_users() {
     page_header("Developer Mode - Player Manager", &Instructions::None);
 
     let profiles: Vec<String> = all_profiles();
@@ -36,8 +38,6 @@ fn list_users(player: &mut Player) {
 
     println!();
     pause();
-
-    main(player);
 }
 
 fn delete_users(player: &mut Player) {
@@ -53,7 +53,7 @@ fn delete_users(player: &mut Player) {
 
             if !delete_profile {
                 cancel(None);
-                main(player);
+                return;
             }
 
             if *profile_string == player.settings.username {
@@ -73,15 +73,13 @@ fn delete_users(player: &mut Player) {
                 Ok(()) => success(Some(&format!("Profile '{profile_string}' deleted."))),
                 Err(error) => failure(&error.to_string()),
             }
-
-            main(player);
         }
 
         None => unreachable(),
     }
 }
 
-fn view_user(player: &mut Player) {
+fn view_user() {
     page_header("Developer Mode - Player Manager - Data Viewer", &Instructions::None);
     let choice = select(&all_profiles(), Some("Select a player to view"));
 
@@ -95,16 +93,12 @@ fn view_user(player: &mut Player) {
             match profile_result {
                 Ok(profile) => {
                     Player::paginate(&profile);
-                    main(player);
                 }
                 Err(message) => {
                     message.print(true);
-                    main(player);
                 }
             }
         }
         None => unreachable(),
     }
-
-    main(player);
 }
