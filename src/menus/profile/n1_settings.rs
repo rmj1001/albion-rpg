@@ -9,33 +9,34 @@ use crate::{
 use crate::data::player::Player;
 
 pub fn main(player: &mut Player) {
-    page_header("Profile Settings", &Instructions::Keyboard);
+    loop {
+        page_header("Profile Settings", &Instructions::Keyboard);
 
-    let choice: usize = select(
-        &[
-            "1. Change Username",
-            "2. Change Password",
-            "3. Reset Profile",
-            "4. Delete Profile",
-            "5. Toggle Hard Mode",
-            "6. View Player Data",
-            "NAV: Go Back",
-        ],
-        None,
-    );
+        let choice: usize = select(
+            &[
+                "1. Change Username",
+                "2. Change Password",
+                "3. Reset Profile",
+                "4. Delete Profile",
+                "5. Toggle Hard Mode",
+                "6. View Player Data",
+                "NAV: Go Back",
+            ],
+            None,
+        );
 
-    match choice {
-        0 => change_username(player),
-        1 => change_password(player),
-        2 => reset(player),
-        3 => delete_profile(player),
-        4 => hardmode(player),
-        5 => {
-            player.view();
-            main(player);
+        match choice {
+            0 => change_username(player),
+            1 => change_password(player),
+            2 => reset(player),
+            3 => delete_profile(player),
+            4 => hardmode(player),
+            5 => {
+                player.view();
+            }
+            6 => crate::menus::game_menu::main(player),
+            _ => unreachable(),
         }
-        6 => crate::menus::game_menu::main(player),
-        _ => unreachable(),
     }
 }
 
