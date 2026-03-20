@@ -43,96 +43,92 @@ fn print_menu(player: &mut Player) {
 }
 
 pub fn main(player: &mut Player) {
-    // Check for achievements at login to keep the player file up to date
-    Achievements::check(player);
+    loop {
+        // Check for achievements at login to keep the player file up to date
+        Achievements::check(player);
 
-    // Update armor equipment status
-    Equipment::check_equipment_ownership(player);
+        // Update armor equipment status
+        Equipment::check_equipment_ownership(player);
 
-    print_menu(player);
+        print_menu(player);
 
-    let choice = prompt("Enter Menu Code").to_lowercase();
+        let choice = prompt("Enter Menu Code").to_lowercase();
 
-    match &choice[..] {
-        // Combat
-        "1" | "wander the realm" => {
-            Battle::new("Wandering the Wild", "You are wandering the realm...", player, 0, None).start();
-        }
-        "2" | "enter the stronghold" => {
-            page_header("The Stronghold", &Instructions::None);
-
-            let enter_stronghold =
-                confirm("Are you sure you want to enter the stronghold? You must win many hard battles.");
-
-            if enter_stronghold {
-                Battle::new(
-                    "The Stronghold",
-                    "You delve into the stronghold...",
-                    player,
-                    50,
-                    Some(exit_stronghold),
-                )
-                .start();
+        match &choice[..] {
+            // Combat
+            "1" | "wander the realm" => {
+                Battle::new("Wandering the Wild", "You are wandering the realm...", player, 0, None).start();
             }
+            "2" | "enter the stronghold" => {
+                page_header("The Stronghold", &Instructions::None);
 
-            main(player);
-        }
+                let enter_stronghold =
+                    confirm("Are you sure you want to enter the stronghold? You must win many hard battles.");
 
-        // Economy
-        "3" | "the guilds" => crate::menus::economy::e1_the_guilds::main(player),
-        "4" | "the bank" => crate::menus::economy::e2_the_bank::main(player),
-        "5" | "trading post" => crate::menus::economy::e3_trading_post::main(player),
-        "6" | "weapons shop" => crate::menus::economy::e4_weapons_shop::main(player),
-        "7" | "armor shop" => crate::menus::economy::e5_armor_shop::main(player),
-
-        // Profile
-        "8" | "inventory" => crate::menus::profile::p1_inventory::main(player),
-        "9" | "hall of records" => crate::menus::profile::p2_hall_of_records::main(player),
-        "97" | "settings" => crate::menus::profile::n1_settings::main(player),
-        "98" | "save game" | "save" => {
-            page_header("Saving Game", &Instructions::None);
-            println!("\nSaving game...");
-            sleep(STANDARD_SLEEP);
-
-            player.save();
-            success(None);
-
-            main(player);
-        }
-        "99" | "logout" => {
-            player.save();
-
-            page_header("Accounts Menu", &Instructions::None);
-            println!("\nLogging out...");
-            sleep(STANDARD_SLEEP);
-
-            crate::menus::accounts::main();
-        }
-
-        "exit" => {
-            exit(Some(player));
-        }
-
-        "3.141592" => {
-            page_header("Developer Mode", &Instructions::None);
-            Settings::toggle_developer(player);
-            main(player);
-        }
-
-        misc => match misc {
-            "96" | "developer" => {
-                if player.settings.developer {
-                    crate::menus::devmode::d1_developer_menu::main(player);
-                } else {
-                    invalid_input(Some(misc), None, true);
-                    main(player);
+                if enter_stronghold {
+                    Battle::new(
+                        "The Stronghold",
+                        "You delve into the stronghold...",
+                        player,
+                        50,
+                        Some(exit_stronghold),
+                    )
+                    .start();
                 }
             }
-            _ => {
-                invalid_input(Some(misc), None, true);
-                main(player);
+
+            // Economy
+            "3" | "the guilds" => crate::menus::economy::e1_the_guilds::main(player),
+            "4" | "the bank" => crate::menus::economy::e2_the_bank::main(player),
+            "5" | "trading post" => crate::menus::economy::e3_trading_post::main(player),
+            "6" | "weapons shop" => crate::menus::economy::e4_weapons_shop::main(player),
+            "7" | "armor shop" => crate::menus::economy::e5_armor_shop::main(player),
+
+            // Profile
+            "8" | "inventory" => crate::menus::profile::p1_inventory::main(player),
+            "9" | "hall of records" => crate::menus::profile::p2_hall_of_records::main(player),
+            "97" | "settings" => crate::menus::profile::n1_settings::main(player),
+            "98" | "save game" | "save" => {
+                page_header("Saving Game", &Instructions::None);
+                println!("\nSaving game...");
+                sleep(STANDARD_SLEEP);
+
+                player.save();
+                success(None);
             }
-        },
+            "99" | "logout" => {
+                player.save();
+
+                page_header("Accounts Menu", &Instructions::None);
+                println!("\nLogging out...");
+                sleep(STANDARD_SLEEP);
+
+                crate::menus::accounts::main();
+            }
+
+            "exit" => {
+                exit(Some(player));
+            }
+
+            "3.141592" => {
+                page_header("Developer Mode", &Instructions::None);
+                Settings::toggle_developer(player);
+            }
+
+            misc => match misc {
+                "96" | "developer" => {
+                    if player.settings.developer {
+                        crate::menus::devmode::d1_developer_menu::main(player);
+                    } else {
+                        invalid_input(Some(misc), None, true);
+                        main(player);
+                    }
+                }
+                _ => {
+                    invalid_input(Some(misc), None, true);
+                }
+            },
+        }
     }
 }
 
